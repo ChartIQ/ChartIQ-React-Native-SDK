@@ -7,11 +7,23 @@ module.exports = {
     [
       'module-resolver',
       {
-        extensions: ['.tsx', '.ts', '.js', '.json'],
+        root: ['./src'],
         alias: {
-          [pak.name]: path.join(__dirname, '..', pak.source),
+          '~': path.resolve(__dirname, './src'),
         },
+        extensions: [
+          '.tsx',
+          '.ts',
+          '.ios.js',
+          '.android.js',
+          '.json',
+          '.native.js',
+          '.ttf',
+          '.d.ts',
+          '.svg',
+        ],
       },
     ],
+    'react-native-reanimated/plugin',
   ],
 };

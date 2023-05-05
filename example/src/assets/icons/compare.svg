@@ -1,0 +1,11 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M23.343 23.863v-9.797h-4.31v9.797h-1.078V12.17h-4.31v11.692h-1.078V15.34h-4.31v8.522H7V25h17.636v-1.137h-1.293zm-11.853 0H9.335v-7.384h2.155v7.384zm5.388 0h-2.155V13.308h2.155v10.555zm5.388 0H20.11v-8.66h2.155v8.66z"
+        fill="@COLOR" fill-rule="nonzero" />
+    <g transform="translate(9.5 7)" stroke="@COLOR">
+        <circle cx="1" cy="4.5" r="1" />
+        <circle cx="6.3" cy="1" r="1" />
+        <circle cx="11.7" cy="3" r="1" />
+        <path d="m2 4 3.223-2.5M7.25 1 11 2.5" />
+    </g>
+</svg>
