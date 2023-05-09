@@ -2,15 +2,14 @@ import { Theme, useTheme } from '~/theme';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { filters } from '../drawing-tools-selector/drawing-tools-selector.data';
 
 interface SelectorFiltersProps {
-  filters: { name: string; value: string }[];
   handleFilterChange: (value: string) => void;
   selectedFilter: string;
 }
 
 const SelectorFilters: React.FC<SelectorFiltersProps> = ({
-  filters,
   handleFilterChange,
   selectedFilter,
 }) => {

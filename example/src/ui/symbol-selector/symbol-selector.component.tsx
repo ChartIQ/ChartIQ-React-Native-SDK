@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '../../assets/icons';
 import { BottomSheet } from '../bottom-sheet';
@@ -17,6 +17,7 @@ import { FilterSelector } from '../selector-filters';
 import { ChartSymbol, fetchSymbolsAsync } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
 import { useTheme, Theme } from '~/theme';
+import { InputFieldMethods } from '../input/input.component';
 
 interface SymbolSelectorProps {
   onChange: (symbol: ChartSymbol) => void;
@@ -34,14 +35,14 @@ const filters = [
   { name: 'Indexes', value: 'indexes' },
   { name: 'Funds', value: 'funds' },
   { name: 'Features', value: 'features' },
-];
+] as const;
 
 const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
   ({ onChange }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const textInputRef = useRef<TextInput>(null);
+    const textInputRef = useRef<InputFieldMethods>(null);
     const [data, setData] = React.useState<ChartSymbol[]>([]);
     const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
     const [inputValue, setInputValue] = React.useState<string>('');
@@ -52,7 +53,7 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
       setInputValue('');
       setData([]);
       setIsLoading(false);
-      textInputRef.current?.clear();
+      textInputRef.current?.onClose();
     };
 
     const handleClose = () => {
@@ -62,7 +63,6 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
     };
 
     const fetchSymbols = (input: string, filter: string) => {
-      console.log(input, filter);
       setInputValue(input);
       setIsLoading(true);
       if (input.length === 0) {
@@ -102,10 +102,10 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
     };
 
     const handleFilterChange = (filter: string) => {
-      // if (filter !== selectedFilter) {
-      setSelectedFilter(filter);
-      fetchSymbols(inputValue, filter);
-      // }
+      if (filter !== selectedFilter) {
+        setSelectedFilter(filter);
+        fetchSymbols(inputValue, filter);
+      }
     };
 
     return (
@@ -116,12 +116,7 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
             handleClose={handleClose}
             onChange={(text) => fetchSymbols(text, selectedFilter)}
           />
-
-          <FilterSelector
-            filters={filters}
-            handleFilterChange={handleFilterChange}
-            selectedFilter={selectedFilter}
-          />
+          <FilterSelector handleFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
         </View>
         <View style={styles.container}>
           {!isLoading ? (

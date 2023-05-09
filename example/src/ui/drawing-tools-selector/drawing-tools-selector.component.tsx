@@ -44,7 +44,9 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const textInputRef = useRef<TextInput>(null);
     const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
-    const [tools, setTools] = useState(drawingTools);
+    const [tools, setTools] = useState(() =>
+      drawingTools.map((item) => ({ ...item, favorite: false })),
+    );
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem>(drawingTools[0]);
 
@@ -226,7 +228,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
           ];
 
     const renderSectionFooter = () => {
-      if (selectedFilter === DrawingToolTags.favorites && filteredSection[0].data.length === 0) {
+      if (selectedFilter === DrawingToolTags.favorites && filteredSection[0]?.data?.length === 0) {
         return (
           <View style={styles.listEmptyContainer}>
             <View style={styles.space64} />
@@ -262,22 +264,15 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
         (selectedIndex) => {
           switch (selectedIndex) {
             case 0:
-              console.log('restoreDefaultDrawingConfig');
-              // chartIQWebViewRef.current?.restoreDefaultDrawingConfig(tool.name, true);
               restoreDefaultDrawingConfig(tool.name, false);
 
               break;
 
             case destructiveButtonIndex:
-              console.log('clearDrawing');
               clearDrawing();
-              // chartIQWebViewRef.current?.clearDrawing();
-
               break;
 
             case cancelButtonIndex:
-              console.log('Cancel');
-            // Canceled
           }
         },
       );
@@ -296,11 +291,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
               </Pressable>
             }
           />
-          <FilterSelector
-            filters={filters}
-            handleFilterChange={handleFilterChange}
-            selectedFilter={selectedFilter}
-          />
+          <FilterSelector handleFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
         </View>
         <BottomSheetSectionList
           stickyHeaderHiddenOnScroll

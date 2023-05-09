@@ -28,7 +28,7 @@ export interface ChartStyleSelectorMethods {
   open: () => void;
   close: () => void;
 }
-export const chartStyleSelectorData: Array<ChartStyleItem> = [
+export const chartStyleSelectorData = [
   { label: 'Candle', value: ChartType.CANDLE, icon: icons.candles },
   { label: 'Bar', value: ChartType.BAR, icon: icons.bar },
   { label: 'Colored Bar', value: ChartType.COLORED_BAR, icon: icons.coloredBar },
@@ -60,4 +60,4 @@ export const chartStyleSelectorData: Array<ChartStyleItem> = [
     aggregationType: AggregationType.RANGEBARS,
     icon: icons.rangeBars,
   },
-];
+] as const;

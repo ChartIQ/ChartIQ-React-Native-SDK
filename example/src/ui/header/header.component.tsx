@@ -24,6 +24,7 @@ import Icons from '~/assets/icons';
 
 const timingConfig = { duration: 200 };
 const CROSSHAIR_HEIGHT = 70;
+const HEADER_HEIGHT = 50;
 
 interface HeaderProps {
   interval: string | null;
@@ -38,6 +39,7 @@ interface HeaderProps {
   isCrosshairEnabled: boolean;
   crosshairState: CrosshairSharedValues;
   isDrawing: boolean;
+  isFullscreen: boolean;
 }
 
 interface HeaderItem {
@@ -64,6 +66,7 @@ const Header: React.FC<HeaderProps> = ({
   isCrosshairEnabled,
   crosshairState,
   isDrawing,
+  isFullscreen,
 }) => {
   const { width } = useWindowDimensions();
   const theme = useTheme();
@@ -170,9 +173,21 @@ const Header: React.FC<HeaderProps> = ({
 
   const otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 
+  const headerContainerStyle = useAnimatedStyle(() => {
+    if (isFullscreen) {
+      return {
+        height: withTiming(0),
+      };
+    }
+
+    return {
+      height: withTiming(HEADER_HEIGHT),
+    };
+  }, [isFullscreen]);
+
   return (
     <>
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, headerContainerStyle]}>
         <View style={styles.row}>
           <TouchableOpacity onPress={handleSymbolSelector} style={styles.button}>
             {symbol ? (
@@ -197,7 +212,7 @@ const Header: React.FC<HeaderProps> = ({
             </View>
           ))}
         </View>
-      </View>
+      </Animated.View>
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
         {otherItems.map(({ Icon, key, onPress, style, containerStyle, fill }) => (
           <View key={key} style={styles.itemContainer}>

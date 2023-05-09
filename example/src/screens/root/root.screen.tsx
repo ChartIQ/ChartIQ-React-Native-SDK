@@ -1,6 +1,7 @@
 import * as React from 'react';
+import * as Orientation from 'expo-screen-orientation';
 
-import { NativeSyntheticEvent, StyleSheet, View } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, View, ViewStyle } from 'react-native';
 import {
   ChartIqWrapperView,
   setInitialData,
@@ -49,10 +50,8 @@ import { ChartStyleSelector } from '../../ui/chart-style-selector';
 import { DrawingToolManager } from '../../ui/drawing-tool-manager';
 import { Header } from '../../ui/header';
 import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
-import { Theme, useTheme } from '~/theme';
-import Icons from '~/assets/icons';
-import { ReText } from '~/ui/re-text';
 import { DrawingMeasure } from '~/ui/drawing-measure';
+import FullScreenAnimatedButtonComponent from '~/ui/full-screen-animated-button/full-screen-animated-button.component';
 
 const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
 
@@ -83,8 +82,11 @@ export default function Root() {
   const [isCrosshairEnabled, setIsCrosshairEnabled] = React.useState(false);
   const measureValue = useSharedValue('');
   const { updateSupportedSettings, updateDrawingSettings } = useUpdateDrawingTool();
+  const [isFullscreen, setIsFullScreen] = React.useState(false);
+  const [isLandscape, setIsLandscape] = React.useState(false);
 
   const onPullInitialData = async (event: QuoteFeedEvent) => {
+    console.log('onPullInitialData');
     const parsed: ChartIQDatafeedParams = JSON.parse(event.nativeEvent.quoteFeedParam);
 
     const response = await handleRequest(parsed);
@@ -93,12 +95,16 @@ export default function Root() {
   };
 
   const onPullUpdateData = async (event: QuoteFeedEvent) => {
+    console.log('onPullUpdateData');
+
     const parsed: ChartIQDatafeedParams = JSON.parse(event.nativeEvent.quoteFeedParam);
     const response = await handleRequest(parsed);
     setInitialData(JSON.stringify(response));
   };
 
   const onPullPagingData = async (event: QuoteFeedEvent) => {
+    console.log('onPullPagingData');
+
     const parsed: ChartIQDatafeedParams = JSON.parse(event.nativeEvent.quoteFeedParam);
     const response = await handleRequest(parsed);
     setInitialData(JSON.stringify(response));
@@ -111,6 +117,7 @@ export default function Root() {
   const drawingToolSelectorRef = React.useRef<DrawingToolSelectorMethods>(null);
 
   const toggleSymbolSelector = () => {
+    console.log('toggleSymbolSelector');
     symbolSelectorRef.current?.open();
   };
 
@@ -136,7 +143,6 @@ export default function Root() {
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
-    console.log('handleSymbolChange', symbol);
     setSymbol(symbol);
     setChartSymbol(symbol);
   };
@@ -148,8 +154,6 @@ export default function Root() {
   };
 
   const handleChartStyleChange = (input: ChartStyleItem) => {
-    // setChartStyle(input);
-    // chartIqWebViewRef.current?.setChartType(input.value);
     setChartStyle(input);
     if (input.aggregationType) {
       setAggregationType(input.aggregationType);
@@ -162,7 +166,7 @@ export default function Root() {
     setCompareSymbols((prevState) => {
       return new Map(prevState).set(input.symbol, {
         ...input,
-        color: input.color ? input.color : colorPickerColors[0],
+        color: input.color,
       });
     });
 
@@ -196,14 +200,12 @@ export default function Root() {
 
   const initChart = async () => {
     const symbol = await getSymbol();
-    console.log({ symbol });
     setSymbol(symbol);
 
     const chartType = await getChartType();
     handleChartTypeChanged(chartType);
 
     const aggregationType = await getChartAggregationType();
-    console.log({ aggregationType });
     const periodicity = await getPeriodicity();
     const parsedPeriodicity = JSON.parse(periodicity);
     const interval = JSON.parse(parsedPeriodicity.interval);
@@ -213,7 +215,6 @@ export default function Root() {
 
     const activeSeries = await getActiveSeries();
     const map = new Map();
-    console.log('getActiveSeries', { activeSeries });
     activeSeries.forEach((item) => {
       map.set(item.symbolName, {
         color: item.color,
@@ -250,11 +251,12 @@ export default function Root() {
   const onChartTypeChanged = ({
     nativeEvent: { chartType },
   }: NativeSyntheticEvent<{ chartType: string }>) => {
-    console.log('onChartTypeChanged', { chartType });
+    console.log('onChartTypeChanged');
     handleChartTypeChanged(chartType);
   };
 
   const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
+    console.log('onHUDChanged');
     const response: CrosshairState = JSON.parse(hud);
 
     crosshair.close.value = response.close ?? '0';
@@ -268,26 +270,54 @@ export default function Root() {
   const onMeasureChanged = ({
     nativeEvent: { measure },
   }: NativeSyntheticEvent<{ measure: string }>) => {
+    console.log('onMeasureChanged');
     measureValue.value = measure;
   };
 
+  React.useEffect(() => {
+    Orientation.getOrientationAsync().then((orientation) => {
+      setIsLandscape(
+        orientation === Orientation.Orientation.LANDSCAPE_LEFT ||
+          orientation === Orientation.Orientation.LANDSCAPE_RIGHT,
+      );
+    });
+
+    Orientation.addOrientationChangeListener(
+      ({ orientationInfo: { orientation } }: Orientation.OrientationChangeEvent) => {
+        setIsLandscape(
+          orientation === Orientation.Orientation.LANDSCAPE_LEFT ||
+            orientation === Orientation.Orientation.LANDSCAPE_RIGHT,
+        );
+      },
+    );
+
+    return () => {
+      Orientation.removeOrientationChangeListeners();
+    };
+  }, [setIsLandscape]);
+
+  const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
+
   return (
-    <>
-      <Header
-        symbol={symbol}
-        interval={interval?.label ?? null}
-        chartStyle={chartStyle}
-        isCrosshairEnabled={isCrosshairEnabled}
-        handleSymbolSelector={toggleSymbolSelector}
-        handleIntervalSelector={toggleIntervalSelector}
-        handleChartStyleSelector={toggleChartStyleSelector}
-        handleCompareSymbolSelector={toggleCompareSymbolSelector}
-        handleDrawingTool={toggleDrawingToolSelector}
-        handleCrosshair={toggleCrosshair}
-        isDrawing={isDrawing}
-        crosshairState={crosshair}
-      />
-      <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
+      <View>
+        <Header
+          symbol={symbol}
+          interval={interval?.label ?? null}
+          chartStyle={chartStyle}
+          isCrosshairEnabled={isCrosshairEnabled}
+          handleSymbolSelector={toggleSymbolSelector}
+          handleIntervalSelector={toggleIntervalSelector}
+          handleChartStyleSelector={toggleChartStyleSelector}
+          handleCompareSymbolSelector={toggleCompareSymbolSelector}
+          handleDrawingTool={toggleDrawingToolSelector}
+          handleCrosshair={toggleCrosshair}
+          isDrawing={isDrawing}
+          crosshairState={crosshair}
+          isFullscreen={isFullscreen && isLandscape}
+        />
+      </View>
+      <View style={[{ flex: 1 }, displayStyle]}>
         <ChartIqWrapperView
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
@@ -332,7 +362,14 @@ export default function Root() {
         }}
         ref={drawingToolSelectorRef}
       />
-    </>
+      <FullScreenAnimatedButtonComponent
+        isLandscape={isLandscape}
+        active={isFullscreen}
+        onChange={(value) => {
+          setIsFullScreen(value);
+        }}
+      />
+    </View>
   );
 }
 

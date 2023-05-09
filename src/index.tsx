@@ -5,6 +5,7 @@ import {
   ViewStyle,
   NativeSyntheticEvent,
   NativeModules,
+  ViewProps,
 } from 'react-native';
 import { TimeUnit } from '~/constants';
 import { DrawingParams, DrawingSettings, DrawingTool } from '~/model';
@@ -18,7 +19,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-type ChartIqWrapperProps = {
+interface ChartIqWrapperProps extends ViewProps {
   style: ViewStyle;
   onPullInitialData: (
     event: NativeSyntheticEvent<{ quoteFeedParam: string }>
@@ -34,7 +35,7 @@ type ChartIqWrapperProps = {
   ) => void;
   onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
   onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
-};
+}
 
 const ComponentName = 'ChartIqWrapperView';
 

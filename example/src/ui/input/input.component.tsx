@@ -1,5 +1,4 @@
 import { Theme, useTheme } from '~/theme';
-// import { EvilIcons } from '@expo/vector-icons';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   NativeSyntheticEvent,
@@ -20,44 +19,66 @@ interface InputFieldProps {
   handleClose: () => void;
 }
 
-const InputField = forwardRef<TextInput, InputFieldProps>(({ onChange, handleClose }, ref) => {
-  const theme = useTheme();
-  const styles = createStyles(theme);
-  const inputRef = useRef<TextInput>(null);
+export interface InputFieldMethods {
+  onClose: () => void;
+  focus: () => void;
+}
 
-  const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    onChange(event.nativeEvent.text);
-  };
+const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
+  ({ onChange, handleClose }, ref) => {
+    const theme = useTheme();
+    const styles = createStyles(theme);
+    const [value, setValue] = useState('');
+    const textInputRef = useRef<TextInput>(null);
 
-  const onClose = () => {
-    inputRef.current?.clear();
-    onChange('');
-  };
+    const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      onChange(event.nativeEvent.text);
+      setValue(event.nativeEvent.text);
+    };
 
-  useImperativeHandle(ref, () => inputRef.current);
+    const onClose = () => {
+      onChange('');
+      setValue('');
+    };
 
-  return (
-    <View style={styles.inputContainer}>
-      <View style={styles.input}>
-        {/* <EvilIcons name="search" size={24} color={theme.colors.placeholder} /> */}
-        <BottomSheetTextInput
-          ref={inputRef}
-          onChange={handleChange}
-          style={styles.textInput}
-          placeholderTextColor={theme.colors.placeholder}
-          placeholder="Search"
-        />
+    useImperativeHandle(ref, () => ({
+      onClose,
+      focus: () => {
+        textInputRef.current?.focus();
+      },
+    }));
 
-        <Pressable onPress={onClose} style={styles.close}>
-          <Icons.close width={12} height={12} fill={theme.colors.background} />
-        </Pressable>
+    return (
+      <View style={styles.inputContainer}>
+        <View style={styles.input}>
+          <Icons.search
+            width={16}
+            height={16}
+            fill={theme.colors.placeholder}
+            style={{ marginHorizontal: 4 }}
+          />
+          <BottomSheetTextInput
+            //@ts-ignore
+            ref={textInputRef}
+            onChange={handleChange}
+            style={styles.textInput}
+            placeholderTextColor={theme.colors.placeholder}
+            placeholder="Search"
+            value={value}
+          />
+          {value.length > 0 ? (
+            <Pressable onPress={onClose} style={styles.close}>
+              <Icons.close width={12} height={12} fill={theme.colors.background} />
+            </Pressable>
+          ) : null}
+        </View>
+        <TouchableOpacity onPress={handleClose}>
+          <Text style={styles.text}>Cancel</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={handleClose}>
-        <Text style={styles.text}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
-  );
-});
+    );
+  },
+);
 
 InputField.displayName = 'InputField';
 
@@ -90,11 +111,12 @@ const createStyles = (theme: Theme) =>
       flex: 1,
       color: theme.colors.buttonText,
       fontSize: 16,
+      padding: 0,
     },
     close: {
       backgroundColor: theme.colors.cardSubtitle,
       borderRadius: 32,
-      padding: 16,
+      padding: 8,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 4,
