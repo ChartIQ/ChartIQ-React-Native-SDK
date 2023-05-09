@@ -6,6 +6,7 @@ import Animated, { useAnimatedProps } from 'react-native-reanimated';
 const styles = StyleSheet.create({
   baseStyle: {
     color: 'black',
+    padding: 0,
   },
 });
 Animated.addWhitelistedNativeProps({ text: true });

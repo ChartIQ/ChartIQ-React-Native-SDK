@@ -1,9 +1,10 @@
 import { Theme, useTheme } from '~/theme';
 import React, { useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated';
 
 import { LineTypeItem, lineTypePickerData } from '~/assets/icons/line-types/line-types';
+import { FlatList } from 'react-native-gesture-handler';
 
 interface HorizontalLineTypePickerProps {
   active: boolean;

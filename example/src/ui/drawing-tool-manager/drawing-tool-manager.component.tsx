@@ -1,21 +1,20 @@
-import { DrawingParams, Theme, useTheme } from '@chart-iq/chart-iq-sdk';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useContext } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingToolsNavigation, RootStack } from '~/shared/navigation.types';
 
 import Icons from '../../assets/icons';
-import {
-  DrawingContext,
-  ChartIQWebViewContext,
-} from '../../context/drawing-context/drawing.context';
+
 import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
 import { DrawingItem } from '../drawing-tools-selector/drawing-tools-selector.data';
 import { HorizontalColorPicker } from '../horizontal-color-picker';
 import { HorizontalLineTypePicker } from '../horizontal-line-type-picker';
+import { Theme, useTheme } from '~/theme';
+import { DrawingContext } from '~/context/drawing-context/drawing.context';
+import { DrawingParams } from '~/model';
+import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 
 interface DrawingToolManagerProps {
   drawingItem: DrawingItem;
@@ -32,8 +31,6 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   const theme = useTheme();
   const styles = createStyles(theme);
   const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
-  const chartIQWebView = useContext(ChartIQWebViewContext);
-
   const { drawingSettings, supportedSettings, currentLineType } = useContext(DrawingContext);
   const { updateFillColor, updateLineColor, updateLineTypeItem } = useUpdateDrawingTool();
 
@@ -49,7 +46,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
     setActiveTool(null);
 
     if (color) {
-      chartIQWebView.current?.setDrawingParameter(DrawingParams.FILL_COLOR, color);
+      setDrawingParams(DrawingParams.FILL_COLOR, color);
       updateFillColor(color);
     }
   };
@@ -62,7 +59,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
     setActiveTool(null);
 
     if (color) {
-      chartIQWebView.current?.setDrawingParameter(DrawingParams.LINE_COLOR, color);
+      setDrawingParams(DrawingParams.LINE_COLOR, color);
 
       updateLineColor(color);
     }
@@ -75,11 +72,8 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
     setActiveTool(null);
     updateLineTypeItem(lineTypeItem);
-    chartIQWebView.current?.setDrawingParameter(DrawingParams.LINE_TYPE, lineTypeItem.value);
-    chartIQWebView.current?.setDrawingParameter(
-      DrawingParams.LINE_WIDTH,
-      lineTypeItem.lineWidth.toString(),
-    );
+    setDrawingParams(DrawingParams.LINE_TYPE, lineTypeItem.value);
+    setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
   };
 
   const handleSettingsPress = () => {

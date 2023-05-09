@@ -1,5 +1,5 @@
-import { Theme } from '@chart-iq/chart-iq-sdk';
 import { StyleSheet } from 'react-native';
+import { Theme } from '~/theme';
 
 export const createStyles = (theme: Theme) =>
   StyleSheet.create({
@@ -55,7 +55,6 @@ export const createStyles = (theme: Theme) =>
     },
 
     listEmptyContainer: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 36,

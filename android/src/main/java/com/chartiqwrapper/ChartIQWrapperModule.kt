@@ -10,6 +10,7 @@ import com.chartiq.sdk.model.Series
 import com.chartiq.sdk.model.TimeUnit
 import com.chartiq.sdk.model.charttype.ChartAggregationType
 import com.chartiq.sdk.model.charttype.ChartType
+import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -20,6 +21,7 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.*
 import java.lang.Runnable
+import java.util.*
 
 
 class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
@@ -94,10 +96,15 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun enableDrawing(tool: DrawingTool) {
-    handler.post(Runnable {
-      chartIQViewModel.getChartIQ().enableDrawing(tool)
-    })
+  fun enableDrawing(tool: String) {
+    val newTool = DrawingTool.values().find {
+      it.value == tool
+    }
+    if(newTool !== null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().enableDrawing(newTool)
+      })
+    }
   }
 
   @ReactMethod
@@ -226,6 +233,81 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       chartIQViewModel.getChartIQ().setAggregationType(ChartAggregationType.valueOf(aggregationType))
     })
   }
+
+  @ReactMethod
+  fun getDrawingParams(tool: String, promise: Promise){
+    val drawingTool = DrawingTool.values().find {
+      it.value == tool
+    }
+    if(drawingTool != null){
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().getDrawingParameters(drawingTool){
+          promise.resolve(gson.toJson(it))
+        }
+      })
+    }
+  }
+
+  @ReactMethod
+  fun setDrawingParams(parameterName: String, value: String){
+    val drawingParameter = DrawingParameterType.values().find {
+      it.value == parameterName
+    }
+
+    if(drawingParameter != null){
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, value)
+      })
+    }
+  }
+
+  @ReactMethod
+  fun clearDrawing(){
+    handler.post(Runnable {
+       chartIQViewModel.getChartIQ().clearDrawing()
+    })
+  }
+
+  @ReactMethod
+  fun restoreDefaultDrawingConfig(tool: String, all: Boolean){
+    val drawingTool = DrawingTool.values().find {
+      it.value == tool
+    }
+
+    if(drawingTool != null){
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().restoreDefaultDrawingConfig(drawingTool, all)
+      })
+    }
+
+  }
+  @ReactMethod
+  fun deleteDrawing(){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().deleteDrawing()
+    })
+  }
+
+  @ReactMethod
+  fun undoDrawing(promise: Promise){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().undoDrawing{value ->
+        promise.resolve(value)
+      }
+    })
+  }
+
+  @ReactMethod
+  fun redoDrawing(promise: Promise){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().redoDrawing{value ->
+        promise.resolve(value)
+      }
+    })
+  }
+
+
+
 
   private fun formatOHLC(input: String): List<OHLCParams>? {
     return gson.fromJson<List<OHLCParams>>(

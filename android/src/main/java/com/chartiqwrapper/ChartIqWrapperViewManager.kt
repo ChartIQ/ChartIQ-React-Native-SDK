@@ -3,28 +3,74 @@ package com.chartiqwrapper
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import androidx.lifecycle.MutableLiveData
 import com.chartiq.sdk.ChartIQ
 import com.chartiq.sdk.DataSource
 import com.chartiq.sdk.DataSourceCallback
+import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.QuoteFeedParams
+import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.google.gson.Gson
+import kotlinx.coroutines.*
 
 
-class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) : SimpleViewManager<View>() {
+class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) :
+  SimpleViewManager<View>() {
   private val defaultUrl =
     "https://mobile.demo.chartiq.com/android/3.2.0/sample-template-native-sdk.html"
-  var reactContext: ThemedReactContext? = null
-
+  private val gson: Gson = Gson()
+  private var reactContext: ThemedReactContext? = null
+  private lateinit var chartIQ: ChartIQ
+  private val job = Job()
+  private val chartScope = CoroutineScope(job + Dispatchers.IO)
   override fun getName() = "ChartIqWrapperView"
 
-  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any>? {
+  val crosshairsHUD = MutableLiveData<CrosshairHUD>()
+  val crosshairsEnabled = MutableLiveData(false)
+
+  fun fetchCrosshairsState() {
+    launchCrosshairsUpdate()
+  }
+
+  private fun getHUDDetails() {
+    chartIQ.getHUDDetails { hud ->
+      crosshairsHUD.value = hud
+      Log.println(Log.INFO, "HUD_CHANGED", hud.toString())
+      dispatchOnHUDChanged(hud)
+    }
+  }
+
+  private fun launchCrosshairsUpdate() {
+    chartScope.launch {
+      while (true) {
+        delay(CROSSHAIRS_UPDATE_PERIOD)
+        withContext(Dispatchers.Main) {
+          chartIQ.isCrosshairsEnabled { enabled ->
+            if (enabled) {
+              getHUDDetails()
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private fun addMeasureListener(){
+    chartIQ.addMeasureListener{measure ->
+      dispatchOnMeasureChanged(measure)
+    }
+  }
+
+  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, MutableMap<String, String>>? {
     return MapBuilder.of(
       "onPullInitialData",
       MapBuilder.of("registrationName", "onPullInitialData"),
@@ -34,17 +80,25 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       MapBuilder.of("registrationName", "onPullPagingData"),
       "onChartTypeChanged",
       MapBuilder.of("registrationName", "onChartTypeChanged"),
+      "onHUDChanged",
+      MapBuilder.of("registrationName", "onHUDChanged"),
+      "onMeasureChanged",
+      MapBuilder.of("registrationName", "onMeasureChanged"),
     )
   }
 
   override fun createViewInstance(reactContext: ThemedReactContext): View {
     this.reactContext = reactContext
-    val chartIQ = ChartIQ.getInstance(defaultUrl, reactContext)
+    chartIQ = ChartIQ.getInstance(defaultUrl, reactContext)
     chartIQViewModel.setChartIQ(chartIQ)
+    initDatasource()
     dispatchOnChartTypeChanged()
-//    chartIQViewModel.fetchCrosshairsState()
+    fetchCrosshairsState()
+    addMeasureListener()
     return chartIQ.chartView.apply {
-      layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+      layoutParams = LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
+      )
     }
   }
 
@@ -53,7 +107,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQViewModel.getChartIQ().chartView.id,
+      chartIQ.chartView.id,
       "onPullInitialData",
       event,
     )
@@ -64,7 +118,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQViewModel.getChartIQ().chartView.id,
+      chartIQ.chartView.id,
       "onPullUpdateData",
       event,
     )
@@ -75,7 +129,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQViewModel.getChartIQ().chartView.id,
+      chartIQ.chartView.id,
       "onPullPagingData",
       event,
     )
@@ -84,24 +138,51 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   @ReactMethod
   fun dispatchOnChartTypeChanged() {
     val event: WritableMap = Arguments.createMap()
-    event.putString("chartType",
-      chartIQViewModel.getChartIQ().getChartType{ chartType -> chartType?.value}.toString()
+    event.putString(
+      "chartType", chartIQ.getChartType { chartType -> chartType?.value }.toString()
     )
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQViewModel.getChartIQ().chartView.id,
+      chartIQ.chartView.id,
       "onChartTypeChanged",
       event,
     )
   }
 
+  @ReactMethod
+  fun dispatchOnHUDChanged(hud: CrosshairHUD) {
+    val event: WritableMap = Arguments.createMap().apply {
+      putString("hud", gson.toJson(hud))
+    }
+
+    reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+      chartIQ.chartView.id,
+      "onHUDChanged",
+      event,
+    )
+  }
+
+  @ReactMethod
+  fun dispatchOnMeasureChanged(measure: String){
+    val event: WritableMap = Arguments.createMap().apply {
+      putString("measure", measure)
+    }
+
+    reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+      chartIQ.chartView.id,
+      "onMeasureChanged",
+      event,
+    )
+  }
+
+
   private fun initDatasource() {
-    chartIQViewModel.getChartIQ().apply {
+    chartIQ.apply {
       setDataSource(object : DataSource {
         override fun pullInitialData(
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          Log.println(Log.INFO, "asd", "pullInitial");
+          Log.println(Log.INFO, "asd", "pullInitial")
           chartIQViewModel.initialCallback = callback
           dispatchOnPullInitialData(params)
         }
@@ -125,5 +206,9 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
         }
       })
     }
+  }
+
+  companion object {
+    private const val CROSSHAIRS_UPDATE_PERIOD = 300L
   }
 }

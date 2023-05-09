@@ -23,6 +23,7 @@ import { CrosshairSharedValues } from '~/model';
 import Icons from '~/assets/icons';
 
 const timingConfig = { duration: 200 };
+const CROSSHAIR_HEIGHT = 70;
 
 interface HeaderProps {
   interval: string | null;
@@ -83,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({
   const onCrosshair = () => {
     'worklet';
 
-    const toValue = isCrosshairEnabled ? 0 : 50;
+    const toValue = isCrosshairEnabled ? 0 : CROSSHAIR_HEIGHT;
     crosshairHeight.value = withTiming(toValue, timingConfig, () => {
       runOnJS(handleCrosshair)(!isCrosshairEnabled);
     });

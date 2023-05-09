@@ -1,30 +1,33 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { SharedValue } from 'react-native-reanimated';
+import { StyleSheet, Text } from 'react-native';
+import { useDerivedValue, SharedValue } from 'react-native-reanimated';
 
-import { ReText } from '../../../re-text';
 import { CrosshairSharedValues } from '../.././../../model';
 import { Theme, useTheme } from '../../../../theme';
+import { ReText } from '~/ui/re-text';
+import { FlatList } from 'react-native';
+import { View } from 'react-native';
 
 interface AnimatedCrosshairValuesProps {
   crosshair: CrosshairSharedValues;
 }
 
-const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
-  crosshair,
-}) => {
-  const data = Object.entries(crosshair).map(
-    ([key, value]: [string, SharedValue<string>]) => ({
-      key,
-      value,
-    })
-  );
+const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ crosshair }) => {
+  const data = useDerivedValue(() => {
+    return Object.entries(crosshair).map(([key, value]: [string, SharedValue<string>]) => {
+      return {
+        key,
+        value: value,
+      };
+    });
+  }, [crosshair]);
+
   const theme = useTheme();
   const styles = createStyles(theme);
 
   return (
     <FlatList
-      data={data}
+      data={data.value}
       contentContainerStyle={styles.contentContainerStyle}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
@@ -67,7 +70,6 @@ const createStyles = (theme: Theme) =>
     },
     textValue: {
       fontSize: 12,
-      height: 16,
       color: theme.colors.buttonText,
     },
     columnWrapperStyle: {

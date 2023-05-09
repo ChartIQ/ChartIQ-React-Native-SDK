@@ -1,8 +1,8 @@
-import { DrawingTool } from '@chart-iq/chart-iq-sdk';
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import Icons from '../../assets/icons';
+import { DrawingTool } from '~/model';
 
 export enum DrawingToolTags {
   text = 'text',

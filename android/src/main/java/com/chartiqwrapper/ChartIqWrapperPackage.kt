@@ -18,40 +18,7 @@ class ChartIQViewModel {
   var initialCallback: DataSourceCallback? = null
   var updateCallback: DataSourceCallback? = null
   var pagingCallback: DataSourceCallback? = null
-  val crosshairsHUD = MutableLiveData<CrosshairHUD>()
-  val crosshairsEnabled = MutableLiveData(false)
 
-
-  private val job = Job()
-
-  private val chartScope = CoroutineScope(job + Dispatchers.IO)
-
-
-
-   fun fetchCrosshairsState() {
-    chartIQ.isCrosshairsEnabled { enabled ->
-      if (enabled) {
-        launchCrosshairsUpdate()
-      }
-    }
-  }
-
-  private fun getHUDDetails() {
-    chartIQ.getHUDDetails { hud ->
-      crosshairsHUD.value = hud
-    }
-  }
-
-  private fun launchCrosshairsUpdate() {
-    chartScope.launch {
-      while (true) {
-        delay(CROSSHAIRS_UPDATE_PERIOD)
-        withContext(Dispatchers.Main){
-          getHUDDetails()
-        }
-      }
-    }
-  }
   fun setChartIQ(input: ChartIQ): ChartIQ {
     chartIQ = input
     return chartIQ
@@ -59,10 +26,6 @@ class ChartIQViewModel {
 
   fun getChartIQ(): ChartIQ {
     return chartIQ
-  }
-
-  companion object {
-    private const val CROSSHAIRS_UPDATE_PERIOD = 300L
   }
 
 }

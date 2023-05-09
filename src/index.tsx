@@ -7,6 +7,7 @@ import {
   NativeModules,
 } from 'react-native';
 import { TimeUnit } from '~/constants';
+import { DrawingParams, DrawingSettings, DrawingTool } from '~/model';
 import { ChartType } from '~/model/chart-type';
 
 const { ChartIQWrapperModule } = NativeModules;
@@ -31,6 +32,8 @@ type ChartIqWrapperProps = {
   onChartTypeChanged: (
     event: NativeSyntheticEvent<{ chartType: string }>
   ) => void;
+  onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
+  onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
 };
 
 const ComponentName = 'ChartIqWrapperView';
@@ -123,4 +126,39 @@ export function removeSeries(symbol: string) {
 
 export function setAggregationType(type: string) {
   return ChartIQWrapperModule.setAggregationType(type);
+}
+
+export function enableDrawing(tool: string) {
+  return ChartIQWrapperModule.enableDrawing(tool);
+}
+export function disableDrawing() {
+  return ChartIQWrapperModule.disableDrawing();
+}
+
+export async function getDrawingParams(tool: string): Promise<DrawingSettings> {
+  const response = await ChartIQWrapperModule.getDrawingParams(tool);
+
+  return JSON.parse(response);
+}
+
+export function setDrawingParams(parameterName: DrawingParams, value: string) {
+  return ChartIQWrapperModule.setDrawingParams(parameterName, value);
+}
+
+export function clearDrawing() {
+  return ChartIQWrapperModule.clearDrawing();
+}
+export function restoreDefaultDrawingConfig(
+  tool: DrawingTool,
+  all: boolean = false
+) {
+  return ChartIQWrapperModule.restoreDefaultDrawingConfig(tool, all);
+}
+
+export async function undoDrawing(): Promise<boolean> {
+  return ChartIQWrapperModule.undoDrawing();
+}
+
+export async function redoDrawing(): Promise<boolean> {
+  return ChartIQWrapperModule.redoDrawing();
 }

@@ -1,7 +1,5 @@
-import { useTheme, DrawingTool } from '@chart-iq/chart-iq-sdk';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useRef,
   forwardRef,
@@ -9,15 +7,13 @@ import React, {
   useState,
   useMemo,
   useEffect,
-  useContext,
 } from 'react';
-import { View, Image, Text, SectionList, Pressable } from 'react-native';
+import { View, Image, Text, Pressable } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import icons from '~/assets/icons';
 import images from '~/assets/images';
-import { asyncStorageKeys } from '~/constants/async-storage-keys';
-import { ChartIQWebViewContext, DrawingContext } from '~/context/drawing-context/drawing.context';
 
 import { BottomSheet } from '../bottom-sheet';
 import { FilterSelector } from '../selector-filters';
@@ -36,6 +32,10 @@ import {
   DrawingToolSelectorProps,
 } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
+import { useTheme } from '~/theme';
+import { asyncStorageKeys } from '~/constants/async-storage-keys';
+import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
+import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 
 const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSelectorProps>(
   ({ onChange }, ref) => {
@@ -45,7 +45,6 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     const textInputRef = useRef<TextInput>(null);
     const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
     const [tools, setTools] = useState(drawingTools);
-    const chartIQWebViewRef = useContext(ChartIQWebViewContext);
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem>(drawingTools[0]);
 
@@ -123,6 +122,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
         asyncStorageKeys.drawingToolsFavorite,
         JSON.stringify([...favoriteItems, item]),
       );
+
       setTools((prevTools) => {
         return prevTools.map((tool) => {
           if (tool.name === item.name) {
@@ -263,13 +263,15 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
           switch (selectedIndex) {
             case 0:
               console.log('restoreDefaultDrawingConfig');
-              chartIQWebViewRef.current?.restoreDefaultDrawingConfig(tool.name, true);
+              // chartIQWebViewRef.current?.restoreDefaultDrawingConfig(tool.name, true);
+              restoreDefaultDrawingConfig(tool.name, false);
 
               break;
 
             case destructiveButtonIndex:
               console.log('clearDrawing');
-              chartIQWebViewRef.current?.clearDrawing();
+              clearDrawing();
+              // chartIQWebViewRef.current?.clearDrawing();
 
               break;
 
@@ -300,7 +302,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
             selectedFilter={selectedFilter}
           />
         </View>
-        <SectionList
+        <BottomSheetSectionList
           stickyHeaderHiddenOnScroll
           sections={filteredSection}
           renderSectionHeader={renderSectionHeader}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { KeyboardAvoidingView, NativeSyntheticEvent, Platform, StyleSheet } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, View } from 'react-native';
 import {
   ChartIqWrapperView,
   setInitialData,
@@ -17,36 +17,42 @@ import {
   removeSeries,
   getChartAggregationType,
   setAggregationType,
+  disableDrawing,
+  enableDrawing,
+  getDrawingParams,
 } from 'react-native-chart-iq-wrapper';
-
-import SymbolSelector, {
-  SymbolSelectorMethods,
-} from './ui/symbol-selector/symbol-selector.component';
+import { useSharedValue } from 'react-native-reanimated';
+import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '../../api';
 import IntervalSelector, {
   IntervalItem,
   IntervalSelectorMethods,
   intervals,
-} from './ui/interval-selector/interval-selector.component';
+} from '../../ui/interval-selector/interval-selector.component';
 import {
   ChartStyleItem,
   ChartStyleSelectorMethods,
   chartStyleSelectorData,
-} from './ui/chart-style-selector/chart-style-selector.data';
+} from '../../ui/chart-style-selector/chart-style-selector.data';
+import { DrawingItem } from '../../ui/drawing-tools-selector/drawing-tools-selector.data';
 import CompareSymbolSelector, {
   ColoredChartSymbol,
   CompareSymbolSelectorMethods,
-} from './ui/compare-symbol-selector/compare-symbol-selector.component';
-import { DrawingToolSelectorMethods } from './ui/drawing-tools-selector/drawing-tools-selector.types';
-
-import { useSharedValue } from 'react-native-reanimated';
-import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from './api';
-import { Header } from './ui/header';
-import { ChartStyleSelector } from './ui/chart-style-selector';
-
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { DrawingItem } from './ui/drawing-tools-selector/drawing-tools-selector.data';
-
-import { colorPickerColors } from './constants';
+} from '../../ui/compare-symbol-selector/compare-symbol-selector.component';
+import SymbolSelector, {
+  SymbolSelectorMethods,
+} from '../../ui/symbol-selector/symbol-selector.component';
+import { DrawingToolSelectorMethods } from '../../ui/drawing-tools-selector/drawing-tools-selector.types';
+import { colorPickerColors } from '../../constants';
+import { CrosshairSharedValues, CrosshairState, DrawingTool } from '../../model';
+import { DrawingToolSelector } from '../../ui/drawing-tools-selector';
+import { ChartStyleSelector } from '../../ui/chart-style-selector';
+import { DrawingToolManager } from '../../ui/drawing-tool-manager';
+import { Header } from '../../ui/header';
+import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
+import { Theme, useTheme } from '~/theme';
+import Icons from '~/assets/icons';
+import { ReText } from '~/ui/re-text';
+import { DrawingMeasure } from '~/ui/drawing-measure';
 
 const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
 
@@ -65,7 +71,7 @@ const handleRequest = async (input: ChartIQDatafeedParams) => {
   return await fetchDataFeedAsync(params);
 };
 
-export default function App() {
+export default function Root() {
   const [symbol, setSymbol] = React.useState<null | string>(null);
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
   const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
@@ -75,6 +81,8 @@ export default function App() {
     new Map(),
   );
   const [isCrosshairEnabled, setIsCrosshairEnabled] = React.useState(false);
+  const measureValue = useSharedValue('');
+  const { updateSupportedSettings, updateDrawingSettings } = useUpdateDrawingTool();
 
   const onPullInitialData = async (event: QuoteFeedEvent) => {
     const parsed: ChartIQDatafeedParams = JSON.parse(event.nativeEvent.quoteFeedParam);
@@ -119,12 +127,12 @@ export default function App() {
   };
 
   const toggleDrawingToolSelector = () => {
-    // if (!isDrawing) {
-    //   return drawingToolSelectorRef.current?.open();
-    // }
-    // setIsDrawing(false);
-    // setDrawingItem(null);
-    // chartIqWebViewRef.current?.disableDrawing();
+    if (!isDrawing) {
+      return drawingToolSelectorRef.current?.open();
+    }
+    setIsDrawing(false);
+    setDrawingItem(null);
+    disableDrawing();
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
@@ -183,11 +191,12 @@ export default function App() {
   };
 
   const showDrawingToolsSelector = () => {
-    // drawingToolSelectorRef.current?.open();
+    drawingToolSelectorRef.current?.open();
   };
 
   const initChart = async () => {
     const symbol = await getSymbol();
+    console.log({ symbol });
     setSymbol(symbol);
 
     const chartType = await getChartType();
@@ -220,15 +229,14 @@ export default function App() {
     initChart();
   }, []);
 
-  const crosshairStateValue = {
-    open: useSharedValue('0'),
-    high: useSharedValue('0'),
-    low: useSharedValue('0'),
-    close: useSharedValue('0'),
-    volume: useSharedValue('0'),
-    price: useSharedValue('0'),
+  const crosshair: CrosshairSharedValues = {
+    close: useSharedValue<string>('0'),
+    open: useSharedValue<string>('0'),
+    high: useSharedValue<string>('0'),
+    low: useSharedValue<string>('0'),
+    volume: useSharedValue<string>('0'),
+    price: useSharedValue<string>('0'),
   };
-
   const handleChartTypeChanged = (chartType: string) => {
     const newChartType = chartStyleSelectorData.find(
       (item) => item.value.toLocaleLowerCase() === chartType.toLocaleLowerCase(),
@@ -246,48 +254,73 @@ export default function App() {
     handleChartTypeChanged(chartType);
   };
 
+  const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
+    const response: CrosshairState = JSON.parse(hud);
+
+    crosshair.close.value = response.close ?? '0';
+    crosshair.open.value = response.open ?? '0';
+    crosshair.high.value = response.high ?? '0';
+    crosshair.low.value = response.low ?? '0';
+    crosshair.volume.value = response.volume ?? '0';
+    crosshair.price.value = response.price ?? '0';
+  };
+
+  const onMeasureChanged = ({
+    nativeEvent: { measure },
+  }: NativeSyntheticEvent<{ measure: string }>) => {
+    measureValue.value = measure;
+  };
+
   return (
-    <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-        enabled={Platform.OS === 'ios' ? true : false}
-      >
-        <Header
-          symbol={symbol}
-          interval={interval?.label ?? null}
-          chartStyle={chartStyle}
-          isCrosshairEnabled={isCrosshairEnabled}
-          handleSymbolSelector={toggleSymbolSelector}
-          handleIntervalSelector={toggleIntervalSelector}
-          handleChartStyleSelector={toggleChartStyleSelector}
-          handleCompareSymbolSelector={toggleCompareSymbolSelector}
-          handleDrawingTool={toggleDrawingToolSelector}
-          handleCrosshair={toggleCrosshair}
-          isDrawing={false}
-          crosshairState={crosshairStateValue}
-        />
+    <>
+      <Header
+        symbol={symbol}
+        interval={interval?.label ?? null}
+        chartStyle={chartStyle}
+        isCrosshairEnabled={isCrosshairEnabled}
+        handleSymbolSelector={toggleSymbolSelector}
+        handleIntervalSelector={toggleIntervalSelector}
+        handleChartStyleSelector={toggleChartStyleSelector}
+        handleCompareSymbolSelector={toggleCompareSymbolSelector}
+        handleDrawingTool={toggleDrawingToolSelector}
+        handleCrosshair={toggleCrosshair}
+        isDrawing={isDrawing}
+        crosshairState={crosshair}
+      />
+      <View style={{ flex: 1 }}>
         <ChartIqWrapperView
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
           onPullPagingData={onPullPagingData}
           onChartTypeChanged={onChartTypeChanged}
+          onHUDChanged={onHUDChanged}
+          onMeasureChanged={onMeasureChanged}
           style={styles.box}
         />
-        <CompareSymbolSelector
-          ref={compareSymbolSelectorRef}
-          onAdd={addSymbol}
-          onDelete={removeSymbol}
-          data={compareSymbols}
-        />
-        <SymbolSelector onChange={handleSymbolChange} ref={symbolSelectorRef} />
-        <IntervalSelector ref={intervalSelectorRef} onChange={handleIntervalChange} />
-        <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
-        {/* <DrawingToolSelector
-        onChange={(input) => {
-          chartIqWebViewRef.current?.enableDrawing(input.name);
-          chartIqWebViewRef.current?.getDrawingParams(input.name);
+        <DrawingMeasure isDrawing={isDrawing} measure={measureValue} />
+        {drawingItem !== null ? (
+          <DrawingToolManager
+            handleDrawingTool={showDrawingToolsSelector}
+            drawingItem={drawingItem}
+          />
+        ) : null}
+      </View>
+
+      <CompareSymbolSelector
+        ref={compareSymbolSelectorRef}
+        onAdd={addSymbol}
+        onDelete={removeSymbol}
+        data={compareSymbols}
+      />
+      <SymbolSelector onChange={handleSymbolChange} ref={symbolSelectorRef} />
+      <IntervalSelector ref={intervalSelectorRef} onChange={handleIntervalChange} />
+      <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
+      <DrawingToolSelector
+        onChange={async (input) => {
+          enableDrawing(input.name);
+          const params = await getDrawingParams(input.name);
+
+          updateDrawingSettings(() => params);
 
           updateSupportedSettings(input.name);
           setDrawingItem(input);
@@ -298,9 +331,8 @@ export default function App() {
           setIsDrawing(true);
         }}
         ref={drawingToolSelectorRef}
-      /> */}
-      </KeyboardAvoidingView>
-    </GestureHandlerRootView>
+      />
+    </>
   );
 }
 

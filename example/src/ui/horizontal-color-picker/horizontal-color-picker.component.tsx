@@ -1,7 +1,9 @@
-import { Theme, colorPickerColors, useTheme } from '@chart-iq/chart-iq-sdk';
 import React, { useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated';
+import { colorPickerColors } from '~/constants';
+import { Theme, useTheme } from '~/theme';
 
 interface HorizontalColorPickerProps {
   active: boolean;
