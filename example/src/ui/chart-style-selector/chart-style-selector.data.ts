@@ -28,7 +28,15 @@ export interface ChartStyleSelectorMethods {
   open: () => void;
   close: () => void;
 }
-export const chartStyleSelectorData = [
+
+interface ChartStyleSelectorData {
+  label: string;
+  value: ChartType;
+  icon: React.FC<SvgProps>;
+  aggregationType?: AggregationType;
+}
+
+export const chartStyleSelectorData: ChartStyleSelectorData[] = [
   { label: 'Candle', value: ChartType.CANDLE, icon: icons.candles },
   { label: 'Bar', value: ChartType.BAR, icon: icons.bar },
   { label: 'Colored Bar', value: ChartType.COLORED_BAR, icon: icons.coloredBar },
@@ -60,4 +68,4 @@ export const chartStyleSelectorData = [
     aggregationType: AggregationType.RANGEBARS,
     icon: icons.rangeBars,
   },
-] as const;
+] satisfies ChartStyleSelectorData[];

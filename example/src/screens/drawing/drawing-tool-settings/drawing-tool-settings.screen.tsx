@@ -16,18 +16,23 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { DrawingToolsRoute, DrawingToolsSettings, RootStack } from '~/shared/navigation.types';
+import {
+  DrawingToolsRoute,
+  DrawingToolsSettings,
+  DrawingsStack,
+  RootStack,
+} from '~/shared/navigation.types';
 
-import { DrawingContext } from '../../context/drawing-context/drawing.context';
-import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
-import { ColorSelector } from '../../ui/color-selector';
-import { ColorSelectorMethods } from '../../ui/color-selector/color-selector.component';
-import { LineTypeSelector } from '../../ui/line-type-selector';
-import { LineTypeSelectorMethods } from '../../ui/line-type-selector/line-type-selector.component';
-import { ListItem } from '../../ui/list-item';
 import { Theme, useTheme } from '~/theme';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { DrawingParams } from '~/model';
+import ColorSelector, { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
+import LineTypeSelector, {
+  LineTypeSelectorMethods,
+} from '~/ui/line-type-selector/line-type-selector.component';
+import { DrawingContext } from '~/context/drawing-context/drawing.context';
+import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
+import { ListItem } from '~/ui/list-item';
 
 const DrawingToolSettings: React.FC = () => {
   const { params } = useRoute<DrawingToolsRoute>();
@@ -137,13 +142,13 @@ const DrawingToolSettings: React.FC = () => {
 
   const handleNavigate = (
     routeName:
-      | RootStack.DrawingToolsFontFamily
-      | RootStack.DrawingToolsFontSizes
-      | RootStack.DrawingToolsFibonacci
-      | RootStack.DrawingToolsSTDDeviation
-      | RootStack.DrawingToolsImpulse
-      | RootStack.DrawingToolCorrective
-      | RootStack.DrawingToolDecoration,
+      | DrawingsStack.DrawingToolsFontFamily
+      | DrawingsStack.DrawingToolsFontSizes
+      | DrawingsStack.DrawingToolsFibonacci
+      | DrawingsStack.DrawingToolsSTDDeviation
+      | DrawingsStack.DrawingToolsImpulse
+      | DrawingsStack.DrawingToolCorrective
+      | DrawingsStack.DrawingToolDecoration,
   ) => {
     navigation.navigate(routeName);
   };
@@ -213,7 +218,7 @@ const DrawingToolSettings: React.FC = () => {
           ) : null}
           {supportingFont ? (
             <>
-              <Pressable onPress={() => handleNavigate(RootStack.DrawingToolsFontFamily)}>
+              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontFamily)}>
                 <ListItem key="font-family" title="Font Family">
                   <View style={styles.listItemDescriptionContainer}>
                     <Text style={styles.text}>{font.family}</Text>
@@ -221,7 +226,7 @@ const DrawingToolSettings: React.FC = () => {
                   </View>
                 </ListItem>
               </Pressable>
-              <Pressable onPress={() => handleNavigate(RootStack.DrawingToolsFontSizes)}>
+              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontSizes)}>
                 <ListItem key="font-size" title="Font Size">
                   <View style={styles.listItemDescriptionContainer}>
                     <Text style={styles.text}>{font.size}</Text>
@@ -253,14 +258,14 @@ const DrawingToolSettings: React.FC = () => {
             </ListItem>
           ) : null}
           {supportingFibonacci ? (
-            <Pressable onPress={() => handleNavigate(RootStack.DrawingToolsFibonacci)}>
+            <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFibonacci)}>
               <ListItem title="Fibonacci settings">
                 <Icons.chevronRight fill={theme.colors.border} />
               </ListItem>
             </Pressable>
           ) : null}
           {supportingDeviations ? (
-            <Pressable onPress={() => handleNavigate(RootStack.DrawingToolsSTDDeviation)}>
+            <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsSTDDeviation)}>
               <ListItem title="STD Deviations">
                 <Icons.chevronRight fill={theme.colors.border} />
               </ListItem>
@@ -276,7 +281,7 @@ const DrawingToolSettings: React.FC = () => {
           ) : null}
           {supportingElliottWave ? (
             <>
-              <Pressable onPress={() => handleNavigate(RootStack.DrawingToolsImpulse)}>
+              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsImpulse)}>
                 <ListItem title="Impulse">
                   <View style={styles.listItemDescriptionContainer}>
                     <Text style={styles.text}>{impulse}</Text>
@@ -284,7 +289,7 @@ const DrawingToolSettings: React.FC = () => {
                   </View>
                 </ListItem>
               </Pressable>
-              <Pressable onPress={() => handleNavigate(RootStack.DrawingToolCorrective)}>
+              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolCorrective)}>
                 <ListItem title="Corrective">
                   <View style={styles.listItemDescriptionContainer}>
                     <Text style={styles.text}>{corrective}</Text>
@@ -292,7 +297,7 @@ const DrawingToolSettings: React.FC = () => {
                   </View>
                 </ListItem>
               </Pressable>
-              <Pressable onPress={() => handleNavigate(RootStack.DrawingToolDecoration)}>
+              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolDecoration)}>
                 <ListItem title="Decoration">
                   <View style={styles.listItemDescriptionContainer}>
                     <Text style={styles.text}>{decoration}</Text>

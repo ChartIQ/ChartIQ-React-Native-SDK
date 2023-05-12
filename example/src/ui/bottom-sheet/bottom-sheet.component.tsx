@@ -25,8 +25,8 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         index={-1}
-        enablePanDownToClose
-        enableOverDrag
+        enablePanDownToClose={true}
+        enableOverDrag={true}
         onChange={(index) => {
           if (index === -1) {
             Keyboard.dismiss();

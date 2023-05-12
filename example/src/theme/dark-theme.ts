@@ -24,6 +24,8 @@ const DarkTheme: ColorPallette = {
   white: Colors.white,
 
   favoriteBackground: Colors.brillianteAzure,
+
+  fullViewButtonBackground: Colors.darkGunmetal,
 } as const;
 
 export default DarkTheme;

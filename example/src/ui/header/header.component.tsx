@@ -1,5 +1,5 @@
 import { Theme, useTheme } from '../../theme';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -21,10 +21,11 @@ import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.dat
 import { AnimatedCrosshairValues } from './components/animated-crosshair-values';
 import { CrosshairSharedValues } from '~/model';
 import Icons from '~/assets/icons';
+import { useNavigation } from '@react-navigation/native';
+import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
 
 const timingConfig = { duration: 200 };
 const CROSSHAIR_HEIGHT = 70;
-const HEADER_HEIGHT = 50;
 
 interface HeaderProps {
   interval: string | null;
@@ -36,10 +37,11 @@ interface HeaderProps {
   handleCompareSymbolSelector: () => void;
   handleDrawingTool: () => void;
   handleCrosshair: (input: boolean) => void;
+  handleFullScreen: () => void;
   isCrosshairEnabled: boolean;
   crosshairState: CrosshairSharedValues;
   isDrawing: boolean;
-  isFullscreen: boolean;
+  isLandscape: boolean;
 }
 
 interface HeaderItem {
@@ -62,15 +64,17 @@ const Header: React.FC<HeaderProps> = ({
   handleCompareSymbolSelector,
   handleCrosshair,
   handleDrawingTool,
+  handleFullScreen,
 
   isCrosshairEnabled,
   crosshairState,
   isDrawing,
-  isFullscreen,
+  isLandscape,
 }) => {
   const { width } = useWindowDimensions();
   const theme = useTheme();
   const styles = createStyles(theme);
+  const navigation = useNavigation<SettingsNavigation>();
 
   const [open, setOpen] = useState(false);
   const otherToolsHeight = useSharedValue(0);
@@ -123,6 +127,10 @@ const Header: React.FC<HeaderProps> = ({
 
   const numberOfVisibleItems = Math.floor(width / 2 / cardWidth);
 
+  const handleGetStudies = async () => {
+    navigation.navigate(RootStack.Studies);
+  };
+
   const items: HeaderItem[] = [
     {
       onPress: handleChartStyleSelector,
@@ -130,9 +138,21 @@ const Header: React.FC<HeaderProps> = ({
       key: 'chartStyle',
     },
     {
+      onPress: () => {
+        handleGetStudies();
+      },
+      Icon: Icons.studies,
+      key: 'studies',
+    },
+    {
       onPress: handleCompareSymbolSelector,
       Icon: Icons.compare,
       key: 'compare',
+    },
+    {
+      onPress: () => {},
+      Icon: Icons.signals,
+      key: 'signals',
     },
     {
       onPress: onCrosshair,
@@ -149,7 +169,9 @@ const Header: React.FC<HeaderProps> = ({
       containerStyle: drawingStyle,
     },
     {
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate(RootStack.Settings);
+      },
       Icon: Icons.menuSettings,
       key: 'settings',
     },
@@ -157,37 +179,38 @@ const Header: React.FC<HeaderProps> = ({
 
   const isAllItemsFits = items.length <= numberOfVisibleItems;
 
-  const visibleItems: HeaderItem[] = items.slice(
-    0,
-    isAllItemsFits ? items.length : numberOfVisibleItems - 1,
-  );
+  const visibleItems = useMemo(() => {
+    const visibleItems: HeaderItem[] = items.slice(
+      0,
+      isAllItemsFits ? items.length : numberOfVisibleItems - 1,
+    );
 
-  if (!isAllItemsFits) {
-    visibleItems.push({
-      onPress: handleChevron,
-      Icon: Icons.chevronRight,
-      key: 'chevron',
-      style: { transform: [{ rotate: open ? '90deg' : '270deg' }] },
-    });
-  }
+    if (!isAllItemsFits) {
+      visibleItems.push({
+        onPress: handleChevron,
+        Icon: Icons.chevronRight,
+        key: 'chevron',
+        style: { transform: [{ rotate: open ? '90deg' : '270deg' }] },
+      });
+    }
+
+    if (isLandscape) {
+      visibleItems.push({
+        onPress: () => {
+          handleFullScreen();
+        },
+        Icon: Icons.fullView,
+        key: 'full-screen',
+      });
+    }
+    return visibleItems;
+  }, [items]);
 
   const otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 
-  const headerContainerStyle = useAnimatedStyle(() => {
-    if (isFullscreen) {
-      return {
-        height: withTiming(0),
-      };
-    }
-
-    return {
-      height: withTiming(HEADER_HEIGHT),
-    };
-  }, [isFullscreen]);
-
   return (
     <>
-      <Animated.View style={[styles.container, headerContainerStyle]}>
+      <Animated.View style={[styles.container]}>
         <View style={styles.row}>
           <TouchableOpacity onPress={handleSymbolSelector} style={styles.button}>
             {symbol ? (

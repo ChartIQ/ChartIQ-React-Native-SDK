@@ -34,6 +34,10 @@ import Step from './step-chart.svg';
 import Undo from './undo.svg';
 import VertexLine from './vertex-line-chart.svg';
 import VolumeCandle from './volume-candle-chart.svg';
+import Signals from './signal.svg';
+import Studies from './studies.svg';
+import FullView from './fullview.svg';
+import FullViewActive from './fullview-active.svg';
 
 export default {
   bar: Bar,
@@ -72,4 +76,8 @@ export default {
   close: Close,
   navSettings: NavSettings,
   moreVertical: MoreVertical,
+  signals: Signals,
+  studies: Studies,
+  fullView: FullView,
+  fullViewActive: FullViewActive,
 };

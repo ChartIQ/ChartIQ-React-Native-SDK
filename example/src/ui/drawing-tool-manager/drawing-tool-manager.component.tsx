@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { DrawingToolsNavigation, RootStack } from '~/shared/navigation.types';
+import { DrawingToolsNavigation, DrawingsStack } from '~/shared/navigation.types';
 
 import Icons from '../../assets/icons';
 
@@ -77,7 +77,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   };
 
   const handleSettingsPress = () => {
-    navigation.navigate(RootStack.DrawingToolsSettings, {
+    navigation.navigate(DrawingsStack.DrawingToolsSettings, {
       title: drawingItem.title,
       name: drawingItem.name,
       settings: {

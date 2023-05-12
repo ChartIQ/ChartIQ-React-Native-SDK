@@ -1,10 +1,22 @@
-import { DrawingSettings } from '@chart-iq/chart-iq-sdk/src/model/drawingtool/drawing-settings';
-import { DrawingTool } from '@chart-iq/chart-iq-sdk/src/model/drawingtool/drawingtools';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { DrawingSettings, DrawingTool } from '~/model';
 
 export enum RootStack {
   Main = '[Root stack] Main',
+  Studies = '[Root stack] Studies',
+  Settings = '[Root stack] Settings',
+  Drawings = '[Root stack] Drawings',
+}
+
+export type RootStackParamList = {
+  [RootStack.Main]: undefined;
+  [RootStack.Drawings]: undefined;
+  [RootStack.Settings]: undefined;
+  [RootStack.Studies]: undefined;
+};
+
+export enum DrawingsStack {
   DrawingToolsSettings = '[Root stack] DrawingToolsSettings',
   DrawingToolsFontFamily = '[Root stack] DrawingToolsFontFamily',
   DrawingToolsFontSizes = '[Root stack] DrawingToolsFontSizes',
@@ -15,32 +27,60 @@ export enum RootStack {
   DrawingToolDecoration = '[Root stack] DrawingToolDecoration',
 }
 
-export type RootStackParamList = {
-  [RootStack.Main]: undefined;
-  [RootStack.DrawingToolsSettings]: { title: string; settings: DrawingSettings; name: DrawingTool };
-  [RootStack.DrawingToolsFontFamily]: undefined;
-  [RootStack.DrawingToolsFontSizes]: undefined;
-  [RootStack.DrawingToolsFibonacci]: undefined;
-  [RootStack.DrawingToolsSTDDeviation]: undefined;
-  [RootStack.DrawingToolsImpulse]: undefined;
-  [RootStack.DrawingToolCorrective]: undefined;
-  [RootStack.DrawingToolDecoration]: undefined;
+export type DrawingsStackParamList = {
+  [DrawingsStack.DrawingToolsSettings]: {
+    title: string;
+    settings: DrawingSettings;
+    name: DrawingTool;
+  };
+  [DrawingsStack.DrawingToolsFontFamily]: undefined;
+  [DrawingsStack.DrawingToolsFontSizes]: undefined;
+  [DrawingsStack.DrawingToolsFibonacci]: undefined;
+  [DrawingsStack.DrawingToolsSTDDeviation]: undefined;
+  [DrawingsStack.DrawingToolsImpulse]: undefined;
+  [DrawingsStack.DrawingToolCorrective]: undefined;
+  [DrawingsStack.DrawingToolDecoration]: undefined;
+};
+
+export enum SettingsStack {
+  Settings = '[Settings stack] Settings',
+  Languages = '[Settings stack] Languages',
+}
+
+export type SettingsStackParamList = {
+  [SettingsStack.Settings]: undefined;
+  [SettingsStack.Languages]: undefined;
+};
+
+export enum StudiesStack {
+  Studies = '[Studies stack] Studies',
+  AddStudy = '[Studies stack] AddStudy',
+}
+
+export type StudiesStackParamList = {
+  [StudiesStack.Studies]: undefined;
+  [StudiesStack.AddStudy]: undefined;
 };
 
 export type DrawingToolsNavigation = NativeStackNavigationProp<
-  RootStackParamList,
-  RootStack.DrawingToolsSettings
+  DrawingsStackParamList,
+  DrawingsStack.DrawingToolsSettings
 >;
+
+export type SettingsNavigation = NativeStackNavigationProp<RootStackParamList, RootStack.Settings>;
 
 export type DrawingToolsSettings = NativeStackNavigationProp<
-  RootStackParamList,
-  | RootStack.DrawingToolsFontFamily
-  | RootStack.DrawingToolsFontSizes
-  | RootStack.DrawingToolsFibonacci
-  | RootStack.DrawingToolsSTDDeviation
-  | RootStack.DrawingToolsImpulse
-  | RootStack.DrawingToolCorrective
-  | RootStack.DrawingToolDecoration
+  DrawingsStackParamList,
+  | DrawingsStack.DrawingToolsFontFamily
+  | DrawingsStack.DrawingToolsFontSizes
+  | DrawingsStack.DrawingToolsFibonacci
+  | DrawingsStack.DrawingToolsSTDDeviation
+  | DrawingsStack.DrawingToolsImpulse
+  | DrawingsStack.DrawingToolCorrective
+  | DrawingsStack.DrawingToolDecoration
 >;
 
-export type DrawingToolsRoute = RouteProp<RootStackParamList, RootStack.DrawingToolsSettings>;
+export type DrawingToolsRoute = RouteProp<
+  DrawingsStackParamList,
+  DrawingsStack.DrawingToolsSettings
+>;

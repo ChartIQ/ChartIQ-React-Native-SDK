@@ -12,14 +12,16 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		70DF60BE9CA993D53168F277 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7636982212B48851AA878D /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		942FC540B82A684747E1B317 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = ChartIqWrapperExample;
@@ -37,12 +39,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ChartIqWrapperExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ChartIqWrapperExample/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-ChartIqWrapperExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ChartIqWrapperExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ChartIqWrapperExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ChartIqWrapperExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		8B7636982212B48851AA878D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -83,6 +87,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		101825C1002F75FA2C9146FB /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				EA87019AA730AC5A570619AB /* ChartIqWrapperExample */,
+				5D505F84CCC19B85A03D8CF6 /* ChartIqWrapperExampleTests */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* ChartIqWrapperExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +119,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		5D505F84CCC19B85A03D8CF6 /* ChartIqWrapperExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				8B7636982212B48851AA878D /* ExpoModulesProvider.swift */,
+			);
+			name = ChartIqWrapperExampleTests;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,7 +134,7 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
-		83CBB9F61A601CBA00E9B192 /* PBXGroup */ = {
+		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* ChartIqWrapperExample */,
@@ -122,6 +143,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				101825C1002F75FA2C9146FB /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -146,6 +168,14 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		EA87019AA730AC5A570619AB /* ChartIqWrapperExample */ = {
+			isa = PBXGroup;
+			children = (
+				1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */,
+			);
+			name = ChartIqWrapperExample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,14 +227,14 @@
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		83CBB9F71A601CBA00E9B192 = {
+		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 13B07F861A680F5B00A75B9A /* ChartIqWrapperExample */;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
@@ -219,7 +249,7 @@
 				en,
 				Base,
 			);
-			mainGroup = 83CBB9F61A601CBA00E9B192 /* PBXGroup */;
+			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -405,6 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* ChartIqWrapperExampleTests.m in Sources */,
+				70DF60BE9CA993D53168F277 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +445,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				942FC540B82A684747E1B317 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +481,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChartIqWrapperExample.app/ChartIqWrapperExample";
@@ -473,6 +506,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChartIqWrapperExample.app/ChartIqWrapperExample";
@@ -498,6 +532,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ChartIqWrapperExample;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -524,6 +559,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ChartIqWrapperExample;
 				SWIFT_VERSION = 5.0;
@@ -700,5 +736,5 @@
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 83CBB9F71A601CBA00E9B192;
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

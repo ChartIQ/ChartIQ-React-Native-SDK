@@ -21,6 +21,8 @@ export interface ColorPallette {
   white: string;
 
   favoriteBackground: string;
+
+  fullViewButtonBackground: string;
 }
 
 export default interface Theme {

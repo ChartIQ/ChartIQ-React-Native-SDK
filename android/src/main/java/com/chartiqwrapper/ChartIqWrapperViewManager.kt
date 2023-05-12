@@ -84,6 +84,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       MapBuilder.of("registrationName", "onHUDChanged"),
       "onMeasureChanged",
       MapBuilder.of("registrationName", "onMeasureChanged"),
+      "onChartAggregationTypeChanged",
+      MapBuilder.of("registrationName", "onChartAggregationTypeChanged"),
     )
   }
 
@@ -93,8 +95,10 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     chartIQViewModel.setChartIQ(chartIQ)
     initDatasource()
     dispatchOnChartTypeChanged()
+    dispatchOnChartAggregationTypeChanged()
     fetchCrosshairsState()
     addMeasureListener()
+
     return chartIQ.chartView.apply {
       layoutParams = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
@@ -146,6 +150,25 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       "onChartTypeChanged",
       event,
     )
+  }
+
+  @ReactMethod
+  fun dispatchOnChartAggregationTypeChanged(){
+    val event: WritableMap = Arguments.createMap()
+    chartIQ.getChartAggregationType{ aggregationType ->
+
+      val response: String? = aggregationType?.value
+      event.putString(
+       "aggregationType", response
+      )
+     Log.println(Log.INFO, "AGGREGATION_TYPE", response.toString() )
+     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+       chartIQ.chartView.id,
+       "onChartAggregationTypeChanged",
+       event,
+     )
+   }
+
   }
 
   @ReactMethod

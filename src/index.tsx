@@ -10,6 +10,7 @@ import {
 import { TimeUnit } from '~/constants';
 import { DrawingParams, DrawingSettings, DrawingTool } from '~/model';
 import { ChartType } from '~/model/chart-type';
+import { Study } from '~/model/study';
 
 const { ChartIQWrapperModule } = NativeModules;
 
@@ -32,6 +33,9 @@ interface ChartIqWrapperProps extends ViewProps {
   ) => Promise<void>;
   onChartTypeChanged: (
     event: NativeSyntheticEvent<{ chartType: string }>
+  ) => void;
+  onChartAggregationTypeChanged: (
+    event: NativeSyntheticEvent<{ aggregationType: string }>
   ) => void;
   onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
   onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
@@ -102,12 +106,14 @@ export async function getSymbol(): Promise<string> {
   return await ChartIQWrapperModule.getSymbol();
 }
 
-export async function getPeriodicity(): Promise<string> {
-  return await ChartIQWrapperModule.getPeriodicity();
+export async function getPeriodicity() {
+  return ChartIQWrapperModule.getPeriodicity();
 }
 
-export async function getChartAggregationType(): Promise<string> {
-  return await ChartIQWrapperModule.getChartAggregationType();
+export async function getChartAggregationType() {
+  const type = await ChartIQWrapperModule.getChartAggregationType();
+
+  return type as string | null;
 }
 
 export async function getActiveSeries(): Promise<
@@ -162,4 +168,38 @@ export async function undoDrawing(): Promise<boolean> {
 
 export async function redoDrawing(): Promise<boolean> {
   return ChartIQWrapperModule.redoDrawing();
+}
+
+export async function getStudyList() {
+  const response = await ChartIQWrapperModule.getStudyList();
+
+  return JSON.parse(response) as Array<Study>;
+}
+
+export async function getExtendedHours(): Promise<boolean> {
+  return await ChartIQWrapperModule.getExtendedHours();
+}
+
+export function setExtendedHours(value: boolean) {
+  return ChartIQWrapperModule.setExtendedHours(value);
+}
+
+export function setTheme(theme: 'day' | 'night' | 'none') {
+  return ChartIQWrapperModule.setTheme(theme);
+}
+
+export function setChartScale(scale: 'log' | 'linear') {
+  return ChartIQWrapperModule.setChartScale(scale);
+}
+
+export async function getChartScale(): Promise<string> {
+  return await ChartIQWrapperModule.getChartScale();
+}
+
+export async function getIsInvertYAxis(): Promise<boolean> {
+  return await ChartIQWrapperModule.getIsInvertYAxis();
+}
+
+export function setIsInvertYAxis(value: boolean) {
+  return ChartIQWrapperModule.setIsInvertYAxis(value);
 }

@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { Dimensions, Pressable, useWindowDimensions } from 'react-native';
+import React from 'react';
+import { Pressable, useWindowDimensions } from 'react-native';
+
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
   FadeIn,
-  runOnUI,
-  useDerivedValue,
 } from 'react-native-reanimated';
+import Icons from '~/assets/icons';
 import { useTheme } from '~/theme';
 
 enum Corners {
@@ -19,8 +19,7 @@ enum Corners {
 }
 
 interface FullScreenButtonProps {
-  isLandscape: boolean;
-  active: boolean;
+  isFullScreen: boolean;
   onChange: (value: boolean) => void;
 }
 
@@ -28,23 +27,12 @@ const PADDING = 32;
 const BOX_SIZE = 32;
 const SPACE = PADDING + BOX_SIZE;
 
-const { width: INITIAL_WIDTH, height: INITIAL_HEIGHT } = Dimensions.get('screen');
-
-const FullScreenButton: React.FC<FullScreenButtonProps> = ({
-  isLandscape,
-  active = true,
-  onChange,
-}) => {
+const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onChange }) => {
   const theme = useTheme();
   const pos = useSharedValue(Corners.TOP_RIGHT);
-  const width = useSharedValue(INITIAL_WIDTH);
-  const height = useSharedValue(INITIAL_HEIGHT);
-
-  const defaultX = useDerivedValue(() => width.value - SPACE, [width]);
-  const defaultY = SPACE;
-
-  const translateX = useSharedValue(defaultX.value);
-  const translateY = useSharedValue(defaultY);
+  const { width, height } = useWindowDimensions();
+  const translateX = useSharedValue(width - SPACE);
+  const translateY = useSharedValue(PADDING);
 
   const gestureDown = Gesture.Fling()
     .direction(Directions.DOWN)
@@ -52,7 +40,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       const position = pos.value;
 
       if (position === Corners.TOP_LEFT || position === Corners.TOP_RIGHT) {
-        translateY.value = withTiming(height.value - SPACE);
+        translateY.value = withTiming(height - SPACE);
       }
     })
     .onEnd(() => {
@@ -72,7 +60,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       const position = pos.value;
 
       if (position === Corners.BOTTOM_LEFT || position === Corners.BOTTOM_RIGHT) {
-        translateY.value = withTiming(active ? PADDING : SPACE);
+        translateY.value = withTiming(PADDING);
       }
     })
     .onEnd(() => {
@@ -109,7 +97,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
     .onStart(() => {
       const position = pos.value;
       if (position === Corners.TOP_LEFT || position === Corners.BOTTOM_LEFT) {
-        translateX.value = withTiming(defaultX.value);
+        translateX.value = withTiming(width - SPACE);
       }
     })
     .onEnd(() => {
@@ -131,26 +119,11 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
     [translateY, translateX],
   );
 
-  useEffect(() => {
-    if (pos.value === Corners.TOP_LEFT || pos.value === Corners.TOP_RIGHT) {
-      if (active) {
-        runOnUI(() => {
-          translateY.value = withTiming(PADDING);
-        })();
-        return;
-      }
-
-      runOnUI(() => {
-        translateY.value = withTiming(SPACE);
-      })();
-    }
-  }, [active]);
-
   const onPress = () => {
-    onChange(!active);
+    onChange(false);
   };
 
-  if (!isLandscape) {
+  if (!isFullScreen) {
     return null;
   }
 
@@ -162,7 +135,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
           {
             width: BOX_SIZE,
             height: BOX_SIZE,
-            backgroundColor: theme.colors.colorPrimary,
+            backgroundColor: theme.colors.fullViewButtonBackground,
             position: 'absolute',
             top: 0,
             left: 0,
@@ -173,8 +146,10 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({
       >
         <Pressable
           onPress={onPress}
-          style={{ flex: 1, backgroundColor: theme.colors.error, borderRadius: BOX_SIZE }}
-        />
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Icons.fullViewActive width={44} height={44} fill={theme.colors.primaryButtonText} />
+        </Pressable>
       </Animated.View>
     </GestureDetector>
   );

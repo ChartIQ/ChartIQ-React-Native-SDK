@@ -4,14 +4,12 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.chartiq.sdk.model.CrosshairHUD
-import com.chartiq.sdk.model.OHLCParams
-import com.chartiq.sdk.model.Series
-import com.chartiq.sdk.model.TimeUnit
+import com.chartiq.sdk.model.*
 import com.chartiq.sdk.model.charttype.ChartAggregationType
 import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
+import com.chartiq.sdk.model.study.Study
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -51,7 +49,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     if (data != null) {
       val handler = Handler(Looper.getMainLooper())
       handler.post(Runnable {
-        chartIQViewModel.initialCallback?.execute(data)
+        chartIQViewModel.updateCallback?.execute(data)
       })
     }
   }
@@ -61,7 +59,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     val data = formatOHLC(data)
     if (data != null) {
       handler.post(Runnable {
-        chartIQViewModel.initialCallback?.execute(data)
+        chartIQViewModel.pagingCallback?.execute(data)
       })
     }
   }
@@ -100,7 +98,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     val newTool = DrawingTool.values().find {
       it.value == tool
     }
-    if(newTool !== null) {
+    if (newTool !== null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().enableDrawing(newTool)
       })
@@ -180,9 +178,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getPeriodicity(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().let {
-        it.getPeriodicity{periodicity ->
-          it.getInterval{interval ->
-            it.getTimeUnit{timeUnit ->
+        it.getPeriodicity { periodicity ->
+          it.getInterval { interval ->
+            it.getTimeUnit { timeUnit ->
 
               var response = JsonObject().apply {
                 addProperty("periodicity", periodicity)
@@ -201,7 +199,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getActiveSeries(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getActiveSeries() { symbols ->
+      chartIQViewModel.getChartIQ().getActiveSeries { symbols ->
         symbols.let {
           promise.resolve(gson.toJson(it))
         }
@@ -219,7 +217,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getChartAggregationType(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getChartAggregationType() { symbols ->
+      chartIQViewModel.getChartIQ().getChartAggregationType { symbols ->
         symbols.let {
           promise.resolve(it?.value)
         }
@@ -228,20 +226,28 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setAggregationType(aggregationType: String){
-    handler.post(Runnable {
-      chartIQViewModel.getChartIQ().setAggregationType(ChartAggregationType.valueOf(aggregationType))
-    })
+  fun setAggregationType(type: String) {
+    val aggregationType = ChartAggregationType.values().find {
+      it.value == type
+    }
+
+    if(aggregationType != null){
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ()
+          .setAggregationType(aggregationType)
+      })
+    }
+
   }
 
   @ReactMethod
-  fun getDrawingParams(tool: String, promise: Promise){
+  fun getDrawingParams(tool: String, promise: Promise) {
     val drawingTool = DrawingTool.values().find {
       it.value == tool
     }
-    if(drawingTool != null){
+    if (drawingTool != null) {
       handler.post(Runnable {
-        chartIQViewModel.getChartIQ().getDrawingParameters(drawingTool){
+        chartIQViewModel.getChartIQ().getDrawingParameters(drawingTool) {
           promise.resolve(gson.toJson(it))
         }
       })
@@ -249,12 +255,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setDrawingParams(parameterName: String, value: String){
+  fun setDrawingParams(parameterName: String, value: String) {
     val drawingParameter = DrawingParameterType.values().find {
       it.value == parameterName
     }
 
-    if(drawingParameter != null){
+    if (drawingParameter != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, value)
       })
@@ -262,50 +268,131 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun clearDrawing(){
+  fun clearDrawing() {
     handler.post(Runnable {
-       chartIQViewModel.getChartIQ().clearDrawing()
+      chartIQViewModel.getChartIQ().clearDrawing()
     })
   }
 
   @ReactMethod
-  fun restoreDefaultDrawingConfig(tool: String, all: Boolean){
+  fun restoreDefaultDrawingConfig(tool: String, all: Boolean) {
     val drawingTool = DrawingTool.values().find {
       it.value == tool
     }
 
-    if(drawingTool != null){
+    if (drawingTool != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().restoreDefaultDrawingConfig(drawingTool, all)
       })
     }
 
   }
+
   @ReactMethod
-  fun deleteDrawing(){
+  fun deleteDrawing() {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().deleteDrawing()
     })
   }
 
   @ReactMethod
-  fun undoDrawing(promise: Promise){
+  fun undoDrawing(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().undoDrawing{value ->
+      chartIQViewModel.getChartIQ().undoDrawing { value ->
         promise.resolve(value)
       }
     })
   }
 
   @ReactMethod
-  fun redoDrawing(promise: Promise){
+  fun redoDrawing(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().redoDrawing{value ->
+      chartIQViewModel.getChartIQ().redoDrawing { value ->
         promise.resolve(value)
       }
     })
   }
 
+  @ReactMethod
+  fun getStudyList(promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getStudyList { study ->
+        study.forEach {
+          Log.println(Log.DEBUG, "STUDY", it.parameters.toString())
+        }
+        promise.resolve(gson.toJson(study))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun setIsInvertYAxis(inverted: Boolean) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setIsInvertYAxis(inverted)
+    })
+  }
+
+  @ReactMethod
+  fun getIsInvertYAxis(promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getIsInvertYAxis {
+        promise.resolve(it)
+      }
+    })
+  }
+
+  @ReactMethod
+  fun getChartScale(promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getChartScale {
+        promise.resolve(gson.toJson(it))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun setChartScale(scale: String) {
+    val chartScale = ChartScale.values().find {
+      it.value == scale
+    }
+
+    if (chartScale != null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().setChartScale(chartScale)
+      })
+    }
+  }
+
+  @ReactMethod
+  fun setTheme(theme: String) {
+    val chartTheme = ChartTheme.values().find {
+      it.value == theme
+    }
+
+    if (chartTheme != null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().setTheme(chartTheme)
+      })
+    } else {
+      setTheme(ChartTheme.NONE.toString())
+    }
+  }
+
+  @ReactMethod
+  fun getExtendedHours(promise: Promise){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getIsExtendedHours() {
+        promise.resolve(it)
+      }
+    })
+  }
+
+  @ReactMethod
+  fun setExtendedHours(extendedHours: Boolean){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setExtendedHours(extendedHours)
+    })
+  }
 
 
 
