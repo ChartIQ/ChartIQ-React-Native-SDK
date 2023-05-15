@@ -7,15 +7,16 @@ import {
   NativeModules,
   ViewProps,
 } from 'react-native';
+
 import { TimeUnit } from '~/constants';
 import { DrawingParams, DrawingSettings, DrawingTool } from '~/model';
 import { ChartType } from '~/model/chart-type';
-import { Study } from '~/model/study';
+import { Study, StudyParameterType } from '~/model/study';
 
 const { ChartIQWrapperModule } = NativeModules;
 
 const LINKING_ERROR =
-  `The package 'react-native-chart-iq-wrapper' doesn't seem to be linked. Make sure: \n\n` +
+  "The package 'react-native-chart-iq-wrapper' doesn't seem to be linked. Make sure: \n\n" +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
@@ -202,4 +203,26 @@ export async function getIsInvertYAxis(): Promise<boolean> {
 
 export function setIsInvertYAxis(value: boolean) {
   return ChartIQWrapperModule.setIsInvertYAxis(value);
+}
+
+export async function getActiveStudies() {
+  const activeStudies = await ChartIQWrapperModule.getActiveStudies();
+
+  return JSON.parse(activeStudies) as Study[];
+}
+
+export function addStudy(study: string, isClone: boolean = false) {
+  return ChartIQWrapperModule.addStudy(study, isClone);
+}
+
+export async function getStudyParameters(
+  study: Study,
+  type: StudyParameterType
+) {
+  const response = await ChartIQWrapperModule.getStudyParameters(
+    JSON.stringify(study),
+    type
+  );
+
+  return JSON.parse(response);
 }

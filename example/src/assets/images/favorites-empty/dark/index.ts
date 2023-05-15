@@ -1,3 +1,3 @@
-import dark from './design-tool.png';
+const dark = require('./design-tool.png');
 
 export default dark;

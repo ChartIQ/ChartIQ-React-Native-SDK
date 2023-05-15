@@ -10,6 +10,7 @@ import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.chartiq.sdk.model.study.Study
+import com.chartiq.sdk.model.study.StudyParameterType
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -317,10 +318,16 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getStudyList(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getStudyList { study ->
-        study.forEach {
-          Log.println(Log.DEBUG, "STUDY", it.parameters.toString())
-        }
         promise.resolve(gson.toJson(study))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun getActiveStudies(promise: Promise){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getActiveStudies{
+        promise.resolve(gson.toJson(it))
       }
     })
   }
@@ -392,6 +399,32 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setExtendedHours(extendedHours)
     })
+  }
+
+  @ReactMethod
+  fun addStudy(study: String, isClone: Boolean){
+    val parsedStudy = gson.fromJson(study, Study::class.java)
+
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().addStudy(parsedStudy, isClone)
+    })
+  }
+
+  @ReactMethod
+  fun getStudyParameters(study: String, type: String, promise: Promise){
+    val parsedStudy = gson.fromJson(study, Study::class.java)
+    val parsedType = StudyParameterType.values().find {
+      it.name == type
+    }
+
+    if(parsedStudy != null && parsedType != null){
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().getStudyParameters(parsedStudy, parsedType) {
+          promise.resolve(gson.toJson(it))
+        }
+      })
+    }
+
   }
 
 

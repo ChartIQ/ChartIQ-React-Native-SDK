@@ -4,7 +4,11 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+  ],
 
   parser: '@typescript-eslint/parser',
   plugins: [
@@ -16,9 +20,9 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
-    indent: [0, 2, { SwitchCase: 1 }],
+    'indent': [0, 2, { SwitchCase: 1 }],
     'linebreak-style': 0,
-    quotes: ['error', 'single'],
+    'quotes': ['error', 'single'],
     'prettier/prettier': [
       'error',
       {
@@ -43,20 +47,26 @@ module.exports = {
     'import/order': [
       'warn',
       {
-        alphabetize: {
+        'alphabetize': {
           caseInsensitive: true,
           order: 'asc',
         },
-        groups: [['builtin', 'external'], 'internal', 'parent', 'sibling', 'index'],
+        'groups': [
+          ['builtin', 'external'],
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
         'newlines-between': 'always',
-        pathGroupsExcludedImportTypes: ['builtin', 'object'],
+        'pathGroupsExcludedImportTypes': ['builtin', 'object'],
       },
     ],
     'import/prefer-default-export': 'off',
     'no-inline-styles/no-inline-styles': 1,
   },
   settings: {
-    react: {
+    'react': {
       version: 'detect',
     },
     'import/resolver': {
@@ -76,9 +86,9 @@ module.exports = {
         'plugin:react-hooks/recommended',
       ],
       rules: {
-        indent: [0, 2, { SwitchCase: 1 }],
+        'indent': [0, 2, { SwitchCase: 1 }],
         'linebreak-style': 0,
-        quotes: ['error', 'single'],
+        'quotes': ['error', 'single'],
         'prettier/prettier': [
           'error',
           {
@@ -102,26 +112,34 @@ module.exports = {
         'import/order': [
           'warn',
           {
-            alphabetize: {
+            'alphabetize': {
               caseInsensitive: true,
               order: 'asc',
             },
-            groups: [['builtin', 'external'], 'internal', 'parent', 'sibling', 'index'],
+            'groups': [
+              ['builtin', 'external'],
+              'internal',
+              'parent',
+              'sibling',
+              'index',
+            ],
             'newlines-between': 'always',
-            pathGroupsExcludedImportTypes: ['builtin', 'object'],
+            'pathGroupsExcludedImportTypes': ['builtin', 'object'],
           },
         ],
         'import/prefer-default-export': 'off',
         'no-inline-styles/no-inline-styles': 1,
       },
       settings: {
-        react: {
+        'react': {
           version: 'detect',
         },
         'import/resolver': {
           typescript: {},
         },
-        'import/ignore': ['node_modules(\\\\|/)react-native(\\\\|/)index\\.js$'],
+        'import/ignore': [
+          'node_modules(\\\\|/)react-native(\\\\|/)index\\.js$',
+        ],
       },
     },
   ],

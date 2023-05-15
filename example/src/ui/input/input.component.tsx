@@ -16,7 +16,8 @@ import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 interface InputFieldProps {
   onChange: (input: string) => void;
-  handleClose: () => void;
+  handleClose?: () => void;
+  bottomSheet?: boolean;
 }
 
 export interface InputFieldMethods {
@@ -25,7 +26,7 @@ export interface InputFieldMethods {
 }
 
 const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
-  ({ onChange, handleClose }, ref) => {
+  ({ onChange, handleClose, bottomSheet = false }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const [value, setValue] = useState('');
@@ -57,24 +58,37 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
             fill={theme.colors.placeholder}
             style={{ marginHorizontal: 4 }}
           />
-          <BottomSheetTextInput
-            //@ts-ignore
-            ref={textInputRef}
-            onChange={handleChange}
-            style={styles.textInput}
-            placeholderTextColor={theme.colors.placeholder}
-            placeholder="Search"
-            value={value}
-          />
+          {bottomSheet ? (
+            <BottomSheetTextInput
+              //@ts-ignore
+              ref={textInputRef}
+              onChange={handleChange}
+              style={styles.textInput}
+              placeholderTextColor={theme.colors.placeholder}
+              placeholder="Search"
+              value={value}
+            />
+          ) : (
+            <TextInput
+              ref={textInputRef}
+              onChange={handleChange}
+              style={styles.textInput}
+              placeholderTextColor={theme.colors.placeholder}
+              placeholder="Search"
+              value={value}
+            />
+          )}
           {value.length > 0 ? (
             <Pressable onPress={onClose} style={styles.close}>
               <Icons.close width={12} height={12} fill={theme.colors.background} />
             </Pressable>
           ) : null}
         </View>
-        <TouchableOpacity onPress={handleClose}>
-          <Text style={styles.text}>Cancel</Text>
-        </TouchableOpacity>
+        {handleClose ? (
+          <TouchableOpacity onPress={handleClose}>
+            <Text style={styles.text}>Cancel</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     );
   },

@@ -1,3 +1,3 @@
-import light from './design-tool.png';
+const light = require('./design-tool.png');
 
 export default light;

@@ -112,6 +112,7 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
       <BottomSheet ref={bottomSheetRef} onClose={onClose}>
         <View>
           <Input
+            bottomSheet
             ref={textInputRef}
             handleClose={handleClose}
             onChange={(text) => fetchSymbols(text, selectedFilter)}

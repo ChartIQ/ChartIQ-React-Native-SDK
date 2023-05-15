@@ -1,2 +1,2 @@
-export { Study } from './study';
+export { Study, StudyParameterType } from './study';
 export { StudyParameterModel } from './study-parameter-model';

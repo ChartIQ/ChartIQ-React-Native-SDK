@@ -1,6 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { DrawingSettings, DrawingTool } from '~/model';
+import { Study } from '~/model/study';
 
 export enum RootStack {
   Main = '[Root stack] Main',
@@ -55,11 +57,13 @@ export type SettingsStackParamList = {
 export enum StudiesStack {
   Studies = '[Studies stack] Studies',
   AddStudy = '[Studies stack] AddStudy',
+  StudyParameters = '[Studies stack] StudyParameters',
 }
 
 export type StudiesStackParamList = {
   [StudiesStack.Studies]: undefined;
   [StudiesStack.AddStudy]: undefined;
+  [StudiesStack.StudyParameters]: { study: Study };
 };
 
 export type DrawingToolsNavigation = NativeStackNavigationProp<
