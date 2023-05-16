@@ -10,6 +10,7 @@ import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.chartiq.sdk.model.study.Study
+import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -232,10 +233,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       it.value == type
     }
 
-    if(aggregationType != null){
+    if (aggregationType != null) {
       handler.post(Runnable {
-        chartIQViewModel.getChartIQ()
-          .setAggregationType(aggregationType)
+        chartIQViewModel.getChartIQ().setAggregationType(aggregationType)
       })
     }
 
@@ -324,9 +324,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun getActiveStudies(promise: Promise){
+  fun getActiveStudies(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getActiveStudies{
+      chartIQViewModel.getChartIQ().getActiveStudies {
         promise.resolve(gson.toJson(it))
       }
     })
@@ -386,23 +386,23 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun getExtendedHours(promise: Promise){
+  fun getExtendedHours(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getIsExtendedHours() {
+      chartIQViewModel.getChartIQ().getIsExtendedHours {
         promise.resolve(it)
       }
     })
   }
 
   @ReactMethod
-  fun setExtendedHours(extendedHours: Boolean){
+  fun setExtendedHours(extendedHours: Boolean) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setExtendedHours(extendedHours)
     })
   }
 
   @ReactMethod
-  fun addStudy(study: String, isClone: Boolean){
+  fun addStudy(study: String, isClone: Boolean) {
     val parsedStudy = gson.fromJson(study, Study::class.java)
 
     handler.post(Runnable {
@@ -411,22 +411,39 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun getStudyParameters(study: String, type: String, promise: Promise){
+  fun getStudyParameters(study: String, type: String, promise: Promise) {
     val parsedStudy = gson.fromJson(study, Study::class.java)
     val parsedType = StudyParameterType.values().find {
       it.name == type
     }
 
-    if(parsedStudy != null && parsedType != null){
+    if (parsedStudy != null && parsedType != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().getStudyParameters(parsedStudy, parsedType) {
           promise.resolve(gson.toJson(it))
         }
       })
     }
-
   }
 
+  @ReactMethod
+  fun setStudyParameter(study: String, parameter: String){
+    val parsedStudy = gson.fromJson(study, Study::class.java)
+    val parsedParameter = gson.fromJson(parameter, StudyParameterModel::class.java)
+
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setStudyParameter(parsedStudy, parsedParameter)
+    })
+  }
+
+  @ReactMethod
+  fun removeStudy(study: String) {
+    val parsedStudy = gson.fromJson(study, Study::class.java)
+
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().removeStudy(parsedStudy)
+    })
+  }
 
 
   private fun formatOHLC(input: String): List<OHLCParams>? {

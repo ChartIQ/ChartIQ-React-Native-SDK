@@ -12,6 +12,8 @@ import DrawActive from './draw-active.svg';
 import Draw from './draw.svg';
 import drawingTools from './drawing-tools';
 import FillColor from './fill-color';
+import FullViewActive from './fullview-active.svg';
+import FullView from './fullview.svg';
 import HeikinAshi from './heikin-ashi-chart.svg';
 import Histogram from './histogram-chart.svg';
 import HollowCandle from './hollow-candle-chart.svg';
@@ -30,14 +32,12 @@ import Renko from './renko-chart.svg';
 import Scatterplot from './scatterplot-chart.svg';
 import Search from './search.svg';
 import Settings from './settings.svg';
+import Signals from './signal.svg';
 import Step from './step-chart.svg';
+import Studies from './studies.svg';
 import Undo from './undo.svg';
 import VertexLine from './vertex-line-chart.svg';
 import VolumeCandle from './volume-candle-chart.svg';
-import Signals from './signal.svg';
-import Studies from './studies.svg';
-import FullView from './fullview.svg';
-import FullViewActive from './fullview-active.svg';
 
 export default {
   bar: Bar,

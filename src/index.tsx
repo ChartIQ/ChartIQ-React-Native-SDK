@@ -9,7 +9,12 @@ import {
 } from 'react-native';
 
 import { TimeUnit } from '~/constants';
-import { DrawingParams, DrawingSettings, DrawingTool } from '~/model';
+import {
+  DrawingParams,
+  DrawingSettings,
+  DrawingTool,
+  StudyParameterModel,
+} from '~/model';
 import { ChartType } from '~/model/chart-type';
 import { Study, StudyParameterType } from '~/model/study';
 
@@ -211,8 +216,8 @@ export async function getActiveStudies() {
   return JSON.parse(activeStudies) as Study[];
 }
 
-export function addStudy(study: string, isClone: boolean = false) {
-  return ChartIQWrapperModule.addStudy(study, isClone);
+export function addStudy(study: Study, isClone: boolean = false) {
+  return ChartIQWrapperModule.addStudy(JSON.stringify(study), isClone);
 }
 
 export async function getStudyParameters(
@@ -225,4 +230,18 @@ export async function getStudyParameters(
   );
 
   return JSON.parse(response);
+}
+
+export function removeStudy(study: Study) {
+  return ChartIQWrapperModule.removeStudy(JSON.stringify(study));
+}
+
+export function setStudyParameter(
+  study: Study,
+  parameter: StudyParameterModel
+) {
+  return ChartIQWrapperModule.setStudyParameter(
+    JSON.stringify(study),
+    JSON.stringify(parameter)
+  );
 }

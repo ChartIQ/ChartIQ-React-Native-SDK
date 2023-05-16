@@ -17,7 +17,7 @@ const AddStudies: React.FC = () => {
   const styles = createStyles(theme);
   const [studies, setStudies] = useState<Study[]>([]);
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState(() => new Set<number>());
+  const [selected, setSelected] = useState(new Set<number>());
   const navigation = useNavigation<NativeStackNavigationProp<StudiesStackParamList>>();
 
   const get = useCallback(async () => {
@@ -31,11 +31,13 @@ const AddStudies: React.FC = () => {
 
   const handleSelect = useCallback(async () => {
     const activeStudies = await getActiveStudies();
-    selected.forEach((index) => {
-      if (studies[index]) {
-        const isClone = activeStudies.some((item) => studies[index]?.name === item.name);
 
-        addStudy(JSON.stringify(studies[index]), isClone);
+    selected.forEach((index) => {
+      const study = studies[index];
+      if (study !== undefined) {
+        const isClone = activeStudies.some((item) => study.name === item.name);
+
+        addStudy(study, isClone);
       }
     });
 
@@ -44,45 +46,50 @@ const AddStudies: React.FC = () => {
 
   const onPress = useCallback(
     (index: number) => () => {
-      if (selected.size === 0) {
-        navigation.setOptions({
-          headerRight: () => (
-            <Pressable onPress={handleSelect}>
-              <Text style={styles.done}>Done</Text>
-            </Pressable>
-          ),
-        });
-      }
-      if (selected.size === 1 && selected.has(index)) {
-        navigation.setOptions({
-          headerRight: () => null,
-        });
-      }
-
       setSelected((prevState) => {
-        if (prevState.has(index)) {
-          prevState.delete(index);
-          return prevState;
+        const newState = new Set(prevState);
+
+        if (newState.has(index)) {
+          newState.delete(index);
+        } else {
+          newState.add(index);
         }
-        prevState.add(index);
-        return prevState;
+
+        return newState;
       });
     },
-    [handleSelect, navigation, selected, styles.done],
+    [],
   );
 
-  const renderItem = useCallback(
-    ({ item: { name }, index }: ListRenderItemInfo<Study>) => (
+  useEffect(() => {
+    if (selected.size === 0) {
+      navigation.setOptions({
+        headerRight: () => null,
+      });
+      return;
+    }
+
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={handleSelect}>
+          <Text style={styles.done}>Done</Text>
+        </Pressable>
+      ),
+    });
+  }, [handleSelect, navigation, selected, styles.done]);
+
+  const renderItem = ({ item: { name }, index }: ListRenderItemInfo<Study>) => {
+    const isSelected = selected.has(index);
+    return (
       <Pressable onPress={onPress(index)} android_ripple={{ color: theme.colors.colorPrimary }}>
         <ListItem title={name}>
-          {selected.has(index) ? (
+          {isSelected ? (
             <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
           ) : null}
         </ListItem>
       </Pressable>
-    ),
-    [onPress, selected, theme.colors.colorPrimary],
-  );
+    );
+  };
 
   const filtered = studies.filter((item) => item.name.includes(search));
 

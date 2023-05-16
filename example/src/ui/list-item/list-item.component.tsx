@@ -1,17 +1,19 @@
-import { Theme, useTheme } from '~/theme';
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+
+import { Theme, useTheme } from '~/theme';
 
 interface ListItemProps extends PropsWithChildren {
   title: string;
+  textStyle?: StyleProp<TextStyle>;
 }
 
-const ListItem: React.FC<ListItemProps> = ({ title, children }) => {
+const ListItem: React.FC<ListItemProps> = ({ title, children, textStyle }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, textStyle]}>{title}</Text>
       {children}
     </View>
   );

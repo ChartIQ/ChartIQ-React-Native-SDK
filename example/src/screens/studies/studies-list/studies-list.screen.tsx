@@ -2,7 +2,12 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { getActiveStudies, getStudyParameters } from 'react-native-chart-iq-wrapper';
+import {
+  addStudy,
+  getActiveStudies,
+  getStudyParameters,
+  removeStudy,
+} from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
@@ -53,8 +58,17 @@ const Studies: React.FC = () => {
   }, [activeStudies, handleAddStudies, navigation, styles.buttonText, styles.headerButton]);
 
   const navigateStudyParams = (study: Study) => {
-    console.log({ study });
     navigation.navigate(StudiesStack.StudyParameters, { study });
+  };
+
+  const handleRemove = (study: Study) => {
+    removeStudy(study);
+    get();
+  };
+
+  const handleClone = (study: Study) => {
+    addStudy(study, true);
+    get();
   };
 
   return (
@@ -67,14 +81,18 @@ const Studies: React.FC = () => {
             rightActionButtons={[
               {
                 key: 'study-item-remove',
-                onPress: () => {},
+                onPress: () => {
+                  handleRemove(item);
+                },
                 title: 'Remove',
                 backgroundColor: theme.colors.error,
                 color: theme.colors.primaryButtonText,
               },
               {
                 key: 'study-item-clone',
-                onPress: () => {},
+                onPress: () => {
+                  handleClone(item);
+                },
                 title: 'Clone',
                 backgroundColor: theme.colors.favoriteBackground,
                 color: theme.colors.primaryButtonText,
