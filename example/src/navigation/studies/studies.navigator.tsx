@@ -11,29 +11,39 @@ import { Theme, useTheme } from '~/theme';
 
 const { Navigator, Screen } = createNativeStackNavigator<StudiesStackParamList>();
 
-const SettingsNavigator: React.FC = () => {
+const StudiesNavigator: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const navigation = useNavigation();
 
   return (
     <Navigator>
       <Screen
-        options={{ title: 'Active Studies' }}
-        name={StudiesStack.Studies}
-        component={ActiveStudiesScreen}
-      />
-      <Screen
         options={{
-          title: 'Add Studies',
-          headerLeft: ({}) => {
-            const navigation = useNavigation();
-
+          title: 'Active Studies',
+          headerLeft: () => {
             return (
               <Pressable onPress={navigation.goBack}>
                 <Text style={styles.text}>Cancel</Text>
               </Pressable>
             );
           },
+          headerTitleAlign: 'center',
+        }}
+        name={StudiesStack.Studies}
+        component={ActiveStudiesScreen}
+      />
+      <Screen
+        options={{
+          title: 'Add Studies',
+          headerLeft: () => {
+            return (
+              <Pressable onPress={navigation.goBack}>
+                <Text style={styles.text}>Cancel</Text>
+              </Pressable>
+            );
+          },
+          headerTitleAlign: 'center',
         }}
         name={StudiesStack.AddStudy}
         component={AddStudiesScreen}
@@ -51,4 +61,4 @@ const createStyles = (theme: Theme) =>
     },
   });
 
-export default SettingsNavigator;
+export default StudiesNavigator;

@@ -9,6 +9,7 @@ export enum RootStack {
   Studies = '[Root stack] Studies',
   Settings = '[Root stack] Settings',
   Drawings = '[Root stack] Drawings',
+  Signals = '[Root stack] Signals',
 }
 
 export type RootStackParamList = {
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   [RootStack.Drawings]: undefined;
   [RootStack.Settings]: undefined;
   [RootStack.Studies]: undefined;
+  [RootStack.Signals]: undefined;
 };
 
 export enum DrawingsStack {
@@ -64,6 +66,20 @@ export type StudiesStackParamList = {
   [StudiesStack.Studies]: undefined;
   [StudiesStack.AddStudy]: undefined;
   [StudiesStack.StudyParameters]: { study: Study };
+};
+
+export enum SignalsStack {
+  Signals = '[Signals stack] Signals',
+  AddSignal = '[Signals stack] AddSignal',
+  ChangeStudyParameters = '[Signals stack] ChangeStudyParameters',
+  AddCondition = '[Signals stack] AddCondition',
+}
+
+export type SignalsStackParamList = {
+  [SignalsStack.Signals]: undefined;
+  [SignalsStack.AddSignal]: undefined;
+  [SignalsStack.ChangeStudyParameters]: { study: Study };
+  [SignalsStack.AddCondition]: { study: Study };
 };
 
 export type DrawingToolsNavigation = NativeStackNavigationProp<

@@ -1,8 +1,9 @@
 import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
-import icons from '../../assets/icons';
 import { ChartType } from '~/model/chart-type';
+
+import icons from '../../assets/icons';
 
 export enum AggregationType {
   HEIKINASHI = 'Heikin Ashi',
@@ -67,5 +68,11 @@ export const chartStyleSelectorData: ChartStyleSelectorData[] = [
     value: ChartType.RANGE_BARS,
     aggregationType: AggregationType.RANGEBARS,
     icon: icons.rangeBars,
+  },
+  {
+    label: 'Point & Figure',
+    value: ChartType.PNDF,
+    aggregationType: AggregationType.PANDF,
+    icon: icons.pointAndFigure,
   },
 ] satisfies ChartStyleSelectorData[];

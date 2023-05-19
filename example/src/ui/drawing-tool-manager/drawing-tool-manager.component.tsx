@@ -1,20 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useContext } from 'react';
 import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
+import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { DrawingToolsNavigation, DrawingsStack } from '~/shared/navigation.types';
+import { DrawingContext } from '~/context/drawing-context/drawing.context';
+import { DrawingParams } from '~/model';
+import { DrawingsStack, RootStack } from '~/shared/navigation.types';
+import { Theme, useTheme } from '~/theme';
 
 import Icons from '../../assets/icons';
-
 import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
 import { DrawingItem } from '../drawing-tools-selector/drawing-tools-selector.data';
 import { HorizontalColorPicker } from '../horizontal-color-picker';
 import { HorizontalLineTypePicker } from '../horizontal-line-type-picker';
-import { Theme, useTheme } from '~/theme';
-import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 
 interface DrawingToolManagerProps {
   drawingItem: DrawingItem;
@@ -27,7 +26,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   drawingItem,
   handleDrawingTool,
 }) => {
-  const navigation = useNavigation<DrawingToolsNavigation>();
+  const navigation = useNavigation();
   const theme = useTheme();
   const styles = createStyles(theme);
   const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
@@ -77,14 +76,19 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   };
 
   const handleSettingsPress = () => {
-    navigation.navigate(DrawingsStack.DrawingToolsSettings, {
-      title: drawingItem.title,
-      name: drawingItem.name,
-      settings: {
-        ...drawingSettings,
-        fillColor,
-        color: lineColor,
-        pattern: lineType,
+    navigation.navigate(RootStack.Drawings, {
+      screen: DrawingsStack.DrawingToolsSettings,
+      params: {
+        options: {
+          title: drawingItem.title,
+          name: drawingItem.name,
+          settings: {
+            ...drawingSettings,
+            fillColor,
+            color: lineColor,
+            pattern: lineType,
+          },
+        },
       },
     });
   };
@@ -114,7 +118,12 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
           scrollEnabled={false}
         >
           <Pressable onPress={handleDrawingTool} style={styles.itemContainer}>
-            <drawingItem.Icon width={24} height={24} fill={theme.colors.buttonText} />
+            <drawingItem.Icon
+              width={24}
+              height={24}
+              fill={theme.colors.buttonText}
+              stroke={theme.colors.buttonText}
+            />
           </Pressable>
           {supportingFillColor && (
             <Pressable style={[styles.itemContainer]} onPress={toggleFillColor}>

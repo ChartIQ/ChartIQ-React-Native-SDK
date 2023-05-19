@@ -16,4 +16,5 @@ export enum ChartType {
   KAGI = 'Kagi',
   RENKO = 'Renko',
   RANGE_BARS = 'Range Bars',
+  PNDF = 'Point & Figure',
 }

@@ -1,5 +1,5 @@
-import { Theme, useTheme } from '../../theme';
-import React, { useMemo, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,13 +16,14 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SvgProps } from 'react-native-svg';
 
+import Icons from '~/assets/icons';
+import { CrosshairSharedValues } from '~/model';
+import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
+
+import { Theme, useTheme } from '../../theme';
 import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.data';
 
 import { AnimatedCrosshairValues } from './components/animated-crosshair-values';
-import { CrosshairSharedValues } from '~/model';
-import Icons from '~/assets/icons';
-import { useNavigation } from '@react-navigation/native';
-import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
 
 const timingConfig = { duration: 200 };
 const CROSSHAIR_HEIGHT = 70;
@@ -80,22 +81,22 @@ const Header: React.FC<HeaderProps> = ({
   const otherToolsHeight = useSharedValue(0);
   const crosshairHeight = useSharedValue(0);
 
-  const handleChevron = () => {
+  const handleChevron = useCallback(() => {
     'worklet';
     const toValue = open ? 0 : 50;
     otherToolsHeight.value = withTiming(toValue, timingConfig);
 
     runOnJS(setOpen)((prevState) => !prevState);
-  };
+  }, [open, otherToolsHeight]);
 
-  const onCrosshair = () => {
+  const onCrosshair = useCallback(() => {
     'worklet';
 
     const toValue = isCrosshairEnabled ? 0 : CROSSHAIR_HEIGHT;
     crosshairHeight.value = withTiming(toValue, timingConfig, () => {
       runOnJS(handleCrosshair)(!isCrosshairEnabled);
     });
-  };
+  }, [crosshairHeight, handleCrosshair, isCrosshairEnabled]);
 
   const otherToolsHeightStyle = useAnimatedStyle(
     () => ({ height: otherToolsHeight.value }),
@@ -108,14 +109,19 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   const displayStyle = { display: open ? 'flex' : 'none' } as ViewStyle;
-  const drawingStyle = isDrawing
-    ? [styles.chartStyleButton, styles.selectedButton]
-    : styles.chartStyleButton;
+  const drawingStyle = useMemo(
+    () => (isDrawing ? [styles.chartStyleButton, styles.selectedButton] : styles.chartStyleButton),
+    [isDrawing, styles.chartStyleButton, styles.selectedButton],
+  );
   const drawingFill = isDrawing ? theme.colors.background : theme.colors.buttonText;
   const crosshairFill = isCrosshairEnabled ? theme.colors.background : theme.colors.buttonText;
-  const crosshairStyle: ViewStyle | ViewStyle[] = isCrosshairEnabled
-    ? [styles.chartStyleButton, styles.selectedButton]
-    : styles.chartStyleButton;
+  const crosshairStyle: ViewStyle | ViewStyle[] = useMemo(
+    () =>
+      isCrosshairEnabled
+        ? [styles.chartStyleButton, styles.selectedButton]
+        : styles.chartStyleButton,
+    [isCrosshairEnabled, styles.chartStyleButton, styles.selectedButton],
+  );
 
   const iconProps = {
     width: 24,
@@ -127,55 +133,78 @@ const Header: React.FC<HeaderProps> = ({
 
   const numberOfVisibleItems = Math.floor(width / 2 / cardWidth);
 
-  const handleGetStudies = async () => {
+  const handleStudies = useCallback(() => {
     navigation.navigate(RootStack.Studies);
-  };
+  }, [navigation]);
 
-  const items: HeaderItem[] = [
-    {
-      onPress: handleChartStyleSelector,
-      Icon: chartStyle?.icon ?? null,
-      key: 'chartStyle',
-    },
-    {
-      onPress: () => {
-        handleGetStudies();
+  const handleSignals = useCallback(() => {
+    navigation.navigate(RootStack.Signals);
+  }, [navigation]);
+
+  const items: HeaderItem[] = useMemo(
+    () => [
+      {
+        onPress: handleChartStyleSelector,
+        Icon: chartStyle?.icon ?? null,
+        key: 'chartStyle',
       },
-      Icon: Icons.studies,
-      key: 'studies',
-    },
-    {
-      onPress: handleCompareSymbolSelector,
-      Icon: Icons.compare,
-      key: 'compare',
-    },
-    {
-      onPress: () => {},
-      Icon: Icons.signals,
-      key: 'signals',
-    },
-    {
-      onPress: onCrosshair,
-      Icon: Icons.crosshair,
-      key: 'crosshair',
-      containerStyle: crosshairStyle,
-      fill: crosshairFill,
-    },
-    {
-      onPress: handleDrawingTool,
-      Icon: isDrawing ? Icons.drawActive : Icons.draw,
-      key: 'draw',
-      fill: drawingFill,
-      containerStyle: drawingStyle,
-    },
-    {
-      onPress: () => {
-        navigation.navigate(RootStack.Settings);
+      {
+        onPress: () => {
+          handleStudies();
+        },
+        Icon: Icons.studies,
+        key: 'studies',
       },
-      Icon: Icons.menuSettings,
-      key: 'settings',
-    },
-  ];
+      {
+        onPress: handleCompareSymbolSelector,
+        Icon: Icons.compare,
+        key: 'compare',
+      },
+      {
+        onPress: () => {
+          handleSignals();
+        },
+        Icon: Icons.signals,
+        key: 'signals',
+      },
+      {
+        onPress: onCrosshair,
+        Icon: Icons.crosshair,
+        key: 'crosshair',
+        containerStyle: crosshairStyle,
+        fill: crosshairFill,
+      },
+      {
+        onPress: handleDrawingTool,
+        Icon: isDrawing ? Icons.drawActive : Icons.draw,
+        key: 'draw',
+        fill: drawingFill,
+        containerStyle: drawingStyle,
+      },
+      {
+        onPress: () => {
+          navigation.navigate(RootStack.Settings);
+        },
+        Icon: Icons.menuSettings,
+        key: 'settings',
+      },
+    ],
+    [
+      chartStyle?.icon,
+      crosshairFill,
+      crosshairStyle,
+      drawingFill,
+      drawingStyle,
+      handleChartStyleSelector,
+      handleCompareSymbolSelector,
+      handleDrawingTool,
+      handleSignals,
+      handleStudies,
+      isDrawing,
+      navigation,
+      onCrosshair,
+    ],
+  );
 
   const isAllItemsFits = items.length <= numberOfVisibleItems;
 
@@ -204,7 +233,15 @@ const Header: React.FC<HeaderProps> = ({
       });
     }
     return visibleItems;
-  }, [items]);
+  }, [
+    handleChevron,
+    handleFullScreen,
+    isAllItemsFits,
+    isLandscape,
+    items,
+    numberOfVisibleItems,
+    open,
+  ]);
 
   const otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 

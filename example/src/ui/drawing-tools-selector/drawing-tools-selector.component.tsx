@@ -1,5 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useRef,
   forwardRef,
@@ -9,11 +11,13 @@ import React, {
   useEffect,
 } from 'react';
 import { View, Image, Text, Pressable } from 'react-native';
+import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import icons from '~/assets/icons';
 import images from '~/assets/images';
+import { asyncStorageKeys } from '~/constants/async-storage-keys';
+import { useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
 import { FilterSelector } from '../selector-filters';
@@ -32,10 +36,6 @@ import {
   DrawingToolSelectorProps,
 } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
-import { useTheme } from '~/theme';
-import { asyncStorageKeys } from '~/constants/async-storage-keys';
-import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
-import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 
 const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSelectorProps>(
   ({ onChange }, ref) => {

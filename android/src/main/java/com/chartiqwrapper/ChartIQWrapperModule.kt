@@ -3,12 +3,12 @@ package com.chartiqwrapper
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.chartiq.sdk.model.*
 import com.chartiq.sdk.model.charttype.ChartAggregationType
 import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
+import com.chartiq.sdk.model.signal.Signal
 import com.chartiq.sdk.model.study.Study
 import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
@@ -16,12 +16,9 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.*
 import java.lang.Runnable
-import java.util.*
 
 
 class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
@@ -416,23 +413,36 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     val parsedType = StudyParameterType.values().find {
       it.name == type
     }
-
     if (parsedStudy != null && parsedType != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().getStudyParameters(parsedStudy, parsedType) {
+          Log.println(Log.DEBUG, "getStudyParameters", it.toString())
           promise.resolve(gson.toJson(it))
         }
+
       })
     }
   }
 
   @ReactMethod
-  fun setStudyParameter(study: String, parameter: String){
+  fun setStudyParameter(study: String, parameter: String, promise: Promise) {
     val parsedStudy = gson.fromJson(study, Study::class.java)
     val parsedParameter = gson.fromJson(parameter, StudyParameterModel::class.java)
 
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setStudyParameter(parsedStudy, parsedParameter)
+    })
+  }
+
+  @ReactMethod
+  fun setStudyParameters(study: String, parameters: String, promise: Promise) {
+    val parsedStudy = gson.fromJson(study, Study::class.java)
+    val collectionType = object : TypeToken<List<StudyParameterModel>>() {}.type
+    val parsedParameters = gson.fromJson<List<StudyParameterModel>>(parameters, collectionType)
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setStudyParameters(parsedStudy, parsedParameters) {
+        promise.resolve(gson.toJson(it))
+      }
     })
   }
 
@@ -444,6 +454,35 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       chartIQViewModel.getChartIQ().removeStudy(parsedStudy)
     })
   }
+
+  @ReactMethod
+  fun getActiveSignals(promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getActiveSignals {
+        promise.resolve(gson.toJson(it))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun addStudySignal(name: String, promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().addSignalStudy(name) {
+        promise.resolve(gson.toJson(it))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun addSignal(signal: String,editMode: Boolean) {
+    val parsedSignal = gson.fromJson(signal, Signal::class.java)
+    if (parsedSignal != null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().saveSignal(parsedSignal, editMode)
+      })
+    }
+  }
+
 
 
   private fun formatOHLC(input: String): List<OHLCParams>? {

@@ -1,4 +1,38 @@
-import React from 'react';
+import {
+  Orientation,
+  OrientationChangeEvent,
+  addOrientationChangeListener,
+  getOrientationAsync,
+  removeOrientationChangeListeners,
+} from 'expo-screen-orientation';
+import React, { useCallback } from 'react';
+import { NativeSyntheticEvent } from 'react-native';
+import {
+  disableDrawing,
+  enableDrawing,
+  getDrawingParams,
+  setInitialData,
+  setPagingData,
+  setUpdateData,
+  addSeries,
+  setSymbol as setChartSymbol,
+  setPeriodicity,
+  setAggregationType,
+  setChartType,
+  removeSeries,
+  enableCrosshairs,
+  disableCrosshairs,
+  getSymbol,
+  getChartType,
+  getChartAggregationType,
+  getPeriodicity,
+  getActiveSeries,
+} from 'react-native-chart-iq-wrapper';
+import { useSharedValue } from 'react-native-reanimated';
+
+import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
+import { colorPickerColors } from '~/constants';
+import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
 import {
   ChartStyleItem,
   ChartStyleSelectorMethods,
@@ -9,46 +43,14 @@ import {
   CompareSymbolSelectorMethods,
 } from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
+import { DrawingToolSelectorMethods } from '~/ui/drawing-tools-selector/drawing-tools-selector.types';
 import {
   IntervalItem,
   IntervalSelectorMethods,
   intervals,
 } from '~/ui/interval-selector/interval-selector.component';
-
-import { useSharedValue } from 'react-native-reanimated';
-import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
-import {
-  disableDrawing,
-  enableDrawing,
-  getDrawingParams,
-  setInitialData,
-  setPagingData,
-  setUpdateData,
-} from 'react-native-chart-iq-wrapper';
 import { SymbolSelectorMethods } from '~/ui/symbol-selector/symbol-selector.component';
-import { DrawingToolSelectorMethods } from '~/ui/drawing-tools-selector/drawing-tools-selector.types';
-import { addSeries, setSymbol as setChartSymbol } from 'react-native-chart-iq-wrapper';
-import { setPeriodicity } from 'react-native-chart-iq-wrapper';
-import { setAggregationType } from 'react-native-chart-iq-wrapper';
-import { setChartType } from 'react-native-chart-iq-wrapper';
-import { colorPickerColors } from '~/constants';
-import { removeSeries } from 'react-native-chart-iq-wrapper';
-import { enableCrosshairs } from 'react-native-chart-iq-wrapper';
-import { disableCrosshairs } from 'react-native-chart-iq-wrapper';
-import { getSymbol } from 'react-native-chart-iq-wrapper';
-import { getChartType } from 'react-native-chart-iq-wrapper';
-import { getChartAggregationType } from 'react-native-chart-iq-wrapper';
-import { getPeriodicity } from 'react-native-chart-iq-wrapper';
-import { getActiveSeries } from 'react-native-chart-iq-wrapper';
-import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
-import { NativeSyntheticEvent } from 'react-native';
-import {
-  Orientation,
-  OrientationChangeEvent,
-  addOrientationChangeListener,
-  getOrientationAsync,
-  removeOrientationChangeListeners,
-} from 'expo-screen-orientation';
+
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
 type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
@@ -147,14 +149,14 @@ export const useChartIQ = () => {
     setPeriodicity(input.period, input.interval, input.timeUnit);
   };
 
-  const handleChartStyleChange = (input: ChartStyleItem) => {
+  const handleChartStyleChange = useCallback((input: ChartStyleItem) => {
     setChartStyle(input);
     if (input.aggregationType) {
       setAggregationType(input.aggregationType);
       return;
     }
     setChartType(input.value);
-  };
+  }, []);
 
   const onChartAggregationTypeChanged: (
     event: NativeSyntheticEvent<{
@@ -211,7 +213,7 @@ export const useChartIQ = () => {
     drawingToolSelectorRef.current?.open();
   };
 
-  const initChart = async () => {
+  const initChart = useCallback(async () => {
     const symbol = await getSymbol();
     setSymbol(symbol);
 
@@ -260,11 +262,11 @@ export const useChartIQ = () => {
       });
       handleChartStyleChange(foundChartType);
     }
-  };
+  }, [handleChartStyleChange]);
 
   React.useEffect(() => {
     initChart();
-  }, []);
+  }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {
     close: useSharedValue<string>('0'),

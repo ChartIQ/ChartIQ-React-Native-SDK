@@ -2,12 +2,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import {
-  addStudy,
-  getActiveStudies,
-  getStudyParameters,
-  removeStudy,
-} from 'react-native-chart-iq-wrapper';
+import { addStudy, getActiveStudies, removeStudy } from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
@@ -76,36 +71,46 @@ const Studies: React.FC = () => {
       <FlatList
         data={activeStudies}
         contentContainerStyle={{ flex: 1 }}
-        renderItem={({ item }) => (
-          <SwipableItem
-            rightActionButtons={[
-              {
-                key: 'study-item-remove',
-                onPress: () => {
-                  handleRemove(item);
+        renderItem={({ item }) => {
+          const [name, value] = item.name.split(' (', 2);
+          return (
+            <SwipableItem
+              rightActionButtons={[
+                {
+                  key: 'study-item-remove',
+                  onPress: () => {
+                    handleRemove(item);
+                  },
+                  title: 'Remove',
+                  backgroundColor: theme.colors.error,
+                  color: theme.colors.primaryButtonText,
                 },
-                title: 'Remove',
-                backgroundColor: theme.colors.error,
-                color: theme.colors.primaryButtonText,
-              },
-              {
-                key: 'study-item-clone',
-                onPress: () => {
-                  handleClone(item);
+                {
+                  key: 'study-item-clone',
+                  onPress: () => {
+                    handleClone(item);
+                  },
+                  title: 'Clone',
+                  backgroundColor: theme.colors.favoriteBackground,
+                  color: theme.colors.primaryButtonText,
                 },
-                title: 'Clone',
-                backgroundColor: theme.colors.favoriteBackground,
-                color: theme.colors.primaryButtonText,
-              },
-            ]}
-          >
-            <Pressable onPress={() => navigateStudyParams(item)}>
-              <ListItem title={item.name}>
-                <Icons.chevronRight />
-              </ListItem>
-            </Pressable>
-          </SwipableItem>
-        )}
+              ]}
+            >
+              <Pressable onPress={() => navigateStudyParams(item)}>
+                <ListItem
+                  titleComponent={
+                    <View>
+                      <Text style={styles.studyName}>{name}</Text>
+                      <Text style={styles.studyValue}>{`(${value}`}</Text>
+                    </View>
+                  }
+                >
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </ListItem>
+              </Pressable>
+            </SwipableItem>
+          );
+        }}
         ListEmptyComponent={
           <View style={styles.emptyView}>
             <Image
@@ -159,6 +164,13 @@ const createStyles = (theme: Theme) =>
     },
     headerButton: {
       color: theme.colors.colorPrimary,
+    },
+    studyName: {
+      fontSize: 16,
+    },
+    studyValue: {
+      fontSize: 14,
+      color: theme.colors.cardSubtitle,
     },
   });
 

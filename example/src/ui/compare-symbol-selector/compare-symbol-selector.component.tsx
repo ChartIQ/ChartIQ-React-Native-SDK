@@ -1,18 +1,19 @@
-import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 
+import { ChartSymbol } from '~/api';
+import { Theme, useTheme } from '~/theme';
+
 import { BottomSheet } from '../bottom-sheet';
 import { ColorSelector } from '../color-selector';
 import { ColorSelectorMethods } from '../color-selector/color-selector.component';
+import { SelectorHeader } from '../selector-header';
 import SymbolSelector, {
   SymbolSelectorMethods,
 } from '../symbol-selector/symbol-selector.component';
 
 import { SwipableSymbol } from './components/swipable-symbol-item';
-import { ChartSymbol } from '~/api';
-import { SelectorHeader } from '../selector-header';
 
 export type ColoredChartSymbol = ChartSymbol & { color: string };
 

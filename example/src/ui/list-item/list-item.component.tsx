@@ -1,21 +1,42 @@
 import React, { PropsWithChildren } from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
+import Icons from '~/assets/icons';
 import { Theme, useTheme } from '~/theme';
 
 interface ListItemProps extends PropsWithChildren {
-  title: string;
+  title?: string;
   textStyle?: StyleProp<TextStyle>;
+  titleComponent?: JSX.Element;
+  onPress?: () => void;
+  value?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-const ListItem: React.FC<ListItemProps> = ({ title, children, textStyle }) => {
+const ListItem: React.FC<ListItemProps> = ({
+  title,
+  children,
+  textStyle,
+  titleComponent,
+  onPress,
+  value,
+  style,
+}) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+
   return (
-    <View style={styles.container}>
-      <Text style={[styles.title, textStyle]}>{title}</Text>
+    <Pressable onPress={onPress} style={[styles.container, style]}>
+      {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
+      {value ? (
+        <View style={styles.row}>
+          <Text style={[styles.title, textStyle]}>{value}</Text>
+          {onPress ? <Icons.chevronRight fill={theme.colors.cardSubtitle} /> : null}
+        </View>
+      ) : null}
+      {titleComponent ? titleComponent : null}
       {children}
-    </View>
+    </Pressable>
   );
 };
 
@@ -27,12 +48,16 @@ const createStyles = (theme: Theme) =>
       borderColor: theme.colors.border,
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       paddingHorizontal: 16,
       paddingVertical: 12,
     },
     title: {
-      color: theme.colors.buttonText,
+      color: theme.colors.cardSubtitle,
       fontSize: 16,
+    },
+    row: {
+      flexDirection: 'row',
     },
   });
 

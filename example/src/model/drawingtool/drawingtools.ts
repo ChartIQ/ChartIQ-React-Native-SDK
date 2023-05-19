@@ -38,4 +38,5 @@ export enum DrawingTool {
   TREND_LINE = 'trendline',
   VERTICAL_LINE = 'vertical',
   VOLUME_PROFILE = 'volumeprofile',
+  POINT_AND_FIGURE = 'Point & Figure',
 }
