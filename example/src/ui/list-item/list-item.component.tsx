@@ -30,7 +30,7 @@ const ListItem: React.FC<ListItemProps> = ({
       {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
       {value ? (
         <View style={styles.row}>
-          <Text style={[styles.title, textStyle]}>{value}</Text>
+          <Text style={[styles.description, textStyle]}>{value}</Text>
           {onPress ? <Icons.chevronRight fill={theme.colors.cardSubtitle} /> : null}
         </View>
       ) : null}
@@ -53,6 +53,10 @@ const createStyles = (theme: Theme) =>
       paddingVertical: 12,
     },
     title: {
+      color: theme.colors.cardTitle,
+      fontSize: 16,
+    },
+    description: {
       color: theme.colors.cardSubtitle,
       fontSize: 16,
     },

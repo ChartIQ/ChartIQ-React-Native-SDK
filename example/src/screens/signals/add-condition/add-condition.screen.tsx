@@ -1,16 +1,22 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, SectionList, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { getStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
 import { Condition } from '~/model/signals/condition';
-import { SignalOperatorValues } from '~/model/signals/signal-operator';
+import {
+  SignalOperator,
+  SignalOperatorListItem,
+  SignalOperatorValues,
+} from '~/model/signals/signal-operator';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';
 import { SelectOptionFromListMethods } from '~/ui/select-from-list/select-from-list.component';
+
+import { MarkerOptionsForm } from './components/marker-options-form';
 
 interface AddConditionProps
   extends NativeStackScreenProps<SignalsStackParamList, SignalsStack.AddCondition> {}
@@ -26,7 +32,9 @@ const AddCondition: React.FC<AddConditionProps> = ({
   const theme = useTheme();
   const styles = createStyles(theme);
   const selectFromListRef = React.useRef<SelectOptionFromListMethods>(null);
-  const [selectedConditions, setSelectedConditions] = React.useState<Condition[]>([]);
+  const [selectedIndicator, setSelectedIndicator] = useState<StudyParameter>();
+  const [operator, setOperator] = useState<SignalOperatorListItem | null>(null);
+
   const [inputParams, setInputParams] = useState<Array<StudyParameter>>([]);
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
@@ -36,22 +44,26 @@ const AddCondition: React.FC<AddConditionProps> = ({
 
     setInputParams(inputs);
     setOutputParams(outputs);
+    setSelectedIndicator(outputs[0]);
   }, [study]);
 
   useEffect(() => {
     get();
   }, [get]);
 
-  console.log('study', study);
+  // console.log('study', study);
   // console.log('inputParams', inputParams);
   // console.log('outputParams', outputParams);
 
-  const onChangeFromList = (value: string, id: string) => {
+  const onChangeFromList = ({ key, value }: { value: string; key: string }, id: string) => {
     if (id === FIRST_CONDITION) {
-      console.log('FIRST_CONDITION', value);
+      setOperator(
+        (prevState) =>
+          SignalOperatorValues.find(({ key: signalKey }) => signalKey === key) ?? prevState,
+      );
     }
     if (id === INDICATOR) {
-      console.log('INDICATOR', value);
+      setSelectedIndicator(outputParams.find(({ name }) => name === key));
     }
   };
 
@@ -70,30 +82,37 @@ const AddCondition: React.FC<AddConditionProps> = ({
       key: name,
       value: `${name} ${study.shortName} (${inputValues})`,
     }));
-    selectFromListRef.current?.open(data, data[0]?.key ?? '', INDICATOR);
+    selectFromListRef.current?.open(data, selectedIndicator?.name ?? '', INDICATOR);
   };
 
   const handleAddCondition = () => {
-    const data = Object.entries(SignalOperatorValues).map(([key, value]) => ({
-      key: value,
-      value: key,
+    const data = Object.values(SignalOperatorValues).map(({ key, description }) => ({
+      key: key,
+      value: description,
     }));
-    selectFromListRef.current?.open(data, '', FIRST_CONDITION);
+    selectFromListRef.current?.open(data, operator?.key ?? '', FIRST_CONDITION);
   };
 
   return (
     <>
-      <SectionList
-        ListHeaderComponent={
-          <>
-            <Text style={styles.title}>Condition settings</Text>
-            <ListItem onPress={handleIndicator} title="Indicator 1" value={study.name} />
-            <ListItem onPress={handleAddCondition} title="Condition " value="Select Action" />
-          </>
-        }
-        data={[]}
-        sections={[]}
+      <Text style={styles.title}>Condition settings</Text>
+      <ListItem
+        onPress={handleIndicator}
+        title="Indicator 1"
+        value={`${selectedIndicator?.name} ${study.name}`}
       />
+      <ListItem
+        onPress={handleAddCondition}
+        title="Condition "
+        value={operator?.description ?? 'Select Action'}
+      />
+
+      {operator ? (
+        <>
+          <Text style={styles.title}>Appearance Settings</Text>
+          <MarkerOptionsForm color={selectedIndicator?.value as string} />
+        </>
+      ) : null}
       <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
     </>
   );

@@ -9,7 +9,7 @@ import { BottomSheet } from '../bottom-sheet';
 import { ListItem } from '../list-item';
 
 interface SelectOptionFromListProps {
-  onChange: (value: string, id: string) => void;
+  onChange: (result: { value: string; key: string }, id: string) => void;
 }
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
@@ -31,8 +31,8 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
       bottomSheetRef.current?.close();
     };
 
-    const handleSelect = (fieldSelectedValue: string) => {
-      onChange(fieldSelectedValue, idRef.current);
+    const handleSelect = (value: string, key: string) => {
+      onChange({ key, value }, idRef.current);
       onClose();
     };
 
@@ -57,7 +57,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
         <BottomSheetFlatList
           data={flatListData}
           renderItem={({ item: { value, key } }) => (
-            <ListItem onPress={() => handleSelect(value)} title={value}>
+            <ListItem onPress={() => handleSelect(value, key)} title={value}>
               {key === selectedItem ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
             </ListItem>
           )}
