@@ -2,7 +2,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList } from 'react-native';
-import { addSignal, addStudySignal, getStudyList } from 'react-native-chart-iq-wrapper';
+import {
+  addSignal,
+  addStudySignal,
+  getStudyList,
+  getStudyParameters,
+} from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
@@ -31,11 +36,11 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const [studies, setStudies] = useState<Study[]>([]);
   const [selectedStudy, setSelectedStudy] = useState<Study | null>(null);
   const addCondition = params?.addCondition;
+  const changedStudy = params?.changeStudy?.study;
   const [conditions, setConditions] = useState<Map<string, Condition>>(new Map());
   const [joiner, setJoiner] = useState<SignalJoiner>(SignalJoiner.OR);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [actualStudy, setActualStudy] = useState<Study | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -47,12 +52,17 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           return newConditions;
         });
       }
-    }, [addCondition]),
+      if (changedStudy) {
+        console.log('changedStudy', changedStudy);
+        setSelectedStudy(changedStudy);
+      }
+    }, [addCondition, changedStudy]),
   );
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
-    setStudies(studiesList);
+
+    setStudies(studiesList.filter(({ signalIQExclude }) => !signalIQExclude));
   }, []);
 
   useEffect(() => {
@@ -67,19 +77,16 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     );
   };
 
-  const handleStudyChange = ({ value }: { value: string }, _: string) => {
-    const study = studies.find((item) => item.name === value) ?? null;
-
+  const handleStudyChange = async ({ value }: { value: string }, _: string) => {
+    const item = studies.find((item) => item.name === value) ?? null;
+    const study = await addStudySignal(item?.shortName ?? '');
     setSelectedStudy(study);
   };
 
   const handleChangeStudyParams = async () => {
     if (selectedStudy === null) return;
-    const study = await addStudySignal(selectedStudy.name);
-    console.log('selectedStudy name', selectedStudy.name);
-    console.log('addStudySignal name', study.name);
-    setActualStudy(study);
-    navigation.navigate(SignalsStack.ChangeStudyParameters, { study });
+
+    navigation.navigate(SignalsStack.ChangeStudyParameters, { study: selectedStudy });
   };
 
   const handleAddCondition = (id: string, index: number, input?: Condition) => {
@@ -102,7 +109,6 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         rightIndicator: `${condition.rightIndicator} ${stdy?.name}`,
       }));
 
-      // console.log(Array.from(conditions.values()));
       const signal: Signal = {
         conditions: mappedConditions,
         joiner,
@@ -210,7 +216,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
               onPress={() => {
                 handleAddCondition(id, index, condition);
               }}
-              studyName={selectedStudy ? selectedStudy.name : ''}
+              studyName={selectedStudy ? selectedStudy.shortName : ''}
             />
             {data.length > 0 ? (
               index === 0 ? (

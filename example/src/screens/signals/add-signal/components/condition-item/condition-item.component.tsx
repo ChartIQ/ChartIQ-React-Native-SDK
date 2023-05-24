@@ -37,7 +37,7 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, studyName, onPress
                 <Text style={styles.cardTitle}>{`${index} Condition`}</Text>
               </View>
               <Text style={styles.cardDescription}>
-                {`${condition.leftIndicator} ${studyName} Is ${signalOperator} ${condition.rightIndicator} ${studyName}`}
+                {`${condition.leftIndicator}  Is ${signalOperator} ${condition.rightIndicator} ${studyName}`}
               </Text>
             </View>
           </View>

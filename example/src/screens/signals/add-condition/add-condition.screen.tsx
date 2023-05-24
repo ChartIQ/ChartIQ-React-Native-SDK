@@ -72,7 +72,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         return {
           ...prevState,
           signalOperator: key as SignalOperator,
-          rightIndicator: prevState.rightIndicator ?? rightInd?.name ?? null,
+          rightIndicator: prevState.rightIndicator ?? rightInd?.name ?? 'Value',
           markerOption: {
             ...prevState.markerOption,
             color:

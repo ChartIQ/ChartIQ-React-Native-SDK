@@ -78,7 +78,10 @@ export enum SignalsStack {
 
 export type SignalsStackParamList = {
   [SignalsStack.Signals]: undefined;
-  [SignalsStack.AddSignal]: { addCondition?: { condition: Condition; id: string } };
+  [SignalsStack.AddSignal]: {
+    addCondition?: { condition: Condition; id: string };
+    changeStudy?: { study: Study };
+  };
   [SignalsStack.ChangeStudyParameters]: { study: Study };
   [SignalsStack.AddCondition]: { study: Study; condition?: Condition; id: string; index: number };
 };

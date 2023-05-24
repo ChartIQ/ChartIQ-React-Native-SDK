@@ -18,6 +18,7 @@ import {
 import { ChartType } from '~/model/chart-type';
 import { Signal } from '~/model/signals';
 import { Study, StudyParameterType } from '~/model/study';
+import { StudySimplified } from '~/model/study/study';
 
 const { ChartIQWrapperModule } = NativeModules;
 
@@ -255,7 +256,7 @@ export async function setStudyParameters(
     JSON.stringify(study),
     JSON.stringify(parameter)
   );
-  return JSON.parse(response);
+  return JSON.parse(response) as StudySimplified;
 }
 
 export async function getActiveSignals() {

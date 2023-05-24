@@ -70,7 +70,6 @@ const Studies: React.FC = () => {
     <View style={styles.container}>
       <FlatList
         data={activeStudies}
-        contentContainerStyle={{ flex: 1 }}
         renderItem={({ item }) => {
           const [name, value] = item.name.split(' (', 2);
           return (
@@ -140,6 +139,7 @@ const createStyles = (theme: Theme) =>
       marginBottom: 32,
     },
     emptyView: {
+      paddingTop: 128, //
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',

@@ -27,4 +27,10 @@ export interface Study {
   signalIQExclude: boolean;
 }
 
+export type StudySimplified = {
+  studyName: string;
+  type: string | null;
+  outputs: { [key: string]: string };
+};
+
 export type StudyParameterType = 'Inputs' | 'Outputs' | 'Parameters';

@@ -411,6 +411,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getStudyParameters(study: String, type: String, promise: Promise) {
     val parsedStudy = gson.fromJson(study, Study::class.java)
+    Log.println(Log.DEBUG, "getStudyParameters", parsedStudy.toString())
     val parsedType = StudyParameterType.values().find {
       it.name == type
     }
@@ -442,6 +443,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     val parsedParameters = gson.fromJson<List<StudyParameterModel>>(parameters, collectionType)
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setStudyParameters(parsedStudy, parsedParameters) {
+        Log.println(Log.INFO, "setStudyParameters", it.toString())
         promise.resolve(gson.toJson(it))
       }
     })
