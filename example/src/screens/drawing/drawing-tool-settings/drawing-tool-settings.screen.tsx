@@ -11,27 +11,21 @@ import {
   TextInputChangeEventData,
   NativeSyntheticEvent,
 } from 'react-native';
+import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import {
-  DrawingToolsRoute,
-  DrawingToolsSettings,
-  DrawingsStack,
-  RootStack,
-} from '~/shared/navigation.types';
-
-import { Theme, useTheme } from '~/theme';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
+import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
+import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
+import { Theme, useTheme } from '~/theme';
 import ColorSelector, { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
 import LineTypeSelector, {
   LineTypeSelectorMethods,
 } from '~/ui/line-type-selector/line-type-selector.component';
-import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { ListItem } from '~/ui/list-item';
 
 const DrawingToolSettings: React.FC = () => {
@@ -191,49 +185,48 @@ const DrawingToolSettings: React.FC = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.container}>
           {supportingFillColor ? (
-            <Pressable onPress={toggleFillColor}>
-              <ListItem key="Fill color" title="Fill color">
-                <View style={[styles.colorBox, { backgroundColor: fillColor }]} />
-              </ListItem>
-            </Pressable>
+            <ListItem onPress={toggleFillColor} key="Fill color" title="Fill color">
+              <View style={[styles.colorBox, { backgroundColor: fillColor }]} />
+            </ListItem>
           ) : null}
           {supportingLineColor ? (
-            <Pressable onPress={toggleLineColor}>
-              <ListItem key="Line color" title="Line color">
-                <View style={[styles.colorBox, { backgroundColor: lineColor }]} />
-              </ListItem>
-            </Pressable>
+            <ListItem onPress={toggleLineColor} key="Line color" title="Line color">
+              <View style={[styles.colorBox, { backgroundColor: lineColor }]} />
+            </ListItem>
           ) : null}
           {supportingLineType ? (
-            <Pressable onPress={toggleLineType}>
-              <ListItem key="Line type" title="Line type">
-                <currentLineType.Icon
-                  width={24}
-                  height={24}
-                  fill={theme.colors.buttonText}
-                  stroke={theme.colors.buttonText}
-                />
-              </ListItem>
-            </Pressable>
+            <ListItem onPress={toggleLineType} key="Line type" title="Line type">
+              <currentLineType.Icon
+                width={24}
+                height={24}
+                fill={theme.colors.buttonText}
+                stroke={theme.colors.buttonText}
+              />
+            </ListItem>
           ) : null}
           {supportingFont ? (
             <>
-              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontFamily)}>
-                <ListItem key="font-family" title="Font Family">
-                  <View style={styles.listItemDescriptionContainer}>
-                    <Text style={styles.text}>{font.family}</Text>
-                    <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                  </View>
-                </ListItem>
-              </Pressable>
-              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontSizes)}>
-                <ListItem key="font-size" title="Font Size">
-                  <View style={styles.listItemDescriptionContainer}>
-                    <Text style={styles.text}>{font.size}</Text>
-                    <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                  </View>
-                </ListItem>
-              </Pressable>
+              <ListItem
+                onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontFamily)}
+                key="font-family"
+                title="Font Family"
+              >
+                <View style={styles.listItemDescriptionContainer}>
+                  <Text style={styles.text}>{font.family}</Text>
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </View>
+              </ListItem>
+
+              <ListItem
+                onPress={() => handleNavigate(DrawingsStack.DrawingToolsFontSizes)}
+                key="font-size"
+                title="Font Size"
+              >
+                <View style={styles.listItemDescriptionContainer}>
+                  <Text style={styles.text}>{font.size}</Text>
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </View>
+              </ListItem>
               <ListItem key="font-style" title="Font Style">
                 <View style={styles.row}>
                   <Pressable
@@ -258,18 +251,20 @@ const DrawingToolSettings: React.FC = () => {
             </ListItem>
           ) : null}
           {supportingFibonacci ? (
-            <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsFibonacci)}>
-              <ListItem title="Fibonacci settings">
-                <Icons.chevronRight fill={theme.colors.border} />
-              </ListItem>
-            </Pressable>
+            <ListItem
+              onPress={() => handleNavigate(DrawingsStack.DrawingToolsFibonacci)}
+              title="Fibonacci settings"
+            >
+              <Icons.chevronRight fill={theme.colors.border} />
+            </ListItem>
           ) : null}
           {supportingDeviations ? (
-            <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsSTDDeviation)}>
-              <ListItem title="STD Deviations">
-                <Icons.chevronRight fill={theme.colors.border} />
-              </ListItem>
-            </Pressable>
+            <ListItem
+              onPress={() => handleNavigate(DrawingsStack.DrawingToolsSTDDeviation)}
+              title="STD Deviations"
+            >
+              <Icons.chevronRight fill={theme.colors.border} />
+            </ListItem>
           ) : null}
           {supportingVolumeProfile ? (
             <ListItem title="Volume Profile">
@@ -281,30 +276,35 @@ const DrawingToolSettings: React.FC = () => {
           ) : null}
           {supportingElliottWave ? (
             <>
-              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolsImpulse)}>
-                <ListItem title="Impulse">
-                  <View style={styles.listItemDescriptionContainer}>
-                    <Text style={styles.text}>{impulse}</Text>
-                    <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                  </View>
-                </ListItem>
-              </Pressable>
-              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolCorrective)}>
-                <ListItem title="Corrective">
-                  <View style={styles.listItemDescriptionContainer}>
-                    <Text style={styles.text}>{corrective}</Text>
-                    <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                  </View>
-                </ListItem>
-              </Pressable>
-              <Pressable onPress={() => handleNavigate(DrawingsStack.DrawingToolDecoration)}>
-                <ListItem title="Decoration">
-                  <View style={styles.listItemDescriptionContainer}>
-                    <Text style={styles.text}>{decoration}</Text>
-                    <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                  </View>
-                </ListItem>
-              </Pressable>
+              <ListItem
+                onPress={() => handleNavigate(DrawingsStack.DrawingToolsImpulse)}
+                title="Impulse"
+              >
+                <View style={styles.listItemDescriptionContainer}>
+                  <Text style={styles.text}>{impulse}</Text>
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </View>
+              </ListItem>
+              <ListItem
+                onPress={() => handleNavigate(DrawingsStack.DrawingToolCorrective)}
+                title="Corrective"
+              >
+                <View style={styles.listItemDescriptionContainer}>
+                  <Text style={styles.text}>{corrective}</Text>
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </View>
+              </ListItem>
+
+              <ListItem
+                onPress={() => handleNavigate(DrawingsStack.DrawingToolDecoration)}
+                title="Decoration"
+              >
+                <View style={styles.listItemDescriptionContainer}>
+                  <Text style={styles.text}>{decoration}</Text>
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </View>
+              </ListItem>
+
               <ListItem title="Show Lines">
                 <Switch onChange={toggleShowLines} value={showLines} />
               </ListItem>

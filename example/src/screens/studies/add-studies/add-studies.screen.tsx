@@ -81,13 +81,11 @@ const AddStudies: React.FC = () => {
   const renderItem = ({ item: { name }, index }: ListRenderItemInfo<Study>) => {
     const isSelected = selected.has(index);
     return (
-      <Pressable onPress={onPress(index)} android_ripple={{ color: theme.colors.colorPrimary }}>
-        <ListItem title={name}>
-          {isSelected ? (
-            <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
-          ) : null}
-        </ListItem>
-      </Pressable>
+      <ListItem onPress={onPress(index)} title={name}>
+        {isSelected ? (
+          <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
+        ) : null}
+      </ListItem>
     );
   };
 

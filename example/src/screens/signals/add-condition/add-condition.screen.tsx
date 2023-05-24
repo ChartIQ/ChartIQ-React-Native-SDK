@@ -1,39 +1,41 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
 import { getStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
-import { Condition } from '~/model/signals/condition';
-import {
-  SignalOperator,
-  SignalOperatorListItem,
-  SignalOperatorValues,
-} from '~/model/signals/signal-operator';
+import { Condition, NullableCondition } from '~/model/signals/condition';
+import { MarkerOption } from '~/model/signals/marker-option';
+import { SignalOperatorValues, SignalOperator } from '~/model/signals/signal-operator';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
+import { ColorSelector } from '~/ui/color-selector';
+import { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';
 import { SelectOptionFromListMethods } from '~/ui/select-from-list/select-from-list.component';
 
 import { MarkerOptionsForm } from './components/marker-options-form';
+import { MarkerOptionsFormMethods } from './components/marker-options-form/marker-options-form.component';
 
 interface AddConditionProps
   extends NativeStackScreenProps<SignalsStackParamList, SignalsStack.AddCondition> {}
 
-const FIRST_CONDITION = 'First condition';
-const INDICATOR = 'Indicator';
+const CONDITION = 'CONDITION';
+const FIRST_INDICATOR = 'FIRST_INDICATOR';
+const SECOND_INDICATOR = 'SECOND_INDICATOR';
 
-const AddCondition: React.FC<AddConditionProps> = ({
-  route: {
-    params: { study },
-  },
-}) => {
+const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigation }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const study = params?.study;
+  const condition = params?.condition;
+  const id = params?.id;
   const selectFromListRef = React.useRef<SelectOptionFromListMethods>(null);
-  const [selectedIndicator, setSelectedIndicator] = useState<StudyParameter>();
-  const [operator, setOperator] = useState<SignalOperatorListItem | null>(null);
+  const colorSelectorRef = React.useRef<ColorSelectorMethods>(null);
+  const markerOptionRef = React.useRef<MarkerOptionsFormMethods>(null);
+  const [selectedCondition, setSelectedCondition] = useState<NullableCondition | null>(null);
+  const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>(null);
 
   const [inputParams, setInputParams] = useState<Array<StudyParameter>>([]);
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
@@ -44,30 +46,82 @@ const AddCondition: React.FC<AddConditionProps> = ({
 
     setInputParams(inputs);
     setOutputParams(outputs);
-    setSelectedIndicator(outputs[0]);
-  }, [study]);
+    if (condition) {
+      setSelectedCondition(condition);
+    } else {
+      setSelectedCondition({
+        leftIndicator: outputs[0]?.name ?? null,
+        signalOperator: null,
+        markerOption: null,
+        rightIndicator: null,
+      });
+    }
+  }, [condition, study]);
 
   useEffect(() => {
     get();
   }, [get]);
 
-  // console.log('study', study);
-  // console.log('inputParams', inputParams);
-  // console.log('outputParams', outputParams);
-
-  const onChangeFromList = ({ key, value }: { value: string; key: string }, id: string) => {
-    if (id === FIRST_CONDITION) {
-      setOperator(
-        (prevState) =>
-          SignalOperatorValues.find(({ key: signalKey }) => signalKey === key) ?? prevState,
-      );
+  const onChangeFromList = ({ key }: { value: string; key: string }, id: string) => {
+    if (id === CONDITION) {
+      setSelectedCondition((prevState) => {
+        if (!prevState) {
+          return null;
+        }
+        const rightInd = outputParams.find(({ name }) => name !== prevState.leftIndicator);
+        return {
+          ...prevState,
+          signalOperator: key as SignalOperator,
+          rightIndicator: prevState.rightIndicator ?? rightInd?.name ?? null,
+          markerOption: {
+            ...prevState.markerOption,
+            color:
+              (outputParams.find(({ name }) => name === prevState.leftIndicator)
+                ?.value as string) ?? '',
+          },
+        };
+      });
     }
-    if (id === INDICATOR) {
-      setSelectedIndicator(outputParams.find(({ name }) => name === key));
+    if (id === FIRST_INDICATOR) {
+      const indicator = outputParams.find(({ name }) => name === key);
+      setSelectedCondition((prevState) => {
+        if (!prevState) {
+          return null;
+        }
+
+        const rightInd =
+          prevState.rightIndicator === null
+            ? null
+            : outputParams.find(({ name }) => name !== prevState.leftIndicator)?.name ?? null;
+
+        return {
+          ...prevState,
+          leftIndicator: indicator?.name as string,
+          rightIndicator: rightInd,
+          markerOption: {
+            ...prevState.markerOption,
+            color:
+              (outputParams.find(({ name }) => name === prevState.leftIndicator)
+                ?.value as string) ?? '',
+          },
+        };
+      });
+    }
+    if (id === SECOND_INDICATOR) {
+      const indicator = outputParams.find(({ name }) => name === key);
+      setSelectedCondition((prevState) => {
+        if (!prevState) {
+          return null;
+        }
+        return {
+          ...prevState,
+          rightIndicator: indicator?.name ?? (key as string),
+        };
+      });
     }
   };
 
-  const handleIndicator = () => {
+  const handleIndicator = (id: string, selected?: string) => {
     const inputValues = inputParams
       .map(({ value }) => {
         if (typeof value === 'boolean') {
@@ -78,11 +132,21 @@ const AddCondition: React.FC<AddConditionProps> = ({
       })
       .join(',');
 
-    const data = outputParams.map(({ name }) => ({
+    let data = outputParams.map(({ name }) => ({
       key: name,
       value: `${name} ${study.shortName} (${inputValues})`,
     }));
-    selectFromListRef.current?.open(data, selectedIndicator?.name ?? '', INDICATOR);
+    if (id === SECOND_INDICATOR) {
+      data = [
+        ...data.filter(({ key }) => key !== selectedCondition?.leftIndicator),
+        { key: 'Value', value: 'Value' },
+        { key: 'Open', value: 'Open' },
+        { key: 'High', value: 'High' },
+        { key: 'Low', value: 'Low' },
+        { key: 'Close', value: 'Close' },
+      ];
+    }
+    selectFromListRef.current?.open(data, selected ?? '', id);
   };
 
   const handleAddCondition = () => {
@@ -90,30 +154,129 @@ const AddCondition: React.FC<AddConditionProps> = ({
       key: key,
       value: description,
     }));
-    selectFromListRef.current?.open(data, operator?.key ?? '', FIRST_CONDITION);
+    selectFromListRef.current?.open(data, selectedCondition?.signalOperator ?? '', CONDITION);
   };
 
+  const handleColor = () => {
+    colorSelectorRef.current?.open(selectedCondition?.leftIndicator ?? '');
+  };
+
+  const handleColorChange = (input: string) => {
+    setSelectedCondition((prevState) => {
+      if (!prevState) return null;
+
+      return {
+        ...prevState,
+        markerOption: {
+          ...prevState.markerOption,
+          color: input,
+        } as MarkerOption,
+      };
+    });
+  };
+
+  const handleSave = useCallback(() => {
+    const markerOption = markerOptionRef.current?.getMarkerOptions();
+    if (!markerOption) return;
+
+    const addCondition: Condition = {
+      leftIndicator: selectedCondition?.leftIndicator ?? '',
+      rightIndicator:
+        selectedCondition?.rightIndicator === 'Value'
+          ? secondIndicatorValue
+          : selectedCondition?.rightIndicator ?? '',
+      markerOption: markerOption,
+      signalOperator: selectedCondition?.signalOperator ?? ('' as SignalOperator),
+    };
+    navigation.navigate(SignalsStack.AddSignal, { addCondition: { condition: addCondition, id } });
+  }, [
+    id,
+    navigation,
+    secondIndicatorValue,
+    selectedCondition?.leftIndicator,
+    selectedCondition?.rightIndicator,
+    selectedCondition?.signalOperator,
+  ]);
+
+  useEffect(() => {
+    if (selectedCondition?.signalOperator) {
+      navigation.setOptions({
+        headerRight: () => (
+          <Pressable onPress={handleSave}>
+            <Text style={styles.headerRight}>Save</Text>
+          </Pressable>
+        ),
+      });
+    }
+  }, [handleSave, navigation, selectedCondition?.signalOperator, styles.headerRight]);
+
+  const rightIndicator = outputParams.find(
+    ({ name }) => name === selectedCondition?.rightIndicator,
+  );
+
+  const selectedOperator = SignalOperatorValues.find(
+    (item) => item.key === selectedCondition?.signalOperator,
+  );
+  const leftIndicatorDescription = `${selectedCondition?.leftIndicator ?? ''} ${study.name}`;
+  const rightIndicatorDescription = rightIndicator
+    ? `${selectedCondition?.rightIndicator ?? ''} ${study.name}`
+    : selectedCondition?.rightIndicator ?? '';
+  const markerColor = selectedCondition?.markerOption?.color ?? '';
+
+  const hideSecondIndicator =
+    selectedCondition?.signalOperator &&
+    (selectedCondition?.signalOperator === SignalOperator.TURNS_UP ||
+      selectedCondition?.signalOperator === SignalOperator.TURNS_DOWN ||
+      selectedCondition?.signalOperator === SignalOperator.INCREASES ||
+      selectedCondition?.signalOperator === SignalOperator.DECREASES ||
+      selectedCondition?.signalOperator === SignalOperator.DOES_NOT_CHANGE);
+
+  const showValueSelector =
+    selectedCondition?.signalOperator && selectedCondition.rightIndicator === 'Value';
   return (
     <>
       <Text style={styles.title}>Condition settings</Text>
       <ListItem
-        onPress={handleIndicator}
+        onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
         title="Indicator 1"
-        value={`${selectedIndicator?.name} ${study.name}`}
+        value={leftIndicatorDescription}
       />
       <ListItem
         onPress={handleAddCondition}
         title="Condition "
-        value={operator?.description ?? 'Select Action'}
+        value={selectedOperator?.description ?? 'Select Action'}
       />
 
-      {operator ? (
+      {selectedCondition?.signalOperator ? (
         <>
+          {hideSecondIndicator ? null : (
+            <ListItem
+              onPress={() =>
+                handleIndicator(SECOND_INDICATOR, selectedCondition?.rightIndicator ?? '')
+              }
+              title="Indicator 2"
+              value={rightIndicatorDescription}
+            />
+          )}
+          {showValueSelector ? (
+            <ListItem title="Value">
+              <TextInput
+                onChangeText={setSecondIndicatorValue}
+                defaultValue="0.0"
+                style={styles.textInput}
+              />
+            </ListItem>
+          ) : null}
           <Text style={styles.title}>Appearance Settings</Text>
-          <MarkerOptionsForm color={selectedIndicator?.value as string} />
+          <MarkerOptionsForm
+            color={markerColor}
+            onColorPressed={handleColor}
+            ref={markerOptionRef}
+          />
         </>
       ) : null}
       <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
+      <ColorSelector onChange={handleColorChange} ref={colorSelectorRef} />
     </>
   );
 };
@@ -132,6 +295,13 @@ const createStyles = ({ colors }: Theme) =>
     },
     row: {
       flexDirection: 'row',
+    },
+    headerRight: {
+      color: colors.colorPrimary,
+    },
+    textInput: {
+      padding: 0,
+      color: colors.cardSubtitle,
     },
   });
 

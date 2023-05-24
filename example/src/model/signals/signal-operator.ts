@@ -1,15 +1,15 @@
 export enum SignalOperator {
-  GREATER_THAN = 'greater_than',
-  LESS_THAN = 'less_than',
-  EQUAL_TO = 'equal_to',
-  CROSSES = 'crosses',
-  CROSSES_ABOVE = 'crosses_above',
-  CROSSES_BELOW = 'crosses_below',
-  TURNS_UP = 'turns_up',
-  TURNS_DOWN = 'turns_down',
-  INCREASES = 'increases',
-  DECREASES = 'decreases',
-  DOES_NOT_CHANGE = 'does_not_change',
+  GREATER_THAN = 'GREATER_THAN',
+  LESS_THAN = 'LESS_THAN',
+  EQUAL_TO = 'EQUAL_TO',
+  CROSSES = 'CROSSES',
+  CROSSES_ABOVE = 'CROSSES_ABOVE',
+  CROSSES_BELOW = 'CROSSES_BELOW',
+  TURNS_UP = 'TURNS_UP',
+  TURNS_DOWN = 'TURNS_DOWN',
+  INCREASES = 'INCREASES',
+  DECREASES = 'DECREASES',
+  DOES_NOT_CHANGE = 'DOES_NOT_CHANGE',
 }
 
 export type SignalOperatorListItem = {

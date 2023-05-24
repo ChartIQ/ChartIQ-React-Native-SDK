@@ -171,13 +171,12 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
               renderItem: ({ item }) => {
                 if (item?.options !== undefined) {
                   return (
-                    <Pressable
+                    <ListItem
                       onPress={() => handleSelectOption(item.options, item.value, item.name)}
+                      title={item.name}
                     >
-                      <ListItem title={item.name}>
-                        <Text>{item.value}</Text>
-                      </ListItem>
-                    </Pressable>
+                      <Text>{item.value}</Text>
+                    </ListItem>
                   );
                 }
                 if (typeof item.value === 'number' || typeof item.value === 'string') {
@@ -209,11 +208,9 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
               data: outputParams,
               key: 'section.output-params',
               renderItem: ({ item }) => (
-                <Pressable onPress={() => handleChangeColor(item.name)}>
-                  <ListItem title={item.name}>
-                    <View style={[styles.box, { backgroundColor: item.value as string }]} />
-                  </ListItem>
-                </Pressable>
+                <ListItem onPress={() => handleChangeColor(item.name)} title={item.name}>
+                  <View style={[styles.box, { backgroundColor: item.value as string }]} />
+                </ListItem>
               ),
             },
           ]}

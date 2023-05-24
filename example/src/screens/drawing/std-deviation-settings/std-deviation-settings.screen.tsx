@@ -197,11 +197,9 @@ const STDDeviationsSettingsScreen: React.FC = () => {
                 <Switch value={showLine} onChange={() => handleShowLine(name)} />
               </ListItem>
 
-              <Pressable onPress={() => handleLineColor(name)}>
-                <ListItem title={`Line ${name} color`}>
-                  <View style={[styles.colorBox, { backgroundColor: lineColor }]} />
-                </ListItem>
-              </Pressable>
+              <ListItem onPress={() => handleLineColor(name)} title={`Line ${name} color`}>
+                <View style={[styles.colorBox, { backgroundColor: lineColor }]} />
+              </ListItem>
               <ListItem title={`Line ${name} type`}>
                 <Pressable onPress={() => handleLineType(name)} style={styles.lineContainer}>
                   <Icon width={40} height={40} fill="black" stroke="black" />

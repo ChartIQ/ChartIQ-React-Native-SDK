@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { FlatList, Pressable } from 'react-native';
+import { FlatList } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -39,14 +39,12 @@ const CorrectiveScreen: React.FC = () => {
       <FlatList
         data={items}
         renderItem={({ item: { name, value } }) => (
-          <Pressable onPress={() => handlePress(value)}>
-            <ListItem title={name}>
-              <Icons.chevronRight
-                fill={theme.colors.colorPrimary}
-                style={{ display: value === decoration ? 'flex' : 'none' }}
-              />
-            </ListItem>
-          </Pressable>
+          <ListItem onPress={() => handlePress(value)} title={name}>
+            <Icons.chevronRight
+              fill={theme.colors.colorPrimary}
+              style={{ display: value === decoration ? 'flex' : 'none' }}
+            />
+          </ListItem>
         )}
         keyExtractor={(item) => item.value}
       />

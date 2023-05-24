@@ -1,5 +1,6 @@
 package com.chartiqwrapper
 
+import android.content.pm.ApplicationInfo
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
@@ -98,7 +99,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     dispatchOnChartAggregationTypeChanged()
     fetchCrosshairsState()
     addMeasureListener()
-
+    Log.println(Log.INFO, "FLAG_DEBUGGABLE", ApplicationInfo.FLAG_DEBUGGABLE.toString())
     return chartIQ.chartView.apply {
       layoutParams = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT

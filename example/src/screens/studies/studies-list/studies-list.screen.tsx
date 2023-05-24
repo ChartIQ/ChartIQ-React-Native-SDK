@@ -96,18 +96,17 @@ const Studies: React.FC = () => {
                 },
               ]}
             >
-              <Pressable onPress={() => navigateStudyParams(item)}>
-                <ListItem
-                  titleComponent={
-                    <View>
-                      <Text style={styles.studyName}>{name}</Text>
-                      <Text style={styles.studyValue}>{`(${value}`}</Text>
-                    </View>
-                  }
-                >
-                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-                </ListItem>
-              </Pressable>
+              <ListItem
+                onPress={() => navigateStudyParams(item)}
+                titleComponent={
+                  <View>
+                    <Text style={styles.studyName}>{name}</Text>
+                    <Text style={styles.studyValue}>{`(${value}`}</Text>
+                  </View>
+                }
+              >
+                <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+              </ListItem>
             </SwipableItem>
           );
         }}

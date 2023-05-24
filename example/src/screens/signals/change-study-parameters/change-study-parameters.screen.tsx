@@ -28,10 +28,13 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
     navigation.setOptions({ title: study.name });
   }, [navigation, study.name]);
 
+  console.log('study', study.name);
+
   const get = useCallback(async () => {
     const inputs = await getStudyParameters(study, 'Inputs');
     const outputs = await getStudyParameters(study, 'Outputs');
-
+    console.log('outputParameters', outputs);
+    console.log('inputParameters', inputs);
     setInputParams(inputs);
     setOutputParams(outputs);
   }, [study]);

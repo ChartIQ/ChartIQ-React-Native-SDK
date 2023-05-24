@@ -39,14 +39,12 @@ const ImpulseScreen: React.FC = () => {
       <FlatList
         data={items}
         renderItem={({ item: { name, value } }) => (
-          <Pressable onPress={() => handlePress(value)}>
-            <ListItem title={name}>
-              <Icons.chevronRight
-                fill={theme.colors.colorPrimary}
-                style={{ display: value === impulse ? 'flex' : 'none' }}
-              />
-            </ListItem>
-          </Pressable>
+          <ListItem onPress={() => handlePress(value)} title={name}>
+            <Icons.chevronRight
+              fill={theme.colors.colorPrimary}
+              style={{ display: value === impulse ? 'flex' : 'none' }}
+            />
+          </ListItem>
         )}
         keyExtractor={(item) => item.value}
       />

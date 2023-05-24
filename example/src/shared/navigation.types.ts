@@ -2,6 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { DrawingSettings, DrawingTool } from '~/model';
+import { Condition } from '~/model/signals/condition';
 import { Study } from '~/model/study';
 
 export enum RootStack {
@@ -77,9 +78,9 @@ export enum SignalsStack {
 
 export type SignalsStackParamList = {
   [SignalsStack.Signals]: undefined;
-  [SignalsStack.AddSignal]: undefined;
+  [SignalsStack.AddSignal]: { addCondition?: { condition: Condition; id: string } };
   [SignalsStack.ChangeStudyParameters]: { study: Study };
-  [SignalsStack.AddCondition]: { study: Study };
+  [SignalsStack.AddCondition]: { study: Study; condition?: Condition; id: string; index: number };
 };
 
 export type DrawingToolsNavigation = NativeStackNavigationProp<

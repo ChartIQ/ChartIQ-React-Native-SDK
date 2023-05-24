@@ -85,12 +85,16 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
       outputParameters={outputParams}
     >
       <View style={styles.footerContainer}>
-        <Pressable onPress={handleResetToDefaults}>
-          <ListItem textStyle={{ color: theme.colors.colorPrimary }} title="Reset to Defaults" />
-        </Pressable>
-        <Pressable onPress={handleRemoveStudy}>
-          <ListItem textStyle={{ color: theme.colors.error }} title="Remove Study" />
-        </Pressable>
+        <ListItem
+          onPress={handleResetToDefaults}
+          textStyle={{ color: theme.colors.colorPrimary }}
+          title="Reset to Defaults"
+        />
+        <ListItem
+          onPress={handleRemoveStudy}
+          textStyle={{ color: theme.colors.error }}
+          title="Remove Study"
+        />
       </View>
     </ChangeStudyParameters>
   );

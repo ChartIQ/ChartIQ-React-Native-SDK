@@ -1,24 +1,24 @@
 export enum SignalMarkerType {
-  MARKER = 'marker',
-  PAINTBAR = 'paintbar',
+  MARKER = 'MARKER',
+  PAINTBAR = 'PAINTBAR',
 }
 
 export enum SignalShape {
-  CIRCLE = 'circle',
-  SQUARE = 'square',
-  DIAMOND = 'diamond',
+  CIRCLE = 'CIRCLE',
+  SQUARE = 'SQUARE',
+  DIAMOND = 'DIAMOND',
 }
 
 export enum SignalSize {
-  SMALL = 'small',
-  MEDIUM = 'medium',
-  LARGE = 'large',
+  SMALL = 'S',
+  MEDIUM = 'M',
+  LARGE = 'L',
 }
 
 export enum SignalPosition {
-  ABOVE_CANDLE = 'above_candle',
-  BELOW_CANDLE = 'below_candle',
-  ON_CANDLE = 'on_candle',
+  ABOVE_CANDLE = 'ABOVE_CANDLE',
+  BELOW_CANDLE = 'BELOW_CANDLE',
+  ON_CANDLE = 'ON_CANDLE',
 }
 
 export interface MarkerOption {
@@ -28,4 +28,13 @@ export interface MarkerOption {
   signalSize: SignalSize;
   label: string;
   signalPosition: SignalPosition;
+}
+
+export interface NullableMarkerOption {
+  type?: SignalMarkerType | null;
+  color?: string | null;
+  signalShape?: SignalShape | null;
+  signalSize?: SignalSize | null;
+  label?: string | null;
+  signalPosition?: SignalPosition | null;
 }

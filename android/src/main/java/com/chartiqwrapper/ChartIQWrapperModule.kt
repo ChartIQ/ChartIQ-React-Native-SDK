@@ -9,6 +9,7 @@ import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.chartiq.sdk.model.signal.Signal
+import com.chartiq.sdk.model.signal.SignalOperator
 import com.chartiq.sdk.model.study.Study
 import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
@@ -459,6 +460,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getActiveSignals(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getActiveSignals {
+        Log.println(Log.DEBUG, "getActiveSignals", it.toString())
         promise.resolve(gson.toJson(it))
       }
     })
@@ -475,10 +477,16 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
   @ReactMethod
   fun addSignal(signal: String,editMode: Boolean) {
+    Log.println(Log.DEBUG, "addSignal", signal)
     val parsedSignal = gson.fromJson(signal, Signal::class.java)
+    Log.println(Log.DEBUG, "parsed addSignal", parsedSignal.toString())
+    Log.println(Log.DEBUG, "signal operator string", SignalOperator.CROSSES.toString())
     if (parsedSignal != null) {
+
       handler.post(Runnable {
+        Log.println(Log.DEBUG, "addSignal", "adding signal")
         chartIQViewModel.getChartIQ().saveSignal(parsedSignal, editMode)
+        Log.println(Log.DEBUG, "addSignal", "added signal")
       })
     }
   }

@@ -12,6 +12,7 @@ export interface Signal {
   name: string;
   conditions: Condition[];
   joiner: SignalJoiner;
+  description: string;
   disabled: boolean;
   study: Study;
 }

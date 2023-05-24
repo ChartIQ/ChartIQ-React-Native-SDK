@@ -269,3 +269,7 @@ export async function addStudySignal(name: string) {
 
   return JSON.parse(response) as Study;
 }
+
+export function addSignal(signal: Signal, editMode: boolean = false) {
+  return ChartIQWrapperModule.addSignal(JSON.stringify(signal), editMode);
+}

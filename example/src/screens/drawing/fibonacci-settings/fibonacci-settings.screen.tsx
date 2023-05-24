@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
+import { encode } from 'base-64';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { encode } from 'base-64';
 
 import Icons from '~/assets/icons';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
@@ -67,11 +67,9 @@ const FontFamilyScreen: React.FC = () => {
       <FlatList
         data={settings}
         renderItem={({ item: { display, level } }) => (
-          <Pressable onPress={() => handlePress(level)}>
-            <ListItem title={`${level.toFixed(2)} %`}>
-              {display ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
-            </ListItem>
-          </Pressable>
+          <ListItem onPress={() => handlePress(level)} title={`${level.toFixed(2)} %`}>
+            {display ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
+          </ListItem>
         )}
         keyExtractor={(item) => item.level.toString()}
         ListFooterComponent={() => (
