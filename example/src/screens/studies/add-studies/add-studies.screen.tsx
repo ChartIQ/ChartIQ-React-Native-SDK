@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
 import { Study } from '~/model/study';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { Input } from '~/ui/input';
@@ -19,11 +20,16 @@ const AddStudies: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(new Set<number>());
   const navigation = useNavigation<NativeStackNavigationProp<StudiesStackParamList>>();
+  const translations = useTranslations();
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
-    setStudies(studiesList);
-  }, []);
+    const translatedStudies = studiesList.map((item) => ({
+      ...item,
+      name: translations[item.name] ?? item.name,
+    }));
+    setStudies(translatedStudies);
+  }, [translations]);
 
   useEffect(() => {
     get();

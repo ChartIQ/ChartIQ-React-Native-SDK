@@ -10,14 +10,16 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
+import { ChartSymbol, fetchSymbolsAsync } from '~/api';
+import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
+import { useTranslations } from '~/shared/hooks/use-translations';
+import { useTheme, Theme } from '~/theme';
+
 import Icons from '../../assets/icons';
 import { BottomSheet } from '../bottom-sheet';
 import { Input } from '../input';
-import { FilterSelector } from '../selector-filters';
-import { ChartSymbol, fetchSymbolsAsync } from '~/api';
-import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
-import { useTheme, Theme } from '~/theme';
 import { InputFieldMethods } from '../input/input.component';
+import { FilterSelector } from '../selector-filters';
 
 interface SymbolSelectorProps {
   onChange: (symbol: ChartSymbol) => void;

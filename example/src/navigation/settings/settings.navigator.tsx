@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+
 import { SettingsScreen } from '~/screens/settings/chart-settings';
 import { SelectLanguageScreen } from '~/screens/settings/select-language';
 import { SettingsStack, SettingsStackParamList } from '~/shared/navigation.types';

@@ -31,8 +31,15 @@ const Studies: React.FC = () => {
   const get = useCallback(async () => {
     const response = await getActiveStudies();
 
-    setActiveStudies(response);
-  }, [setActiveStudies]);
+    const translatedStudies = response.map((item) => {
+      return {
+        ...item,
+        name: item.name,
+      };
+    });
+
+    setActiveStudies(translatedStudies);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {

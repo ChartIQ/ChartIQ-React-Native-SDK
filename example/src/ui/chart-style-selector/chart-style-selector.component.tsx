@@ -1,6 +1,12 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { getChartAggregationType, getChartType } from 'react-native-chart-iq-wrapper';
+import { FlatList } from 'react-native-gesture-handler';
+
+import Icons from '~/assets/icons';
+import { useTranslations } from '~/shared/hooks/use-translations';
+import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
@@ -11,10 +17,6 @@ import {
   ChartStyleSelectorMethods,
   ChartStyleSelectorProps,
 } from './chart-style-selector.data';
-import { Theme, useTheme } from '~/theme';
-import { FlatList } from 'react-native-gesture-handler';
-import { getChartAggregationType, getChartType } from 'react-native-chart-iq-wrapper';
-import Icons from '~/assets/icons';
 
 const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelectorProps>(
   ({ onChange }, ref) => {
@@ -22,11 +24,22 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const [selectedChartStyle, setSelectedChartStyle] = React.useState<ChartStyleItem | null>(null);
+    const translations = useTranslations();
+    const [data, setData] = React.useState<ChartStyleItem[]>(chartStyleSelectorData);
 
     const handleClose = () => {
       bottomSheetRef.current?.close();
       Keyboard.dismiss();
     };
+
+    useEffect(() => {
+      setData(
+        chartStyleSelectorData.map((item) => ({
+          ...item,
+          label: translations[item.label] ?? item.label,
+        })),
+      );
+    }, [translations]);
 
     const handleOpen = async () => {
       bottomSheetRef.current?.expand();
@@ -72,7 +85,7 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
           title="Chart style"
         />
         <FlatList
-          data={chartStyleSelectorData}
+          data={data}
           contentContainerStyle={styles.contentContainer}
           style={styles.contentContainer}
           ItemSeparatorComponent={() => <View style={styles.separator} />}

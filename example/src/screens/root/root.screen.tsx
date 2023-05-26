@@ -1,20 +1,28 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIqWrapperView, setTheme } from 'react-native-chart-iq-wrapper';
+import {
+  ChartIqWrapperView,
+  getTranslations,
+  setLanguage,
+  setTheme,
+} from 'react-native-chart-iq-wrapper';
 
-import IntervalSelector from '../../ui/interval-selector/interval-selector.component';
-
-import CompareSymbolSelector from '../../ui/compare-symbol-selector/compare-symbol-selector.component';
-import SymbolSelector from '../../ui/symbol-selector/symbol-selector.component';
-
-import { DrawingToolSelector } from '../../ui/drawing-tools-selector';
-import { ChartStyleSelector } from '../../ui/chart-style-selector';
-import { DrawingToolManager } from '../../ui/drawing-tool-manager';
-import { Header } from '../../ui/header';
-import { DrawingMeasure } from '~/ui/drawing-measure';
-import FullScreenAnimatedButtonComponent from '~/ui/full-screen-animated-button/full-screen-animated-button.component';
+import { asyncStorageKeys } from '~/constants/async-storage-keys';
+import { ChartIQLanguages } from '~/constants/languages';
+import { defaultENTranslations } from '~/localization/language-keys';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { useTheme } from '~/theme';
+import { DrawingMeasure } from '~/ui/drawing-measure';
+import FullScreenAnimatedButtonComponent from '~/ui/full-screen-animated-button/full-screen-animated-button.component';
+
+import { ChartStyleSelector } from '../../ui/chart-style-selector';
+import CompareSymbolSelector from '../../ui/compare-symbol-selector/compare-symbol-selector.component';
+import { DrawingToolManager } from '../../ui/drawing-tool-manager';
+import { DrawingToolSelector } from '../../ui/drawing-tools-selector';
+import { Header } from '../../ui/header';
+import IntervalSelector from '../../ui/interval-selector/interval-selector.component';
+import SymbolSelector from '../../ui/symbol-selector/symbol-selector.component';
 
 export default function Root() {
   const { isDark } = useTheme();
@@ -72,6 +80,26 @@ export default function Root() {
 
     setTheme('day');
   }, [isDark]);
+
+  const get = React.useCallback(async () => {
+    let userLanguage =
+      (await AsyncStorage.getItem(asyncStorageKeys.languageCode)) ?? ChartIQLanguages.EN.code;
+
+    AsyncStorage.setItem(asyncStorageKeys.languageCode, userLanguage);
+    setLanguage(userLanguage);
+
+    getTranslations(userLanguage).then((translations) => {
+      if (Object.keys(translations).length === 0) {
+        AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(defaultENTranslations));
+      }
+
+      AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(translations));
+    });
+  }, []);
+
+  React.useEffect(() => {
+    get();
+  }, [get]);
 
   return (
     <View style={{ flex: 1 }}>
