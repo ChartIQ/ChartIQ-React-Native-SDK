@@ -43,14 +43,15 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   const handleSave = useCallback(() => {
     const inputParameters = changeStudyParametersRef.current?.getInputParamsData() || [];
     const outputParameters = changeStudyParametersRef.current?.getOutputParamsData() || [];
-    console.log(outputParameters);
+
     setStudyParameters(study, [...inputParameters, ...outputParameters]).then((data) => {
-      console.log(data.outputs);
       navigation.navigate(SignalsStack.AddSignal, {
         changeStudy: {
           study: {
             ...study,
+            outputs: data.outputs,
             name: data.studyName,
+            shortName: data.studyName,
             type: data.type ?? study.type,
           },
         },

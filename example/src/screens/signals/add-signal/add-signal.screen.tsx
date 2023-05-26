@@ -2,12 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList } from 'react-native';
-import {
-  addSignal,
-  addStudySignal,
-  getStudyList,
-  getStudyParameters,
-} from 'react-native-chart-iq-wrapper';
+import { addSignal, addSignalStudy, getStudyList } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
@@ -20,6 +15,7 @@ import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';
 import { SelectOptionFromListMethods } from '~/ui/select-from-list/select-from-list.component';
+import { SwipableItem } from '~/ui/swipable-item';
 
 import ConditionItem from './components/condition-item/condition-item.component';
 import { JoinSelector } from './components/join-selector';
@@ -37,32 +33,68 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const [selectedStudy, setSelectedStudy] = useState<Study | null>(null);
   const addCondition = params?.addCondition;
   const changedStudy = params?.changeStudy?.study;
+  const signalForEdit = params?.signalForEdit?.signal;
   const [conditions, setConditions] = useState<Map<string, Condition>>(new Map());
   const [joiner, setJoiner] = useState<SignalJoiner>(SignalJoiner.OR);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  const onStudyChange = useCallback(async () => {
+    if (changedStudy) {
+      setSelectedStudy(changedStudy);
+      setConditions((prevState) => {
+        const newConditions = new Map(prevState);
+
+        newConditions.forEach((condition, key) => {
+          newConditions.set(key, {
+            ...condition,
+            leftIndicator: condition.leftIndicator.replace(
+              selectedStudy?.shortName || '',
+              changedStudy.name,
+            ),
+            rightIndicator: condition.rightIndicator
+              ? condition.rightIndicator.replace(selectedStudy?.shortName || '', changedStudy.name)
+              : '',
+          });
+        });
+
+        return newConditions;
+      });
+    }
+  }, [changedStudy, selectedStudy?.shortName]);
+
+  const onConditionChange = useCallback(() => {
+    if (addCondition?.condition) {
+      setConditions((prevState) => {
+        const newConditions = new Map(prevState);
+        newConditions.set(addCondition.id, addCondition.condition);
+
+        return newConditions;
+      });
+    }
+  }, [addCondition]);
 
   useFocusEffect(
     useCallback(() => {
-      if (addCondition?.condition) {
-        setConditions((prevState) => {
-          const newConditions = new Map(prevState);
-          newConditions.set(addCondition.id, addCondition.condition);
+      onConditionChange();
+    }, [onConditionChange]),
+  );
 
-          return newConditions;
-        });
-      }
-      if (changedStudy) {
-        console.log('changedStudy', changedStudy);
-        setSelectedStudy(changedStudy);
-      }
-    }, [addCondition, changedStudy]),
+  useFocusEffect(
+    useCallback(() => {
+      onStudyChange();
+    }, [onStudyChange]),
   );
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
 
-    setStudies(studiesList.filter(({ signalIQExclude }) => !signalIQExclude));
+    setStudies(
+      studiesList
+        .filter(({ signalIQExclude }) => !signalIQExclude)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    );
   }, []);
 
   useEffect(() => {
@@ -79,7 +111,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
 
   const handleStudyChange = async ({ value }: { value: string }, _: string) => {
     const item = studies.find((item) => item.name === value) ?? null;
-    const study = await addStudySignal(item?.shortName ?? '');
+    const study = await addSignalStudy(item?.shortName ?? '');
     setSelectedStudy(study);
   };
 
@@ -96,18 +128,13 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         condition: input,
         id,
         index,
+        joiner,
       });
   };
 
   const handleSave = useCallback(async () => {
     if (selectedStudy) {
-      const stdy = await addStudySignal(selectedStudy.name);
-
-      const mappedConditions = Array.from(conditions.values()).map((condition) => ({
-        ...condition,
-        leftIndicator: `${condition.leftIndicator} ${stdy?.name}`,
-        rightIndicator: `${condition.rightIndicator} ${stdy?.name}`,
-      }));
+      const mappedConditions = Array.from(conditions.values());
 
       const signal: Signal = {
         conditions: mappedConditions,
@@ -115,18 +142,19 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         name,
         disabled: false,
         description,
-        study: stdy,
+        study: selectedStudy,
         uniqueId: '',
       };
-      addSignal(signal, false);
+
+      addSignal(signal, isEdit);
       navigation.goBack();
     }
-  }, [conditions, description, joiner, name, navigation, selectedStudy]);
+  }, [conditions, description, isEdit, joiner, name, navigation, selectedStudy]);
 
   const data = Array.from(conditions).map(([id, condition]) => ({ id, condition }));
 
   useEffect(() => {
-    if (selectedStudy && conditions.size > 0) {
+    if (selectedStudy && conditions.size > 0 && name.length > 0) {
       navigation.setOptions({
         headerRight: () => (
           <Text disabled={false} style={styles.saveButton} onPress={handleSave}>
@@ -146,11 +174,30 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   }, [
     conditions.size,
     handleSave,
+    name.length,
     navigation,
     selectedStudy,
     styles.saveButton,
     styles.saveButtonDisabled,
   ]);
+
+  useEffect(() => {
+    if (signalForEdit) {
+      setConditions(
+        new Map(signalForEdit.conditions.map((condition) => [uuid.v4() as string, condition])),
+      );
+      setJoiner(signalForEdit.joiner);
+      setName(signalForEdit.name);
+      setDescription(signalForEdit.description);
+      setSelectedStudy(signalForEdit.study);
+      setIsEdit(true);
+      navigation.setOptions({
+        headerTitle: 'Edit Signal',
+      });
+    } else {
+      setIsEdit(false);
+    }
+  }, [navigation, signalForEdit]);
 
   const ListFooterComponent = (
     <>
@@ -169,6 +216,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
               <TextInput
                 style={styles.textInput}
                 multiline
+                defaultValue={description}
                 placeholder="Description will appear in an infobox when the signal is clicked."
                 onChangeText={setDescription}
               />
@@ -176,7 +224,12 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           }
         />
         <ListItem title="Name">
-          <TextInput style={styles.textInput} placeholder="Enter name" onChangeText={setName} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter name"
+            defaultValue={name}
+            onChangeText={setName}
+          />
         </ListItem>
       </View>
     </>
@@ -200,9 +253,24 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           <Icons.chevronRight fill={theme.colors.cardSubtitle} />
         </ListItem>
 
-        <ListItem onPress={handleSelectStudy} title="Change study" textStyle={styles.selectStudy} />
+        {!isEdit ? (
+          <ListItem
+            onPress={handleSelectStudy}
+            title="Change study"
+            textStyle={styles.selectStudy}
+          />
+        ) : null}
       </>
     );
+
+  const handleDeleteCondition = (id: string) => {
+    setConditions((conditions) => {
+      const newConditions = new Map(conditions);
+      newConditions.delete(id);
+
+      return newConditions;
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -210,14 +278,28 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         data={data}
         renderItem={({ item: { condition, id }, index }) => (
           <>
-            <ConditionItem
-              condition={condition}
-              index={index}
-              onPress={() => {
-                handleAddCondition(id, index, condition);
-              }}
-              studyName={selectedStudy ? selectedStudy.shortName : ''}
-            />
+            <SwipableItem
+              rightActionButtons={[
+                {
+                  title: 'Delete',
+                  onPress: () => {
+                    handleDeleteCondition(id);
+                  },
+                  key: 'condition.delete',
+                  backgroundColor: theme.colors.error,
+                  color: theme.colors.primaryButtonText,
+                },
+              ]}
+            >
+              <ConditionItem
+                condition={condition}
+                index={index}
+                onPress={() => {
+                  handleAddCondition(id, index, condition);
+                }}
+                joiner={joiner}
+              />
+            </SwipableItem>
             {data.length > 0 ? (
               index === 0 ? (
                 <JoinSelector onPress={setJoiner} />

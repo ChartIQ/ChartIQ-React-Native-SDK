@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Pressable, SectionList, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { SectionList, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { StudyParameter, StudyParameterModel } from '~/model';
 import { Theme, useTheme } from '~/theme';
@@ -90,7 +90,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       fromListSelectorRef.current?.open(options, selected, fieldName);
     };
 
-    const onOptionChange = (input: string, id: string) => {
+    const onOptionChange = ({ value: input }: { value: string }, id: string) => {
       const itemToChange = inputParamsData.find((item) => item.fieldName === id);
       if (itemToChange) {
         setInputParamsData((prevState) => {

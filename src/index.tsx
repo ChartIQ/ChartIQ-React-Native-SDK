@@ -265,12 +265,30 @@ export async function getActiveSignals() {
   return JSON.parse(response) as Signal[];
 }
 
-export async function addStudySignal(name: string) {
-  const response = await ChartIQWrapperModule.addStudySignal(name);
+export async function addSignalStudy(name: string) {
+  const response = await ChartIQWrapperModule.addSignalStudy(name); // rename native method
 
   return JSON.parse(response) as Study;
 }
 
 export function addSignal(signal: Signal, editMode: boolean = false) {
   return ChartIQWrapperModule.addSignal(JSON.stringify(signal), editMode);
+}
+
+export function toggleSignal(signal: Signal) {
+  return ChartIQWrapperModule.toggleSignal(JSON.stringify(signal));
+}
+
+export function removeSignal(signal: Signal) {
+  return ChartIQWrapperModule.removeSignal(JSON.stringify(signal));
+}
+
+export async function getTranslations(languageCode: string) {
+  const response = await ChartIQWrapperModule.getTranslations(languageCode);
+
+  return JSON.parse(response);
+}
+
+export function setLanguage(languageCode: string) {
+  return ChartIQWrapperModule.setLanguage(languageCode);
 }

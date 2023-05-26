@@ -1,13 +1,15 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { getActiveSignals } from 'react-native-chart-iq-wrapper';
+import { FlatList, Image, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { getActiveSignals, removeSignal, toggleSignal } from 'react-native-chart-iq-wrapper';
 
 import images from '~/assets/images';
 import { Signal } from '~/model/signals';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
+import { ListItem } from '~/ui/list-item';
+import { SwipableItem } from '~/ui/swipable-item';
 
 interface SignalsProps
   extends NativeStackScreenProps<SignalsStackParamList, SignalsStack.Signals> {}
@@ -19,13 +21,13 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   const [activeSignals, setActiveSignal] = useState<Signal[]>([]);
 
   const handleAddSignal = useCallback(() => {
-    navigation.navigate(SignalsStack.AddSignal);
+    navigation.navigate(SignalsStack.AddSignal, {});
   }, [navigation]);
 
   const get = useCallback(async () => {
     const response = await getActiveSignals();
 
-    console.log('response', response);
+    setActiveSignal(response);
   }, []);
 
   useFocusEffect(
@@ -35,23 +37,54 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   );
 
   useEffect(() => {
-    // if (activeStudies.length !== 0) {
-    //   navigation.setOptions({
-    //     headerRight: () => (
-    //       <Pressable onPress={handleAddStudies}>
-    //         <Text style={styles.headerButton}>Add</Text>
-    //       </Pressable>
-    //     ),
-    //   });
-    // }
-  }, []);
+    if (activeSignals.length !== 0) {
+      navigation.setOptions({
+        headerRight: () => (
+          <Pressable onPress={handleAddSignal}>
+            <Text style={styles.headerButton}>Add</Text>
+          </Pressable>
+        ),
+      });
+    }
+  }, [activeSignals.length, handleAddSignal, navigation, styles.headerButton]);
+
+  const handleToggleSignal = (value: boolean, signal: Signal) => {
+    toggleSignal(signal);
+    get();
+  };
+
+  const handleEditSignal = (signal: Signal) => {
+    navigation.navigate(SignalsStack.AddSignal, { signalForEdit: { signal } });
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={[]}
+        data={activeSignals}
         contentContainerStyle={{ flex: 1 }}
-        renderItem={null}
+        renderItem={({ item }) => (
+          <SwipableItem
+            rightActionButtons={[
+              {
+                key: 'delete-signal-item',
+                onPress: () => {
+                  removeSignal(item);
+                  get();
+                },
+                title: 'Delete',
+                backgroundColor: theme.colors.error,
+                color: theme.colors.primaryButtonText,
+              },
+            ]}
+          >
+            <ListItem onPress={() => handleEditSignal(item)} title={item.name}>
+              <Switch
+                value={!item.disabled}
+                onValueChange={(value) => handleToggleSignal(value, item)}
+              />
+            </ListItem>
+          </SwipableItem>
+        )}
         ListEmptyComponent={
           <View style={styles.emptyView}>
             <Image

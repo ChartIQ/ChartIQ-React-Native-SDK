@@ -469,7 +469,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun addStudySignal(name: String, promise: Promise) {
+  fun addSignalStudy(name: String, promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().addSignalStudy(name) {
         promise.resolve(gson.toJson(it))
@@ -491,6 +491,44 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
         Log.println(Log.DEBUG, "addSignal", "added signal")
       })
     }
+  }
+
+  @ReactMethod
+  fun toggleSignal(signal: String) {
+    val parsedSignal = gson.fromJson(signal, Signal::class.java)
+
+    if(parsedSignal != null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().toggleSignal(parsedSignal)
+      })
+    }
+  }
+
+  @ReactMethod
+  fun removeSignal(signal: String) {
+    val parsedSignal = gson.fromJson(signal, Signal::class.java)
+
+    if(parsedSignal != null) {
+      handler.post(Runnable {
+        chartIQViewModel.getChartIQ().removeSignal(parsedSignal)
+      })
+    }
+  }
+
+  @ReactMethod
+  fun getTranslations(languageCode: String, promise: Promise){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getTranslations(languageCode){
+        promise.resolve(gson.toJson(it))
+      }
+    })
+  }
+
+  @ReactMethod
+  fun setLanguage(languageCode: String){
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setLanguage(languageCode)
+    })
   }
 
 

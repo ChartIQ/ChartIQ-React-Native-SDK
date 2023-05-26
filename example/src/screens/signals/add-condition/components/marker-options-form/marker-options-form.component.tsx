@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import {
   MarkerOption,
@@ -8,6 +8,7 @@ import {
   SignalShape,
   SignalSize,
 } from '~/model/signals/marker-option';
+import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';
 import { SelectOptionFromListMethods } from '~/ui/select-from-list/select-from-list.component';
@@ -15,6 +16,7 @@ import { SelectOptionFromListMethods } from '~/ui/select-from-list/select-from-l
 interface MarkerOptionsFormProps {
   color: string;
   onColorPressed: () => void;
+  showAppearance?: boolean;
 }
 export interface MarkerOptionsFormMethods {
   getMarkerOptions: () => MarkerOption;
@@ -87,7 +89,9 @@ type Data = {
 };
 
 const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsFormProps>(
-  ({ color: colorProp, onColorPressed }, ref) => {
+  ({ color: colorProp, onColorPressed, showAppearance = true }, ref) => {
+    const theme = useTheme();
+    const styles = createStyles(theme);
     const fromListSelectRef = React.useRef<SelectOptionFromListMethods>(null);
 
     const [markType, setMarkType] = useState<Data>(DATA.markerType[0]);
@@ -165,7 +169,8 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
     }));
 
     return (
-      <>
+      <View style={{ display: showAppearance ? 'flex' : 'none' }}>
+        <Text style={styles.title}>Appearance Settings</Text>
         <View>
           <ListItem onPress={handleMarkerType} title="Marker Type" value={markType.value} />
           <ListItem onPress={onColorPressed} title="Color">
@@ -179,22 +184,29 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
           <ListItem onPress={handlePosition} title="Position" value={position.value} />
         </View>
         <SelectFromList ref={fromListSelectRef} onChange={onChange} />
-      </>
+      </View>
     );
   },
 );
 
 MarkerOptionsForm.displayName = 'MarkerOptionsForm';
 
-const styles = StyleSheet.create({
-  input: {
-    padding: 0,
-    fontSize: 16,
-  },
-  colorBox: {
-    width: 24,
-    height: 24,
-  },
-});
+const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
+  StyleSheet.create({
+    title: {
+      paddingVertical: 8,
+      paddingLeft: 16,
+      textTransform: 'uppercase',
+      color: cardSubtitle,
+    },
+    input: {
+      padding: 0,
+      fontSize: 16,
+    },
+    colorBox: {
+      width: 24,
+      height: 24,
+    },
+  });
 
 export default MarkerOptionsForm;
