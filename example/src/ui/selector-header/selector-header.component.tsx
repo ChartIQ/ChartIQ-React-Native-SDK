@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+
 import { Theme, useTheme } from '~/theme';
 
 interface SelectorHeaderProps {
@@ -27,7 +28,9 @@ const SelectorHeader: React.FC<SelectorHeaderProps> = ({
       <View style={[styles.button, styles.alignLeft]}>
         {handleLeftAction ? (
           <TouchableOpacity onPress={handleLeftAction}>
-            <Text style={[styles.text]}>{leftActionTitle}</Text>
+            <Text numberOfLines={1} style={[styles.text]}>
+              {leftActionTitle}
+            </Text>
           </TouchableOpacity>
         ) : null}
       </View>
@@ -39,7 +42,11 @@ const SelectorHeader: React.FC<SelectorHeaderProps> = ({
       <View style={[styles.button, styles.alignRight]}>
         {handleRightAction ? (
           <TouchableOpacity onPress={handleRightAction}>
-            {rightActionTitle ? <Text style={styles.text}>{rightActionTitle}</Text> : null}
+            {rightActionTitle ? (
+              <Text numberOfLines={1} style={styles.text}>
+                {rightActionTitle}
+              </Text>
+            ) : null}
           </TouchableOpacity>
         ) : null}
         {RightActionIcon ? RightActionIcon : null}
@@ -64,6 +71,7 @@ const createStyles = (theme: Theme) =>
     text: {
       color: theme.colors.colorPrimary,
       paddingHorizontal: 12,
+      textTransform: 'capitalize',
     },
     flex: {
       flex: 1,
@@ -75,9 +83,10 @@ const createStyles = (theme: Theme) =>
     title: {
       fontSize: 17,
       color: theme.colors.buttonText,
+      textTransform: 'capitalize',
     },
     button: {
-      width: 70,
+      width: 80,
     },
     alignRight: {
       alignItems: 'flex-end',

@@ -1,9 +1,9 @@
-import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { LineTypeItem, lineTypePickerData } from '~/assets/icons/line-types/line-types';
+import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';

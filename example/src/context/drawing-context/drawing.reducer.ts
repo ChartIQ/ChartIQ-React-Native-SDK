@@ -1,9 +1,4 @@
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-
-import lineTypes from '../../assets/icons/line-types';
-
-import { DrawingAction } from './drawing-actions';
-import { DrawingState } from './drawing-state.types';
 import {
   Corrective,
   Decoration,
@@ -13,6 +8,11 @@ import {
   SupportedSettings,
   Template,
 } from '~/model';
+
+import lineTypes from '../../assets/icons/line-types';
+
+import { DrawingAction } from './drawing-actions';
+import { DrawingState } from './drawing-state.types';
 
 export type Action = {
   type: DrawingAction;

@@ -24,7 +24,7 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const [selectedChartStyle, setSelectedChartStyle] = React.useState<ChartStyleItem | null>(null);
-    const translations = useTranslations();
+    const { translationMap, translations } = useTranslations();
     const [data, setData] = React.useState<ChartStyleItem[]>(chartStyleSelectorData);
 
     const handleClose = () => {
@@ -36,10 +36,10 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
       setData(
         chartStyleSelectorData.map((item) => ({
           ...item,
-          label: translations[item.label] ?? item.label,
+          label: translationMap[item.label] ?? item.label,
         })),
       );
-    }, [translations]);
+    }, [translationMap]);
 
     const handleOpen = async () => {
       bottomSheetRef.current?.expand();
@@ -80,9 +80,9 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     return (
       <BottomSheet ref={bottomSheetRef}>
         <SelectorHeader
-          leftActionTitle="Cancel"
+          leftActionTitle={translations.cancel}
           handleLeftAction={handleClose}
-          title="Chart style"
+          title={translations['Chart Style']}
         />
         <FlatList
           data={data}

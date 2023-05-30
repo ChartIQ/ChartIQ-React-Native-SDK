@@ -1,6 +1,7 @@
-import { Theme, useTheme } from '~/theme';
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+
+import { Theme, useTheme } from '~/theme';
 
 import { SwipableItem } from '../../../swipable-item';
 import { ColoredChartSymbol } from '../../compare-symbol-selector.component';

@@ -1,7 +1,8 @@
-import { Theme, useTheme } from '~/theme';
 import React, { PropsWithChildren, useRef } from 'react';
 import { Pressable, Animated, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+
+import { Theme, useTheme } from '~/theme';
 
 interface SwipableSymbolProps extends PropsWithChildren {
   rightActionButtons: Array<{

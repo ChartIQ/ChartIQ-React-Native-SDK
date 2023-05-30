@@ -1,18 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, FlatList, View } from 'react-native';
 import { useDerivedValue, SharedValue } from 'react-native-reanimated';
 
-import { CrosshairSharedValues } from '../.././../../model';
-import { Theme, useTheme } from '../../../../theme';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { ReText } from '~/ui/re-text';
-import { FlatList } from 'react-native';
-import { View } from 'react-native';
+
+import { CrosshairSharedValues } from '../../../../model';
+import { Theme, useTheme } from '../../../../theme';
 
 interface AnimatedCrosshairValuesProps {
   crosshair: CrosshairSharedValues;
 }
 
 const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ crosshair }) => {
+  const { translationMap } = useTranslations();
   const data = useDerivedValue(() => {
     return Object.entries(crosshair).map(([key, value]: [string, SharedValue<string>]) => {
       return {
@@ -35,7 +36,7 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ cross
       renderItem={({ item: { key, value } }) => {
         return (
           <View style={styles.itemContainer}>
-            <Text style={styles.title}>{key}</Text>
+            <Text style={styles.title}>{translationMap[key] || key}</Text>
             <ReText style={styles.textValue} text={value} />
           </View>
         );

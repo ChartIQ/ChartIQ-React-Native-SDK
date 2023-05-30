@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import {
@@ -8,12 +7,10 @@ import {
   setChartScale,
   setIsInvertYAxis,
   setExtendedHours as setChartExtendedHours,
-  setLanguage,
 } from 'react-native-chart-iq-wrapper';
 
-import Icons from '~/assets/icons';
-import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';
@@ -26,19 +23,12 @@ const Settings: React.FC = () => {
   const [logScale, setLogScale] = useState(false);
   const [invertYAxis, setInvertYAxis] = useState(false);
   const [extendedHours, setExtendedHours] = useState(false);
-  const [languageName, setLanguageName] = useState(ChartIQLanguages.EN.title);
+  const { languageName, setLanguage, translations } = useTranslations();
 
   const getValues = useCallback(async () => {
     const logScale = await getChartScale();
     const invertYAxis = await getIsInvertYAxis();
     const extendedHours = await getExtendedHours();
-    let userLanguageCode =
-      (await AsyncStorage.getItem(asyncStorageKeys.languageCode)) ?? ChartIQLanguages.EN.code;
-
-    setLanguageName(
-      Object.values(ChartIQLanguages).find((item) => item.code === userLanguageCode)?.title ??
-        ChartIQLanguages.EN.title,
-    );
 
     setLogScale(JSON.parse(logScale).toLowerCase() === 'log');
     setInvertYAxis(invertYAxis);
@@ -61,17 +51,15 @@ const Settings: React.FC = () => {
     );
   };
 
-  const handleLanguageChange = ({ key, value }: { key: string; value: string }) => {
-    setLanguageName(value);
+  const handleLanguageChange = ({ key }: { key: string; value: string }) => {
     setLanguage(key);
-    AsyncStorage.setItem(asyncStorageKeys.languageCode, key);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Text style={styles.sectionTitle}>Chart Preferences</Text>
-        <ListItem title="Log Scale">
+        <Text style={styles.sectionTitle}>{translations['Chart Preferences']}</Text>
+        <ListItem title={translations['Log Scale']}>
           <Switch
             value={logScale}
             onChange={({ nativeEvent: { value } }) => {
@@ -89,7 +77,7 @@ const Settings: React.FC = () => {
             }}
           />
         </ListItem>
-        <ListItem title="Extended Hours">
+        <ListItem title={translations['Extended Hours']}>
           <Switch
             value={extendedHours}
             onChange={({ nativeEvent: { value } }) => {
@@ -101,7 +89,11 @@ const Settings: React.FC = () => {
         <Text style={styles.sectionTitle}>Language Preferences</Text>
         <ListItem title="Language" onPress={onLanguage} value={languageName} />
       </ScrollView>
-      <SelectFromList ref={selectFromListRef} onChange={handleLanguageChange} />
+      <SelectFromList
+        title={translations['Choose language']}
+        ref={selectFromListRef}
+        onChange={handleLanguageChange}
+      />
     </View>
   );
 };

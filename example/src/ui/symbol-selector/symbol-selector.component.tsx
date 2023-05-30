@@ -12,7 +12,6 @@ import { FlatList } from 'react-native-gesture-handler';
 
 import { ChartSymbol, fetchSymbolsAsync } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
-import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme, Theme } from '~/theme';
 
 import Icons from '../../assets/icons';

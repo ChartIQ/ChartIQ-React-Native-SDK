@@ -10,6 +10,7 @@ import Icons from '~/assets/icons';
 import { Condition } from '~/model/signals/condition';
 import { Signal, SignalJoiner } from '~/model/signals/signal';
 import { Study } from '~/model/study';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
@@ -28,6 +29,7 @@ interface AddSignalProps
 const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { translations, translationMap } = useTranslations();
   const selectFromListRef = React.useRef<SelectOptionFromListMethods>(null);
   const [studies, setStudies] = useState<Study[]>([]);
   const [selectedStudy, setSelectedStudy] = useState<Study | null>(null);
@@ -93,9 +95,10 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     setStudies(
       studiesList
         .filter(({ signalIQExclude }) => !signalIQExclude)
+        .map((item) => ({ ...item, name: translationMap[item.name] ?? item.name }))
         .sort((a, b) => a.name.localeCompare(b.name)),
     );
-  }, []);
+  }, [translationMap]);
 
   useEffect(() => {
     get();
@@ -109,7 +112,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     );
   };
 
-  const handleStudyChange = async ({ value }: { value: string }, _: string) => {
+  const handleStudyChange = async ({ value }: { value: string }) => {
     const item = studies.find((item) => item.name === value) ?? null;
     const study = await addSignalStudy(item?.shortName ?? '');
     setSelectedStudy(study);
@@ -158,7 +161,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
       navigation.setOptions({
         headerRight: () => (
           <Text disabled={false} style={styles.saveButton} onPress={handleSave}>
-            Save
+            {translations.Save}
           </Text>
         ),
       });
@@ -166,7 +169,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
       navigation.setOptions({
         headerRight: () => (
           <Text disabled={true} style={styles.saveButtonDisabled} onPress={handleSave}>
-            Save
+            {translations.Save}
           </Text>
         ),
       });
@@ -179,6 +182,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     selectedStudy,
     styles.saveButton,
     styles.saveButtonDisabled,
+    translations.Save,
   ]);
 
   useEffect(() => {
@@ -314,7 +318,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         ListFooterComponent={ListFooterComponent}
       />
 
-      <SelectFromList ref={selectFromListRef} onChange={handleStudyChange} />
+      <SelectFromList title="Add study" ref={selectFromListRef} onChange={handleStudyChange} />
     </View>
   );
 };

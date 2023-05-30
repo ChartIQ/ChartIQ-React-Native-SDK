@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '~/theme';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   NativeSyntheticEvent,
@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 
 import Icons from '~/assets/icons';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { useTranslations } from '~/shared/hooks/use-translations';
+import { Theme, useTheme } from '~/theme';
 
 interface InputFieldProps {
   onChange: (input: string) => void;
@@ -31,6 +32,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
     const styles = createStyles(theme);
     const [value, setValue] = useState('');
     const textInputRef = useRef<TextInput>(null);
+    const { translations } = useTranslations();
 
     const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
       onChange(event.nativeEvent.text);
@@ -56,7 +58,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
             width={16}
             height={16}
             fill={theme.colors.placeholder}
-            style={{ marginHorizontal: 4 }}
+            style={styles.icon}
           />
           {bottomSheet ? (
             <BottomSheetTextInput
@@ -65,7 +67,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               onChange={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
-              placeholder="Search"
+              placeholder={translations.Search}
               value={value}
             />
           ) : (
@@ -74,7 +76,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               onChange={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
-              placeholder="Search"
+              placeholder={translations.Search}
               value={value}
             />
           )}
@@ -86,7 +88,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
         </View>
         {handleClose ? (
           <TouchableOpacity onPress={handleClose}>
-            <Text style={styles.text}>Cancel</Text>
+            <Text style={styles.text}>{translations.cancel}</Text>
           </TouchableOpacity>
         ) : null}
       </View>
@@ -119,6 +121,7 @@ const createStyles = (theme: Theme) =>
     text: {
       color: theme.colors.colorPrimary,
       paddingHorizontal: 12,
+      textTransform: 'capitalize',
     },
 
     textInput: {
@@ -126,6 +129,7 @@ const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
       fontSize: 16,
       padding: 0,
+      textTransform: 'capitalize',
     },
     close: {
       backgroundColor: theme.colors.cardSubtitle,
@@ -136,5 +140,8 @@ const createStyles = (theme: Theme) =>
       marginRight: 4,
       width: 16,
       height: 16,
+    },
+    icon: {
+      marginHorizontal: 4,
     },
   });

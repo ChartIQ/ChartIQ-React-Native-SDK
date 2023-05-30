@@ -1,6 +1,7 @@
-import { useTheme } from '../../theme';
 import React from 'react';
 import { Path, Svg, G, Circle } from 'react-native-svg';
+
+import { useTheme } from '../../theme';
 
 interface CompareProps {
   width?: number;

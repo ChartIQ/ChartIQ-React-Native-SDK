@@ -269,12 +269,12 @@ export const useChartIQ = () => {
   }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {
-    close: useSharedValue<string>('0'),
-    open: useSharedValue<string>('0'),
-    high: useSharedValue<string>('0'),
-    low: useSharedValue<string>('0'),
-    volume: useSharedValue<string>('0'),
-    price: useSharedValue<string>('0'),
+    Close: useSharedValue<string>('0'),
+    Open: useSharedValue<string>('0'),
+    High: useSharedValue<string>('0'),
+    Low: useSharedValue<string>('0'),
+    Volume: useSharedValue<string>('0'),
+    Price: useSharedValue<string>('0'),
   };
   const handleChartTypeChanged = (chartType: string) => {
     const newChartType = chartStyleSelectorData.find(
@@ -295,12 +295,12 @@ export const useChartIQ = () => {
   const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
     const response: CrosshairState = JSON.parse(hud);
 
-    crosshair.close.value = response.close ?? '0';
-    crosshair.open.value = response.open ?? '0';
-    crosshair.high.value = response.high ?? '0';
-    crosshair.low.value = response.low ?? '0';
-    crosshair.volume.value = response.volume ?? '0';
-    crosshair.price.value = response.price ?? '0';
+    crosshair.Close.value = response.close ?? '0';
+    crosshair.Open.value = response.open ?? '0';
+    crosshair.High.value = response.high ?? '0';
+    crosshair.Low.value = response.low ?? '0';
+    crosshair.Volume.value = response.volume ?? '0';
+    crosshair.Price.value = response.price ?? '0';
   };
 
   const onMeasureChanged = ({

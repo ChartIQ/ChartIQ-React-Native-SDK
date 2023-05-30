@@ -1,17 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import {
-  ChartIqWrapperView,
-  getTranslations,
-  setLanguage,
-  setTheme,
-} from 'react-native-chart-iq-wrapper';
+import { ChartIqWrapperView, setLanguage, setTheme } from 'react-native-chart-iq-wrapper';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
-import { defaultENTranslations } from '~/localization/language-keys';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
 import { DrawingMeasure } from '~/ui/drawing-measure';
 import FullScreenAnimatedButtonComponent from '~/ui/full-screen-animated-button/full-screen-animated-button.component';
@@ -69,6 +64,7 @@ export default function Root() {
     symbolSelectorRef,
     intervalSelectorRef,
   } = useChartIQ();
+  const { getTranslationsFromStorage } = useTranslations();
 
   const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
 
@@ -87,22 +83,15 @@ export default function Root() {
 
     AsyncStorage.setItem(asyncStorageKeys.languageCode, userLanguage);
     setLanguage(userLanguage);
-
-    getTranslations(userLanguage).then((translations) => {
-      if (Object.keys(translations).length === 0) {
-        AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(defaultENTranslations));
-      }
-
-      AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(translations));
-    });
   }, []);
 
   React.useEffect(() => {
     get();
-  }, [get]);
+    getTranslationsFromStorage();
+  }, [get, getTranslationsFromStorage]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.box}>
       <View style={displayStyle}>
         <Header
           symbol={symbol}

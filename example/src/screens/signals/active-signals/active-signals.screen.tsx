@@ -6,6 +6,7 @@ import { getActiveSignals, removeSignal, toggleSignal } from 'react-native-chart
 
 import images from '~/assets/images';
 import { Signal } from '~/model/signals';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
@@ -17,6 +18,7 @@ interface SignalsProps
 const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { translations } = useTranslations();
 
   const [activeSignals, setActiveSignal] = useState<Signal[]>([]);
 
@@ -41,12 +43,12 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
       navigation.setOptions({
         headerRight: () => (
           <Pressable onPress={handleAddSignal}>
-            <Text style={styles.headerButton}>Add</Text>
+            <Text style={styles.headerButton}>{translations.Add}</Text>
           </Pressable>
         ),
       });
     }
-  }, [activeSignals.length, handleAddSignal, navigation, styles.headerButton]);
+  }, [activeSignals.length, handleAddSignal, navigation, styles.headerButton, translations.Add]);
 
   const handleToggleSignal = (value: boolean, signal: Signal) => {
     toggleSignal(signal);

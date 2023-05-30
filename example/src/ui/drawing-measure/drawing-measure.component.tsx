@@ -1,12 +1,12 @@
 import React from 'react';
-import { Pressable, ViewStyle } from 'react-native';
-import { View } from 'react-native';
-import Icons from '~/assets/icons';
-import { Theme, useTheme } from '~/theme';
-import { ReText } from '../re-text';
-import { StyleSheet } from 'react-native';
+import { Pressable, ViewStyle, View, StyleSheet } from 'react-native';
 import { redoDrawing, undoDrawing } from 'react-native-chart-iq-wrapper';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+
+import Icons from '~/assets/icons';
+import { Theme, useTheme } from '~/theme';
+
+import { ReText } from '../re-text';
 
 interface DrawingMeasureProps {
   measure: SharedValue<string>;

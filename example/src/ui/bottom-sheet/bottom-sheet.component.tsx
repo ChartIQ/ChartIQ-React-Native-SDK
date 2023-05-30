@@ -1,9 +1,11 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { Theme, useTheme } from '~/theme';
 import React, { PropsWithChildren, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Keyboard, StyleSheet } from 'react-native';
+import { runOnJS } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Theme, useTheme } from '~/theme';
 
 interface BottomSheetSelectorProps extends PropsWithChildren {
   snapPoints?: string[];
@@ -20,6 +22,13 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
 
     useImperativeHandle(ref, () => bottomSheetRef.current);
 
+    const handleDismiss = (index: number) => {
+      'worklet';
+      if (index === -1) {
+        runOnJS(Keyboard.dismiss)();
+      }
+    };
+
     return (
       <BottomSheet
         ref={bottomSheetRef}
@@ -27,11 +36,7 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         index={-1}
         enablePanDownToClose={true}
         enableOverDrag={true}
-        onChange={(index) => {
-          if (index === -1) {
-            Keyboard.dismiss();
-          }
-        }}
+        onChange={handleDismiss}
         onClose={onClose}
         handleComponent={() => null}
         style={styles.bottomSheet}

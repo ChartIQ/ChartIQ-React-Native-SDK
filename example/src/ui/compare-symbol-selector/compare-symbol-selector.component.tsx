@@ -3,6 +3,7 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 
 import { ChartSymbol } from '~/api';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
@@ -33,6 +34,7 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
   ({ onAdd, onDelete, data }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
+    const { translations } = useTranslations();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const symbolSelectorRef = useRef<SymbolSelectorMethods>(null);
     const colorSelectorRef = useRef<ColorSelectorMethods>(null);
@@ -81,9 +83,9 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
         <BottomSheet ref={bottomSheetRef}>
           <SelectorHeader
             title="Compare Symbols"
-            leftActionTitle="Cancel"
+            leftActionTitle={translations.cancel}
             handleLeftAction={handleClose}
-            rightActionTitle="Add"
+            rightActionTitle={translations.Add}
             handleRightAction={handleAddPress}
           />
           <FlatList

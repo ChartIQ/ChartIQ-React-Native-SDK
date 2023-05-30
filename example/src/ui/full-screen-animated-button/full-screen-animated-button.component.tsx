@@ -1,6 +1,5 @@
 import React from 'react';
-import { Pressable, useWindowDimensions } from 'react-native';
-
+import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
@@ -8,6 +7,7 @@ import Animated, {
   withTiming,
   FadeIn,
 } from 'react-native-reanimated';
+
 import Icons from '~/assets/icons';
 import { useTheme } from '~/theme';
 
@@ -144,15 +144,25 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
           style,
         ]}
       >
-        <Pressable
-          onPress={onPress}
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Icons.fullViewActive width={44} height={44} fill={theme.colors.primaryButtonText} />
+        <Pressable onPress={onPress} style={styles.button}>
+          <Icons.fullViewActive
+            width={44}
+            height={44}
+            fill={theme.colors.fullViewButtonBackground}
+            stroke={theme.colors.buttonText}
+          />
         </Pressable>
       </Animated.View>
     </GestureDetector>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default React.memo(FullScreenButton);

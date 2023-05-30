@@ -1,13 +1,13 @@
 import { useContext, useRef } from 'react';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
+import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from '~/model';
 
 import { DrawingActions } from '../../context/drawing-context/drawing-actions';
 import {
   DrawingContext,
   DrawingDispatchContext,
 } from '../../context/drawing-context/drawing.context';
-import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from '~/model';
 
 export const useUpdateDrawingTool = () => {
   const drawingToolManager = useRef(new ChartIQDrawingManager());

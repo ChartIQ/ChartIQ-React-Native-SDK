@@ -2,10 +2,12 @@ import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { TimeUnit } from '~/constants';
+import { useTranslations } from '~/shared/hooks/use-translations';
+import { Theme, useTheme } from '~/theme';
+
 import { BottomSheet } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
-import { TimeUnit } from '~/constants';
-import { Theme, useTheme } from '~/theme';
 
 export type IntervalItem = {
   label: string;
@@ -45,6 +47,7 @@ const IntervalSelector = forwardRef<IntervalSelectorMethods, IntervalSelectorPro
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
+    const { translations } = useTranslations();
 
     const handleClose = () => {
       bottomSheetRef.current?.close();
@@ -64,7 +67,11 @@ const IntervalSelector = forwardRef<IntervalSelectorMethods, IntervalSelectorPro
 
     return (
       <BottomSheet ref={bottomSheetRef}>
-        <SelectorHeader title="Intervals" leftActionTitle="Cancel" handleLeftAction={handleClose} />
+        <SelectorHeader
+          title="Intervals"
+          leftActionTitle={translations.cancel}
+          handleLeftAction={handleClose}
+        />
         <FlatList
           data={intervals}
           contentContainerStyle={styles.contentContainer}

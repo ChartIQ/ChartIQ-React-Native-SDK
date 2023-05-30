@@ -8,6 +8,7 @@ import { Condition, NullableCondition } from '~/model/signals/condition';
 import { MarkerOption } from '~/model/signals/marker-option';
 import { SignalJoiner } from '~/model/signals/signal';
 import { SignalOperatorValues, SignalOperator } from '~/model/signals/signal-operator';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ColorSelector } from '~/ui/color-selector';
@@ -29,6 +30,7 @@ const SECOND_INDICATOR = 'SECOND_INDICATOR';
 const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigation }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { translations } = useTranslations();
   const study = params?.study;
   const condition = params?.condition;
   const id = params?.id;
@@ -38,8 +40,6 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const markerOptionRef = React.useRef<MarkerOptionsFormMethods>(null);
   const [selectedCondition, setSelectedCondition] = useState<NullableCondition | null>(null);
   const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>('0');
-
-  const [inputParams, setInputParams] = useState<Array<StudyParameter>>([]);
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useEffect(() => {
@@ -49,10 +49,8 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   }, [navigation, params.index]);
 
   const get = useCallback(async () => {
-    const inputs = await getStudyParameters(study, 'Inputs');
     const outputs = await getStudyParameters(study, 'Outputs');
 
-    setInputParams(inputs);
     setOutputParams(outputs);
     if (condition) {
       const isSecondIndicatorValueNumber = !Number.isNaN(Number(condition.rightIndicator));
@@ -243,12 +241,18 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       navigation.setOptions({
         headerRight: () => (
           <Pressable onPress={handleSave}>
-            <Text style={styles.headerRight}>Save</Text>
+            <Text style={styles.headerRight}>{translations.Save}</Text>
           </Pressable>
         ),
       });
     }
-  }, [handleSave, navigation, selectedCondition?.signalOperator, styles.headerRight]);
+  }, [
+    handleSave,
+    navigation,
+    selectedCondition?.signalOperator,
+    styles.headerRight,
+    translations.Save,
+  ]);
 
   const rightIndicator = outputParams.find(
     ({ name }) => name === selectedCondition?.rightIndicator,
@@ -280,7 +284,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       <ListItem
         onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
         title="Indicator 1"
-        value={leftIndicatorDescription}
+        value={leftIndicatorDescription ?? undefined}
       />
       <ListItem
         onPress={handleAddCondition}

@@ -20,16 +20,16 @@ const AddStudies: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(new Set<number>());
   const navigation = useNavigation<NativeStackNavigationProp<StudiesStackParamList>>();
-  const translations = useTranslations();
+  const { translationMap } = useTranslations();
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
     const translatedStudies = studiesList.map((item) => ({
       ...item,
-      name: translations[item.name] ?? item.name,
+      name: translationMap[item.name] ?? item.name,
     }));
     setStudies(translatedStudies);
-  }, [translations]);
+  }, [translationMap]);
 
   useEffect(() => {
     get();

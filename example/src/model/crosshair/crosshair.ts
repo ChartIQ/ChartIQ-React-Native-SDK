@@ -10,12 +10,12 @@ export interface CrosshairState {
 }
 
 export interface CrosshairSharedValues {
-  open: SharedValue<string>;
-  high: SharedValue<string>;
-  low: SharedValue<string>;
-  close: SharedValue<string>;
-  volume: SharedValue<string>;
-  price: SharedValue<string>;
+  Open: SharedValue<string>;
+  High: SharedValue<string>;
+  Low: SharedValue<string>;
+  Close: SharedValue<string>;
+  Volume: SharedValue<string>;
+  Price: SharedValue<string>;
 }
 
 export const defaultCrosshairState: CrosshairState = {

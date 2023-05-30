@@ -18,6 +18,7 @@ import { SvgProps } from 'react-native-svg';
 
 import Icons from '~/assets/icons';
 import { CrosshairSharedValues } from '~/model';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
 
 import { Theme, useTheme } from '../../theme';
@@ -76,6 +77,7 @@ const Header: React.FC<HeaderProps> = ({
   const theme = useTheme();
   const styles = createStyles(theme);
   const navigation = useNavigation<SettingsNavigation>();
+  const { translationMap } = useTranslations();
 
   const [open, setOpen] = useState(false);
   const otherToolsHeight = useSharedValue(0);
@@ -258,7 +260,7 @@ const Header: React.FC<HeaderProps> = ({
           </TouchableOpacity>
           <View style={styles.space} />
           <TouchableOpacity onPress={handleIntervalSelector} style={styles.button}>
-            <Text style={styles.buttonText}>{interval}</Text>
+            <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>

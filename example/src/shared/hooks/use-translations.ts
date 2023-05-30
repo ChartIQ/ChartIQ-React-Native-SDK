@@ -1,23 +1,80 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
+import { setLanguage as setChartIQLanguage, getTranslations } from 'react-native-chart-iq-wrapper';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
-import { defaultENTranslations } from '~/localization/language-keys';
+import { ChartIQLanguages, defaultENTranslations } from '~/constants/languages';
+import { TranslationsActions } from '~/context/translations-context/translations-actions';
+import {
+  TranslationsContext,
+  TranslationsDispatchContext,
+} from '~/context/translations-context/translations.context';
 
 export const useTranslations = () => {
-  const [translations, setTranslations] = useState(defaultENTranslations);
+  const { languageCode, translationMap, translations } = useContext(TranslationsContext);
+  const dispatch = useContext(TranslationsDispatchContext);
 
-  useEffect(() => {
-    AsyncStorage.getItem(asyncStorageKeys.translations).then((data) => {
-      const parsed = JSON.parse(data || '{}');
+  const setLanguage = useCallback(
+    async (languageCode: string) => {
+      setChartIQLanguage(languageCode);
+      const newTranslationsMap = await getTranslations(languageCode);
 
-      if (Object.keys(parsed).length > 0) {
-        setTranslations(parsed);
-      } else {
-        setTranslations(defaultENTranslations);
-      }
-    });
-  }, []);
+      AsyncStorage.setItem(asyncStorageKeys.languageCode, languageCode);
+      AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(newTranslationsMap));
 
-  return translations as Record<string, string>;
+      const newTranslations = Object.keys(defaultENTranslations).reduce(
+        (acc, item) => ({ ...acc, [item]: newTranslationsMap[item] || item }),
+        defaultENTranslations,
+      );
+
+      dispatch(
+        TranslationsActions.setLanguage({
+          languageCode,
+          translationMap: newTranslationsMap,
+          translations: newTranslations,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  const getTranslationsFromStorage = useCallback(async () => {
+    const translationsFromStorage = await AsyncStorage.getItem(asyncStorageKeys.translations);
+    const languageCodeFromStorage = await AsyncStorage.getItem(asyncStorageKeys.languageCode);
+
+    if (!translationsFromStorage || !languageCodeFromStorage) {
+      setLanguage(ChartIQLanguages.EN.code);
+      return;
+    }
+
+    const parsedTranslationsMap = JSON.parse(translationsFromStorage);
+    const newTranslations = Object.keys(defaultENTranslations).reduce(
+      (acc, item) => ({ ...acc, [item]: parsedTranslationsMap[item] || item }),
+      defaultENTranslations,
+    );
+
+    dispatch(
+      TranslationsActions.setLanguage({
+        languageCode: languageCodeFromStorage,
+        translationMap: parsedTranslationsMap,
+        translations: newTranslations,
+      }),
+    );
+  }, [dispatch, setLanguage]);
+
+  const languageName = useMemo(
+    () =>
+      Object.values(ChartIQLanguages).find((item) => item.code === languageCode)?.title ||
+      ChartIQLanguages.EN.title,
+    [languageCode],
+  );
+
+  return {
+    translationMap,
+    languageCode,
+    translations,
+    languageName,
+    setLanguage,
+    getTranslationsFromStorage,
+  };
 };

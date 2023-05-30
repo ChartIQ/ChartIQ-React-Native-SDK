@@ -24,7 +24,7 @@ const LightTheme: ColorPallette = {
 
   favoriteBackground: Colors.brillianteAzure,
 
-  fullViewButtonBackground: Colors.darkGunmetal,
+  fullViewButtonBackground: Colors.brightGrey,
 };
 
 export default LightTheme;

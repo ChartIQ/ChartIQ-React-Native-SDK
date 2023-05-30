@@ -1,4 +1,4 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useContext } from 'react';
 import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
@@ -6,7 +6,7 @@ import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
-import { DrawingsStack, RootStack, RootStackParamList } from '~/shared/navigation.types';
+import { DrawingsStack, RootStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 
 import Icons from '../../assets/icons';
@@ -15,19 +15,17 @@ import { DrawingItem } from '../drawing-tools-selector/drawing-tools-selector.da
 import { HorizontalColorPicker } from '../horizontal-color-picker';
 import { HorizontalLineTypePicker } from '../horizontal-line-type-picker';
 
-interface DrawingToolManagerProps
-  extends NativeStackScreenProps<RootStackParamList, RootStack.Drawings> {
+interface DrawingToolManagerProps {
   drawingItem: DrawingItem;
   handleDrawingTool: () => void;
 }
-
 type DrawingTool = 'line-color' | 'fill-color' | 'line-type';
 
 const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   drawingItem,
   handleDrawingTool,
-  navigation,
 }) => {
+  const navigation = useNavigation();
   const theme = useTheme();
   const styles = createStyles(theme);
   const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
@@ -77,10 +75,12 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   };
 
   const handleSettingsPress = () => {
-    navigation.navigate(RootStack.Drawings, {
-      screen: DrawingsStack.DrawingToolsSettings,
+    // @ts-ignore
+    navigation.navigate({
+      name: RootStack.Drawings,
       params: {
-        options: {
+        screen: DrawingsStack.DrawingToolsSettings,
+        params: {
           title: drawingItem.title,
           name: drawingItem.name,
           settings: {

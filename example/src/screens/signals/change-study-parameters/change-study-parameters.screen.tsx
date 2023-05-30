@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { getStudyParameters, setStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ChangeStudyParameters } from '~/ui/change-study-parameters';
@@ -20,6 +21,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { translations } = useTranslations();
   const changeStudyParametersRef = useRef<ChangeStudyParameterMethods>(null);
   const [inputParams, setInputParams] = useState<Array<StudyParameter>>([]);
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
@@ -63,11 +65,11 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={styles.buttonText}>{translations.Save}</Text>
         </Pressable>
       ),
     });
-  }, [handleSave, navigation, study, styles.buttonText]);
+  }, [handleSave, navigation, study, styles.buttonText, translations.Save]);
 
   return (
     <ChangeStudyParameters

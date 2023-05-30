@@ -29,7 +29,7 @@ export const fetchSymbolsAsync = async (input: SymbolParams) => {
         x: input.fund,
         e: input.filter,
       } satisfies SymbolQueryParams,
-    }
+    },
   );
 
   if (data?.http_status === 200 && data.payload.symbols.length > 0) {

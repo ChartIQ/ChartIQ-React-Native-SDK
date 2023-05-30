@@ -17,6 +17,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import icons from '~/assets/icons';
 import images from '~/assets/images';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
@@ -49,6 +50,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     );
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem>(drawingTools[0]);
+    const { translationMap } = useTranslations();
 
     useEffect(() => {
       const getFavoriteItems = async () => {
@@ -58,7 +60,11 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
         const favoriteItems = JSON.parse(storageFavoriteItems) as DrawingItem[];
 
         setTools((prevTools) => {
-          return prevTools.map((tool) => {
+          const translated = prevTools.map((item) => ({
+            ...item,
+            title: translationMap[item.title] ?? item.title,
+          }));
+          return translated.map((tool) => {
             if (favoriteItems.find((item) => item.name === tool.name)) {
               return {
                 ...tool,
@@ -72,7 +78,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
       };
 
       getFavoriteItems();
-    }, []);
+    }, [translationMap]);
 
     const handleClose = () => {
       bottomSheetRef.current?.close();

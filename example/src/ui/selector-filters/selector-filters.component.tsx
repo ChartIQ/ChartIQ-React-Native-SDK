@@ -18,10 +18,10 @@ const SelectorFilters: React.FC<SelectorFiltersProps> = ({
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const translations = useTranslations();
+  const { translationMap } = useTranslations();
   const translatedFilters = filters.map((item) => ({
     ...item,
-    name: translations[item.name] ?? item.name,
+    name: translationMap[item.name] ?? item.name,
   }));
 
   return (

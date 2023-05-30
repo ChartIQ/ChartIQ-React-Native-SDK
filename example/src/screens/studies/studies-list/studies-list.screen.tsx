@@ -7,6 +7,7 @@ import { addStudy, getActiveStudies, removeStudy } from 'react-native-chart-iq-w
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
 import { Study } from '~/model/study';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
@@ -22,6 +23,7 @@ const Studies: React.FC = () => {
         StudiesStack.AddStudy | StudiesStack.StudyParameters
       >
     >();
+  const { translations } = useTranslations();
   const [activeStudies, setActiveStudies] = useState<Study[]>([]);
 
   const handleAddStudies = useCallback(() => {
@@ -52,12 +54,19 @@ const Studies: React.FC = () => {
       navigation.setOptions({
         headerRight: () => (
           <Pressable onPress={handleAddStudies}>
-            <Text style={styles.headerButton}>Add</Text>
+            <Text style={styles.headerButton}>{translations.Add}</Text>
           </Pressable>
         ),
       });
     }
-  }, [activeStudies, handleAddStudies, navigation, styles.buttonText, styles.headerButton]);
+  }, [
+    activeStudies,
+    handleAddStudies,
+    navigation,
+    styles.buttonText,
+    styles.headerButton,
+    translations.Add,
+  ]);
 
   const navigateStudyParams = (study: Study) => {
     navigation.navigate(StudiesStack.StudyParameters, { study });
@@ -87,7 +96,7 @@ const Studies: React.FC = () => {
                   onPress: () => {
                     handleRemove(item);
                   },
-                  title: 'Remove',
+                  title: translations.Delete,
                   backgroundColor: theme.colors.error,
                   color: theme.colors.primaryButtonText,
                 },
@@ -107,7 +116,7 @@ const Studies: React.FC = () => {
                 titleComponent={
                   <View>
                     <Text style={styles.studyName}>{name}</Text>
-                    <Text style={styles.studyValue}>{`(${value}`}</Text>
+                    {value ? <Text style={styles.studyValue}>{`(${value}`}</Text> : null}
                   </View>
                 }
               >

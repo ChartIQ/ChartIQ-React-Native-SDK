@@ -1,7 +1,7 @@
-import { Theme, useTheme } from '~/theme';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Theme, useTheme } from '~/theme';
 import { SwipableItem } from '~/ui/swipable-item';
 
 import { DrawingItem } from '../../drawing-tools-selector.data';

@@ -1,11 +1,18 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import {
+  Orientation,
+  OrientationChangeEvent,
+  addOrientationChangeListener,
+  getOrientationAsync,
+} from 'expo-screen-orientation';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+import { colorPickerColors } from '~/constants';
+import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
-import { Theme, useTheme } from '~/theme';
-import { colorPickerColors } from '~/constants';
 
 interface ColorSelectorProps {
   onChange: (input: string, id?: string) => void;
@@ -17,12 +24,36 @@ export interface ColorSelectorMethods {
   close: () => void;
 }
 
+const HORIZONTAL_LIST_NUM_COLUMNS = 10;
+const VERTICAL_LIST_NUM_COLUMNS = 5;
+
 const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(
   ({ onChange, selectedColor }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const idRef = useRef<string | null>(null);
+    const [numberOfColumns, setNumberOfColumns] = React.useState<number>(VERTICAL_LIST_NUM_COLUMNS);
+    const [isLandscape, setIsLandscape] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+      const callback = (orientation: Orientation) => {
+        setIsLandscape(
+          orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
+        );
+      };
+      getOrientationAsync().then(callback);
+
+      const subscription = addOrientationChangeListener(
+        ({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+          callback(orientation);
+        },
+      );
+
+      return () => {
+        subscription.remove();
+      };
+    }, [setIsLandscape]);
 
     const handleClose = () => {
       bottomSheetRef.current?.close();
@@ -44,13 +75,22 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(
       idRef.current = null;
     };
 
+    useEffect(() => {
+      if (isLandscape) {
+        setNumberOfColumns(HORIZONTAL_LIST_NUM_COLUMNS);
+      } else {
+        setNumberOfColumns(VERTICAL_LIST_NUM_COLUMNS);
+      }
+    }, [isLandscape]);
+
     return (
       <>
         <BottomSheet ref={bottomSheetRef}>
           <SelectorHeader title="Select color" />
           <FlatList
             data={colorPickerColors}
-            numColumns={5}
+            numColumns={numberOfColumns}
+            key={numberOfColumns === HORIZONTAL_LIST_NUM_COLUMNS ? 'horizontal' : 'vertical'}
             scrollEnabled={false}
             contentContainerStyle={[
               styles.contentContainer,
