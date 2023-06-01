@@ -27,6 +27,7 @@ import {
   getChartAggregationType,
   getPeriodicity,
   getActiveSeries,
+  QuoteFeedEvent,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
@@ -52,8 +53,6 @@ import {
 import { SymbolSelectorMethods } from '~/ui/symbol-selector/symbol-selector.component';
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
-
-type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
 
 const handleRequest = async (input: ChartIQDatafeedParams) => {
   const params = {
@@ -89,9 +88,7 @@ export const useChartIQ = () => {
 
   const onPullInitialData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
     const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
-
     const response = await handleRequest(parsed);
-
     setInitialData(JSON.stringify(response));
   };
 
@@ -264,9 +261,9 @@ export const useChartIQ = () => {
     }
   }, [handleChartStyleChange]);
 
-  React.useEffect(() => {
-    initChart();
-  }, [initChart]);
+  // React.useEffect(() => {
+  //   initChart();
+  // }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {
     Close: useSharedValue<string>('0'),
@@ -309,27 +306,27 @@ export const useChartIQ = () => {
     measureValue.value = measure;
   };
 
-  React.useEffect(() => {
-    const callback = (orientation: Orientation) => {
-      setIsLandscape(
-        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
-      );
-      drawingToolSelectorRef.current?.close();
-      symbolSelectorRef.current?.close();
-      intervalSelectorRef.current?.close();
-      chartStyleSelectorRef.current?.close();
-      compareSymbolSelectorRef.current?.close();
-    };
-    getOrientationAsync().then(callback);
+  // React.useEffect(() => {
+  //   const callback = (orientation: Orientation) => {
+  //     setIsLandscape(
+  //       orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
+  //     );
+  //     drawingToolSelectorRef.current?.close();
+  //     symbolSelectorRef.current?.close();
+  //     intervalSelectorRef.current?.close();
+  //     chartStyleSelectorRef.current?.close();
+  //     compareSymbolSelectorRef.current?.close();
+  //   };
+  //   getOrientationAsync().then(callback);
 
-    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-      callback(orientation);
-    });
+  //   addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+  //     callback(orientation);
+  //   });
 
-    return () => {
-      removeOrientationChangeListeners();
-    };
-  }, [setIsLandscape]);
+  //   return () => {
+  //     removeOrientationChangeListeners();
+  //   };
+  // }, [setIsLandscape]);
 
   const toggleFullScreen = () => {
     setIsFullScreen((prevState) => {

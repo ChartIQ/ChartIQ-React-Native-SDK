@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -6,6 +7,7 @@ import {
   NativeSyntheticEvent,
   NativeModules,
   ViewProps,
+  NativeEventEmitter,
 } from 'react-native';
 
 import { TimeUnit } from '~/constants';
@@ -20,7 +22,21 @@ import { Signal } from '~/model/signals';
 import { Study, StudyParameterType } from '~/model/study';
 import { StudySimplified } from '~/model/study/study';
 
-const { ChartIQWrapperModule } = NativeModules;
+const {
+  ChartIQWrapperModule: AndroidModule,
+  RTEEventEmitter,
+  ChartIqWrapperViewManager: IOSModule,
+} = NativeModules;
+
+console.log({
+  AndroidModule,
+  IOSModule,
+});
+
+const ChartIQWrapperModule = Platform.select({
+  ios: IOSModule,
+  android: AndroidModule,
+});
 
 const LINKING_ERROR =
   "The package 'react-native-chart-iq-wrapper' doesn't seem to be linked. Make sure: \n\n" +
@@ -28,17 +44,15 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
+const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
+
+export type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
+
 interface ChartIqWrapperProps extends ViewProps {
   style: ViewStyle;
-  onPullInitialData: (
-    event: NativeSyntheticEvent<{ quoteFeedParam: string }>
-  ) => Promise<void>;
-  onPullUpdateData: (
-    event: NativeSyntheticEvent<{ quoteFeedParam: string }>
-  ) => Promise<void>;
-  onPullPagingData: (
-    event: NativeSyntheticEvent<{ quoteFeedParam: string }>
-  ) => Promise<void>;
+  onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
+  onPullUpdateData: (event: QuoteFeedEvent) => Promise<void>;
+  onPullPagingData: (event: QuoteFeedEvent) => Promise<void>;
   onChartTypeChanged: (
     event: NativeSyntheticEvent<{ chartType: string }>
   ) => void;
@@ -51,12 +65,51 @@ interface ChartIqWrapperProps extends ViewProps {
 
 const ComponentName = 'ChartIqWrapperView';
 
-export const ChartIqWrapperView =
+const ChartIqWrapperViewComponent =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<ChartIqWrapperProps>(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };
+
+const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
+  onPullInitialData,
+  onPullUpdateData,
+  onPullPagingData,
+  ...props
+}) => {
+  useEffect(() => {
+    RTVEventEmitter.addListener(
+      'DispatchOnPullInitialData',
+      (quote: { quoteFeedParam: string }) => {
+        onPullInitialData({
+          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+        });
+      }
+    );
+    RTVEventEmitter.addListener(
+      'DispatchOnPullUpdateData',
+      (quote: { quoteFeedParam: string }) => {
+        onPullUpdateData({
+          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+        });
+      }
+    );
+    RTVEventEmitter.addListener(
+      'DispatchOnPullPagingData',
+      (quote: { quoteFeedParam: string }) => {
+        onPullPagingData({
+          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+        });
+      }
+    );
+  }, [onPullInitialData, onPullPagingData, onPullUpdateData]);
+
+  return <ChartIqWrapperViewComponent {...props} />;
+};
+
+export const ChartIqWrapperView =
+  Platform.OS !== 'ios' ? ChartIqWrapperViewComponent : IOSChartWrapperView;
 
 export function setInitialData(data: string) {
   return ChartIQWrapperModule.setInitialData(data);
