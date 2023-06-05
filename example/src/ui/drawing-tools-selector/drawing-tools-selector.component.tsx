@@ -29,7 +29,7 @@ import {
   DrawingItem,
   drawingTools,
   DrawingToolTags,
-  filters,
+  filters as drawingFilters,
   specialTools,
 } from './drawing-tools-selector.data';
 import {
@@ -44,7 +44,7 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const textInputRef = useRef<TextInput>(null);
-    const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
+    const [selectedFilter, setSelectedFilter] = React.useState<string>(drawingFilters[0].value);
     const [tools, setTools] = useState(() =>
       drawingTools.map((item) => ({ ...item, favorite: false })),
     );
@@ -297,7 +297,11 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
               </Pressable>
             }
           />
-          <FilterSelector handleFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
+          <FilterSelector
+            handleFilterChange={handleFilterChange}
+            selectedFilter={selectedFilter}
+            filters={drawingFilters}
+          />
         </View>
         <BottomSheetSectionList
           stickyHeaderHiddenOnScroll

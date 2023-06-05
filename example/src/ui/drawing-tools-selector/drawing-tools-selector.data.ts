@@ -33,7 +33,7 @@ export const filters = [
   { name: 'Markings', value: DrawingToolTags.markings },
   { name: 'Fibonacci', value: DrawingToolTags.fibonacci },
   { name: 'Lines', value: DrawingToolTags.lines },
-] as const;
+];
 
 export const specialTools: DrawingItem[] = [
   {

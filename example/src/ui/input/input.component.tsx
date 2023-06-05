@@ -19,6 +19,7 @@ interface InputFieldProps {
   onChange: (input: string) => void;
   handleClose?: () => void;
   bottomSheet?: boolean;
+  handleClear?: () => void;
 }
 
 export interface InputFieldMethods {
@@ -27,7 +28,7 @@ export interface InputFieldMethods {
 }
 
 const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
-  ({ onChange, handleClose, bottomSheet = false }, ref) => {
+  ({ onChange, handleClose, bottomSheet = false, handleClear }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const [value, setValue] = useState('');
@@ -40,8 +41,8 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
     };
 
     const onClose = () => {
-      onChange('');
       setValue('');
+      handleClear && handleClear();
     };
 
     useImperativeHandle(ref, () => ({

@@ -1,5 +1,5 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import React, { useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -36,7 +36,7 @@ const filters = [
   { name: 'Indexes', value: 'indexes' },
   { name: 'Funds', value: 'funds' },
   { name: 'Features', value: 'features' },
-] as const;
+];
 
 const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
   ({ onChange }, ref) => {
@@ -50,27 +50,30 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [noDataFound, setNoDataFound] = React.useState<string | null>(null);
 
-    const onClose = () => {
+    const handleClose = useCallback(() => {
+      Keyboard.dismiss();
       setInputValue('');
       setData([]);
       setIsLoading(false);
       textInputRef.current?.onClose();
-    };
-
-    const handleClose = () => {
-      Keyboard.dismiss();
       bottomSheetRef.current?.close();
-      onClose();
+    }, []);
+
+    const handleClear = () => {
+      setInputValue('');
+      setData([]);
+      setIsLoading(false);
     };
 
-    const fetchSymbols = (input: string, filter: string) => {
-      setInputValue(input);
-      setIsLoading(true);
+    const fetchSymbols = useCallback((input: string, filter: string) => {
       if (input.length === 0) {
         setData([]);
         setIsLoading(false);
         return;
       }
+
+      setInputValue(input);
+      setIsLoading(true);
 
       fetchSymbolsAsync({
         symbol: input,
@@ -87,7 +90,7 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
           setData(data);
         })
         .finally(() => setIsLoading(false));
-    };
+    }, []);
 
     useImperativeHandle(ref, () => ({
       open: () => {
@@ -109,16 +112,26 @@ const SymbolSelector = forwardRef<SymbolSelectorMethods, SymbolSelectorProps>(
       }
     };
 
+    const handleTextChange = useCallback(
+      (text: string) => fetchSymbols(text, selectedFilter),
+      [fetchSymbols, selectedFilter],
+    );
+
     return (
-      <BottomSheet ref={bottomSheetRef} onClose={onClose}>
+      <BottomSheet ref={bottomSheetRef}>
         <View>
           <Input
             bottomSheet
             ref={textInputRef}
             handleClose={handleClose}
-            onChange={(text) => fetchSymbols(text, selectedFilter)}
+            onChange={handleTextChange}
+            handleClear={handleClear}
           />
-          <FilterSelector handleFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
+          <FilterSelector
+            handleFilterChange={handleFilterChange}
+            selectedFilter={selectedFilter}
+            filters={filters}
+          />
         </View>
         <View style={styles.container}>
           {!isLoading ? (

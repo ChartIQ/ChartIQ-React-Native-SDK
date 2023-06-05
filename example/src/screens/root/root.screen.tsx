@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIqWrapperView, setLanguage, setTheme } from 'react-native-chart-iq-wrapper';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
@@ -91,7 +91,7 @@ export default function Root() {
   }, [get, getTranslationsFromStorage]);
 
   return (
-    <View style={styles.box}>
+    <KeyboardAvoidingView style={styles.box}>
       <View style={displayStyle}>
         <Header
           symbol={symbol}
@@ -141,7 +141,7 @@ export default function Root() {
       <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
       <DrawingToolSelector onChange={onDrawingToolChanged} ref={drawingToolSelectorRef} />
       <FullScreenAnimatedButtonComponent isFullScreen={isFullscreen} onChange={toggleFullScreen} />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
