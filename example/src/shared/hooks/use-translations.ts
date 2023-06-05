@@ -39,27 +39,24 @@ export const useTranslations = () => {
   );
 
   const getTranslationsFromStorage = useCallback(async () => {
-    const translationsFromStorage = await AsyncStorage.getItem(asyncStorageKeys.translations);
-    const languageCodeFromStorage = await AsyncStorage.getItem(asyncStorageKeys.languageCode);
-
-    if (!translationsFromStorage || !languageCodeFromStorage) {
-      setLanguage(ChartIQLanguages.EN.code);
-      return;
-    }
-
-    const parsedTranslationsMap = JSON.parse(translationsFromStorage);
-    const newTranslations = Object.keys(defaultENTranslations).reduce(
-      (acc, item) => ({ ...acc, [item]: parsedTranslationsMap[item] || item }),
-      defaultENTranslations,
-    );
-
-    dispatch(
-      TranslationsActions.setLanguage({
-        languageCode: languageCodeFromStorage,
-        translationMap: parsedTranslationsMap,
-        translations: newTranslations,
-      }),
-    );
+    // const translationsFromStorage = await AsyncStorage.getItem(asyncStorageKeys.translations);
+    // const languageCodeFromStorage = await AsyncStorage.getItem(asyncStorageKeys.languageCode);
+    // if (!translationsFromStorage || !languageCodeFromStorage) {
+    //   setLanguage(ChartIQLanguages.EN.code);
+    //   return;
+    // }
+    // const parsedTranslationsMap = JSON.parse(translationsFromStorage);
+    // const newTranslations = Object.keys(defaultENTranslations).reduce(
+    //   (acc, item) => ({ ...acc, [item]: parsedTranslationsMap[item] || item }),
+    //   defaultENTranslations,
+    // );
+    // dispatch(
+    //   TranslationsActions.setLanguage({
+    //     languageCode: languageCodeFromStorage,
+    //     translationMap: parsedTranslationsMap,
+    //     translations: newTranslations,
+    //   }),
+    // );
   }, [dispatch, setLanguage]);
 
   const languageName = useMemo(

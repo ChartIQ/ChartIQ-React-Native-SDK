@@ -28,11 +28,6 @@ const {
   ChartIqWrapperViewManager: IOSModule,
 } = NativeModules;
 
-console.log({
-  AndroidModule,
-  IOSModule,
-});
-
 const ChartIQWrapperModule = Platform.select({
   ios: IOSModule,
   android: AndroidModule,
@@ -50,6 +45,7 @@ export type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
 
 interface ChartIqWrapperProps extends ViewProps {
   style: ViewStyle;
+  url: string;
   onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
   onPullUpdateData: (event: QuoteFeedEvent) => Promise<void>;
   onPullPagingData: (event: QuoteFeedEvent) => Promise<void>;
@@ -164,6 +160,7 @@ export function addSeries(
 }
 
 export async function getSymbol(): Promise<string> {
+  console.log('getSymbol');
   return await ChartIQWrapperModule.getSymbol();
 }
 
@@ -233,7 +230,7 @@ export async function redoDrawing(): Promise<boolean> {
 
 export async function getStudyList() {
   const response = await ChartIQWrapperModule.getStudyList();
-
+  console.log('getStudyList response: ', response);
   return JSON.parse(response) as Array<Study>;
 }
 
@@ -267,11 +264,12 @@ export function setIsInvertYAxis(value: boolean) {
 
 export async function getActiveStudies() {
   const activeStudies = await ChartIQWrapperModule.getActiveStudies();
-
+  console.log('Active studies from native: ', activeStudies);
   return JSON.parse(activeStudies) as Study[];
 }
 
 export function addStudy(study: Study, isClone: boolean = false) {
+  return;
   return ChartIQWrapperModule.addStudy(JSON.stringify(study), isClone);
 }
 
@@ -279,6 +277,7 @@ export async function getStudyParameters(
   study: Study,
   type: StudyParameterType
 ) {
+  return;
   const response = await ChartIQWrapperModule.getStudyParameters(
     JSON.stringify(study),
     type
@@ -288,6 +287,7 @@ export async function getStudyParameters(
 }
 
 export function removeStudy(study: Study) {
+  return;
   return ChartIQWrapperModule.removeStudy(JSON.stringify(study));
 }
 
@@ -295,6 +295,7 @@ export function setStudyParameter(
   study: Study,
   parameter: StudyParameterModel
 ) {
+  return;
   return ChartIQWrapperModule.setStudyParameter(
     JSON.stringify(study),
     JSON.stringify(parameter)
@@ -305,6 +306,7 @@ export async function setStudyParameters(
   study: Study,
   parameter: StudyParameterModel[]
 ) {
+  return;
   const response = await ChartIQWrapperModule.setStudyParameters(
     JSON.stringify(study),
     JSON.stringify(parameter)
@@ -313,35 +315,42 @@ export async function setStudyParameters(
 }
 
 export async function getActiveSignals() {
+  return;
   const response = await ChartIQWrapperModule.getActiveSignals();
 
   return JSON.parse(response) as Signal[];
 }
 
 export async function addSignalStudy(name: string) {
-  const response = await ChartIQWrapperModule.addSignalStudy(name); // rename native method
+  return;
+  const response = await ChartIQWrapperModule.addSignalStudy(name);
 
   return JSON.parse(response) as Study;
 }
 
 export function addSignal(signal: Signal, editMode: boolean = false) {
+  return;
   return ChartIQWrapperModule.addSignal(JSON.stringify(signal), editMode);
 }
 
 export function toggleSignal(signal: Signal) {
+  return;
   return ChartIQWrapperModule.toggleSignal(JSON.stringify(signal));
 }
 
 export function removeSignal(signal: Signal) {
+  return;
   return ChartIQWrapperModule.removeSignal(JSON.stringify(signal));
 }
 
 export async function getTranslations(languageCode: string) {
+  return;
   const response = await ChartIQWrapperModule.getTranslations(languageCode);
 
   return JSON.parse(response);
 }
 
 export function setLanguage(languageCode: string) {
+  return;
   return ChartIQWrapperModule.setLanguage(languageCode);
 }

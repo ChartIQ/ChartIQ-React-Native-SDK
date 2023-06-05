@@ -29,7 +29,7 @@ import {
   getActiveSeries,
   QuoteFeedEvent,
 } from 'react-native-chart-iq-wrapper';
-import { useSharedValue } from 'react-native-reanimated';
+import { set, useSharedValue } from 'react-native-reanimated';
 
 import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
 import { colorPickerColors } from '~/constants';
@@ -211,17 +211,27 @@ export const useChartIQ = () => {
   };
 
   const initChart = useCallback(async () => {
-    const symbol = await getSymbol();
-    setSymbol(symbol);
+    console.log('initChart');
+    getSymbol()
+      .then((symbol) => {
+        setSymbol(symbol);
+      })
+      .catch(() => {
+        setChartSymbol('AAPL');
+        setSymbol('AAPL');
+      });
 
     // const chartType = await getChartType();
     // handleChartTypeChanged(chartType);
 
     const periodicity = await getPeriodicity();
-    const parsedPeriodicity = JSON.parse(periodicity);
-    const interval = JSON.parse(parsedPeriodicity.interval);
+    console.log('periodicity', periodicity);
+    // const parsedPeriodicity = JSON.parse(periodicity);
+    // const interval = JSON.parse(periodicity.interval);
     setInterval(
-      intervals.find((item) => item.timeUnit.toLowerCase() === interval.toLowerCase()) ?? null,
+      intervals.find(
+        (item) => item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase(),
+      ) ?? null,
     );
 
     const activeSeries = await getActiveSeries();
@@ -261,9 +271,9 @@ export const useChartIQ = () => {
     }
   }, [handleChartStyleChange]);
 
-  // React.useEffect(() => {
-  //   initChart();
-  // }, [initChart]);
+  React.useEffect(() => {
+    initChart();
+  }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {
     Close: useSharedValue<string>('0'),
@@ -306,27 +316,27 @@ export const useChartIQ = () => {
     measureValue.value = measure;
   };
 
-  // React.useEffect(() => {
-  //   const callback = (orientation: Orientation) => {
-  //     setIsLandscape(
-  //       orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
-  //     );
-  //     drawingToolSelectorRef.current?.close();
-  //     symbolSelectorRef.current?.close();
-  //     intervalSelectorRef.current?.close();
-  //     chartStyleSelectorRef.current?.close();
-  //     compareSymbolSelectorRef.current?.close();
-  //   };
-  //   getOrientationAsync().then(callback);
+  React.useEffect(() => {
+    const callback = (orientation: Orientation) => {
+      setIsLandscape(
+        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
+      );
+      drawingToolSelectorRef.current?.close();
+      symbolSelectorRef.current?.close();
+      intervalSelectorRef.current?.close();
+      chartStyleSelectorRef.current?.close();
+      compareSymbolSelectorRef.current?.close();
+    };
+    getOrientationAsync().then(callback);
 
-  //   addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-  //     callback(orientation);
-  //   });
+    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+      callback(orientation);
+    });
 
-  //   return () => {
-  //     removeOrientationChangeListeners();
-  //   };
-  // }, [setIsLandscape]);
+    return () => {
+      removeOrientationChangeListeners();
+    };
+  }, [setIsLandscape]);
 
   const toggleFullScreen = () => {
     setIsFullScreen((prevState) => {
