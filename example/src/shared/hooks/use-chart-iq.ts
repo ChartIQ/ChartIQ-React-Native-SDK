@@ -217,12 +217,12 @@ export const useChartIQ = () => {
   }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {
-    Close: useSharedValue<string>('0'),
+    Price: useSharedValue<string>('0'),
     Open: useSharedValue<string>('0'),
+    Close: useSharedValue<string>('0'),
+    Volume: useSharedValue<string>('0'),
     High: useSharedValue<string>('0'),
     Low: useSharedValue<string>('0'),
-    Volume: useSharedValue<string>('0'),
-    Price: useSharedValue<string>('0'),
   };
   const handleChartTypeChanged = (chartType: string) => {
     const newChartType = chartStyleSelectorData.find(

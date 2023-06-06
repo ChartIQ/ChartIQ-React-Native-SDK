@@ -26,6 +26,8 @@ const LightTheme: ColorPallette = {
 
   fullViewButtonBackground: Colors.darkElectricBlue,
   fullViewButtonForeground: Colors.white,
+
+  crosshairUpdateValueColor: Colors.elevationDark,
 };
 
 export default LightTheme;

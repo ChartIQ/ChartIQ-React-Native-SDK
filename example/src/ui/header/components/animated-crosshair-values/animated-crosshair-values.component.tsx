@@ -71,7 +71,7 @@ const createStyles = (theme: Theme) =>
     },
     textValue: {
       fontSize: 12,
-      color: theme.colors.buttonText,
+      color: theme.colors.crosshairUpdateValueColor,
     },
     columnWrapperStyle: {
       marginBottom: 4,

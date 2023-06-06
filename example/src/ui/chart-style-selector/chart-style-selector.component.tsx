@@ -76,6 +76,16 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
       handleClose();
     };
 
+    const isItemSelected = (item: ChartStyleItem, selectedItem: ChartStyleItem | null) => {
+      if (!selectedItem) return false;
+
+      if (!selectedItem.aggregationType) {
+        return selectedItem?.value === item.value;
+      } else {
+        return selectedItem?.aggregationType === item?.aggregationType;
+      }
+    };
+
     return (
       <BottomSheet ref={bottomSheetRef}>
         <SelectorHeader
@@ -104,7 +114,7 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
                   />
                   <Text style={styles.description}>{item.label}</Text>
                 </View>
-                {selectedChartStyle?.value === item.value ? (
+                {isItemSelected({ ...item, icon: Icon }, selectedChartStyle) ? (
                   <Icons.check width={16} height={16} fill={theme.colors.colorPrimary} />
                 ) : null}
               </TouchableOpacity>

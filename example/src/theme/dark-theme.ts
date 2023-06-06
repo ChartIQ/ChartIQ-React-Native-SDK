@@ -27,6 +27,8 @@ const DarkTheme: ColorPallette = {
 
   fullViewButtonBackground: Colors.white,
   fullViewButtonForeground: Colors.darkElectricBlue,
+
+  crosshairUpdateValueColor: Colors.mayaBlue,
 } as const;
 
 export default DarkTheme;

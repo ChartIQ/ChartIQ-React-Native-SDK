@@ -24,6 +24,8 @@ export interface ColorPallette {
 
   fullViewButtonBackground: string;
   fullViewButtonForeground: string;
+
+  crosshairUpdateValueColor: string;
 }
 
 export default interface Theme {
