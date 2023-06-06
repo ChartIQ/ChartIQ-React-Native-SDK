@@ -31,7 +31,6 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ cross
         justifyContent: 'flex-start',
       };
     }
-
     if (index === 1 || index === 4) {
       return {
         justifyContent: 'center',
@@ -54,7 +53,10 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ cross
       renderItem={({ item: { key, value }, index }) => {
         return (
           <View style={[styles.itemContainer, justify(index)]}>
-            <Text style={styles.title}>{translationMap[key] || key}</Text>
+            <Text style={styles.title}>
+              {translationMap[key] || key}
+              {':'}
+            </Text>
             <ReText style={styles.textValue} text={value} />
           </View>
         );
