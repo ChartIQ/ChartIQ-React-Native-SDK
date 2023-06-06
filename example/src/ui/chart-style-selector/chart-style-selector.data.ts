@@ -25,11 +25,6 @@ export interface ChartStyleSelectorProps {
   onChange: (interval: ChartStyleItem) => void;
 }
 
-export interface ChartStyleSelectorMethods {
-  open: () => void;
-  close: () => void;
-}
-
 interface ChartStyleSelectorData {
   label: string;
   value: ChartType;

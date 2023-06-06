@@ -1,6 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useRef,
@@ -20,7 +19,7 @@ import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { FilterSelector } from '../selector-filters';
 import { SelectorHeader } from '../selector-header';
 
@@ -32,13 +31,10 @@ import {
   filters as drawingFilters,
   specialTools,
 } from './drawing-tools-selector.data';
-import {
-  DrawingToolSelectorMethods,
-  DrawingToolSelectorProps,
-} from './drawing-tools-selector.types';
+import { DrawingToolSelectorProps } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
 
-const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSelectorProps>(
+const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorProps>(
   ({ onChange }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -81,12 +77,13 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     }, [translationMap]);
 
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
     };
 
     useImperativeHandle(ref, () => ({
-      open: () => {
-        bottomSheetRef.current?.expand();
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
+      present: (id) => {
+        bottomSheetRef.current?.present(id);
         textInputRef.current?.focus();
       },
       close: handleClose,

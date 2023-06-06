@@ -1,14 +1,6 @@
-import {
-  Orientation,
-  OrientationChangeEvent,
-  addOrientationChangeListener,
-  getOrientationAsync,
-  removeOrientationChangeListeners,
-} from 'expo-screen-orientation';
 import React, { useCallback } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
-  disableDrawing,
   enableDrawing,
   getDrawingParams,
   setInitialData,
@@ -27,29 +19,21 @@ import {
   getChartAggregationType,
   getPeriodicity,
   getActiveSeries,
+  disableDrawing,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
 import { colorPickerColors } from '~/constants';
 import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
   ChartStyleItem,
-  ChartStyleSelectorMethods,
   chartStyleSelectorData,
 } from '~/ui/chart-style-selector/chart-style-selector.data';
-import {
-  ColoredChartSymbol,
-  CompareSymbolSelectorMethods,
-} from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
+import { ColoredChartSymbol } from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
-import { DrawingToolSelectorMethods } from '~/ui/drawing-tools-selector/drawing-tools-selector.types';
-import {
-  IntervalItem,
-  IntervalSelectorMethods,
-  intervals,
-} from '~/ui/interval-selector/interval-selector.component';
-import { SymbolSelectorMethods } from '~/ui/symbol-selector/symbol-selector.component';
+import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selector.component';
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
@@ -82,8 +66,7 @@ export const useChartIQ = () => {
   const [isCrosshairEnabled, setIsCrosshairEnabled] = React.useState(false);
   const measureValue = useSharedValue('');
 
-  const [isFullscreen, setIsFullScreen] = React.useState(false);
-  const [isLandscape, setIsLandscape] = React.useState(false);
+  const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
   const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
 
@@ -105,37 +88,6 @@ export const useChartIQ = () => {
     const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
     const response = await handleRequest(parsed);
     setPagingData(JSON.stringify(response));
-  };
-
-  const symbolSelectorRef = React.useRef<SymbolSelectorMethods>(null);
-  const intervalSelectorRef = React.useRef<IntervalSelectorMethods>(null);
-  const chartStyleSelectorRef = React.useRef<ChartStyleSelectorMethods>(null);
-  const compareSymbolSelectorRef = React.useRef<CompareSymbolSelectorMethods>(null);
-  const drawingToolSelectorRef = React.useRef<DrawingToolSelectorMethods>(null);
-
-  const toggleSymbolSelector = () => {
-    symbolSelectorRef.current?.open();
-  };
-
-  const toggleIntervalSelector = () => {
-    intervalSelectorRef.current?.open();
-  };
-
-  const toggleChartStyleSelector = () => {
-    chartStyleSelectorRef.current?.open();
-  };
-
-  const toggleCompareSymbolSelector = () => {
-    compareSymbolSelectorRef.current?.open();
-  };
-
-  const toggleDrawingToolSelector = () => {
-    if (!isDrawing) {
-      return drawingToolSelectorRef.current?.open();
-    }
-    setIsDrawing(false);
-    setDrawingItem(null);
-    disableDrawing();
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
@@ -207,10 +159,6 @@ export const useChartIQ = () => {
     }
 
     disableCrosshairs();
-  };
-
-  const showDrawingToolsSelector = () => {
-    drawingToolSelectorRef.current?.open();
   };
 
   const initChart = useCallback(async () => {
@@ -309,34 +257,6 @@ export const useChartIQ = () => {
     measureValue.value = measure;
   };
 
-  React.useEffect(() => {
-    const callback = (orientation: Orientation) => {
-      setIsLandscape(
-        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
-      );
-      drawingToolSelectorRef.current?.close();
-      symbolSelectorRef.current?.close();
-      intervalSelectorRef.current?.close();
-      chartStyleSelectorRef.current?.close();
-      compareSymbolSelectorRef.current?.close();
-    };
-    getOrientationAsync().then(callback);
-
-    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-      callback(orientation);
-    });
-
-    return () => {
-      removeOrientationChangeListeners();
-    };
-  }, [setIsLandscape]);
-
-  const toggleFullScreen = () => {
-    setIsFullScreen((prevState) => {
-      return !prevState;
-    });
-  };
-
   const onDrawingToolChanged = async (input: DrawingItem) => {
     enableDrawing(input.name);
     const params = await getDrawingParams(input.name);
@@ -352,6 +272,15 @@ export const useChartIQ = () => {
     setIsDrawing(true);
   };
 
+  const toggleDrawingToolSelector = () => {
+    if (!isDrawing) {
+      return drawingToolSelectorRef.current?.present();
+    }
+    setIsDrawing(false);
+    setDrawingItem(null);
+    disableDrawing();
+  };
+
   return {
     onChartTypeChanged,
     onHUDChanged,
@@ -362,14 +291,8 @@ export const useChartIQ = () => {
     onDrawingToolChanged,
     onChartAggregationTypeChanged,
 
-    toggleSymbolSelector,
-    toggleIntervalSelector,
-    toggleChartStyleSelector,
-    toggleCompareSymbolSelector,
-    toggleDrawingToolSelector,
-    showDrawingToolsSelector,
     toggleCrosshair,
-    toggleFullScreen,
+    toggleDrawingToolSelector,
 
     removeSymbol,
     addSymbol,
@@ -383,17 +306,11 @@ export const useChartIQ = () => {
     chartStyle,
     compareSymbols,
     isCrosshairEnabled,
-    isLandscape,
     isDrawing,
     drawingItem,
     measureValue,
     crosshair,
-    isFullscreen,
 
-    compareSymbolSelectorRef,
-    symbolSelectorRef,
-    intervalSelectorRef,
-    chartStyleSelectorRef,
     drawingToolSelectorRef,
   };
 };

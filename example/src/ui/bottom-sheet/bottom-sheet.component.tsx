@@ -1,8 +1,7 @@
-import BottomSheet from '@gorhom/bottom-sheet';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { PropsWithChildren, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Keyboard, StyleSheet } from 'react-native';
-import { runOnJS } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Theme, useTheme } from '~/theme';
@@ -12,37 +11,60 @@ interface BottomSheetSelectorProps extends PropsWithChildren {
   onClose?: () => void;
 }
 
+export interface BottomSheetMethods extends BottomSheetModalMethods {
+  present: (id?: string) => void;
+  id: string | null;
+}
+
 const DEFAULT_SNAP_POINTS = ['100%'];
 
 const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorProps>(
   ({ children, snapPoints = DEFAULT_SNAP_POINTS, onClose }, ref) => {
-    const bottomSheetRef = useRef<BottomSheet>(null);
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const idRef = useRef<string | null>(null);
+
     const theme = useTheme();
     const styles = createStyles(theme);
 
-    useImperativeHandle(ref, () => bottomSheetRef.current);
+    useImperativeHandle(ref, () => ({
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
+      present: (id?: string) => {
+        if (id) {
+          idRef.current = id;
+        }
+        bottomSheetRef.current?.present();
+      },
+      id: idRef.current ?? '',
+      close: () => {
+        handleClose();
+      },
+    }));
 
     const handleDismiss = (index: number) => {
-      'worklet';
       if (index === -1) {
-        runOnJS(Keyboard.dismiss)();
+        Keyboard.dismiss();
+        idRef.current = null;
       }
     };
 
+    const handleClose = () => {
+      idRef.current = null;
+    };
     return (
-      <BottomSheet
+      <BottomSheetModal
         ref={bottomSheetRef}
         snapPoints={snapPoints}
-        index={-1}
+        index={0}
         enablePanDownToClose={true}
         enableOverDrag={true}
         onChange={handleDismiss}
-        onClose={onClose}
+        onDismiss={onClose}
         handleComponent={() => null}
         style={styles.bottomSheet}
+        animateOnMount
       >
         <SafeAreaView style={styles.container}>{children}</SafeAreaView>
-      </BottomSheet>
+      </BottomSheetModal>
     );
   },
 );

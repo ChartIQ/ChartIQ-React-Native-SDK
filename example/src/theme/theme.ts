@@ -23,6 +23,7 @@ export interface ColorPallette {
   favoriteBackground: string;
 
   fullViewButtonBackground: string;
+  fullViewButtonForeground: string;
 }
 
 export default interface Theme {

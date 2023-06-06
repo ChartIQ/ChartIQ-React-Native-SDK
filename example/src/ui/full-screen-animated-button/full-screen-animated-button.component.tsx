@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -33,6 +33,12 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
   const { width, height } = useWindowDimensions();
   const translateX = useSharedValue(width - SPACE);
   const translateY = useSharedValue(PADDING);
+
+  useEffect(() => {
+    if (width) {
+      translateX.value = withTiming(width - SPACE);
+    }
+  }, [translateX, width]);
 
   const gestureDown = Gesture.Fling()
     .direction(Directions.DOWN)
@@ -149,7 +155,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
             width={44}
             height={44}
             fill={theme.colors.fullViewButtonBackground}
-            stroke={theme.colors.buttonText}
+            stroke={theme.colors.fullViewButtonForeground}
           />
         </Pressable>
       </Animated.View>

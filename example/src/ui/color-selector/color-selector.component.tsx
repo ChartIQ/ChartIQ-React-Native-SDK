@@ -1,4 +1,3 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import {
   Orientation,
   OrientationChangeEvent,
@@ -11,7 +10,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colorPickerColors } from '~/constants';
 import { Theme, useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
 
 interface ColorSelectorProps {
@@ -19,15 +18,10 @@ interface ColorSelectorProps {
   selectedColor?: string;
 }
 
-export interface ColorSelectorMethods {
-  open: (id?: string) => void;
-  close: () => void;
-}
-
 const HORIZONTAL_LIST_NUM_COLUMNS = 10;
 const VERTICAL_LIST_NUM_COLUMNS = 5;
 
-const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(
+const ColorSelector = forwardRef<BottomSheetMethods, ColorSelectorProps>(
   ({ onChange, selectedColor }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -55,24 +49,11 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(
       };
     }, [setIsLandscape]);
 
-    const handleClose = () => {
-      bottomSheetRef.current?.close();
-    };
-
-    useImperativeHandle(ref, () => ({
-      open: (id?: string) => {
-        bottomSheetRef.current?.expand();
-        if (id) {
-          idRef.current = id;
-        }
-      },
-      close: handleClose,
-    }));
+    useImperativeHandle(ref, () => bottomSheetRef.current ?? ({} as BottomSheetMethods));
 
     const handleChange = (input: string) => {
       onChange(input, idRef.current ?? undefined);
-      handleClose();
-      idRef.current = null;
+      bottomSheetRef?.current?.dismiss();
     };
 
     useEffect(() => {

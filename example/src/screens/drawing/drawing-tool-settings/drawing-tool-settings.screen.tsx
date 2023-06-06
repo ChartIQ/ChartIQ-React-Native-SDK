@@ -22,10 +22,9 @@ import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
-import ColorSelector, { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
-import LineTypeSelector, {
-  LineTypeSelectorMethods,
-} from '~/ui/line-type-selector/line-type-selector.component';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
+import ColorSelector from '~/ui/color-selector/color-selector.component';
+import LineTypeSelector from '~/ui/line-type-selector/line-type-selector.component';
 import { ListItem } from '~/ui/list-item';
 
 const DrawingToolSettings: React.FC = () => {
@@ -33,9 +32,8 @@ const DrawingToolSettings: React.FC = () => {
   const navigation = useNavigation<DrawingToolsSettings>();
   const theme = useTheme();
   const styles = createStyles(theme);
-  const fillColorSelectorRef = useRef<ColorSelectorMethods>(null);
-  const lineColorSelectorRef = useRef<ColorSelectorMethods>(null);
-  const lineTypeSelectorRef = useRef<LineTypeSelectorMethods>(null);
+  const colorSelectorRef = useRef<BottomSheetMethods>(null);
+  const lineTypeSelectorRef = useRef<BottomSheetMethods>(null);
   const {
     drawingSettings,
     supportedSettings: {
@@ -76,13 +74,13 @@ const DrawingToolSettings: React.FC = () => {
   }, [navigation, params.title]);
 
   const toggleFillColor = () => {
-    fillColorSelectorRef.current?.open('');
+    colorSelectorRef.current?.present(DrawingParams.FILL_COLOR);
   };
   const toggleLineColor = () => {
-    lineColorSelectorRef.current?.open('');
+    colorSelectorRef.current?.present(DrawingParams.LINE_COLOR);
   };
   const toggleLineType = () => {
-    lineTypeSelectorRef.current?.open();
+    lineTypeSelectorRef.current?.present();
   };
 
   const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
@@ -91,14 +89,17 @@ const DrawingToolSettings: React.FC = () => {
     setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
   };
 
-  const onFillColorChange = (color: string) => {
-    updateFillColor(color);
-    setDrawingParams(DrawingParams.FILL_COLOR, color);
-  };
+  const onColorChange = (color: string, id?: string | undefined) => {
+    if (!id) return;
 
-  const onLineColorChange = (color: string) => {
-    updateLineColor(color);
-    setDrawingParams(DrawingParams.LINE_COLOR, color);
+    if (id === DrawingParams.FILL_COLOR) {
+      updateFillColor(color);
+      setDrawingParams(DrawingParams.FILL_COLOR, color);
+    }
+    if (id === DrawingParams.LINE_COLOR) {
+      updateLineColor(color);
+      setDrawingParams(DrawingParams.LINE_COLOR, color);
+    }
   };
 
   const toggleBoldFontStyle = () => {
@@ -312,8 +313,7 @@ const DrawingToolSettings: React.FC = () => {
           ) : null}
         </ScrollView>
       </SafeAreaView>
-      <ColorSelector ref={fillColorSelectorRef} onChange={onFillColorChange} />
-      <ColorSelector ref={lineColorSelectorRef} onChange={onLineColorChange} />
+      <ColorSelector ref={colorSelectorRef} onChange={onColorChange} />
       <LineTypeSelector
         selectedItem={currentLineType}
         ref={lineTypeSelectorRef}

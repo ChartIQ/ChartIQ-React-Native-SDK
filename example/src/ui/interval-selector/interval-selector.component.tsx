@@ -1,12 +1,12 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import Icons from '~/assets/icons';
 import { TimeUnit } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
 
 export type IntervalItem = {
@@ -35,30 +35,21 @@ export const intervals: Array<IntervalItem> = [
 
 interface IntervalSelectorProps {
   onChange: (interval: IntervalItem) => void;
+  selectedInterval: IntervalItem;
 }
 
-export interface IntervalSelectorMethods {
-  open: () => void;
-  close: () => void;
-}
-
-const IntervalSelector = forwardRef<IntervalSelectorMethods, IntervalSelectorProps>(
-  ({ onChange }, ref) => {
+const IntervalSelector = forwardRef<BottomSheetMethods, IntervalSelectorProps>(
+  ({ onChange, selectedInterval }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const { translations } = useTranslations();
 
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
     };
 
-    useImperativeHandle(ref, () => ({
-      open: () => {
-        bottomSheetRef.current?.expand();
-      },
-      close: handleClose,
-    }));
+    useImperativeHandle(ref, () => bottomSheetRef.current ?? ({} as BottomSheetMethods));
 
     const handleChange = (interval: IntervalItem) => {
       onChange(interval);
@@ -77,10 +68,14 @@ const IntervalSelector = forwardRef<IntervalSelectorMethods, IntervalSelectorPro
           contentContainerStyle={styles.contentContainer}
           style={styles.contentContainer}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
+          keyExtractor={(item) => item.label}
           renderItem={({ item }) => {
             return (
               <TouchableOpacity onPress={() => handleChange(item)} style={styles.itemContainer}>
                 <Text style={styles.description}>{item.description}</Text>
+                {selectedInterval.label === item.label ? (
+                  <Icons.check fill={theme.colors.colorPrimary} />
+                ) : null}
               </TouchableOpacity>
             );
           }}
@@ -113,6 +108,8 @@ const createStyles = (theme: Theme) =>
       paddingVertical: 12,
       paddingHorizontal: 16,
       backgroundColor: theme.colors.backgroundSecondary,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
   });
 

@@ -1,4 +1,3 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -6,6 +5,7 @@ import { LineTypeItem, lineTypePickerData } from '~/assets/icons/line-types/line
 import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet } from '../bottom-sheet';
+import { BottomSheetMethods } from '../bottom-sheet/bottom-sheet.component';
 import { SelectorHeader } from '../selector-header';
 
 interface LineTypeSelectorProps {
@@ -13,37 +13,23 @@ interface LineTypeSelectorProps {
   selectedItem: LineTypeItem;
 }
 
-export interface LineTypeSelectorMethods {
-  open: (id?: string) => void;
-  close: () => void;
-}
-
-const LineTypeSelector = forwardRef<LineTypeSelectorMethods, LineTypeSelectorProps>(
+const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
   ({ onChange, selectedItem }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const idRef = useRef<string | null>(null);
 
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
     };
 
-    useImperativeHandle(ref, () => ({
-      open: (id?: string) => {
-        if (id) {
-          idRef.current = id;
-        }
-        bottomSheetRef.current?.expand();
-      },
-      close: handleClose,
-    }));
+    useImperativeHandle(ref, () => bottomSheetRef.current ?? ({} as BottomSheetMethods));
 
     const handleChange = (input: LineTypeItem) => {
-      onChange(input, idRef?.current ?? undefined);
+      onChange(input, bottomSheetRef?.current?.id ?? undefined);
       handleClose();
-      idRef.current = null;
     };
+
     return (
       <BottomSheet ref={bottomSheetRef}>
         <SelectorHeader title="Select line type" />

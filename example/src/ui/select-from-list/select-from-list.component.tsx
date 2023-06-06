@@ -1,12 +1,11 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { Input } from '../input';
 import { ListItem } from '../list-item';
 import { SelectorHeader } from '../selector-header';
@@ -18,9 +17,8 @@ interface SelectOptionFromListProps extends PropsWithChildren {
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
 
-export interface SelectOptionFromListMethods {
+export interface SelectOptionFromListMethods extends BottomSheetMethods {
   open: (data: Data, selected: string, id: string) => void;
-  close: () => void;
 }
 
 const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptionFromListProps>(
@@ -33,13 +31,8 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     const { translationMap, translations } = useTranslations();
     const [filter, setFilter] = useState('');
 
-    const onClose = () => {
-      bottomSheetRef.current?.close();
-    };
-
     const handleSelect = (value: string, key: string) => {
       onChange({ key, value }, idRef.current);
-      onClose();
     };
 
     const onExpand = (data: Data, selected: string, id: string) => {
@@ -54,8 +47,8 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     };
 
     useImperativeHandle(ref, () => ({
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       open: onExpand,
-      close: onClose,
     }));
 
     const filteredData = flatListData.filter(({ value }) =>
@@ -68,7 +61,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
           <SelectorHeader
             title={translationMap[title] || title}
             leftActionTitle={translations.close}
-            handleLeftAction={onClose}
+            handleLeftAction={bottomSheetRef.current?.dismiss}
           />
         ) : null}
         <Input bottomSheet onChange={setFilter} />

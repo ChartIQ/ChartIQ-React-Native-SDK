@@ -1,4 +1,3 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 
@@ -6,13 +5,10 @@ import { ChartSymbol } from '~/api';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { ColorSelector } from '../color-selector';
-import { ColorSelectorMethods } from '../color-selector/color-selector.component';
 import { SelectorHeader } from '../selector-header';
-import SymbolSelector, {
-  SymbolSelectorMethods,
-} from '../symbol-selector/symbol-selector.component';
+import SymbolSelector from '../symbol-selector/symbol-selector.component';
 
 import { SwipableSymbol } from './components/swipable-symbol-item';
 
@@ -25,33 +21,27 @@ interface CompareSymbolSelectorProps {
   data: ColoredSymbols;
 }
 
-export interface CompareSymbolSelectorMethods {
-  open: () => void;
-  close: () => void;
-}
-
-const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSymbolSelectorProps>(
+const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelectorProps>(
   ({ onAdd, onDelete, data }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const { translations } = useTranslations();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const symbolSelectorRef = useRef<SymbolSelectorMethods>(null);
-    const colorSelectorRef = useRef<ColorSelectorMethods>(null);
+    const symbolSelectorRef = useRef<BottomSheetMethods>(null);
+    const colorSelectorRef = useRef<BottomSheetMethods>(null);
+
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
       Keyboard.dismiss();
     };
 
     useImperativeHandle(ref, () => ({
-      open: () => {
-        bottomSheetRef.current?.expand();
-      },
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       close: handleClose,
     }));
 
     const handleSymbolAdd = (input: ColoredChartSymbol) => {
-      colorSelectorRef.current?.open(input.symbol);
+      colorSelectorRef.current?.present(input.symbol);
       onAdd(input);
     };
 
@@ -60,7 +50,7 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
     };
 
     const handleAddPress = () => {
-      symbolSelectorRef.current?.open();
+      symbolSelectorRef.current?.present();
     };
 
     const onColorChange = (color: string, id: string | null) => {
@@ -75,7 +65,7 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
     };
 
     const handleChangeColor = (id: string) => {
-      colorSelectorRef.current?.open(id);
+      colorSelectorRef.current?.present(id);
     };
 
     return (
