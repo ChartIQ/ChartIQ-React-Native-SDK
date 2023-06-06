@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
+import { StyleSheet, Text, FlatList, View, ViewStyle } from 'react-native';
 import { useDerivedValue, SharedValue } from 'react-native-reanimated';
 
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -25,17 +25,35 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({ cross
 
   const theme = useTheme();
   const styles = createStyles(theme);
+  const justify = (index: number): ViewStyle => {
+    if (index === 0 || index === 3) {
+      return {
+        justifyContent: 'flex-start',
+      };
+    }
 
+    if (index === 1 || index === 4) {
+      return {
+        justifyContent: 'center',
+      };
+    }
+    if (index === 2 || index === 5) {
+      return {
+        justifyContent: 'flex-end',
+      };
+    }
+
+    return {} as ViewStyle;
+  };
   return (
     <FlatList
       data={data.value}
       contentContainerStyle={styles.contentContainerStyle}
       scrollEnabled={false}
       showsVerticalScrollIndicator={false}
-      columnWrapperStyle={styles.columnWrapperStyle}
-      renderItem={({ item: { key, value } }) => {
+      renderItem={({ item: { key, value }, index }) => {
         return (
-          <View style={styles.itemContainer}>
+          <View style={[styles.itemContainer, justify(index)]}>
             <Text style={styles.title}>{translationMap[key] || key}</Text>
             <ReText style={styles.textValue} text={value} />
           </View>
@@ -54,13 +72,15 @@ const createStyles = (theme: Theme) =>
     },
     contentContainerStyle: {
       paddingHorizontal: 16,
-      paddingTop: 8,
       justifyContent: 'space-between',
     },
     itemContainer: {
       flexDirection: 'row',
       flex: 1,
       alignItems: 'center',
+    },
+    justifyCenter: {
+      justifyContent: 'center',
     },
     title: {
       paddingRight: 5,
@@ -72,9 +92,6 @@ const createStyles = (theme: Theme) =>
     textValue: {
       fontSize: 12,
       color: theme.colors.crosshairUpdateValueColor,
-    },
-    columnWrapperStyle: {
-      marginBottom: 4,
     },
   });
 

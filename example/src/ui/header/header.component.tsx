@@ -1,64 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  useWindowDimensions,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Text, TouchableOpacity, View, ViewStyle, useWindowDimensions } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { SvgProps } from 'react-native-svg';
 
 import Icons from '~/assets/icons';
-import { ActiveImage } from '~/assets/images/active-image';
-import { ActiveImageType } from '~/assets/images/active-image/active-image.types';
-import { CrosshairSharedValues } from '~/model';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
 
-import { Theme, useTheme } from '../../theme';
-import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.data';
+import { useTheme } from '../../theme';
 
 import { AnimatedCrosshairValues } from './components/animated-crosshair-values';
+import { HeaderButtons } from './components/header-buttons';
+import { createStyles } from './header.styles';
+import { HeaderItem, HeaderProps } from './header.types';
 
 const timingConfig = { duration: 200 };
-const CROSSHAIR_HEIGHT = 70;
-
-interface HeaderProps {
-  interval: string | null;
-  chartStyle: ChartStyleItem | null;
-  symbol: string | null;
-  handleSymbolSelector: () => void;
-  handleIntervalSelector: () => void;
-  handleChartStyleSelector: () => void;
-  handleCompareSymbolSelector: () => void;
-  handleDrawingTool: () => void;
-  handleCrosshair: (input: boolean) => void;
-  handleFullScreen: () => void;
-  isCrosshairEnabled: boolean;
-  crosshairState: CrosshairSharedValues;
-  isDrawing: boolean;
-  isLandscape: boolean;
-}
-
-interface HeaderItem {
-  onPress: () => void;
-  Icon?: React.FC<SvgProps> | React.FC | null;
-  key: string;
-  style?: ViewStyle | ViewStyle[];
-  containerStyle?: ViewStyle | ViewStyle[];
-  fill?: string;
-  stroke?: string;
-  activeImageType?: ActiveImageType;
-  active?: boolean;
-}
+const CROSSHAIR_HEIGHT = 58;
 
 const Header: React.FC<HeaderProps> = ({
   symbol,
@@ -96,6 +58,13 @@ const Header: React.FC<HeaderProps> = ({
     runOnJS(setOpen)((prevState) => !prevState);
   }, [open, otherToolsHeight]);
 
+  useEffect(() => {
+    if (open && isLandscape) {
+      otherToolsHeight.value = withTiming(0, timingConfig);
+      setOpen(false);
+    }
+  }, [isLandscape, open, otherToolsHeight]);
+
   const onCrosshair = useCallback(() => {
     'worklet';
 
@@ -115,8 +84,6 @@ const Header: React.FC<HeaderProps> = ({
     [crosshairHeight],
   );
 
-  const displayStyle = { display: open ? 'flex' : 'none' } as ViewStyle;
-
   const getFill = useCallback(
     (condition: boolean) => (condition ? theme.colors.background : theme.colors.buttonText),
     [theme.colors.background, theme.colors.buttonText],
@@ -129,12 +96,6 @@ const Header: React.FC<HeaderProps> = ({
         : (styles.chartStyleButton as ViewStyle | ViewStyle[]),
     [styles.chartStyleButton, styles.selectedButton],
   );
-
-  const iconProps = {
-    width: 24,
-    height: 24,
-    fill: theme.colors.buttonText,
-  };
 
   const cardWidth = 24 + 16;
 
@@ -190,7 +151,8 @@ const Header: React.FC<HeaderProps> = ({
         onPress: () => {
           navigation.navigate(RootStack.Settings);
         },
-        Icon: Icons.menuSettings,
+        Icon: Icons.settings,
+        fill: theme.colors.buttonText,
         key: 'settings',
       },
     ],
@@ -205,6 +167,7 @@ const Header: React.FC<HeaderProps> = ({
       isDrawing,
       navigation,
       onCrosshair,
+      theme.colors.buttonText,
     ],
   );
 
@@ -234,7 +197,7 @@ const Header: React.FC<HeaderProps> = ({
         },
         key: 'full-screen',
         activeImageType: 'fillView',
-        active: false,
+        active: true,
       });
     }
     return visibleItems;
@@ -268,51 +231,10 @@ const Header: React.FC<HeaderProps> = ({
             <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.row}>
-          {visibleItems.map(({ Icon, key, onPress, style, containerStyle, fill }) => (
-            <View key={key} style={styles.itemContainer}>
-              <TouchableOpacity onPress={onPress} style={[styles.chartStyleButton, containerStyle]}>
-                {Icon ? (
-                  <Icon {...iconProps} fill={fill || theme.colors.buttonText} style={style} />
-                ) : null}
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
+        <HeaderButtons type="main" items={visibleItems} open={open} />
       </Animated.View>
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
-        {otherItems.map(
-          ({
-            Icon,
-            key,
-            onPress,
-            style,
-            containerStyle,
-            fill,
-            stroke,
-            activeImageType,
-            active,
-          }) => (
-            <View key={key} style={styles.itemContainer}>
-              <TouchableOpacity
-                onPress={onPress}
-                style={[containerStyle ? containerStyle : styles.chartStyleButton, displayStyle]}
-              >
-                {Icon ? (
-                  <Icon
-                    {...iconProps}
-                    fill={fill || theme.colors.buttonText}
-                    stroke={stroke || undefined}
-                    style={style}
-                  />
-                ) : null}
-                {activeImageType ? (
-                  <ActiveImage type={activeImageType} active={active ?? false} />
-                ) : null}
-              </TouchableOpacity>
-            </View>
-          ),
-        )}
+        <HeaderButtons type="others" items={otherItems} open={open} />
       </Animated.View>
       <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}>
         <AnimatedCrosshairValues crosshair={crosshairState} />
@@ -320,66 +242,5 @@ const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
-
-const createStyles = (theme: Theme) =>
-  StyleSheet.create({
-    otherToolsContainer: {
-      width: '100%',
-      backgroundColor: theme.colors.background,
-      borderBottomColor: theme.colors.border,
-      borderBottomWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      paddingHorizontal: 10,
-    },
-    crosshairContainer: {
-      backgroundColor: theme.colors.background,
-      width: '100%',
-    },
-    container: {
-      backgroundColor: theme.colors.background,
-      padding: 10,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    button: {
-      backgroundColor: theme.colors.buttonBackground,
-      height: 32,
-      width: 76,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    buttonText: {
-      color: theme.colors.buttonText,
-    },
-    selectedButtonText: {
-      color: theme.colors.buttonBackground,
-    },
-    space: {
-      width: 10,
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    chartStyleButton: {
-      borderRadius: 32,
-      backgroundColor: theme.colors.buttonBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 2,
-      width: 32,
-      height: 32,
-    },
-    selectedButton: {
-      backgroundColor: theme.colors.buttonText,
-    },
-    itemContainer: {
-      paddingHorizontal: 8,
-    },
-    iconMargin: {
-      margin: 4,
-    },
-  });
 
 export default Header;
