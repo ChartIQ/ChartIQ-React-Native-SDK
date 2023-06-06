@@ -35,7 +35,7 @@ export const intervals: Array<IntervalItem> = [
 
 interface IntervalSelectorProps {
   onChange: (interval: IntervalItem) => void;
-  selectedInterval: IntervalItem;
+  selectedInterval: IntervalItem | null;
 }
 
 const IntervalSelector = forwardRef<BottomSheetMethods, IntervalSelectorProps>(
@@ -73,7 +73,7 @@ const IntervalSelector = forwardRef<BottomSheetMethods, IntervalSelectorProps>(
             return (
               <TouchableOpacity onPress={() => handleChange(item)} style={styles.itemContainer}>
                 <Text style={styles.description}>{item.description}</Text>
-                {selectedInterval.label === item.label ? (
+                {selectedInterval?.label === item.label ? (
                   <Icons.check fill={theme.colors.colorPrimary} />
                 ) : null}
               </TouchableOpacity>

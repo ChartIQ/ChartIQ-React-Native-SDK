@@ -17,6 +17,8 @@ import Animated, {
 import { SvgProps } from 'react-native-svg';
 
 import Icons from '~/assets/icons';
+import { ActiveImage } from '~/assets/images/active-image';
+import { ActiveImageType } from '~/assets/images/active-image/active-image.types';
 import { CrosshairSharedValues } from '~/model';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
@@ -48,11 +50,14 @@ interface HeaderProps {
 
 interface HeaderItem {
   onPress: () => void;
-  Icon: React.FC<SvgProps> | React.FC | null;
+  Icon?: React.FC<SvgProps> | React.FC | null;
   key: string;
   style?: ViewStyle | ViewStyle[];
   containerStyle?: ViewStyle | ViewStyle[];
   fill?: string;
+  stroke?: string;
+  activeImageType?: ActiveImageType;
+  active?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -111,18 +116,18 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   const displayStyle = { display: open ? 'flex' : 'none' } as ViewStyle;
-  const drawingStyle = useMemo(
-    () => (isDrawing ? [styles.chartStyleButton, styles.selectedButton] : styles.chartStyleButton),
-    [isDrawing, styles.chartStyleButton, styles.selectedButton],
+
+  const getFill = useCallback(
+    (condition: boolean) => (condition ? theme.colors.background : theme.colors.buttonText),
+    [theme.colors.background, theme.colors.buttonText],
   );
-  const drawingFill = isDrawing ? theme.colors.background : theme.colors.buttonText;
-  const crosshairFill = isCrosshairEnabled ? theme.colors.background : theme.colors.buttonText;
-  const crosshairStyle: ViewStyle | ViewStyle[] = useMemo(
-    () =>
-      isCrosshairEnabled
+
+  const getContainerStyles = useCallback(
+    (condition: boolean) =>
+      condition
         ? [styles.chartStyleButton, styles.selectedButton]
-        : styles.chartStyleButton,
-    [isCrosshairEnabled, styles.chartStyleButton, styles.selectedButton],
+        : (styles.chartStyleButton as ViewStyle | ViewStyle[]),
+    [styles.chartStyleButton, styles.selectedButton],
   );
 
   const iconProps = {
@@ -171,17 +176,15 @@ const Header: React.FC<HeaderProps> = ({
       },
       {
         onPress: onCrosshair,
-        Icon: Icons.crosshair,
         key: 'crosshair',
-        containerStyle: crosshairStyle,
-        fill: crosshairFill,
+        activeImageType: 'crosshair',
+        active: isCrosshairEnabled,
       },
       {
         onPress: handleDrawingTool,
-        Icon: isDrawing ? Icons.drawActive : Icons.draw,
         key: 'draw',
-        fill: drawingFill,
-        containerStyle: drawingStyle,
+        activeImageType: 'drawings',
+        active: isDrawing,
       },
       {
         onPress: () => {
@@ -193,15 +196,12 @@ const Header: React.FC<HeaderProps> = ({
     ],
     [
       chartStyle?.icon,
-      crosshairFill,
-      crosshairStyle,
-      drawingFill,
-      drawingStyle,
       handleChartStyleSelector,
       handleCompareSymbolSelector,
       handleDrawingTool,
       handleSignals,
       handleStudies,
+      isCrosshairEnabled,
       isDrawing,
       navigation,
       onCrosshair,
@@ -221,7 +221,9 @@ const Header: React.FC<HeaderProps> = ({
         onPress: handleChevron,
         Icon: Icons.chevronRight,
         key: 'chevron',
-        style: { transform: [{ rotate: open ? '90deg' : '270deg' }] },
+        style: { transform: [{ rotate: open ? '270deg' : '90deg' }] },
+        containerStyle: getContainerStyles(open),
+        fill: getFill(open),
       });
     }
 
@@ -230,12 +232,15 @@ const Header: React.FC<HeaderProps> = ({
         onPress: () => {
           handleFullScreen();
         },
-        Icon: Icons.fullView,
         key: 'full-screen',
+        activeImageType: 'fillView',
+        active: false,
       });
     }
     return visibleItems;
   }, [
+    getContainerStyles,
+    getFill,
     handleChevron,
     handleFullScreen,
     isAllItemsFits,
@@ -276,18 +281,38 @@ const Header: React.FC<HeaderProps> = ({
         </View>
       </Animated.View>
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
-        {otherItems.map(({ Icon, key, onPress, style, containerStyle, fill }) => (
-          <View key={key} style={styles.itemContainer}>
-            <TouchableOpacity
-              onPress={onPress}
-              style={[containerStyle ? containerStyle : styles.chartStyleButton, displayStyle]}
-            >
-              {Icon ? (
-                <Icon {...iconProps} fill={fill || theme.colors.buttonText} style={style} />
-              ) : null}
-            </TouchableOpacity>
-          </View>
-        ))}
+        {otherItems.map(
+          ({
+            Icon,
+            key,
+            onPress,
+            style,
+            containerStyle,
+            fill,
+            stroke,
+            activeImageType,
+            active,
+          }) => (
+            <View key={key} style={styles.itemContainer}>
+              <TouchableOpacity
+                onPress={onPress}
+                style={[containerStyle ? containerStyle : styles.chartStyleButton, displayStyle]}
+              >
+                {Icon ? (
+                  <Icon
+                    {...iconProps}
+                    fill={fill || theme.colors.buttonText}
+                    stroke={stroke || undefined}
+                    style={style}
+                  />
+                ) : null}
+                {activeImageType ? (
+                  <ActiveImage type={activeImageType} active={active ?? false} />
+                ) : null}
+              </TouchableOpacity>
+            </View>
+          ),
+        )}
       </Animated.View>
       <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}>
         <AnimatedCrosshairValues crosshair={crosshairState} />

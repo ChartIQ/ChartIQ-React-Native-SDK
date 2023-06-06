@@ -59,7 +59,7 @@ const DrawingMeasure: React.FC<DrawingMeasureProps> = ({ isDrawing, measure }) =
         </Pressable>
       </View>
       <Animated.View style={[styles.measure, measureStyle]}>
-        <ReText text={measure} />
+        <ReText style={styles.measureText} text={measure} />
       </Animated.View>
     </View>
   );
@@ -92,9 +92,9 @@ const createStyles = (theme: Theme) =>
     },
     measure: {
       marginTop: 8,
-      paddingVertical: 8,
+      paddingVertical: 4,
       paddingHorizontal: 16,
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.measureBackground,
       borderRadius: 4,
     },
     measureText: {

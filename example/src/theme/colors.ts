@@ -21,6 +21,8 @@ export const Colors = {
   paleGrey: '#ebebf5',
   battleshipGrey12: 'rgba(118, 118, 128, 0.12)',
   battleshipGrey24: 'rgba(118, 118, 128, 0.24)',
+  elevationDark48: 'rgba(18, 18, 18, 0.48)',
 
   brillianteAzure: '#3a8eff',
+  ghostWhite48: 'rgba(249, 249, 249, 0.48)',
 } as const;

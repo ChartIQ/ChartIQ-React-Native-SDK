@@ -8,7 +8,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 
-import Icons from '~/assets/icons';
+import { ActiveImage } from '~/assets/images/active-image';
 import { useTheme } from '~/theme';
 
 enum Corners {
@@ -151,12 +151,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
         ]}
       >
         <Pressable onPress={onPress} style={styles.button}>
-          <Icons.fullViewActive
-            width={44}
-            height={44}
-            fill={theme.colors.fullViewButtonBackground}
-            stroke={theme.colors.fullViewButtonForeground}
-          />
+          <ActiveImage type="fillView" active />
         </Pressable>
       </Animated.View>
     </GestureDetector>
