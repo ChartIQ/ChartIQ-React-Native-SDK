@@ -100,6 +100,7 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
                     height={24}
                     color={theme.colors.cardTitle}
                     fill={theme.colors.buttonText}
+                    style={styles.image}
                   />
                   <Text style={styles.description}>{item.label}</Text>
                 </View>
@@ -155,8 +156,6 @@ const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
     },
     image: {
-      width: 24,
-      height: 24,
       marginRight: 16,
     },
   });

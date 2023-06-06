@@ -192,7 +192,7 @@ export default function Root() {
       <SymbolSelector onChange={handleSymbolChange} ref={symbolSelectorRef} />
       <IntervalSelector
         ref={intervalSelectorRef}
-        selectedInterval={interval}
+        selectedInterval={interval ?? null}
         onChange={handleIntervalChange}
       />
       <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
