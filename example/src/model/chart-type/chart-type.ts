@@ -17,4 +17,5 @@ export enum ChartType {
   RENKO = 'Renko',
   RANGE_BARS = 'Range Bars',
   PNDF = 'Point & Figure',
+  None = 'None',
 }
