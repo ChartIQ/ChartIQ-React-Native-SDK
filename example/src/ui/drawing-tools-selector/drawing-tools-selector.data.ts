@@ -130,6 +130,12 @@ export const drawingTools = [
     name: DrawingTool.FIB_FAN,
   } as DrawingItem,
   {
+    Icon: Icons.drawingTools.fibProjection,
+    tags: [DrawingToolTags.fibonacci],
+    title: 'Fib Projection',
+    name: DrawingTool.FIB_PROJECTION,
+  } as DrawingItem,
+  {
     Icon: Icons.drawingTools.fibonacciRetracement,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Retracement',
@@ -238,10 +244,22 @@ export const drawingTools = [
     name: DrawingTool.TREND_LINE,
   } as DrawingItem,
   {
+    Icon: Icons.drawingTools.horizontalLine,
+    tags: [DrawingToolTags.lines],
+    title: 'Horizontal',
+    name: DrawingTool.HORIZONTAL_LINE,
+  } as DrawingItem,
+  {
     Icon: Icons.drawingTools.verticalLine,
     tags: [DrawingToolTags.lines],
     title: 'Vertical',
     name: DrawingTool.VERTICAL_LINE,
+  } as DrawingItem,
+  {
+    Icon: Icons.drawingTools.line,
+    tags: [DrawingToolTags.lines],
+    title: 'Line',
+    name: DrawingTool.LINE,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.volumeProfile,
