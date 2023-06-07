@@ -49,6 +49,7 @@ const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
                 height={56}
                 fill={theme.colors.buttonText}
                 stroke={theme.colors.buttonText}
+                strokeWidth={item.lineWidth}
               />
             </TouchableOpacity>
           )}

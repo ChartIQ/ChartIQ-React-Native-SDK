@@ -62,7 +62,11 @@ const HorizontalLineTypePicker: React.FC<HorizontalLineTypePickerProps> = ({
               activeItem.name === item.name && styles.selectedItem,
             ]}
           >
-            <item.Icon fill={theme.colors.buttonText} stroke={theme.colors.buttonText} />
+            <item.Icon
+              fill={theme.colors.buttonText}
+              stroke={theme.colors.buttonText}
+              strokeWidth={item.lineWidth}
+            />
           </TouchableOpacity>
         )}
       />

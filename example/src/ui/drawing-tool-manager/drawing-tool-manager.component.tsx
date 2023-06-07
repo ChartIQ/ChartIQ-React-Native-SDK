@@ -145,6 +145,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
                 height={24}
                 fill={theme.colors.buttonText}
                 stroke={theme.colors.buttonText}
+                strokeWidth={currentLineType.lineWidth}
               />
             </Pressable>
           ) : null}
