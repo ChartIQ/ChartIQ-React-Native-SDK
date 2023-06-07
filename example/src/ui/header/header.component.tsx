@@ -62,8 +62,10 @@ const Header: React.FC<HeaderProps> = ({
     if (open && isLandscape) {
       otherToolsHeight.value = withTiming(0, timingConfig);
       setOpen(false);
+      crosshairHeight.value = withTiming(0, timingConfig);
+      handleCrosshair(false);
     }
-  }, [isLandscape, open, otherToolsHeight]);
+  }, [crosshairHeight, handleCrosshair, isLandscape, open, otherToolsHeight]);
 
   const onCrosshair = useCallback(() => {
     'worklet';
@@ -197,7 +199,7 @@ const Header: React.FC<HeaderProps> = ({
         },
         key: 'full-screen',
         activeImageType: 'fillView',
-        active: true,
+        active: false,
       });
     }
     return visibleItems;

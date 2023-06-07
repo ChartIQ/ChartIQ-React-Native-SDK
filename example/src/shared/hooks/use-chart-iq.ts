@@ -81,6 +81,15 @@ export const useChartIQ = () => {
   const onPullUpdateData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
     const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
     const response = await handleRequest(parsed);
+
+    if (!isCrosshairEnabled) {
+      const last = response[response.length - 1];
+      crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
+      crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
+      crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
+      crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
+      crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
+    }
     setUpdateData(JSON.stringify(response));
   };
 
@@ -220,7 +229,7 @@ export const useChartIQ = () => {
     Price: useSharedValue<string>('0'),
     Open: useSharedValue<string>('0'),
     Close: useSharedValue<string>('0'),
-    Volume: useSharedValue<string>('0'),
+    Vol: useSharedValue<string>('0'),
     High: useSharedValue<string>('0'),
     Low: useSharedValue<string>('0'),
   };
@@ -243,12 +252,12 @@ export const useChartIQ = () => {
   const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
     const response: CrosshairState = JSON.parse(hud);
 
-    crosshair.Close.value = response.close ?? '0';
-    crosshair.Open.value = response.open ?? '0';
-    crosshair.High.value = response.high ?? '0';
-    crosshair.Low.value = response.low ?? '0';
-    crosshair.Volume.value = response.volume ?? '0';
-    crosshair.Price.value = response.price ?? '0';
+    crosshair.Close.value = response.close ?? crosshair.Close.value;
+    crosshair.Open.value = response.open ?? crosshair.Open.value;
+    crosshair.High.value = response.high ?? crosshair.High.value;
+    crosshair.Low.value = response.low ?? crosshair.Low.value;
+    crosshair.Vol.value = response.volume ?? crosshair.Vol.value;
+    crosshair.Price.value = response.price ?? crosshair.Price.value;
   };
 
   const onMeasureChanged = ({

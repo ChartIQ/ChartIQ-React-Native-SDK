@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -33,6 +33,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
   const { width, height } = useWindowDimensions();
   const translateX = useSharedValue(width - SPACE);
   const translateY = useSharedValue(PADDING);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (width) {
@@ -46,7 +47,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
       const position = pos.value;
 
       if (position === Corners.TOP_LEFT || position === Corners.TOP_RIGHT) {
-        translateY.value = withTiming(height - SPACE);
+        translateY.value = withTiming(height - SPACE - PADDING);
       }
     })
     .onEnd(() => {
@@ -128,6 +129,18 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
   const onPress = () => {
     onChange(false);
   };
+
+  useEffect(() => {
+    if (isFullScreen && isFirstRender.current) {
+      translateX.value = width - SPACE;
+      translateY.value = PADDING;
+      isFirstRender.current = false;
+    }
+
+    return () => {
+      isFirstRender.current = true;
+    };
+  }, [isFullScreen, translateX, translateY, width]);
 
   if (!isFullScreen) {
     return null;
