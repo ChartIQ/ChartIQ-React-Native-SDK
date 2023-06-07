@@ -172,7 +172,11 @@ export const useChartIQ = () => {
 
   const initChart = useCallback(async () => {
     const symbol = await getSymbol();
-    setSymbol(symbol);
+    if (!symbol) {
+      setSymbol('AAPL');
+    } else {
+      setSymbol(symbol);
+    }
 
     // const chartType = await getChartType();
     // handleChartTypeChanged(chartType);
@@ -180,6 +184,7 @@ export const useChartIQ = () => {
     const periodicity = await getPeriodicity();
     const parsedPeriodicity = JSON.parse(periodicity);
     const interval = JSON.parse(parsedPeriodicity.interval);
+
     setInterval(
       intervals.find((item) => item.timeUnit.toLowerCase() === interval.toLowerCase()) ?? null,
     );
@@ -222,7 +227,9 @@ export const useChartIQ = () => {
   }, [handleChartStyleChange]);
 
   React.useEffect(() => {
-    initChart();
+    setTimeout(() => {
+      initChart();
+    }, 1000);
   }, [initChart]);
 
   const crosshair: CrosshairSharedValues = {

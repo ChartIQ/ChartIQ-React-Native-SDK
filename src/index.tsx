@@ -115,7 +115,7 @@ export async function getSymbol(): Promise<string> {
 }
 
 export async function getPeriodicity() {
-  return ChartIQWrapperModule.getPeriodicity();
+  return await ChartIQWrapperModule.getPeriodicity();
 }
 
 export async function getChartAggregationType() {

@@ -13,6 +13,7 @@ import { SelectorHeader } from '../selector-header';
 interface SelectOptionFromListProps extends PropsWithChildren {
   onChange: (result: { value: string; key: string }, id: string) => void;
   title?: string;
+  filtered?: boolean;
 }
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
@@ -22,7 +23,7 @@ export interface SelectOptionFromListMethods extends BottomSheetMethods {
 }
 
 const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptionFromListProps>(
-  ({ onChange, title }, ref) => {
+  ({ onChange, title, filtered = false }, ref) => {
     const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const idRef = useRef<string>('');
@@ -33,6 +34,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
 
     const handleSelect = (value: string, key: string) => {
       onChange({ key, value }, idRef.current);
+      bottomSheetRef.current?.dismiss();
     };
 
     const onExpand = (data: Data, selected: string, id: string) => {
@@ -43,7 +45,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
         setFlatListData(Object.entries(data).map(([key, value]) => ({ key, value })));
       }
       setSelectedItem(selected);
-      bottomSheetRef.current?.expand();
+      bottomSheetRef.current?.present(id);
     };
 
     useImperativeHandle(ref, () => ({
@@ -61,10 +63,10 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
           <SelectorHeader
             title={translationMap[title] || title}
             leftActionTitle={translations.close}
-            handleLeftAction={bottomSheetRef.current?.dismiss}
+            handleLeftAction={() => bottomSheetRef.current?.dismiss()}
           />
         ) : null}
-        <Input bottomSheet onChange={setFilter} />
+        {filtered ? <Input bottomSheet onChange={setFilter} /> : null}
         <BottomSheetFlatList
           data={filteredData}
           renderItem={({ item: { value, key } }) => (
