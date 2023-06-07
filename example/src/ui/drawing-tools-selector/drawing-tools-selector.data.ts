@@ -107,13 +107,13 @@ export const drawingTools = [
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.elliotWave,
-    tags: [DrawingToolTags.markings],
+    tags: [DrawingToolTags.technicals],
     title: 'Elliot Wave',
     name: DrawingTool.ELLIOTT_WAVE,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.ellipse,
-    tags: [DrawingToolTags.lines],
+    tags: [DrawingToolTags.markings],
     title: 'Ellipse',
     name: DrawingTool.ELLIPSE,
   } as DrawingItem,

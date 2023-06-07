@@ -29,6 +29,7 @@ const LightTheme: ColorPallette = {
 
   crosshairUpdateValueColor: Colors.elevationDark,
   measureBackground: Colors.ghostWhite48,
+  selectedColorBackground: Colors.battleshipGrey24,
 };
 
 export default LightTheme;

@@ -13,7 +13,7 @@ import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 
-const FontFamilyScreen: React.FC = () => {
+const FibonacciSettings: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const { updateDrawingSettings } = useUpdateDrawingTool();
@@ -141,4 +141,4 @@ const createStyles = (theme: Theme) =>
     },
   });
 
-export default FontFamilyScreen;
+export default FibonacciSettings;

@@ -27,6 +27,7 @@ export interface ColorPallette {
 
   crosshairUpdateValueColor: string;
   measureBackground: string;
+  selectedColorBackground: string;
 }
 
 export default interface Theme {

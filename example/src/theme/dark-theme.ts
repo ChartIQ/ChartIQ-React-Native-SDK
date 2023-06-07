@@ -30,6 +30,7 @@ const DarkTheme: ColorPallette = {
 
   crosshairUpdateValueColor: Colors.mayaBlue,
   measureBackground: Colors.elevationDark48,
+  selectedColorBackground: Colors.battleshipGrey24,
 } as const;
 
 export default DarkTheme;

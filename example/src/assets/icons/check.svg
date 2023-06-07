@@ -1,5 +1,6 @@
 <svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
-    <text transform="translate(-2 -3)" fill-rule="evenodd" font-size="17">
-        <tspan x="0" y="16">✓</tspan>
+    <text transform="translate(-1.47 -3.615)" fill-rule="evenodd"
+        font-family="SFProText-Regular, SF Pro Text" font-size="17">
+        <tspan x=".055" y="16">✓</tspan>
     </text>
 </svg>

@@ -17,13 +17,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
+import { colorPickerColors } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
-import ColorSelector from '~/ui/color-selector/color-selector.component';
+import ColorSelector, { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
 import LineTypeSelector from '~/ui/line-type-selector/line-type-selector.component';
 import { ListItem } from '~/ui/list-item';
 
@@ -32,7 +33,7 @@ const DrawingToolSettings: React.FC = () => {
   const navigation = useNavigation<DrawingToolsSettings>();
   const theme = useTheme();
   const styles = createStyles(theme);
-  const colorSelectorRef = useRef<BottomSheetMethods>(null);
+  const colorSelectorRef = useRef<ColorSelectorMethods>(null);
   const lineTypeSelectorRef = useRef<BottomSheetMethods>(null);
   const {
     drawingSettings,
@@ -74,10 +75,16 @@ const DrawingToolSettings: React.FC = () => {
   }, [navigation, params.title]);
 
   const toggleFillColor = () => {
-    colorSelectorRef.current?.present(DrawingParams.FILL_COLOR);
+    colorSelectorRef.current?.present(
+      DrawingParams.FILL_COLOR,
+      fillColor === 'black' ? colorPickerColors[colorPickerColors.length - 1] : fillColor,
+    );
   };
   const toggleLineColor = () => {
-    colorSelectorRef.current?.present(DrawingParams.LINE_COLOR);
+    colorSelectorRef.current?.present(
+      DrawingParams.LINE_COLOR,
+      lineColor === 'black' ? colorPickerColors[colorPickerColors.length - 1] : lineColor,
+    );
   };
   const toggleLineType = () => {
     lineTypeSelectorRef.current?.present();
@@ -268,7 +275,7 @@ const DrawingToolSettings: React.FC = () => {
             </ListItem>
           ) : null}
           {supportingVolumeProfile ? (
-            <ListItem title="Volume Profile">
+            <ListItem title="Price Buckets">
               <TextInput
                 value={volumeProfile.priceBuckets.toString()}
                 onChange={handleVolumeProfileChange}

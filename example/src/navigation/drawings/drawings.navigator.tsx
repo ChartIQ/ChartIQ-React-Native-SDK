@@ -16,39 +16,43 @@ const { Navigator, Screen } = createNativeStackNavigator<DrawingsStackParamList>
 const DrawingsNavigator: React.FC = () => {
   return (
     <Navigator>
-      <Screen name={DrawingsStack.DrawingToolsSettings} component={DrawingToolSettingsScreen} />
       <Screen
-        options={{ title: 'Select font family' }}
+        name={DrawingsStack.DrawingToolsSettings}
+        component={DrawingToolSettingsScreen}
+        options={{ headerTitleAlign: 'center' }}
+      />
+      <Screen
+        options={{ title: 'Select font family', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolsFontFamily}
         component={FontFamilyScreen}
       />
       <Screen
-        options={{ title: 'Select font size' }}
+        options={{ title: 'Select font size', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolsFontSizes}
         component={FontSizesScreen}
       />
       <Screen
-        options={{ title: 'Fibonacci settings' }}
+        options={{ title: 'Fibonacci settings', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolsFibonacci}
         component={FibonacciSettings}
       />
       <Screen
-        options={{ title: 'Std Deviations Settings' }}
+        options={{ title: 'Std Deviations Settings', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolsSTDDeviation}
         component={STDDeviationsSettingsScreen}
       />
       <Screen
-        options={{ title: 'Impulse' }}
+        options={{ title: 'Impulse', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolsImpulse}
         component={ImpulseScreen}
       />
       <Screen
-        options={{ title: 'Corrective' }}
+        options={{ title: 'Corrective', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolCorrective}
         component={Corrective}
       />
       <Screen
-        options={{ title: 'Decoration' }}
+        options={{ title: 'Decoration', headerTitleAlign: 'center' }}
         name={DrawingsStack.DrawingToolDecoration}
         component={DecorationScreen}
       />
