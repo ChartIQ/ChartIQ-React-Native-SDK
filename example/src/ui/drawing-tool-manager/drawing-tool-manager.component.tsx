@@ -31,7 +31,6 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
   const { drawingSettings, supportedSettings, currentLineType } = useContext(DrawingContext);
   const { updateFillColor, updateLineColor, updateLineTypeItem } = useUpdateDrawingTool();
-
   const { color: lineColor, pattern: lineType, fillColor } = drawingSettings;
   const { supportingFillColor, supportingLineColor, supportingLineType, supportingSettings } =
     supportedSettings;
@@ -133,7 +132,10 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
           )}
           {supportingLineColor && (
             <Pressable style={[styles.itemContainer]} onPress={toggleLineColor}>
-              <Icons.LineColor iconColor={theme.colors.buttonText} selectedColor={lineColor} />
+              <Icons.LineColor
+                iconColor={theme.colors.buttonText}
+                selectedColor={lineColor === 'black' && theme.isDark ? 'white' : lineColor}
+              />
             </Pressable>
           )}
           {supportingLineType ? (
