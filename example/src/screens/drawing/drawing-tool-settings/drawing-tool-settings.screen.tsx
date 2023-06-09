@@ -17,9 +17,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { colorPickerColors } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
+import { colorInitializer } from '~/shared/helpers';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -51,15 +51,15 @@ const DrawingToolSettings: React.FC = () => {
     currentLineType,
   } = useContext(DrawingContext);
   const {
-    color: lineColor,
-    fillColor,
+    color: lineColorValue,
+    fillColor: fillColorValue,
     font,
     volumeProfile,
-    impulse,
-    corrective,
-    decoration,
-    showLines,
+    waveParameters: { impulse, corrective, decoration, showLines },
   } = drawingSettings;
+
+  const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
+  const [lineColor, setLineColor] = useState(() => colorInitializer(lineColorValue, theme.isDark));
 
   const [axisLabel, setAxisLabel] = useState(() => drawingSettings.axisLabel);
   const [isBold, setIsBold] = useState(() => font.weight === 'bold');
@@ -75,16 +75,10 @@ const DrawingToolSettings: React.FC = () => {
   }, [navigation, params.title]);
 
   const toggleFillColor = () => {
-    colorSelectorRef.current?.present(
-      DrawingParams.FILL_COLOR,
-      fillColor === 'black' ? colorPickerColors[colorPickerColors.length - 1] : fillColor,
-    );
+    colorSelectorRef.current?.present(DrawingParams.FILL_COLOR, fillColor);
   };
   const toggleLineColor = () => {
-    colorSelectorRef.current?.present(
-      DrawingParams.LINE_COLOR,
-      lineColor === 'black' ? colorPickerColors[colorPickerColors.length - 1] : lineColor,
-    );
+    colorSelectorRef.current?.present(DrawingParams.LINE_COLOR, lineColor);
   };
   const toggleLineType = () => {
     lineTypeSelectorRef.current?.present();
@@ -101,10 +95,12 @@ const DrawingToolSettings: React.FC = () => {
 
     if (id === DrawingParams.FILL_COLOR) {
       updateFillColor(color);
+      setFillColor(color);
       setDrawingParams(DrawingParams.FILL_COLOR, color);
     }
     if (id === DrawingParams.LINE_COLOR) {
       updateLineColor(color);
+      setLineColor(color);
       setDrawingParams(DrawingParams.LINE_COLOR, color);
     }
   };
@@ -180,10 +176,13 @@ const DrawingToolSettings: React.FC = () => {
 
   const toggleShowLines = () => {
     updateDrawingSettings((prevState) => {
-      setDrawingParams(DrawingParams.SHOW_LINES, JSON.stringify(!prevState.showLines));
+      setDrawingParams(
+        DrawingParams.SHOW_LINES,
+        JSON.stringify(!prevState.waveParameters.showLines),
+      );
       return {
         ...prevState,
-        showLines: !prevState.showLines,
+        showLines: !prevState.waveParameters.showLines,
       };
     });
   };

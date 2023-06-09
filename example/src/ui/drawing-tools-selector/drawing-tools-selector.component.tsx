@@ -89,9 +89,9 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       close: handleClose,
     }));
 
-    const handleSymbolChange = (symbol: DrawingItem) => {
-      setTool(symbol);
-      onChange(symbol);
+    const handleSymbolChange = (drawingItem: DrawingItem) => {
+      setTool(drawingItem);
+      onChange(drawingItem);
       handleClose();
     };
 

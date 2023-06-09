@@ -1,11 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
+import { colorInitializer } from '~/shared/helpers';
 import { DrawingsStack, RootStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 
@@ -31,18 +32,30 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
   const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
   const { drawingSettings, supportedSettings, currentLineType } = useContext(DrawingContext);
   const { updateFillColor, updateLineColor, updateLineTypeItem } = useUpdateDrawingTool();
-  const { color: lineColor, pattern: lineType, fillColor } = drawingSettings;
+  const { color: lineColorValue, pattern: lineType, fillColor: fillColorValue } = drawingSettings;
   const { supportingFillColor, supportingLineColor, supportingLineType, supportingSettings } =
     supportedSettings;
 
+  const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
+  const [lineColor, setLineColor] = useState(() => colorInitializer(lineColorValue, theme.isDark));
   const toggleFillColor = () => {
     setActiveTool(activeTool === 'fill-color' ? null : 'fill-color');
   };
+
+  useEffect(() => {
+    if (lineColorValue) {
+      setLineColor(colorInitializer(lineColorValue, theme.isDark));
+    }
+    if (fillColorValue) {
+      setFillColor(colorInitializer(fillColorValue, theme.isDark));
+    }
+  }, [fillColorValue, lineColorValue, theme.isDark]);
 
   const handleFillColorChange = (color?: string) => {
     setActiveTool(null);
 
     if (color) {
+      setFillColor(color);
       setDrawingParams(DrawingParams.FILL_COLOR, color);
       updateFillColor(color);
     }
@@ -56,6 +69,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
     setActiveTool(null);
 
     if (color) {
+      setLineColor(color);
       setDrawingParams(DrawingParams.LINE_COLOR, color);
 
       updateLineColor(color);
@@ -98,12 +112,12 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
       <HorizontalColorPicker
         active={activeTool === 'fill-color'}
         onChange={handleFillColorChange}
-        activeColor={fillColor}
+        activeColor={fillColor ?? null}
       />
       <HorizontalColorPicker
         active={activeTool === 'line-color'}
         onChange={handleLineColorChange}
-        activeColor={lineColor}
+        activeColor={lineColor ?? null}
       />
       <HorizontalLineTypePicker
         active={activeTool === 'line-type'}
@@ -132,10 +146,7 @@ const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
           )}
           {supportingLineColor && (
             <Pressable style={[styles.itemContainer]} onPress={toggleLineColor}>
-              <Icons.LineColor
-                iconColor={theme.colors.buttonText}
-                selectedColor={lineColor === 'black' && theme.isDark ? 'white' : lineColor}
-              />
+              <Icons.LineColor iconColor={theme.colors.buttonText} selectedColor={lineColor} />
             </Pressable>
           )}
           {supportingLineType ? (

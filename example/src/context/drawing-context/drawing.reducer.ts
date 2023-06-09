@@ -23,10 +23,10 @@ export const drawingInitialState: DrawingState = {
   name: DrawingTool.NO_TOOL,
   title: '',
   drawingSettings: {
-    color: 'black',
+    color: 'auto',
     lineWidth: 1,
     fibs: [],
-    fillColor: 'black',
+    fillColor: 'auto',
     font: {
       family: 'Arial',
       size: '12',
@@ -50,11 +50,13 @@ export const drawingInitialState: DrawingState = {
     volumeProfile: {
       priceBuckets: 30,
     },
-    impulse: Impulse.ROMAN_CAPITAL,
-    corrective: Corrective.ABC_CAPITAL,
-    decoration: Decoration.ENCLOSED,
-    template: Template.PRIMARY,
-    showLines: true,
+    waveParameters: {
+      impulse: Impulse.ROMAN_CAPITAL,
+      corrective: Corrective.ABC_CAPITAL,
+      decoration: Decoration.ENCLOSED,
+      template: Template.PRIMARY,
+      showLines: true,
+    },
   },
   supportedSettings: {
     supportingAxisLabel: false,

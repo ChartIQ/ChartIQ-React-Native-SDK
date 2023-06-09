@@ -28,14 +28,16 @@ export interface DrawingSettings {
     priceBuckets: number;
   };
 
-  impulse: Impulse;
-  corrective: Corrective;
-  decoration: Decoration;
-  template: Template;
+  waveParameters: {
+    impulse: Impulse;
+    corrective: Corrective;
+    decoration: Decoration;
+    template: Template;
+    showLines: boolean;
+  };
 
   active1: boolean;
   active2: boolean;
   active3: boolean;
   axisLabel: boolean;
-  showLines: boolean;
 }
