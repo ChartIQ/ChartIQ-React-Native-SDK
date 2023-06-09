@@ -214,6 +214,7 @@ const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
     input: {
       padding: 0,
       fontSize: 16,
+      color: cardSubtitle,
     },
     colorBox: {
       width: 24,
