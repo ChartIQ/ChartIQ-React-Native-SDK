@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef, useImperativeHandle, useCallback, useEffect } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -103,13 +103,6 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
     (text: string) => fetchSymbols(text, selectedFilter),
     [fetchSymbols, selectedFilter],
   );
-
-  useEffect(() => {
-    console.log('SymbolSelector mounted');
-    return () => {
-      console.log('SymbolSelector unmounted');
-    };
-  }, []);
 
   return (
     <BottomSheet ref={bottomSheetRef}>

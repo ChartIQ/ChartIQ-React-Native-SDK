@@ -1,7 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import { FlatList, Keyboard, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import { ChartSymbol } from '~/api';
+import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
@@ -91,6 +92,19 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
                 handleDelete={handleSymbolDelete}
               />
             )}
+            ListEmptyComponent={() => (
+              <View style={styles.listEmptyContainer}>
+                <View style={styles.space64} />
+                <Icons.search width={120} height={120} fill={theme.colors.inputBackground} />
+                <View style={styles.space32} />
+                <Text style={styles.emptyListTextTitle}>No symbols to compare</Text>
+                <View style={styles.space16} />
+                <View style={styles.space32} />
+                <TouchableOpacity style={styles.primaryButton} onPress={handleAddPress}>
+                  <Text style={styles.primaryButtonText}>Add Symbol</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           />
         </BottomSheet>
         <SymbolSelector onChange={handleSymbolAdd} ref={symbolSelectorRef} />
@@ -121,6 +135,44 @@ const createStyles = (theme: Theme) =>
     },
     aligned: {
       alignItems: 'center',
+    },
+
+    listEmptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 36,
+      backgroundColor: theme.colors.background,
+    },
+    emptyListTextTitle: {
+      color: theme.colors.cardSubtitle,
+      fontSize: 20,
+    },
+    emptyListTextDescription: {
+      color: theme.colors.cardSubtitle,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+
+    primaryButtonText: {
+      color: theme.colors.primaryButtonText,
+      paddingVertical: 18,
+    },
+    primaryButton: {
+      width: '100%',
+      backgroundColor: theme.colors.colorPrimary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+    },
+    space16: {
+      height: 16,
+    },
+    space32: {
+      height: 32,
+    },
+    space64: {
+      height: 64,
     },
   });
 
