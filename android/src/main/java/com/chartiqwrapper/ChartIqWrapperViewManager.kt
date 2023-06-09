@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.chartiq.sdk.ChartIQ
 import com.chartiq.sdk.DataSource
 import com.chartiq.sdk.DataSourceCallback
+import com.chartiq.sdk.OnStartCallback
 import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.QuoteFeedParams
 import com.chartiq.sdk.model.drawingtool.DrawingTool
@@ -33,6 +34,9 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   private lateinit var chartIQ: ChartIQ
   private val job = Job()
   private val chartScope = CoroutineScope(job + Dispatchers.IO)
+  var startCallback: OnStartCallback = OnStartCallback {
+    dispatchStart()
+  }
   override fun getName() = "ChartIqWrapperView"
 
   val crosshairsHUD = MutableLiveData<CrosshairHUD>()
@@ -72,22 +76,16 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, MutableMap<String, String>>? {
-    return MapBuilder.of(
-      "onPullInitialData",
-      MapBuilder.of("registrationName", "onPullInitialData"),
-      "onPullUpdateData",
-      MapBuilder.of("registrationName", "onPullUpdateData"),
-      "onPullPagingData",
-      MapBuilder.of("registrationName", "onPullPagingData"),
-      "onChartTypeChanged",
-      MapBuilder.of("registrationName", "onChartTypeChanged"),
-      "onHUDChanged",
-      MapBuilder.of("registrationName", "onHUDChanged"),
-      "onMeasureChanged",
-      MapBuilder.of("registrationName", "onMeasureChanged"),
-      "onChartAggregationTypeChanged",
-      MapBuilder.of("registrationName", "onChartAggregationTypeChanged"),
-    )
+    return mapOf(
+      "onPullInitialData" to MapBuilder.of("registrationName", "onPullInitialData"),
+      "onPullUpdateData" to MapBuilder.of("registrationName", "onPullUpdateData"),
+      "onPullPagingData" to MapBuilder.of("registrationName", "onPullPagingData"),
+      "onChartTypeChanged" to MapBuilder.of("registrationName", "onChartTypeChanged"),
+      "onHUDChanged" to MapBuilder.of("registrationName", "onHUDChanged"),
+      "onMeasureChanged" to MapBuilder.of("registrationName", "onMeasureChanged"),
+      "onChartAggregationTypeChanged" to MapBuilder.of("registrationName", "onChartAggregationTypeChanged"),
+      "onStart" to MapBuilder.of("registrationName", "onStart"),
+    ).toMutableMap()
   }
 
   override fun createViewInstance(reactContext: ThemedReactContext): View {
@@ -105,6 +103,17 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
       )
     }
+  }
+
+  @ReactMethod
+  fun dispatchStart() {
+    val event: WritableMap = Arguments.createMap()
+    event.putString("started", "true")
+    reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+      chartIQ.chartView.id,
+      "onStart",
+      event,
+    )
   }
 
   @ReactMethod
@@ -230,6 +239,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
         }
       })
     }
+
+    chartIQ.start(startCallback)
   }
 
   companion object {

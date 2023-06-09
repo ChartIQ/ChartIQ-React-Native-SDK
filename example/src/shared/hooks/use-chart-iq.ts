@@ -20,12 +20,14 @@ import {
   getPeriodicity,
   getActiveSeries,
   disableDrawing,
+  setTheme,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
 import { colorPickerColors } from '~/constants';
 import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
+import { useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
   ChartStyleItem,
@@ -55,6 +57,7 @@ const handleRequest = async (input: ChartIQDatafeedParams) => {
 const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
 
 export const useChartIQ = () => {
+  const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
   const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
@@ -224,13 +227,14 @@ export const useChartIQ = () => {
       });
       handleChartStyleChange(foundChartType);
     }
-  }, [handleChartStyleChange]);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      initChart();
-    }, 1000);
-  }, [initChart]);
+    if (isDark) {
+      setTheme('night');
+      return;
+    } else {
+      setTheme('day');
+    }
+  }, [handleChartStyleChange, isDark]);
 
   const crosshair: CrosshairSharedValues = {
     Price: useSharedValue<string>('0'),
@@ -328,5 +332,7 @@ export const useChartIQ = () => {
     crosshair,
 
     drawingToolSelectorRef,
+
+    initChart,
   };
 };

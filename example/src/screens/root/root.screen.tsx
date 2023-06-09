@@ -8,13 +8,12 @@ import {
 } from 'expo-screen-orientation';
 import * as React from 'react';
 import { KeyboardAvoidingView, StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIqWrapperView, setLanguage, setTheme } from 'react-native-chart-iq-wrapper';
+import { ChartIqWrapperView, setLanguage } from 'react-native-chart-iq-wrapper';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { useTranslations } from '~/shared/hooks/use-translations';
-import { useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ChartStyleSelector } from '~/ui/chart-style-selector';
 import { CompareSymbolSelector } from '~/ui/compare-symbol-selector';
@@ -80,7 +79,6 @@ export default function Root() {
     });
   };
 
-  const { isDark } = useTheme();
   const {
     onChartTypeChanged,
     onHUDChanged,
@@ -111,6 +109,8 @@ export default function Root() {
     symbol,
 
     drawingToolSelectorRef,
+
+    initChart,
   } = useChartIQ();
 
   const showDrawingToolsSelector = () => {
@@ -120,15 +120,6 @@ export default function Root() {
   const { getTranslationsFromStorage } = useTranslations();
 
   const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
-
-  React.useEffect(() => {
-    if (isDark) {
-      setTheme('night');
-      return;
-    }
-
-    setTheme('day');
-  }, [isDark]);
 
   const get = React.useCallback(async () => {
     let userLanguage =
@@ -165,6 +156,7 @@ export default function Root() {
       </View>
       <View style={[{ flex: 1 }]}>
         <ChartIqWrapperView
+          onStart={initChart}
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
           onPullPagingData={onPullPagingData}

@@ -47,6 +47,7 @@ interface ChartIqWrapperProps extends ViewProps {
   ) => void;
   onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
   onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
+  onStart: (event: NativeSyntheticEvent<{}>) => void;
 }
 
 const ComponentName = 'ChartIqWrapperView';
