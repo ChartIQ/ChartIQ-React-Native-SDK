@@ -52,12 +52,14 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
     };
   }, [setIsLandscape]);
 
+  const handleDismiss = () => {
+    bottomSheetRef.current?.dismiss();
+    setSelectedColor('');
+  };
+
   useImperativeHandle(ref, () => ({
     ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
-    dismiss: () => {
-      bottomSheetRef?.current?.dismiss();
-      setSelectedColor('');
-    },
+    dismiss: handleDismiss,
     present: (id?: string, color?: string) => {
       bottomSheetRef?.current?.present(id);
       setSelectedColor(color ?? '');
@@ -80,7 +82,11 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
   return (
     <>
       <BottomSheet ref={bottomSheetRef}>
-        <SelectorHeader title="Select color" />
+        <SelectorHeader
+          title="Select color"
+          leftActionTitle="Cancel"
+          handleLeftAction={handleDismiss}
+        />
         <FlatList
           data={colorPickerColors}
           numColumns={numberOfColumns}
@@ -119,7 +125,6 @@ const createStyles = (theme: Theme) =>
   StyleSheet.create({
     contentContainer: {
       backgroundColor: theme.colors.backgroundSecondary,
-      flex: 1,
     },
     text: {
       color: theme.colors.colorPrimary,

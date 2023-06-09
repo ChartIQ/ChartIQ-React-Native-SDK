@@ -196,7 +196,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   };
 
   const handleColor = () => {
-    colorSelectorRef.current?.present(selectedCondition?.leftIndicator ?? '');
+    colorSelectorRef.current?.present(selectedCondition?.leftIndicator ?? '', markerColor);
   };
 
   const handleColorChange = (input: string) => {
