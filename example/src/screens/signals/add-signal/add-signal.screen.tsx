@@ -121,6 +121,12 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const handleStudyChange = async ({ value }: { value: string }) => {
     const item = studies.find((item) => item.name === value) ?? null;
     const study = await addSignalStudy(item?.shortName ?? '');
+
+    if (selectedStudy && selectedStudy.name !== study?.name) {
+      removeStudy(selectedStudy);
+      setConditions(new Map());
+    }
+
     setSelectedStudy(study);
   };
 
