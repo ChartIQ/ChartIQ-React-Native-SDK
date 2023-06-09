@@ -2,7 +2,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList } from 'react-native';
-import { addSignal, addSignalStudy, getStudyList } from 'react-native-chart-iq-wrapper';
+import {
+  addSignal,
+  addSignalStudy,
+  getStudyList,
+  removeStudy,
+} from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
@@ -204,6 +209,33 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     }
   }, [navigation, signalForEdit]);
 
+  useEffect(() => {
+    if (selectedStudy && !isEdit) {
+      navigation.setOptions({
+        headerLeft: () => {
+          return (
+            <Text
+              style={styles.saveButton}
+              onPress={() => {
+                removeStudy(selectedStudy);
+                navigation.goBack();
+              }}
+            >
+              {translations.cancel}
+            </Text>
+          );
+        },
+      });
+    }
+  }, [
+    isEdit,
+    navigation,
+    selectedStudy,
+    styles.saveButton,
+    styles.saveButtonDisabled,
+    translations.cancel,
+  ]);
+
   const ListFooterComponent = (
     <>
       {selectedStudy ? (
@@ -348,6 +380,7 @@ const createStyles = (theme: Theme) =>
     },
     saveButton: {
       color: theme.colors.colorPrimary,
+      textTransform: 'capitalize',
     },
     saveButtonDisabled: {
       color: theme.colors.cardSubtitle,
