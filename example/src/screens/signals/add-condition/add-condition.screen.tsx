@@ -174,7 +174,12 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         { key: 'Close', value: 'Close' },
       ];
     }
-    selectFromListRef.current?.open(data, selected ?? '', id);
+    selectFromListRef.current?.open({
+      data,
+      selected: selected ?? '',
+      id,
+      title: id === SECOND_INDICATOR ? 'Indicator 2' : 'Indicator 1',
+    });
   };
 
   const handleAddCondition = () => {
@@ -182,11 +187,16 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       key: key,
       value: description,
     }));
-    selectFromListRef.current?.open(data, selectedCondition?.signalOperator ?? '', CONDITION);
+    selectFromListRef.current?.open({
+      data,
+      selected: selectedCondition?.signalOperator ?? '',
+      id: CONDITION,
+      title: 'Condition',
+    });
   };
 
   const handleColor = () => {
-    colorSelectorRef.current?.open(selectedCondition?.leftIndicator ?? '');
+    colorSelectorRef.current?.present(selectedCondition?.leftIndicator ?? '');
   };
 
   const handleColorChange = (input: string) => {

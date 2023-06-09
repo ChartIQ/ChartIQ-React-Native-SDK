@@ -106,28 +106,40 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
     }, [colorProp]);
 
     const handleMarkerType = () => {
-      fromListSelectRef.current?.open(
-        Array.from(DATA.markerType),
-        markType.key,
-        SELECTOR_KEYS.markerType,
-      );
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.markerType),
+        selected: markType.key,
+        id: SELECTOR_KEYS.markerType,
+        title: 'Select Option',
+      });
     };
 
     const handleShape = () => {
-      fromListSelectRef.current?.open(Array.from(DATA.shape), shape.key, SELECTOR_KEYS.shape);
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.shape),
+        selected: shape.key,
+        id: SELECTOR_KEYS.shape,
+        title: 'Select Option',
+      });
     };
     const handleTagMark = (text: string) => {
       setTagMark(text);
     };
     const handleSize = () => {
-      fromListSelectRef.current?.open(Array.from(DATA.size), size.key, SELECTOR_KEYS.size);
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.size),
+        selected: size.key,
+        id: SELECTOR_KEYS.size,
+        title: 'Select Option',
+      });
     };
     const handlePosition = () => {
-      fromListSelectRef.current?.open(
-        Array.from(DATA.position),
-        position.key,
-        SELECTOR_KEYS.position,
-      );
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.position),
+        selected: position.key,
+        id: SELECTOR_KEYS.position,
+        title: 'Select Option',
+      });
     };
 
     const onChange = ({ value }: { value: string; key: string }, id: string) => {

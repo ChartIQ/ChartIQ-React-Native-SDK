@@ -105,11 +105,12 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   }, [get]);
 
   const handleSelectStudy = () => {
-    selectFromListRef.current?.open(
-      studies.map(({ name }) => ({ key: name, value: name })),
-      selectedStudy?.name ?? '',
-      SELECT_STUDY,
-    );
+    selectFromListRef.current?.open({
+      data: studies.map(({ name }) => ({ key: name, value: name })),
+      selected: selectedStudy?.name ?? '',
+      id: SELECT_STUDY,
+      title: 'Select study',
+    });
   };
 
   const handleStudyChange = async ({ value }: { value: string }) => {
@@ -318,7 +319,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         ListFooterComponent={ListFooterComponent}
       />
 
-      <SelectFromList title="Add study" ref={selectFromListRef} onChange={handleStudyChange} />
+      <SelectFromList ref={selectFromListRef} onChange={handleStudyChange} />
     </View>
   );
 };

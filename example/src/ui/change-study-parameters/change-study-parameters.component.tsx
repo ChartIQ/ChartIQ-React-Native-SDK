@@ -79,7 +79,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     };
 
     const handleChangeColor = (paramName: string) => {
-      colorSelectorRef.current?.open(paramName);
+      colorSelectorRef.current?.present(paramName);
     };
 
     const handleSelectOption = (
@@ -87,7 +87,12 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       selected: string,
       fieldName: string,
     ) => {
-      fromListSelectorRef.current?.open(options, selected, fieldName);
+      fromListSelectorRef.current?.open({
+        data: options,
+        selected,
+        id: fieldName,
+        title: fieldName,
+      });
     };
 
     const onOptionChange = ({ value: input }: { value: string }, id: string) => {
