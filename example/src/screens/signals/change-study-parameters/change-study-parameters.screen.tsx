@@ -27,7 +27,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: study.name });
+    navigation.setOptions({ title: study.name.split(' (')[0] });
   }, [navigation, study.name]);
 
   const get = useCallback(async () => {
