@@ -260,7 +260,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     const onMore = () => {
       showActionSheetWithOptions(
         {
-          options: ['Reset Default Parameters', 'Clear Existing Drawings', 'Cancel'],
+          options: ['Restore Default Parameters', 'Clear Existing Drawings', 'Cancel'],
           cancelButtonIndex,
           destructiveButtonIndex,
         },
