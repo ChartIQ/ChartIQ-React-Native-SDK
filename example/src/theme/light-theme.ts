@@ -13,7 +13,7 @@ const LightTheme: ColorPallette = {
   primaryButtonText: Colors.white,
   placeholderSecondaryColor: Colors.brightGrey,
 
-  placeholder: Colors.charcoalGrey,
+  placeholder: Colors.cadetBlue,
   inputBackground: Colors.battleshipGrey12,
 
   cardTitle: Colors.darkElectricBlue,

@@ -13,7 +13,7 @@ const DarkTheme: ColorPallette = {
   primaryButtonText: Colors.white,
   placeholderSecondaryColor: Colors.chineseBlack,
 
-  placeholder: Colors.paleGrey,
+  placeholder: Colors.cadetBlue,
   inputBackground: Colors.battleshipGrey24,
 
   cardTitle: Colors.white,

@@ -80,15 +80,12 @@ const createStyles = (theme: Theme) =>
       width: 24,
       height: 24,
       alignItems: 'center',
-      justifyContent: 'center',
       marginRight: 8,
       borderRadius: 4,
     },
     boxText: {
       lineHeight: 24,
       fontSize: 20,
-      textAlignVertical: 'center',
-      textAlign: 'center',
     },
     cardTitle: {
       color: theme.colors.cardTitle,

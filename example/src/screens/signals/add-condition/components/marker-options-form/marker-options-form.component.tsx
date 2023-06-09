@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import {
   MarkerOption,
+  NullableMarkerOption,
   SignalMarkerType,
   SignalPosition,
   SignalShape,
@@ -17,6 +18,7 @@ interface MarkerOptionsFormProps {
   color: string;
   onColorPressed: () => void;
   showAppearance?: boolean;
+  markerOptions?: NullableMarkerOption;
 }
 export interface MarkerOptionsFormMethods {
   getMarkerOptions: () => MarkerOption;
@@ -89,17 +91,52 @@ type Data = {
 };
 
 const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsFormProps>(
-  ({ color: colorProp, onColorPressed, showAppearance = true }, ref) => {
+  ({ color: colorProp, onColorPressed, showAppearance = true, markerOptions }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const fromListSelectRef = React.useRef<SelectOptionFromListMethods>(null);
 
-    const [markType, setMarkType] = useState<Data>(DATA.markerType[0]);
-    const [shape, setShape] = useState<Data>(DATA.shape[0]);
-    const [tagMark, setTagMark] = useState<string>('x');
-    const [size, setSize] = useState<Data>(DATA.size[0]);
-    const [position, setPosition] = useState<Data>(DATA.position[0]);
-    const [color, setColor] = useState<string>('');
+    const [markType, setMarkType] = useState<Data>(() => {
+      if (markerOptions) {
+        return (
+          DATA.markerType.find((item) => item.key === markerOptions.type) ?? DATA.markerType[0]
+        );
+      }
+      return DATA.markerType[0];
+    });
+    const [shape, setShape] = useState<Data>(() => {
+      if (markerOptions) {
+        return DATA.shape.find((item) => item.key === markerOptions.signalShape) ?? DATA.shape[0];
+      }
+      return DATA.shape[0];
+    });
+    const [tagMark, setTagMark] = useState<string>(() => {
+      if (markerOptions) {
+        return markerOptions.label ?? 'x';
+      }
+      return 'x';
+    });
+    const [size, setSize] = useState<Data>(() => {
+      if (markerOptions) {
+        return DATA.size.find((item) => item.key === markerOptions.signalSize) ?? DATA.size[0];
+      }
+      return DATA.size[0];
+    });
+    const [position, setPosition] = useState<Data>(() => {
+      if (markerOptions) {
+        return (
+          DATA.position.find((item) => item.key === markerOptions.signalPosition) ??
+          DATA.position[0]
+        );
+      }
+      return DATA.position[0];
+    });
+    const [color, setColor] = useState<string>(() => {
+      if (markerOptions) {
+        return markerOptions.color ?? colorProp;
+      }
+      return colorProp;
+    });
 
     useEffect(() => {
       setColor(colorProp);

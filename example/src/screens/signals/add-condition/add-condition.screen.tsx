@@ -322,6 +322,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
                 defaultValue="0.0"
                 value={secondIndicatorValue ?? undefined}
                 style={styles.textInput}
+                placeholderTextColor={theme.colors.placeholder}
               />
             </ListItem>
           ) : null}
@@ -331,6 +332,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
             color={markerColor}
             onColorPressed={handleColor}
             ref={markerOptionRef}
+            markerOptions={selectedCondition?.markerOption ?? undefined}
           />
         </>
       ) : null}

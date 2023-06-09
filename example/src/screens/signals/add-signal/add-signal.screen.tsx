@@ -217,13 +217,14 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         <ListItem
           titleComponent={
             <View>
-              <Text>Description</Text>
+              <Text style={styles.text}>Description</Text>
               <TextInput
                 style={styles.textInput}
                 multiline
                 defaultValue={description}
                 placeholder="Description will appear in an infobox when the signal is clicked."
                 onChangeText={setDescription}
+                placeholderTextColor={theme.colors.placeholder}
               />
             </View>
           }
@@ -234,6 +235,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
             placeholder="Enter name"
             defaultValue={name}
             onChangeText={setName}
+            placeholderTextColor={theme.colors.placeholder}
           />
         </ListItem>
       </View>
@@ -337,6 +339,9 @@ const createStyles = (theme: Theme) =>
     },
     descriptionTitle: {
       color: theme.colors.cardSubtitle,
+    },
+    text: {
+      color: theme.colors.buttonText,
     },
     textInput: {
       padding: 0,
