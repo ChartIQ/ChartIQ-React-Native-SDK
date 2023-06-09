@@ -134,8 +134,9 @@ const Header: React.FC<HeaderProps> = ({
         onPress: () => {
           handleSignals();
         },
-        Icon: Icons.signals,
+        Icon: Icons.navSignals,
         key: 'signals',
+        stroke: theme.colors.buttonText,
       },
       {
         onPress: onCrosshair,

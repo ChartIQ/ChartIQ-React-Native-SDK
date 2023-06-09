@@ -26,6 +26,7 @@ import MenuSetting from './menu-settings.svg';
 import MoreVertical from './more-vertical.svg';
 import Mountain from './mountain-chart.svg';
 import NavSettings from './nav-settings.svg';
+import NavSignals from './nav-signal.svg';
 import PointAndFigure from './point-and-figure-chart.svg';
 import RangeBars from './range-bar-chart.svg';
 import Renko from './renko-chart.svg';
@@ -80,4 +81,5 @@ export default {
   studies: Studies,
   fullView: FullView,
   fullViewActive: FullViewActive,
+  navSignals: NavSignals,
 };

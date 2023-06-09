@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
   enableDrawing,
@@ -122,6 +122,15 @@ export const useChartIQ = () => {
     setChartType(input.value);
   }, []);
 
+  const updateTheme = useCallback(() => {
+    if (isDark) {
+      setTheme('night');
+      return;
+    } else {
+      setTheme('day');
+    }
+  }, [isDark]);
+
   const onChartAggregationTypeChanged: (
     event: NativeSyntheticEvent<{
       aggregationType: string;
@@ -227,14 +236,12 @@ export const useChartIQ = () => {
       });
       handleChartStyleChange(foundChartType);
     }
+    updateTheme();
+  }, [handleChartStyleChange, updateTheme]);
 
-    if (isDark) {
-      setTheme('night');
-      return;
-    } else {
-      setTheme('day');
-    }
-  }, [handleChartStyleChange, isDark]);
+  useEffect(() => {
+    updateTheme();
+  }, [updateTheme]);
 
   const crosshair: CrosshairSharedValues = {
     Price: useSharedValue<string>('0'),
