@@ -126,20 +126,22 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
           return null;
         }
 
-        const rightInd =
-          prevState.rightIndicator === null
-            ? null
-            : outputParams.find(({ name }) => name !== prevState.leftIndicator)?.name ?? null;
-
+        let rightIndValue = prevState.rightIndicator;
+        if (rightIndValue === null) {
+          rightIndValue = outputParams.find(({ name }) =>
+            prevState.leftIndicator?.includes(name),
+          )?.name;
+        }
         return {
           ...prevState,
           leftIndicator: indicator?.name + ' ' + study.shortName,
-          rightIndicator: rightInd,
+          rightIndicator: rightIndValue,
           markerOption: {
             ...prevState.markerOption,
             color:
-              (outputParams.find(({ name }) => name === prevState.leftIndicator)
-                ?.value as string) ?? '',
+              (outputParams.find(({ name }) => {
+                return prevState.leftIndicator?.includes(name);
+              })?.value as string) ?? '',
           },
         };
       });

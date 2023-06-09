@@ -61,7 +61,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
     ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
     dismiss: handleDismiss,
     present: (id?: string, color?: string) => {
-      bottomSheetRef?.current?.present(id);
+      bottomSheetRef.current?.present(id);
       setSelectedColor(color ?? '');
     },
   }));

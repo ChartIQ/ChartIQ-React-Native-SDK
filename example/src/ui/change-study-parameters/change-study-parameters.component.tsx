@@ -45,8 +45,11 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       setOutputParams(outputParameters);
     }, [inputParameters, outputParameters]);
 
-    const onColorChange = (input: string, id: string) => {
+    const onColorChange = (input: string, id: string | undefined) => {
+      if (!id) return;
+
       const itemToChange = outputParamsData.find((item) => item.fieldName === id);
+
       if (itemToChange) {
         setOutputParamsData((prevState) => {
           return prevState.map((item) => {
@@ -78,8 +81,8 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       });
     };
 
-    const handleChangeColor = (paramName: string) => {
-      colorSelectorRef.current?.present(paramName);
+    const handleChangeColor = (paramName: string, value: string) => {
+      colorSelectorRef.current?.present(paramName, value);
     };
 
     const handleSelectOption = (
@@ -163,7 +166,9 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
 
     useImperativeHandle(ref, () => ({
       getInputParamsData: () => inputParamsData,
-      getOutputParamsData: () => outputParamsData,
+      getOutputParamsData: () => {
+        return outputParamsData;
+      },
     }));
 
     return (
@@ -212,14 +217,18 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
             {
               data: outputParams,
               key: 'section.output-params',
-              renderItem: ({ item }) => (
-                <ListItem onPress={() => handleChangeColor(item.name)} title={item.name}>
-                  <View style={[styles.box, { backgroundColor: item.value as string }]} />
-                </ListItem>
-              ),
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    onPress={() => handleChangeColor(item.name, item.value as string)}
+                    title={item.name}
+                  >
+                    <View style={[styles.box, { backgroundColor: item.value as string }]} />
+                  </ListItem>
+                );
+              },
             },
           ]}
-          style={{}}
           keyExtractor={(item) => item.name}
           ListFooterComponent={() => {
             return children ? <>{children}</> : null;
