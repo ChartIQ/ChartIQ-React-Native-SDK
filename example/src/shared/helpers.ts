@@ -15,3 +15,9 @@ export const textOnColor = (color: string) => {
 
   return index < indexSeparator ? 'black' : 'white';
 };
+
+export const formatStudyName = (name?: string | null) => {
+  if (!name) return '';
+
+  return name.split(' (')[0];
+};

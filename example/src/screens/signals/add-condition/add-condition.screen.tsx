@@ -8,6 +8,7 @@ import { Condition, NullableCondition } from '~/model/signals/condition';
 import { MarkerOption } from '~/model/signals/marker-option';
 import { SignalJoiner } from '~/model/signals/signal';
 import { SignalOperatorValues, SignalOperator } from '~/model/signals/signal-operator';
+import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -296,7 +297,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       <ListItem
         onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
         title="Indicator 1"
-        value={leftIndicatorDescription ?? undefined}
+        value={formatStudyName(leftIndicatorDescription) ?? undefined}
       />
       <ListItem
         onPress={handleAddCondition}
@@ -312,7 +313,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
                 handleIndicator(SECOND_INDICATOR, selectedCondition?.rightIndicator ?? '')
               }
               title="Indicator 2"
-              value={rightIndicatorDescription}
+              value={formatStudyName(rightIndicatorDescription)}
             />
           )}
           {showValueSelector ? (
