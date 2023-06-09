@@ -225,12 +225,16 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
           <ListItem onPress={onColorPressed} title="Color">
             <View style={[styles.colorBox, { backgroundColor: color }]} />
           </ListItem>
-          <ListItem onPress={handleShape} title="Shape" value={shape.value} />
-          <ListItem title="Tag Mark">
-            <TextInput style={styles.input} defaultValue="x" onChangeText={handleTagMark} />
-          </ListItem>
-          <ListItem onPress={handleSize} title="Size" value={size.value} />
-          <ListItem onPress={handlePosition} title="Position" value={position.value} />
+          {markType.key === SignalMarkerType.MARKER ? (
+            <>
+              <ListItem onPress={handleShape} title="Shape" value={shape.value} />
+              <ListItem title="Tag Mark">
+                <TextInput style={styles.input} defaultValue="x" onChangeText={handleTagMark} />
+              </ListItem>
+              <ListItem onPress={handleSize} title="Size" value={size.value} />
+              <ListItem onPress={handlePosition} title="Position" value={position.value} />
+            </>
+          ) : null}
         </View>
         <SelectFromList ref={fromListSelectRef} onChange={onChange} />
       </View>
