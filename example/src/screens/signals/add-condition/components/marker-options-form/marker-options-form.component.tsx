@@ -112,9 +112,9 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
     });
     const [tagMark, setTagMark] = useState<string>(() => {
       if (markerOptions) {
-        return markerOptions.label ?? 'x';
+        return markerOptions.label ?? 'X';
       }
-      return 'x';
+      return 'X';
     });
     const [size, setSize] = useState<Data>(() => {
       if (markerOptions) {
@@ -229,7 +229,7 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
             <>
               <ListItem onPress={handleShape} title="Shape" value={shape.value} />
               <ListItem title="Tag Mark">
-                <TextInput style={styles.input} defaultValue="x" onChangeText={handleTagMark} />
+                <TextInput style={styles.input} defaultValue="X" onChangeText={handleTagMark} />
               </ListItem>
               <ListItem onPress={handleSize} title="Size" value={size.value} />
               <ListItem onPress={handlePosition} title="Position" value={position.value} />
