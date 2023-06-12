@@ -171,15 +171,31 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       },
     }));
 
+    const inputData = inputParams.map((item) => ({
+      ...item,
+      value:
+        inputParamsData.find((param) => param.fieldName === item.name)?.fieldSelectedValue ??
+        item.value,
+    }));
+
+    const handleNumberChange = (text: string, name: string) => {
+      const number = Number(text);
+      if (isNaN(number) || number === Infinity || number === -Infinity) {
+        onValueChange(name, 0.0);
+        return;
+      }
+      onValueChange(name, number);
+    };
+
     return (
       <>
         <SectionList
           sections={[
             {
-              data: inputParams,
+              data: inputData,
               key: 'section.input-params',
               renderItem: ({ item }) => {
-                if (item?.options !== undefined) {
+                if (item.fieldType === 'Select') {
                   return (
                     <ListItem
                       onPress={() => handleSelectOption(item.options, item.value, item.name)}
@@ -189,22 +205,39 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                     </ListItem>
                   );
                 }
-                if (typeof item.value === 'number' || typeof item.value === 'string') {
+                if (item.fieldType === 'Text') {
                   return (
                     <ListItem title={item.name}>
                       <TextInput
                         style={styles.input}
                         defaultValue={item.value.toString()}
                         onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
+                        value={item.value.toString()}
                       />
                     </ListItem>
                   );
                 }
-                if (typeof item.value === 'boolean') {
+                if (item.fieldType === 'Number') {
+                  return (
+                    <ListItem title={item.name}>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        defaultValue={item.value.toString()}
+                        placeholder="0.0"
+                        onChange={({ nativeEvent: { text } }) =>
+                          handleNumberChange(text, item.name)
+                        }
+                        value={item.value.toString()}
+                      />
+                    </ListItem>
+                  );
+                }
+                if (item.fieldType === 'Checkbox') {
                   return (
                     <ListItem title={item.name}>
                       <Switch
-                        value={item.value}
+                        value={item.value as boolean}
                         onValueChange={(value) => onValueChange(item.name, value)}
                       />
                     </ListItem>

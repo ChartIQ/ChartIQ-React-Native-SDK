@@ -13,7 +13,9 @@ import {
   DrawingParams,
   DrawingSettings,
   DrawingTool,
+  StudyParameter,
   StudyParameterModel,
+  StudyParameterResponse,
 } from '~/model';
 import { ChartType } from '~/model/chart-type';
 import { Signal } from '~/model/signals';
@@ -232,7 +234,15 @@ export async function getStudyParameters(
     type
   );
 
-  return JSON.parse(response);
+  const data = JSON.parse(response) as StudyParameterResponse[];
+
+  return data.map((item) => {
+    const value = JSON.parse(item.fieldValue);
+    return {
+      ...value,
+      fieldType: item.fieldType,
+    } as StudyParameter;
+  });
 }
 
 export function removeStudy(study: Study) {
