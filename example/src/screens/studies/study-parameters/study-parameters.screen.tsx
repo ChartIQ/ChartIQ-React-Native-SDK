@@ -26,7 +26,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: study.name });
+    navigation.setOptions({ title: study.name, headerTitleAlign: 'center' });
   }, [navigation, study.name]);
 
   const get = useCallback(async () => {
