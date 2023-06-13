@@ -1,15 +1,6 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputChangeEventData,
-  TouchableOpacity,
-  View,
-  Pressable,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -35,9 +26,9 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
     const textInputRef = useRef<TextInput>(null);
     const { translations } = useTranslations();
 
-    const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-      onChange(event.nativeEvent.text);
-      setValue(event.nativeEvent.text);
+    const handleChange = (text: string) => {
+      onChange(text);
+      setValue(text);
     };
 
     const onClose = () => {
@@ -65,7 +56,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
             <BottomSheetTextInput
               //@ts-ignore
               ref={textInputRef}
-              onChange={handleChange}
+              onChangeText={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
@@ -74,7 +65,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
           ) : (
             <TextInput
               ref={textInputRef}
-              onChange={handleChange}
+              onChangeText={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
@@ -130,7 +121,6 @@ const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
       fontSize: 16,
       padding: 0,
-      textTransform: 'capitalize',
     },
     close: {
       backgroundColor: theme.colors.cardSubtitle,

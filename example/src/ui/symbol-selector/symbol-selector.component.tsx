@@ -65,9 +65,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
       return;
     }
 
-    setInputValue(input);
     setIsLoading(true);
-
     fetchSymbolsAsync({
       symbol: input,
       maxResult: DEFAULT_VALUE_MAX_RESULT.toString(),
@@ -100,7 +98,10 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
   };
 
   const handleTextChange = useCallback(
-    (text: string) => fetchSymbols(text, selectedFilter),
+    (text: string) => {
+      setInputValue(text);
+      fetchSymbols(text, selectedFilter);
+    },
     [fetchSymbols, selectedFilter],
   );
 
@@ -108,6 +109,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
     <BottomSheet ref={bottomSheetRef}>
       <View>
         <Input
+          bottomSheet
           ref={textInputRef}
           handleClose={handleClose}
           onChange={handleTextChange}
