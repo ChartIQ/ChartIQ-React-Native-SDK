@@ -190,9 +190,6 @@ export const useChartIQ = () => {
       setSymbol(symbol);
     }
 
-    // const chartType = await getChartType();
-    // handleChartTypeChanged(chartType);
-
     const periodicity = await getPeriodicity();
     const parsedPeriodicity = JSON.parse(periodicity);
     const interval = JSON.parse(parsedPeriodicity.interval);
@@ -301,7 +298,7 @@ export const useChartIQ = () => {
 
   const toggleDrawingToolSelector = () => {
     if (!isDrawing) {
-      return drawingToolSelectorRef.current?.present();
+      return drawingToolSelectorRef.current?.present('');
     }
     setIsDrawing(false);
     setDrawingItem(null);

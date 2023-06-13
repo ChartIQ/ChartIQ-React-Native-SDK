@@ -88,7 +88,9 @@ const createStyles = (theme: Theme) =>
       flexDirection: 'row',
     },
     undoButton: {
-      paddingHorizontal: 5,
+      marginHorizontal: 5,
+      backgroundColor: theme.colors.backgroundSecondary,
+      borderRadius: 32,
     },
     measure: {
       marginTop: 8,
