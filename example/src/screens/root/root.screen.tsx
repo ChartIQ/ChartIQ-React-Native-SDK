@@ -35,19 +35,19 @@ export default function Root() {
   const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
   const toggleSymbolSelector = () => {
-    symbolSelectorRef.current?.present();
+    symbolSelectorRef.current?.present('');
   };
 
   const toggleIntervalSelector = () => {
-    intervalSelectorRef.current?.present();
+    intervalSelectorRef.current?.present('');
   };
 
   const toggleChartStyleSelector = () => {
-    chartStyleSelectorRef.current?.present();
+    chartStyleSelectorRef.current?.present('');
   };
 
   const toggleCompareSymbolSelector = () => {
-    compareSymbolSelectorRef.current?.present();
+    compareSymbolSelectorRef.current?.present('');
   };
 
   React.useEffect(() => {
@@ -114,7 +114,7 @@ export default function Root() {
   } = useChartIQ();
 
   const showDrawingToolsSelector = () => {
-    drawingToolSelectorRef.current?.present();
+    drawingToolSelectorRef.current?.present('');
   };
 
   const { getTranslationsFromStorage } = useTranslations();

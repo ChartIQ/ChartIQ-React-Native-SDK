@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { View, Image, Text, Pressable } from 'react-native';
+import { View, Image, Text, Pressable, Alert } from 'react-native';
 import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -263,16 +263,51 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
           options: ['Restore Default Parameters', 'Clear Existing Drawings', 'Cancel'],
           cancelButtonIndex,
           destructiveButtonIndex,
+          userInterfaceStyle: theme.isDark ? 'dark' : 'light',
+          containerStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          textStyle: {
+            color: theme.colors.buttonText,
+          },
         },
         (selectedIndex) => {
           switch (selectedIndex) {
             case 0:
-              restoreDefaultDrawingConfig(tool.name, false);
+              Alert.alert(
+                'Do You Want To Restore Default Parameters?',
+                'All your drawing parameters will be restored to defaults.',
+                [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Restore',
+                    onPress: () => {
+                      restoreDefaultDrawingConfig(tool.name, false);
+                    },
+                  },
+                ],
+              );
 
               break;
 
             case destructiveButtonIndex:
-              clearDrawing();
+              Alert.alert(
+                'Do You Want To Clear All Existing Drawings?',
+                'All your drawing will be cleared on the current chart.',
+                [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Clear',
+                    onPress: () => {
+                      clearDrawing();
+                    },
+                  },
+                ],
+              );
               break;
 
             case cancelButtonIndex:
