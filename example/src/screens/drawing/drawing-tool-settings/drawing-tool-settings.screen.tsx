@@ -55,7 +55,7 @@ const DrawingToolSettings: React.FC = () => {
     fillColor: fillColorValue,
     font,
     volumeProfile,
-    waveParameters: { impulse, corrective, decoration, showLines },
+    waveParameters,
   } = drawingSettings;
 
   const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
@@ -81,7 +81,7 @@ const DrawingToolSettings: React.FC = () => {
     colorSelectorRef.current?.present(DrawingParams.LINE_COLOR, lineColor);
   };
   const toggleLineType = () => {
-    lineTypeSelectorRef.current?.present();
+    lineTypeSelectorRef.current?.present('');
   };
 
   const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
@@ -288,7 +288,7 @@ const DrawingToolSettings: React.FC = () => {
                 title="Impulse"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{impulse}</Text>
+                  <Text style={styles.text}>{waveParameters.impulse}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
@@ -297,7 +297,7 @@ const DrawingToolSettings: React.FC = () => {
                 title="Corrective"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{corrective}</Text>
+                  <Text style={styles.text}>{waveParameters.corrective}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
@@ -307,13 +307,13 @@ const DrawingToolSettings: React.FC = () => {
                 title="Decoration"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{decoration}</Text>
+                  <Text style={styles.text}>{waveParameters.decoration}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
 
               <ListItem title="Show Lines">
-                <Switch onChange={toggleShowLines} value={showLines} />
+                <Switch onChange={toggleShowLines} value={waveParameters.showLines} />
               </ListItem>
             </>
           ) : null}

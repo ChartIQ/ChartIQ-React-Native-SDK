@@ -5,7 +5,7 @@ import {
   getOrientationAsync,
 } from 'expo-screen-orientation';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { colorPickerColors } from '~/constants';
@@ -28,10 +28,12 @@ export interface ColorSelectorMethods extends BottomSheetMethods {
 const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ onChange }, ref) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { width } = useWindowDimensions();
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
   const [numberOfColumns, setNumberOfColumns] = React.useState<number>(VERTICAL_LIST_NUM_COLUMNS);
   const [isLandscape, setIsLandscape] = React.useState<boolean>(false);
   const [selectedColor, setSelectedColor] = React.useState<string>('');
+  const colorBoxWidth = (width - 24) / numberOfColumns - 12;
 
   React.useEffect(() => {
     const callback = (orientation: Orientation) => {
@@ -104,6 +106,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
                 styles.item,
                 { backgroundColor: item },
                 selectedColor === item ? styles.selectedBorder : null,
+                { width: colorBoxWidth, height: colorBoxWidth },
               ]}
             >
               {selectedColor === item ? (
@@ -131,8 +134,6 @@ const createStyles = (theme: Theme) =>
       paddingHorizontal: 12,
     },
     item: {
-      width: 60,
-      height: 60,
       alignItems: 'center',
       justifyContent: 'center',
       margin: 6,

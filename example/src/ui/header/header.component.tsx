@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, TouchableOpacity, View, ViewStyle, useWindowDimensions } from 'react-native';
+import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -40,12 +40,11 @@ const Header: React.FC<HeaderProps> = ({
   isDrawing,
   isLandscape,
 }) => {
-  const { width } = useWindowDimensions();
   const theme = useTheme();
   const styles = createStyles(theme);
   const navigation = useNavigation<SettingsNavigation>();
   const { translationMap } = useTranslations();
-
+  const [width, setWidth] = useState(0);
   const [open, setOpen] = useState(false);
   const otherToolsHeight = useSharedValue(0);
   const crosshairHeight = useSharedValue(0);
@@ -101,8 +100,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const cardWidth = 24 + 16;
 
-  const numberOfVisibleItems = Math.floor(width / 2 / cardWidth);
-
+  const numberOfVisibleItems = Math.floor(width / cardWidth);
   const handleStudies = useCallback(() => {
     navigation.navigate(RootStack.Studies);
   }, [navigation]);
@@ -176,13 +174,15 @@ const Header: React.FC<HeaderProps> = ({
 
   const isAllItemsFits = items.length <= numberOfVisibleItems;
 
-  const visibleItems = useMemo(() => {
+  const [visibleItems, otherItems] = useMemo(() => {
     const visibleItems: HeaderItem[] = items.slice(
       0,
       isAllItemsFits ? items.length : numberOfVisibleItems - 1,
     );
+    let otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 
     if (!isAllItemsFits) {
+      otherItems = [visibleItems.pop() as HeaderItem, ...otherItems];
       visibleItems.push({
         onPress: handleChevron,
         Icon: Icons.chevronRight,
@@ -203,7 +203,8 @@ const Header: React.FC<HeaderProps> = ({
         active: false,
       });
     }
-    return visibleItems;
+
+    return [visibleItems, otherItems];
   }, [
     getContainerStyles,
     getFill,
@@ -215,8 +216,6 @@ const Header: React.FC<HeaderProps> = ({
     numberOfVisibleItems,
     open,
   ]);
-
-  const otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 
   return (
     <>
@@ -234,7 +233,18 @@ const Header: React.FC<HeaderProps> = ({
             <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
           </TouchableOpacity>
         </View>
-        <HeaderButtons type="main" items={visibleItems} open={open} />
+        <View
+          onLayout={({
+            nativeEvent: {
+              layout: { width },
+            },
+          }) => {
+            setWidth(width);
+          }}
+          style={styles.buttonsContainer}
+        >
+          <HeaderButtons type="main" items={visibleItems} open={open} />
+        </View>
       </Animated.View>
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
         <HeaderButtons type="others" items={otherItems} open={open} />

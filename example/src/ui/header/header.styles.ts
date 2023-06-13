@@ -42,6 +42,7 @@ export const createStyles = (theme: Theme) =>
     },
     row: {
       flexDirection: 'row',
+      justifyContent: 'flex-end',
     },
     chartStyleButton: {
       borderRadius: 32,
@@ -61,5 +62,8 @@ export const createStyles = (theme: Theme) =>
     },
     itemContainer: {
       paddingHorizontal: 8,
+    },
+    buttonsContainer: {
+      flex: 1,
     },
   });
