@@ -293,6 +293,16 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const showValueSelector =
     selectedCondition?.signalOperator && selectedCondition.rightIndicator === 'Value';
 
+  const handleSecondIndicatorValue = (text: string) => {
+    const number = Number(text);
+    if (Number.isNaN(number)) {
+      setSecondIndicatorValue((0.0).toString());
+      return;
+    }
+
+    setSecondIndicatorValue(text);
+  };
+
   return (
     <ScrollView>
       <Text style={styles.title}>Condition settings</Text>
@@ -321,7 +331,8 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
           {showValueSelector ? (
             <ListItem title="Value">
               <TextInput
-                onChangeText={setSecondIndicatorValue}
+                onChangeText={handleSecondIndicatorValue}
+                keyboardType="numeric"
                 defaultValue="0.0"
                 value={secondIndicatorValue ?? undefined}
                 style={styles.textInput}
