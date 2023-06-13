@@ -175,11 +175,27 @@ const Header: React.FC<HeaderProps> = ({
   const isAllItemsFits = items.length <= numberOfVisibleItems;
 
   const [visibleItems, otherItems] = useMemo(() => {
-    const visibleItems: HeaderItem[] = items.slice(
+    let preparedItems = [...items];
+    if (isLandscape) {
+      const compareIndex = preparedItems.findIndex((item) => item.key === 'compare');
+      const signalIndex = preparedItems.findIndex((item) => item.key === 'signals');
+      let tmp = preparedItems[compareIndex];
+      if (
+        compareIndex !== -1 &&
+        signalIndex !== -1 &&
+        preparedItems[compareIndex] &&
+        preparedItems[signalIndex] &&
+        tmp
+      ) {
+        preparedItems[compareIndex] = preparedItems[signalIndex] as HeaderItem;
+        preparedItems[signalIndex] = tmp;
+      }
+    }
+    const visibleItems: HeaderItem[] = preparedItems.slice(
       0,
-      isAllItemsFits ? items.length : numberOfVisibleItems - 1,
+      isAllItemsFits ? preparedItems.length : numberOfVisibleItems - 1,
     );
-    let otherItems = items.slice(numberOfVisibleItems - 1, items.length);
+    let otherItems = preparedItems.slice(numberOfVisibleItems - 1, items.length);
 
     if (!isAllItemsFits) {
       otherItems = [visibleItems.pop() as HeaderItem, ...otherItems];
