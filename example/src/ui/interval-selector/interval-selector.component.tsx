@@ -1,5 +1,6 @@
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { TimeUnit } from '~/constants';
@@ -63,20 +64,25 @@ const IntervalSelector = forwardRef<BottomSheetMethods, IntervalSelectorProps>(
           leftActionTitle={translations.cancel}
           handleLeftAction={handleClose}
         />
-        <FlatList
+        <BottomSheetFlatList
           data={intervals}
           contentContainerStyle={styles.contentContainer}
           style={styles.contentContainer}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           keyExtractor={(item) => item.label}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             return (
-              <TouchableOpacity onPress={() => handleChange(item)} style={styles.itemContainer}>
-                <Text style={styles.description}>{item.description}</Text>
-                {selectedInterval?.label === item.label ? (
-                  <Icons.check fill={theme.colors.colorPrimary} />
+              <>
+                <TouchableOpacity onPress={() => handleChange(item)} style={styles.itemContainer}>
+                  <Text style={styles.description}>{item.description}</Text>
+                  {selectedInterval?.label === item.label ? (
+                    <Icons.check fill={theme.colors.colorPrimary} />
+                  ) : null}
+                </TouchableOpacity>
+                {index === 2 || index === 9 || index === 10 ? (
+                  <View style={styles.space50} />
                 ) : null}
-              </TouchableOpacity>
+              </>
             );
           }}
         />
@@ -90,7 +96,6 @@ const createStyles = (theme: Theme) =>
     contentContainer: {
       paddingTop: 18,
       backgroundColor: theme.colors.background,
-      flex: 1,
     },
     text: {
       color: theme.colors.colorPrimary,
@@ -110,6 +115,9 @@ const createStyles = (theme: Theme) =>
       backgroundColor: theme.colors.backgroundSecondary,
       flexDirection: 'row',
       justifyContent: 'space-between',
+    },
+    space50: {
+      height: 50,
     },
   });
 
