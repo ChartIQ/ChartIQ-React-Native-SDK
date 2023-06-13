@@ -24,10 +24,12 @@ const AddStudies: React.FC = () => {
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
-    const translatedStudies = studiesList.map((item) => ({
-      ...item,
-      name: translationMap[item.name] ?? item.name,
-    }));
+    const translatedStudies = studiesList
+      .map((item) => ({
+        ...item,
+        name: translationMap[item.name] ?? item.name,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
     setStudies(translatedStudies);
   }, [translationMap]);
 
