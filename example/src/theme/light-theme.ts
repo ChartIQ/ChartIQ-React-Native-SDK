@@ -20,6 +20,7 @@ const LightTheme: ColorPallette = {
   cardSubtitle: Colors.cadetBlue,
   border: Colors.paleGrey,
   error: Colors.coralRed,
+  errorBackground: Colors.veryLightPink,
   white: Colors.white,
 
   favoriteBackground: Colors.brillianteAzure,

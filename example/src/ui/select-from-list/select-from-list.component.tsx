@@ -1,6 +1,5 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import React, { PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { set } from 'react-native-reanimated';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -14,6 +13,7 @@ import { SelectorHeader } from '../selector-header';
 interface SelectOptionFromListProps extends PropsWithChildren {
   onChange: (result: { value: string; key: string }, id: string) => void;
   filtered?: boolean;
+  showHeader?: boolean;
 }
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
@@ -29,7 +29,7 @@ export interface SelectOptionFromListMethods extends BottomSheetMethods {
 }
 
 const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptionFromListProps>(
-  ({ onChange, filtered = false }, ref) => {
+  ({ onChange, filtered = false, showHeader = true }, ref) => {
     const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const [flatListData, setFlatListData] = useState<Array<{ key: string; value: string }>>([]);
@@ -65,14 +65,21 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
 
     return (
       <BottomSheet ref={bottomSheetRef}>
-        {title ? (
+        {title && showHeader ? (
           <SelectorHeader
             title={translationMap[title] || title}
             leftActionTitle={translations.close}
             handleLeftAction={() => bottomSheetRef.current?.dismiss()}
           />
         ) : null}
-        {filtered ? <Input bottomSheet onChange={setFilter} /> : null}
+        {filtered ? (
+          <Input
+            bottomSheet
+            onChange={setFilter}
+            handleClear={() => setFilter('')}
+            handleClose={() => bottomSheetRef.current?.dismiss()}
+          />
+        ) : null}
         <BottomSheetFlatList
           data={filteredData}
           renderItem={({ item: { value, key } }) => (

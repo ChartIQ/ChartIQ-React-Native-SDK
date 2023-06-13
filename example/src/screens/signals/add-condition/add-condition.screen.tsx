@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
-import { getStudyParameters } from 'react-native-chart-iq-wrapper';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
+import { getChartAggregationType, getStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
 import { Condition, NullableCondition } from '~/model/signals/condition';
@@ -42,6 +42,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const [selectedCondition, setSelectedCondition] = useState<NullableCondition | null>(null);
   const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>('0');
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
+  const [aggregationType, setAggregationType] = useState<string | null>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -51,7 +52,8 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
 
   const get = useCallback(async () => {
     const outputs = await getStudyParameters(study, 'Outputs');
-
+    const aggregation = await getChartAggregationType();
+    setAggregationType(aggregation);
     setOutputParams(outputs);
     if (condition) {
       const isSecondIndicatorValueNumber = !Number.isNaN(Number(condition.rightIndicator));
@@ -69,7 +71,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         leftIndicator: outputs[0]?.name ? `${outputs[0]?.name} ${study.shortName}` : null,
         signalOperator: null,
         markerOption: {
-          color: outputs[0].value ?? '#000000',
+          color: (outputs[0]?.value as string) ?? '#000000',
         },
         rightIndicator: null,
       });
@@ -292,7 +294,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     selectedCondition?.signalOperator && selectedCondition.rightIndicator === 'Value';
 
   return (
-    <>
+    <ScrollView>
       <Text style={styles.title}>Condition settings</Text>
       <ListItem
         onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
@@ -334,12 +336,13 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
             onColorPressed={handleColor}
             ref={markerOptionRef}
             markerOptions={selectedCondition?.markerOption ?? undefined}
+            aggregationType={aggregationType}
           />
         </>
       ) : null}
       <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
       <ColorSelector onChange={handleColorChange} ref={colorSelectorRef} />
-    </>
+    </ScrollView>
   );
 };
 

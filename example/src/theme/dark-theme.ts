@@ -21,6 +21,7 @@ const DarkTheme: ColorPallette = {
 
   border: Colors.outerSpace,
   error: Colors.coralRed,
+  errorBackground: Colors.veryLightPink,
   white: Colors.white,
 
   favoriteBackground: Colors.brillianteAzure,

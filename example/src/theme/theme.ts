@@ -18,6 +18,7 @@ export interface ColorPallette {
 
   border: string;
   error: string;
+  errorBackground: string;
   white: string;
 
   favoriteBackground: string;

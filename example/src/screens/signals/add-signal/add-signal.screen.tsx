@@ -359,7 +359,12 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         ListFooterComponent={ListFooterComponent}
       />
 
-      <SelectFromList ref={selectFromListRef} onChange={handleStudyChange} />
+      <SelectFromList
+        filtered
+        ref={selectFromListRef}
+        onChange={handleStudyChange}
+        showHeader={false}
+      />
     </View>
   );
 };

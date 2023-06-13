@@ -19,6 +19,7 @@ interface MarkerOptionsFormProps {
   onColorPressed: () => void;
   showAppearance?: boolean;
   markerOptions?: NullableMarkerOption;
+  aggregationType: string | null;
 }
 export interface MarkerOptionsFormMethods {
   getMarkerOptions: () => MarkerOption;
@@ -90,8 +91,14 @@ type Data = {
   value: string;
 };
 
+const WARNING_MESSAGE = 'Paintbar doesn’t work with this chart type.';
+const WARNING_CHAR = '⚠';
+
 const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsFormProps>(
-  ({ color: colorProp, onColorPressed, showAppearance = true, markerOptions }, ref) => {
+  (
+    { color: colorProp, onColorPressed, showAppearance = true, markerOptions, aggregationType },
+    ref,
+  ) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const fromListSelectRef = React.useRef<SelectOptionFromListMethods>(null);
@@ -235,6 +242,15 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
               <ListItem onPress={handlePosition} title="Position" value={position.value} />
             </>
           ) : null}
+          {markType.key === SignalMarkerType.PAINTBAR &&
+          (aggregationType === 'Kagi' || aggregationType === 'Point & Figure') ? (
+            <View style={styles.warningContainer}>
+              <Text style={styles.warningSign}>{WARNING_CHAR}</Text>
+              <Text numberOfLines={2} style={styles.warningMessage}>
+                {WARNING_MESSAGE}
+              </Text>
+            </View>
+          ) : null}
         </View>
         <SelectFromList ref={fromListSelectRef} onChange={onChange} />
       </View>
@@ -244,7 +260,7 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
 
 MarkerOptionsForm.displayName = 'MarkerOptionsForm';
 
-const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
+const createStyles = ({ colors: { cardSubtitle, error, errorBackground } }: Theme) =>
   StyleSheet.create({
     title: {
       paddingVertical: 8,
@@ -260,6 +276,26 @@ const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
     colorBox: {
       width: 24,
       height: 24,
+    },
+    warningContainer: {
+      backgroundColor: errorBackground,
+      flexDirection: 'row',
+      margin: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+    },
+    warningMessage: {
+      color: error,
+      paddingVertical: 12,
+      fontSize: 18,
+      flexWrap: 'wrap',
+      flex: 1,
+      marginRight: 50,
+    },
+    warningSign: {
+      fontSize: 36,
+      color: error,
+      paddingHorizontal: 16,
     },
   });
 

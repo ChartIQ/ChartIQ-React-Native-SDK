@@ -12,6 +12,7 @@ export const Colors = {
   yankeesBlue: '#153246',
   outerSpace: '#273843',
   coralRed: '#ff3b30',
+  veryLightPink: '#ffe9e7',
   black: '#000000',
   elevationDark: '#121212',
   scrim: '#51000000',
