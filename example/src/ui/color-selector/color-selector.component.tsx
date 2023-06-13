@@ -15,14 +15,14 @@ import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
 
 interface ColorSelectorProps {
-  onChange: (input: string, id?: string) => void;
+  onChange: (input: string, id: string) => void;
 }
 
 const HORIZONTAL_LIST_NUM_COLUMNS = 10;
 const VERTICAL_LIST_NUM_COLUMNS = 5;
 
 export interface ColorSelectorMethods extends BottomSheetMethods {
-  present: (id?: string, color?: string) => void;
+  present: (id: string, color?: string) => void;
 }
 
 const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ onChange }, ref) => {
@@ -60,7 +60,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
   useImperativeHandle(ref, () => ({
     ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
     dismiss: handleDismiss,
-    present: (id?: string, color?: string) => {
+    present: (id: string, color?: string) => {
       bottomSheetRef.current?.present(id);
       setSelectedColor(color ?? '');
     },

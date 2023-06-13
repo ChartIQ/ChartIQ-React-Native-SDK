@@ -12,7 +12,7 @@ interface BottomSheetSelectorProps extends PropsWithChildren {
 }
 
 export interface BottomSheetMethods extends BottomSheetModalMethods {
-  present: (id?: string) => void;
+  present: (id: string) => void;
   id: string | null;
 }
 
@@ -28,13 +28,11 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
 
     useImperativeHandle(ref, () => ({
       ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
-      present: (id?: string) => {
-        if (id) {
-          idRef.current = id;
-        }
+      present: (id: string) => {
+        idRef.current = id;
         bottomSheetRef.current?.present();
       },
-      id: idRef.current ?? '',
+      id: idRef.current,
       close: () => {
         handleClose();
       },

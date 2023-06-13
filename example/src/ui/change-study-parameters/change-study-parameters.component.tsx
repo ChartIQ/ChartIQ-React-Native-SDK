@@ -43,11 +43,27 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     useEffect(() => {
       setInputParams(inputParameters);
       setOutputParams(outputParameters);
+      setInputParamsData((prevState) =>
+        prevState.map((item) => {
+          return {
+            ...item,
+            fieldSelectedValue: inputParameters.find((param) => param.name === item.fieldName)
+              ?.value as string,
+          };
+        }),
+      );
+
+      setOutputParamsData((prevState) =>
+        prevState.map((item) => ({
+          ...item,
+          fieldSelectedValue: outputParameters.find((param) => param.name === item.fieldName)
+            ?.value as string,
+        })),
+      );
     }, [inputParameters, outputParameters]);
 
-    const onColorChange = (input: string, id: string | undefined) => {
+    const onColorChange = (input: string, id: string) => {
       if (!id) return;
-
       const itemToChange = outputParamsData.find((item) => item.fieldName === id);
 
       if (itemToChange) {
@@ -177,6 +193,12 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
         inputParamsData.find((param) => param.fieldName === item.name)?.fieldSelectedValue ??
         item.value,
     }));
+    const outputData = outputParams.map((item) => ({
+      ...item,
+      value:
+        outputParamsData.find((param) => param.fieldName === item.name)?.fieldSelectedValue ??
+        item.value,
+    }));
 
     const handleNumberChange = (text: string, name: string) => {
       const number = Number(text);
@@ -248,12 +270,14 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
               },
             },
             {
-              data: outputParams,
+              data: outputData,
               key: 'section.output-params',
               renderItem: ({ item }) => {
                 return (
                   <ListItem
-                    onPress={() => handleChangeColor(item.name, item.value as string)}
+                    onPress={() => {
+                      handleChangeColor(item.name, item.value as string);
+                    }}
                     title={item.name}
                   >
                     <View style={[styles.box, { backgroundColor: item.value as string }]} />
