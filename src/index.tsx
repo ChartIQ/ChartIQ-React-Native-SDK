@@ -31,6 +31,7 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 interface ChartIqWrapperProps extends ViewProps {
+  url: string;
   style: ViewStyle;
   onPullInitialData: (
     event: NativeSyntheticEvent<{ quoteFeedParam: string }>

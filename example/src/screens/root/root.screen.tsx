@@ -10,6 +10,7 @@ import * as React from 'react';
 import { KeyboardAvoidingView, StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIqWrapperView, setLanguage } from 'react-native-chart-iq-wrapper';
 
+import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
@@ -111,6 +112,7 @@ export default function Root() {
     drawingToolSelectorRef,
 
     initChart,
+    initialized,
   } = useChartIQ();
 
   const showDrawingToolsSelector = () => {
@@ -130,9 +132,11 @@ export default function Root() {
   }, []);
 
   React.useEffect(() => {
-    get();
-    getTranslationsFromStorage();
-  }, [get, getTranslationsFromStorage]);
+    if (initialized) {
+      get();
+      getTranslationsFromStorage();
+    }
+  }, [get, getTranslationsFromStorage, initialized]);
 
   return (
     <KeyboardAvoidingView style={styles.box}>
@@ -156,6 +160,7 @@ export default function Root() {
       </View>
       <View style={[{ flex: 1 }]}>
         <ChartIqWrapperView
+          url={WEB_VIEW_SOURCE}
           onStart={initChart}
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}

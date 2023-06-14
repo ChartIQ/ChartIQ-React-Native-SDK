@@ -27,6 +27,7 @@ import ConditionItem from './components/condition-item/condition-item.component'
 import { JoinSelector } from './components/join-selector';
 
 const SELECT_STUDY = 'Select study';
+const DESCRIPTION_PLACEHOLDER = 'Description will appear in an infobox when the signal is clicked.';
 
 interface AddSignalProps
   extends NativeStackScreenProps<SignalsStackParamList, SignalsStack.AddSignal> {}
@@ -46,6 +47,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [descriptionPlaceholder, setDescriptionPlaceholder] = useState(DESCRIPTION_PLACEHOLDER);
 
   const onStudyChange = useCallback(async () => {
     if (changedStudy) {
@@ -259,10 +261,17 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
               <TextInput
                 style={styles.textInput}
                 multiline
+                numberOfLines={2}
                 defaultValue={description}
-                placeholder="Description will appear in an infobox when the signal is clicked."
+                placeholder={descriptionPlaceholder}
                 onChangeText={setDescription}
                 placeholderTextColor={theme.colors.placeholder}
+                onFocus={() => {
+                  setDescriptionPlaceholder('');
+                }}
+                onBlur={() => {
+                  setDescriptionPlaceholder(DESCRIPTION_PLACEHOLDER);
+                }}
               />
             </View>
           }

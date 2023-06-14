@@ -1,9 +1,11 @@
 package com.chartiqwrapper
 
-import android.content.pm.ApplicationInfo
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
+
 import androidx.lifecycle.MutableLiveData
 import com.chartiq.sdk.ChartIQ
 import com.chartiq.sdk.DataSource
@@ -11,15 +13,13 @@ import com.chartiq.sdk.DataSourceCallback
 import com.chartiq.sdk.OnStartCallback
 import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.QuoteFeedParams
-import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
-import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.google.gson.Gson
 import kotlinx.coroutines.*
@@ -27,29 +27,35 @@ import kotlinx.coroutines.*
 
 class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) :
   SimpleViewManager<View>() {
-  private val defaultUrl =
-    "https://mobile.demo.chartiq.com/android/3.2.0/sample-template-native-sdk.html"
   private val gson: Gson = Gson()
   private var reactContext: ThemedReactContext? = null
   private lateinit var chartIQ: ChartIQ
   private val job = Job()
   private val chartScope = CoroutineScope(job + Dispatchers.IO)
-  var startCallback: OnStartCallback = OnStartCallback {
+  private lateinit var view: LinearLayout
+
+  private var startCallback: OnStartCallback = OnStartCallback {
     dispatchStart()
   }
+  private var url: String = ""
   override fun getName() = "ChartIqWrapperView"
 
-  val crosshairsHUD = MutableLiveData<CrosshairHUD>()
-  val crosshairsEnabled = MutableLiveData(false)
+  private val crosshairsHUD = MutableLiveData<CrosshairHUD>()
 
-  fun fetchCrosshairsState() {
+  @ReactProp(name = "url")
+  fun setUrl(view: ViewGroup, url: String?){
+    if(url != null){
+      this.url = url
+      initChartIQ(view)
+    }
+  }
+  private fun fetchCrosshairsState() {
     launchCrosshairsUpdate()
   }
 
   private fun getHUDDetails() {
     chartIQ.getHUDDetails { hud ->
       crosshairsHUD.value = hud
-      Log.println(Log.INFO, "HUD_CHANGED", hud.toString())
       dispatchOnHUDChanged(hud)
     }
   }
@@ -88,20 +94,33 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     ).toMutableMap()
   }
 
-  override fun createViewInstance(reactContext: ThemedReactContext): View {
+  override fun createViewInstance(reactContext: ThemedReactContext): LinearLayout {
     this.reactContext = reactContext
-    chartIQ = ChartIQ.getInstance(defaultUrl, reactContext)
-    chartIQViewModel.setChartIQ(chartIQ)
-    initDatasource()
-    dispatchOnChartTypeChanged()
-    dispatchOnChartAggregationTypeChanged()
-    fetchCrosshairsState()
-    addMeasureListener()
-    Log.println(Log.INFO, "FLAG_DEBUGGABLE", ApplicationInfo.FLAG_DEBUGGABLE.toString())
-    return chartIQ.chartView.apply {
+    view = LinearLayout(reactContext).apply {
       layoutParams = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
       )
+    }
+
+    return view
+  }
+
+  private fun initChartIQ(view: ViewGroup){
+    if(reactContext != null) {
+      chartIQ = ChartIQ.getInstance(url, reactContext!!)
+      chartIQViewModel.setChartIQ(chartIQ)
+
+      view.addView(chartIQ.chartView.apply {
+        layoutParams = LinearLayout.LayoutParams(
+          LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT
+        )
+      })
+
+      initDatasource()
+      dispatchOnChartTypeChanged()
+      dispatchOnChartAggregationTypeChanged()
+      fetchCrosshairsState()
+      addMeasureListener()
     }
   }
 
@@ -110,7 +129,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("started", "true")
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onStart",
       event,
     )
@@ -121,7 +140,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onPullInitialData",
       event,
     )
@@ -132,7 +151,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onPullUpdateData",
       event,
     )
@@ -143,7 +162,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     val event: WritableMap = Arguments.createMap()
     event.putString("quoteFeedParam", Gson().toJson(params))
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onPullPagingData",
       event,
     )
@@ -156,7 +175,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       "chartType", chartIQ.getChartType { chartType -> chartType?.value }.toString()
     )
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onChartTypeChanged",
       event,
     )
@@ -171,9 +190,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       event.putString(
        "aggregationType", response
       )
-     Log.println(Log.INFO, "AGGREGATION_TYPE", response.toString() )
      reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-       chartIQ.chartView.id,
+       view.id,
        "onChartAggregationTypeChanged",
        event,
      )
@@ -188,7 +206,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     }
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onHUDChanged",
       event,
     )
@@ -201,11 +219,12 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     }
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      chartIQ.chartView.id,
+      view.id,
       "onMeasureChanged",
       event,
     )
   }
+
 
 
   private fun initDatasource() {
@@ -215,7 +234,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          Log.println(Log.INFO, "asd", "pullInitial")
           chartIQViewModel.initialCallback = callback
           dispatchOnPullInitialData(params)
         }
@@ -224,7 +242,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          Log.println(Log.INFO, "asd", "pullUpdateData")
           chartIQViewModel.updateCallback = callback
           dispatchOnPullUpdateData(params)
         }
@@ -233,7 +250,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          Log.println(Log.INFO, "asd", "pullPaginationData")
           chartIQViewModel.pagingCallback = callback
           dispatchOnPullPagingData(params)
         }

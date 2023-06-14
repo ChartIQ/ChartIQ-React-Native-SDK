@@ -28,8 +28,8 @@ export const intervals: Array<IntervalItem> = [
   { label: '10m', timeUnit: TimeUnit.MINUTE, description: '10 minute', interval: '1', period: 10 },
   { label: '15m', timeUnit: TimeUnit.MINUTE, description: '15 minute', interval: '1', period: 15 },
   { label: '30m', timeUnit: TimeUnit.MINUTE, description: '30 minute', interval: '1', period: 30 },
-  { label: '1h', timeUnit: TimeUnit.HOUR, description: '1 hour', interval: '3600', period: 1 },
-  { label: '4h', timeUnit: TimeUnit.HOUR, description: '4 hour', interval: '3600', period: 4 },
+  { label: '1h', timeUnit: TimeUnit.MINUTE, description: '1 hour', interval: '60', period: 1 },
+  { label: '4h', timeUnit: TimeUnit.MINUTE, description: '4 hour', interval: '60', period: 4 },
 
   { label: '30s', timeUnit: TimeUnit.SECOND, description: '30 second', interval: '1', period: 30 },
 ];

@@ -57,6 +57,7 @@ const handleRequest = async (input: ChartIQDatafeedParams) => {
 const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
 
 export const useChartIQ = () => {
+  const [initialized, setChartInitialized] = React.useState(false);
   const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
@@ -183,6 +184,7 @@ export const useChartIQ = () => {
   };
 
   const initChart = useCallback(async () => {
+    setChartInitialized(true);
     const symbol = await getSymbol();
     if (!symbol) {
       setSymbol('AAPL');
@@ -195,9 +197,11 @@ export const useChartIQ = () => {
     const newInterval =
       intervals.find(
         (item) =>
-          (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() ||
-            item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase()) &&
-          item.period === periodicity.periodicity,
+          (item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase() &&
+            item.period === periodicity.periodicity &&
+            item.interval === periodicity.interval) ||
+          (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() &&
+            item.period === periodicity.periodicity),
       ) ?? null;
 
     setInterval(newInterval);
@@ -241,8 +245,8 @@ export const useChartIQ = () => {
   }, [handleChartStyleChange, updateTheme]);
 
   useEffect(() => {
-    updateTheme();
-  }, [updateTheme]);
+    if (initialized) updateTheme();
+  }, [initialized, updateTheme]);
 
   const crosshair: CrosshairSharedValues = {
     Price: useSharedValue<string>('0'),
@@ -341,6 +345,7 @@ export const useChartIQ = () => {
 
     drawingToolSelectorRef,
 
+    initialized,
     initChart,
   };
 };

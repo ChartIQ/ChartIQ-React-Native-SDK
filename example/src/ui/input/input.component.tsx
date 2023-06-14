@@ -61,6 +61,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
+              autoFocus
             />
           ) : (
             <TextInput
@@ -70,6 +71,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
+              autoFocus
             />
           )}
           {value.length > 0 ? (
