@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { MainScreen } from '~/screens/root';
@@ -9,7 +9,7 @@ import { SettingStackNavigator } from './settings';
 import { SignalsStackNavigator } from './signals';
 import { StudiesStackNavigator } from './studies';
 
-const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
+const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   return (

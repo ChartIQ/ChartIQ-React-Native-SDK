@@ -118,7 +118,19 @@ export async function getSymbol(): Promise<string> {
 }
 
 export async function getPeriodicity() {
-  return await ChartIQWrapperModule.getPeriodicity();
+  const periodicity = await ChartIQWrapperModule.getPeriodicity();
+
+  const parsed = JSON.parse(periodicity) as {
+    interval: string;
+    periodicity: number;
+    timeUnit: string;
+  };
+
+  if (parsed.interval.includes('"')) {
+    parsed.interval = JSON.parse(parsed.interval);
+  }
+
+  return parsed;
 }
 
 export async function getChartAggregationType() {

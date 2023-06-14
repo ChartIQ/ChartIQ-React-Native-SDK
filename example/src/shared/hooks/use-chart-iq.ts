@@ -191,12 +191,16 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-    const parsedPeriodicity = JSON.parse(periodicity);
-    const interval = JSON.parse(parsedPeriodicity.interval);
 
-    setInterval(
-      intervals.find((item) => item.timeUnit.toLowerCase() === interval.toLowerCase()) ?? null,
-    );
+    const newInterval =
+      intervals.find(
+        (item) =>
+          (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() ||
+            item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase()) &&
+          item.period === periodicity.periodicity,
+      ) ?? null;
+
+    setInterval(newInterval);
 
     const activeSeries = await getActiveSeries();
     const map = new Map();

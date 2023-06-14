@@ -23,15 +23,15 @@ export const intervals: Array<IntervalItem> = [
   { label: '1W', timeUnit: TimeUnit.WEEK, period: 1, interval: '0', description: '1 week' },
   { label: '1M', timeUnit: TimeUnit.MONTH, period: 1, interval: '0', description: '1 month' },
 
-  { label: '1m', timeUnit: TimeUnit.MINUTE, period: 1, interval: '0', description: '1 minute' },
-  { label: '5m', timeUnit: TimeUnit.MINUTE, description: '5 minute', interval: '0', period: 5 },
-  { label: '10m', timeUnit: TimeUnit.MINUTE, description: '10 minute', interval: '0', period: 10 },
-  { label: '15m', timeUnit: TimeUnit.MINUTE, description: '15 minute', interval: '0', period: 15 },
-  { label: '30m', timeUnit: TimeUnit.MINUTE, description: '30 minute', interval: '0', period: 30 },
-  { label: '1h', timeUnit: TimeUnit.HOUR, description: '1 hour', interval: '0', period: 1 },
-  { label: '4h', timeUnit: TimeUnit.HOUR, description: '4 hour', interval: '0', period: 4 },
+  { label: '1m', timeUnit: TimeUnit.MINUTE, period: 1, interval: '1', description: '1 minute' },
+  { label: '5m', timeUnit: TimeUnit.MINUTE, description: '5 minute', interval: '1', period: 5 },
+  { label: '10m', timeUnit: TimeUnit.MINUTE, description: '10 minute', interval: '1', period: 10 },
+  { label: '15m', timeUnit: TimeUnit.MINUTE, description: '15 minute', interval: '1', period: 15 },
+  { label: '30m', timeUnit: TimeUnit.MINUTE, description: '30 minute', interval: '1', period: 30 },
+  { label: '1h', timeUnit: TimeUnit.HOUR, description: '1 hour', interval: '3600', period: 1 },
+  { label: '4h', timeUnit: TimeUnit.HOUR, description: '4 hour', interval: '3600', period: 4 },
 
-  { label: '30s', timeUnit: TimeUnit.SECOND, description: '30 second', interval: '0', period: 30 },
+  { label: '30s', timeUnit: TimeUnit.SECOND, description: '30 second', interval: '1', period: 30 },
 ];
 
 interface IntervalSelectorProps {
