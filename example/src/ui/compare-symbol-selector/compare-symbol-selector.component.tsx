@@ -3,6 +3,7 @@ import { FlatList, Keyboard, StyleSheet, View, Text, TouchableOpacity } from 're
 
 import { ChartSymbol } from '~/api';
 import Icons from '~/assets/icons';
+import { colorPickerColors } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
@@ -41,9 +42,17 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
       close: handleClose,
     }));
 
-    const handleSymbolAdd = (input: ColoredChartSymbol) => {
-      colorSelectorRef.current?.present(input.symbol);
-      onAdd(input);
+    const handleSymbolAdd = (symbol: ChartSymbol) => {
+      // colorSelectorRef.current?.present(symbol.symbol);
+      onAdd({
+        ...symbol,
+        color:
+          (colorPickerColors.find(
+            (_, index, array) => Math.round(Math.random() * array.length) === index,
+          ) ||
+            colorPickerColors[0]) ??
+          '',
+      });
     };
 
     const handleSymbolDelete = (input: ColoredChartSymbol) => {
@@ -51,7 +60,7 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
     };
 
     const handleAddPress = () => {
-      symbolSelectorRef.current?.present();
+      symbolSelectorRef.current?.present('');
     };
 
     const onColorChange = (color: string, id: string | null) => {
