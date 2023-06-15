@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import {
   MarkerOption,
+  NullableMarkerOption,
   SignalMarkerType,
   SignalPosition,
   SignalShape,
@@ -17,6 +18,8 @@ interface MarkerOptionsFormProps {
   color: string;
   onColorPressed: () => void;
   showAppearance?: boolean;
+  markerOptions?: NullableMarkerOption;
+  aggregationType: string | null;
 }
 export interface MarkerOptionsFormMethods {
   getMarkerOptions: () => MarkerOption;
@@ -88,46 +91,99 @@ type Data = {
   value: string;
 };
 
+const WARNING_MESSAGE = 'Paintbar doesn’t work with this chart type.';
+const WARNING_CHAR = '⚠';
+
 const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsFormProps>(
-  ({ color: colorProp, onColorPressed, showAppearance = true }, ref) => {
+  (
+    { color: colorProp, onColorPressed, showAppearance = true, markerOptions, aggregationType },
+    ref,
+  ) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const fromListSelectRef = React.useRef<SelectOptionFromListMethods>(null);
 
-    const [markType, setMarkType] = useState<Data>(DATA.markerType[0]);
-    const [shape, setShape] = useState<Data>(DATA.shape[0]);
-    const [tagMark, setTagMark] = useState<string>('x');
-    const [size, setSize] = useState<Data>(DATA.size[0]);
-    const [position, setPosition] = useState<Data>(DATA.position[0]);
-    const [color, setColor] = useState<string>('');
+    const [markType, setMarkType] = useState<Data>(() => {
+      if (markerOptions) {
+        return (
+          DATA.markerType.find((item) => item.key === markerOptions.type) ?? DATA.markerType[0]
+        );
+      }
+      return DATA.markerType[0];
+    });
+    const [shape, setShape] = useState<Data>(() => {
+      if (markerOptions) {
+        return DATA.shape.find((item) => item.key === markerOptions.signalShape) ?? DATA.shape[0];
+      }
+      return DATA.shape[0];
+    });
+    const [tagMark, setTagMark] = useState<string>(() => {
+      if (markerOptions) {
+        return markerOptions.label ?? 'X';
+      }
+      return 'X';
+    });
+    const [size, setSize] = useState<Data>(() => {
+      if (markerOptions) {
+        return DATA.size.find((item) => item.key === markerOptions.signalSize) ?? DATA.size[0];
+      }
+      return DATA.size[0];
+    });
+    const [position, setPosition] = useState<Data>(() => {
+      if (markerOptions) {
+        return (
+          DATA.position.find((item) => item.key === markerOptions.signalPosition) ??
+          DATA.position[0]
+        );
+      }
+      return DATA.position[0];
+    });
+    const [color, setColor] = useState<string>(() => {
+      if (markerOptions) {
+        return markerOptions.color ?? colorProp;
+      }
+      return colorProp;
+    });
 
     useEffect(() => {
       setColor(colorProp);
     }, [colorProp]);
 
     const handleMarkerType = () => {
-      fromListSelectRef.current?.open(
-        Array.from(DATA.markerType),
-        markType.key,
-        SELECTOR_KEYS.markerType,
-      );
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.markerType),
+        selected: markType.key,
+        id: SELECTOR_KEYS.markerType,
+        title: 'Select Option',
+      });
     };
 
     const handleShape = () => {
-      fromListSelectRef.current?.open(Array.from(DATA.shape), shape.key, SELECTOR_KEYS.shape);
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.shape),
+        selected: shape.key,
+        id: SELECTOR_KEYS.shape,
+        title: 'Select Option',
+      });
     };
     const handleTagMark = (text: string) => {
       setTagMark(text);
     };
     const handleSize = () => {
-      fromListSelectRef.current?.open(Array.from(DATA.size), size.key, SELECTOR_KEYS.size);
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.size),
+        selected: size.key,
+        id: SELECTOR_KEYS.size,
+        title: 'Select Option',
+      });
     };
     const handlePosition = () => {
-      fromListSelectRef.current?.open(
-        Array.from(DATA.position),
-        position.key,
-        SELECTOR_KEYS.position,
-      );
+      fromListSelectRef.current?.open({
+        data: Array.from(DATA.position),
+        selected: position.key,
+        id: SELECTOR_KEYS.position,
+        title: 'Select Option',
+      });
     };
 
     const onChange = ({ value }: { value: string; key: string }, id: string) => {
@@ -176,12 +232,25 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
           <ListItem onPress={onColorPressed} title="Color">
             <View style={[styles.colorBox, { backgroundColor: color }]} />
           </ListItem>
-          <ListItem onPress={handleShape} title="Shape" value={shape.value} />
-          <ListItem title="Tag Mark">
-            <TextInput style={styles.input} defaultValue="x" onChangeText={handleTagMark} />
-          </ListItem>
-          <ListItem onPress={handleSize} title="Size" value={size.value} />
-          <ListItem onPress={handlePosition} title="Position" value={position.value} />
+          {markType.key === SignalMarkerType.MARKER ? (
+            <>
+              <ListItem onPress={handleShape} title="Shape" value={shape.value} />
+              <ListItem title="Tag Mark">
+                <TextInput style={styles.input} defaultValue="X" onChangeText={handleTagMark} />
+              </ListItem>
+              <ListItem onPress={handleSize} title="Size" value={size.value} />
+              <ListItem onPress={handlePosition} title="Position" value={position.value} />
+            </>
+          ) : null}
+          {markType.key === SignalMarkerType.PAINTBAR &&
+          (aggregationType === 'Kagi' || aggregationType === 'Point & Figure') ? (
+            <View style={styles.warningContainer}>
+              <Text style={styles.warningSign}>{WARNING_CHAR}</Text>
+              <Text numberOfLines={2} style={styles.warningMessage}>
+                {WARNING_MESSAGE}
+              </Text>
+            </View>
+          ) : null}
         </View>
         <SelectFromList ref={fromListSelectRef} onChange={onChange} />
       </View>
@@ -191,7 +260,7 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
 
 MarkerOptionsForm.displayName = 'MarkerOptionsForm';
 
-const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
+const createStyles = ({ colors: { cardSubtitle, error, errorBackground } }: Theme) =>
   StyleSheet.create({
     title: {
       paddingVertical: 8,
@@ -202,10 +271,31 @@ const createStyles = ({ colors: { cardSubtitle } }: Theme) =>
     input: {
       padding: 0,
       fontSize: 16,
+      color: cardSubtitle,
     },
     colorBox: {
       width: 24,
       height: 24,
+    },
+    warningContainer: {
+      backgroundColor: errorBackground,
+      flexDirection: 'row',
+      margin: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+    },
+    warningMessage: {
+      color: error,
+      paddingVertical: 12,
+      fontSize: 18,
+      flexWrap: 'wrap',
+      flex: 1,
+      marginRight: 50,
+    },
+    warningSign: {
+      fontSize: 36,
+      color: error,
+      paddingHorizontal: 16,
     },
   });
 

@@ -1,33 +1,85 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as React from 'react';
-import { Button, StyleSheet, View, ViewStyle } from 'react-native';
 import {
-  ChartIqWrapperView,
-  setLanguage,
-  setSymbol,
-  setTheme,
-} from 'react-native-chart-iq-wrapper';
+  Orientation,
+  OrientationChangeEvent,
+  addOrientationChangeListener,
+  getOrientationAsync,
+  removeOrientationChangeListeners,
+} from 'expo-screen-orientation';
+import * as React from 'react';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+import { ChartIqWrapperView, setLanguage } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { uri } from '~/constants';
+import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
-import { useTranslations } from '~/shared/hooks/use-translations';
-import { useTheme } from '~/theme';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
+import { ChartStyleSelector } from '~/ui/chart-style-selector';
+import { CompareSymbolSelector } from '~/ui/compare-symbol-selector';
 import { DrawingMeasure } from '~/ui/drawing-measure';
+import { DrawingToolManager } from '~/ui/drawing-tool-manager';
+import { DrawingToolSelector } from '~/ui/drawing-tools-selector';
 import FullScreenAnimatedButtonComponent from '~/ui/full-screen-animated-button/full-screen-animated-button.component';
-
-import { ChartStyleSelector } from '../../ui/chart-style-selector';
-import CompareSymbolSelector from '../../ui/compare-symbol-selector/compare-symbol-selector.component';
-import { DrawingToolManager } from '../../ui/drawing-tool-manager';
-import { DrawingToolSelector } from '../../ui/drawing-tools-selector';
-import { Header } from '../../ui/header';
-import IntervalSelector from '../../ui/interval-selector/interval-selector.component';
-import SymbolSelector from '../../ui/symbol-selector/symbol-selector.component';
+import { Header } from '~/ui/header';
+import { IntervalSelector } from '~/ui/interval-selector';
+import SymbolSelector from '~/ui/symbol-selector/symbol-selector.component';
 
 export default function Root() {
-  const { isDark } = useTheme();
+  const [isFullscreen, setIsFullScreen] = React.useState(false);
+  const [isLandscape, setIsLandscape] = React.useState(false);
+
+  const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
+  const intervalSelectorRef = React.useRef<BottomSheetMethods>(null);
+  const chartStyleSelectorRef = React.useRef<BottomSheetMethods>(null);
+  const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
+
+  const toggleSymbolSelector = () => {
+    symbolSelectorRef.current?.present('');
+  };
+
+  const toggleIntervalSelector = () => {
+    intervalSelectorRef.current?.present('');
+  };
+
+  const toggleChartStyleSelector = () => {
+    chartStyleSelectorRef.current?.present('');
+  };
+
+  const toggleCompareSymbolSelector = () => {
+    compareSymbolSelectorRef.current?.present('');
+  };
+
+  React.useEffect(() => {
+    const callback = (orientation: Orientation) => {
+      const landscape =
+        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT;
+      if (landscape) {
+        setIsLandscape(landscape);
+        setIsFullScreen(landscape);
+      } else {
+        setIsFullScreen(false);
+        setIsLandscape(false);
+      }
+    };
+    getOrientationAsync().then(callback);
+
+    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+      callback(orientation);
+    });
+
+    return () => {
+      removeOrientationChangeListeners();
+    };
+  }, [setIsLandscape]);
+
+  const toggleFullScreen = () => {
+    setIsFullScreen((prevState) => {
+      return !prevState;
+    });
+  };
+
   const {
     onChartTypeChanged,
     onHUDChanged,
@@ -38,14 +90,8 @@ export default function Root() {
     onDrawingToolChanged,
     onChartAggregationTypeChanged,
 
-    showDrawingToolsSelector,
-    toggleSymbolSelector,
-    toggleIntervalSelector,
-    toggleChartStyleSelector,
-    toggleCompareSymbolSelector,
-    toggleDrawingToolSelector,
     toggleCrosshair,
-    toggleFullScreen,
+    toggleDrawingToolSelector,
 
     addSymbol,
     removeSymbol,
@@ -53,7 +99,6 @@ export default function Root() {
     handleChartStyleChange,
     handleIntervalChange,
 
-    isFullscreen,
     chartStyle,
     compareSymbols,
     crosshair,
@@ -61,28 +106,22 @@ export default function Root() {
     interval,
     isCrosshairEnabled,
     isDrawing,
-    isLandscape,
     measureValue,
     symbol,
 
-    chartStyleSelectorRef,
-    compareSymbolSelectorRef,
     drawingToolSelectorRef,
-    symbolSelectorRef,
-    intervalSelectorRef,
+
+    initChart,
+    initialized,
   } = useChartIQ();
+
+  const showDrawingToolsSelector = () => {
+    drawingToolSelectorRef.current?.present('');
+  };
+
   // const { getTranslationsFromStorage } = useTranslations();
 
   const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
-
-  React.useEffect(() => {
-    if (isDark) {
-      setTheme('night');
-      return;
-    }
-
-    setTheme('day');
-  }, [isDark]);
 
   const get = React.useCallback(async () => {
     let userLanguage =
@@ -93,10 +132,12 @@ export default function Root() {
   }, []);
 
   React.useEffect(() => {
-    get();
-    // getTranslationsFromStorage();
-  }, [get]);
-  console.log('render');
+    if (initialized) {
+      get();
+      // getTranslationsFromStorage();
+    }
+  }, [get, initialized]);
+
   return (
     <SafeAreaView style={styles.box}>
       <View style={displayStyle}>
@@ -119,7 +160,8 @@ export default function Root() {
       </View>
       <View style={[{ flex: 1 }]}>
         <ChartIqWrapperView
-          url={uri}
+          url={WEB_VIEW_SOURCE}
+          onStart={initChart}
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
           onPullPagingData={onPullPagingData}
@@ -145,7 +187,11 @@ export default function Root() {
         data={compareSymbols}
       />
       <SymbolSelector onChange={handleSymbolChange} ref={symbolSelectorRef} />
-      <IntervalSelector ref={intervalSelectorRef} onChange={handleIntervalChange} />
+      <IntervalSelector
+        ref={intervalSelectorRef}
+        selectedInterval={interval ?? null}
+        onChange={handleIntervalChange}
+      />
       <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
       <DrawingToolSelector onChange={onDrawingToolChanged} ref={drawingToolSelectorRef} />
       <FullScreenAnimatedButtonComponent isFullScreen={isFullscreen} onChange={toggleFullScreen} />

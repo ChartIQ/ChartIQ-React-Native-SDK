@@ -12,6 +12,7 @@ import ElliotWave from './elliott-wave.svg';
 import Ellipse from './ellipse.svg';
 import FibonacciArc from './fib-arc.svg';
 import FibonacciFan from './fib-fan.svg';
+import FibonacciProjection from './fib-projection.svg';
 import FibonacciRetracement from './fib-retracement.svg';
 import FibonacciTimezone from './fib-time_zone.svg';
 import Focus from './focus.svg';
@@ -19,6 +20,7 @@ import GannFan from './gann-fan.svg';
 import Gartley from './gartley.svg';
 import Heart from './heart.svg';
 import HorizontalLine from './horizontal-line.svg';
+import Line from './line.svg';
 import Measure from './measure.svg';
 import Pitchfork from './pitchfork.svg';
 import QuadrantLines from './quadrant-lines.svg';
@@ -72,6 +74,8 @@ const drawingTools = {
   trendLine: TrendLine,
   verticalLine: VerticalLine,
   volumeProfile: VolumeProfile,
+  fibProjection: FibonacciProjection,
+  line: Line,
 };
 
 export default drawingTools;

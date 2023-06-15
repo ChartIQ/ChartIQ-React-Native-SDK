@@ -43,10 +43,29 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     useEffect(() => {
       setInputParams(inputParameters);
       setOutputParams(outputParameters);
+      setInputParamsData((prevState) =>
+        prevState.map((item) => {
+          return {
+            ...item,
+            fieldSelectedValue: inputParameters.find((param) => param.name === item.fieldName)
+              ?.value as string,
+          };
+        }),
+      );
+
+      setOutputParamsData((prevState) =>
+        prevState.map((item) => ({
+          ...item,
+          fieldSelectedValue: outputParameters.find((param) => param.name === item.fieldName)
+            ?.value as string,
+        })),
+      );
     }, [inputParameters, outputParameters]);
 
     const onColorChange = (input: string, id: string) => {
+      if (!id) return;
       const itemToChange = outputParamsData.find((item) => item.fieldName === id);
+
       if (itemToChange) {
         setOutputParamsData((prevState) => {
           return prevState.map((item) => {
@@ -78,8 +97,8 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       });
     };
 
-    const handleChangeColor = (paramName: string) => {
-      colorSelectorRef.current?.open(paramName);
+    const handleChangeColor = (paramName: string, value: string) => {
+      colorSelectorRef.current?.present(paramName, value);
     };
 
     const handleSelectOption = (
@@ -87,7 +106,12 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       selected: string,
       fieldName: string,
     ) => {
-      fromListSelectorRef.current?.open(options, selected, fieldName);
+      fromListSelectorRef.current?.open({
+        data: options,
+        selected,
+        id: fieldName,
+        title: fieldName,
+      });
     };
 
     const onOptionChange = ({ value: input }: { value: string }, id: string) => {
@@ -158,18 +182,42 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
 
     useImperativeHandle(ref, () => ({
       getInputParamsData: () => inputParamsData,
-      getOutputParamsData: () => outputParamsData,
+      getOutputParamsData: () => {
+        return outputParamsData;
+      },
     }));
+
+    const inputData = inputParams.map((item) => ({
+      ...item,
+      value:
+        inputParamsData.find((param) => param.fieldName === item.name)?.fieldSelectedValue ??
+        item.value,
+    }));
+    const outputData = outputParams.map((item) => ({
+      ...item,
+      value:
+        outputParamsData.find((param) => param.fieldName === item.name)?.fieldSelectedValue ??
+        item.value,
+    }));
+
+    const handleNumberChange = (text: string, name: string) => {
+      const number = Number(text);
+      if (isNaN(number) || number === Infinity || number === -Infinity) {
+        onValueChange(name, 0.0);
+        return;
+      }
+      onValueChange(name, number);
+    };
 
     return (
       <>
         <SectionList
           sections={[
             {
-              data: inputParams,
+              data: inputData,
               key: 'section.input-params',
               renderItem: ({ item }) => {
-                if (item?.options !== undefined) {
+                if (item.fieldType === 'Select') {
                   return (
                     <ListItem
                       onPress={() => handleSelectOption(item.options, item.value, item.name)}
@@ -179,22 +227,39 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                     </ListItem>
                   );
                 }
-                if (typeof item.value === 'number' || typeof item.value === 'string') {
+                if (item.fieldType === 'Text') {
                   return (
                     <ListItem title={item.name}>
                       <TextInput
                         style={styles.input}
                         defaultValue={item.value.toString()}
                         onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
+                        value={item.value.toString()}
                       />
                     </ListItem>
                   );
                 }
-                if (typeof item.value === 'boolean') {
+                if (item.fieldType === 'Number') {
+                  return (
+                    <ListItem title={item.name}>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        defaultValue={item.value.toString()}
+                        placeholder="0.0"
+                        onChange={({ nativeEvent: { text } }) =>
+                          handleNumberChange(text, item.name)
+                        }
+                        value={item.value.toString()}
+                      />
+                    </ListItem>
+                  );
+                }
+                if (item.fieldType === 'Checkbox') {
                   return (
                     <ListItem title={item.name}>
                       <Switch
-                        value={item.value}
+                        value={item.value as boolean}
                         onValueChange={(value) => onValueChange(item.name, value)}
                       />
                     </ListItem>
@@ -205,16 +270,22 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
               },
             },
             {
-              data: outputParams,
+              data: outputData,
               key: 'section.output-params',
-              renderItem: ({ item }) => (
-                <ListItem onPress={() => handleChangeColor(item.name)} title={item.name}>
-                  <View style={[styles.box, { backgroundColor: item.value as string }]} />
-                </ListItem>
-              ),
+              renderItem: ({ item }) => {
+                return (
+                  <ListItem
+                    onPress={() => {
+                      handleChangeColor(item.name, item.value as string);
+                    }}
+                    title={item.name}
+                  >
+                    <View style={[styles.box, { backgroundColor: item.value as string }]} />
+                  </ListItem>
+                );
+              },
             },
           ]}
-          style={{}}
           keyExtractor={(item) => item.name}
           ListFooterComponent={() => {
             return children ? <>{children}</> : null;

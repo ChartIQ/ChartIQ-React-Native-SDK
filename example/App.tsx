@@ -1,4 +1,5 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer, Theme } from '@react-navigation/native';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
@@ -23,6 +24,7 @@ export default function App() {
     translationsReducer,
     translationsInitialState,
   );
+
   const { colors, isDark } = useTheme();
   const navigationTheme: Theme = {
     colors: {
@@ -49,7 +51,9 @@ export default function App() {
               <DrawingContext.Provider value={drawingState}>
                 <DrawingDispatchContext.Provider value={dispatch}>
                   <NavigationContainer theme={navigationTheme}>
-                    <RootNavigator />
+                    <BottomSheetModalProvider>
+                      <RootNavigator />
+                    </BottomSheetModalProvider>
                   </NavigationContainer>
                 </DrawingDispatchContext.Provider>
               </DrawingContext.Provider>

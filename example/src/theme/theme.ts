@@ -18,11 +18,17 @@ export interface ColorPallette {
 
   border: string;
   error: string;
+  errorBackground: string;
   white: string;
 
   favoriteBackground: string;
 
   fullViewButtonBackground: string;
+  fullViewButtonForeground: string;
+
+  crosshairUpdateValueColor: string;
+  measureBackground: string;
+  selectedColorBackground: string;
 }
 
 export default interface Theme {

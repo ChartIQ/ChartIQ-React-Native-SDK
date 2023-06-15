@@ -1,18 +1,16 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import { FlatList, Keyboard, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import { ChartSymbol } from '~/api';
+import Icons from '~/assets/icons';
+import { colorPickerColors } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { ColorSelector } from '../color-selector';
-import { ColorSelectorMethods } from '../color-selector/color-selector.component';
 import { SelectorHeader } from '../selector-header';
-import SymbolSelector, {
-  SymbolSelectorMethods,
-} from '../symbol-selector/symbol-selector.component';
+import SymbolSelector from '../symbol-selector/symbol-selector.component';
 
 import { SwipableSymbol } from './components/swipable-symbol-item';
 
@@ -25,34 +23,36 @@ interface CompareSymbolSelectorProps {
   data: ColoredSymbols;
 }
 
-export interface CompareSymbolSelectorMethods {
-  open: () => void;
-  close: () => void;
-}
-
-const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSymbolSelectorProps>(
+const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelectorProps>(
   ({ onAdd, onDelete, data }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const { translations } = useTranslations();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const symbolSelectorRef = useRef<SymbolSelectorMethods>(null);
-    const colorSelectorRef = useRef<ColorSelectorMethods>(null);
+    const symbolSelectorRef = useRef<BottomSheetMethods>(null);
+    const colorSelectorRef = useRef<BottomSheetMethods>(null);
+
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
       Keyboard.dismiss();
     };
 
     useImperativeHandle(ref, () => ({
-      open: () => {
-        bottomSheetRef.current?.expand();
-      },
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       close: handleClose,
     }));
 
-    const handleSymbolAdd = (input: ColoredChartSymbol) => {
-      colorSelectorRef.current?.open(input.symbol);
-      onAdd(input);
+    const handleSymbolAdd = (symbol: ChartSymbol) => {
+      // colorSelectorRef.current?.present(symbol.symbol);
+      onAdd({
+        ...symbol,
+        color:
+          (colorPickerColors.find(
+            (_, index, array) => Math.round(Math.random() * array.length) === index,
+          ) ||
+            colorPickerColors[0]) ??
+          '',
+      });
     };
 
     const handleSymbolDelete = (input: ColoredChartSymbol) => {
@@ -60,7 +60,7 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
     };
 
     const handleAddPress = () => {
-      symbolSelectorRef.current?.open();
+      symbolSelectorRef.current?.present('');
     };
 
     const onColorChange = (color: string, id: string | null) => {
@@ -75,7 +75,7 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
     };
 
     const handleChangeColor = (id: string) => {
-      colorSelectorRef.current?.open(id);
+      colorSelectorRef.current?.present(id);
     };
 
     return (
@@ -100,6 +100,19 @@ const CompareSymbolSelector = forwardRef<CompareSymbolSelectorMethods, CompareSy
                 handleChangeColor={handleChangeColor}
                 handleDelete={handleSymbolDelete}
               />
+            )}
+            ListEmptyComponent={() => (
+              <View style={styles.listEmptyContainer}>
+                <View style={styles.space64} />
+                <Icons.search width={120} height={120} fill={theme.colors.inputBackground} />
+                <View style={styles.space32} />
+                <Text style={styles.emptyListTextTitle}>No symbols to compare</Text>
+                <View style={styles.space16} />
+                <View style={styles.space32} />
+                <TouchableOpacity style={styles.primaryButton} onPress={handleAddPress}>
+                  <Text style={styles.primaryButtonText}>Add Symbol</Text>
+                </TouchableOpacity>
+              </View>
             )}
           />
         </BottomSheet>
@@ -131,6 +144,44 @@ const createStyles = (theme: Theme) =>
     },
     aligned: {
       alignItems: 'center',
+    },
+
+    listEmptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 36,
+      backgroundColor: theme.colors.background,
+    },
+    emptyListTextTitle: {
+      color: theme.colors.cardSubtitle,
+      fontSize: 20,
+    },
+    emptyListTextDescription: {
+      color: theme.colors.cardSubtitle,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+
+    primaryButtonText: {
+      color: theme.colors.primaryButtonText,
+      paddingVertical: 18,
+    },
+    primaryButton: {
+      width: '100%',
+      backgroundColor: theme.colors.colorPrimary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 8,
+    },
+    space16: {
+      height: 16,
+    },
+    space32: {
+      height: 32,
+    },
+    space64: {
+      height: 64,
     },
   });
 

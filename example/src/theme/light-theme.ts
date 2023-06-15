@@ -13,18 +13,24 @@ const LightTheme: ColorPallette = {
   primaryButtonText: Colors.white,
   placeholderSecondaryColor: Colors.brightGrey,
 
-  placeholder: Colors.charcoalGrey,
+  placeholder: Colors.cadetBlue,
   inputBackground: Colors.battleshipGrey12,
 
   cardTitle: Colors.darkElectricBlue,
   cardSubtitle: Colors.cadetBlue,
   border: Colors.paleGrey,
   error: Colors.coralRed,
+  errorBackground: Colors.veryLightPink,
   white: Colors.white,
 
   favoriteBackground: Colors.brillianteAzure,
 
-  fullViewButtonBackground: Colors.brightGrey,
+  fullViewButtonBackground: Colors.darkElectricBlue,
+  fullViewButtonForeground: Colors.white,
+
+  crosshairUpdateValueColor: Colors.elevationDark,
+  measureBackground: Colors.ghostWhite48,
+  selectedColorBackground: Colors.battleshipGrey24,
 };
 
 export default LightTheme;

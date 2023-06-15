@@ -5,6 +5,13 @@ export interface StudyParameterModel {
   fieldSelectedValue: string;
 }
 
+type StudyParameterFieldType = 'Select' | 'TextColor' | 'Number' | 'Text' | 'Checkbox';
+
+export type StudyParameterResponse = {
+  fieldType: StudyParameterFieldType;
+  fieldValue: string;
+};
+
 export interface StudyParameter {
   defaultValue: number | string | boolean;
   heading: string;
@@ -14,4 +21,5 @@ export interface StudyParameter {
   options?: {
     [key: string]: string;
   };
+  fieldType: StudyParameterFieldType;
 }

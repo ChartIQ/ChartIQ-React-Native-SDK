@@ -25,11 +25,6 @@ export interface ChartStyleSelectorProps {
   onChange: (interval: ChartStyleItem) => void;
 }
 
-export interface ChartStyleSelectorMethods {
-  open: () => void;
-  close: () => void;
-}
-
 interface ChartStyleSelectorData {
   label: string;
   value: ChartType;
@@ -55,23 +50,35 @@ export const chartStyleSelectorData: ChartStyleSelectorData[] = [
   },
   { label: 'Scatterplot', value: ChartType.SCATTERPLOT, icon: icons.scatterplot },
   { label: 'Histogram', value: ChartType.HISTOGRAM, icon: icons.histogram },
+  {
+    label: 'Hekin Ashi',
+    value: ChartType.None,
+    aggregationType: AggregationType.HEIKINASHI,
+    icon: icons.heikinAshi,
+  },
+  { label: 'Kagi', value: ChartType.None, aggregationType: AggregationType.KAGI, icon: icons.kagi },
+  {
+    label: 'Line Break',
+    value: ChartType.None,
+    aggregationType: AggregationType.LINEBREAK,
+    icon: icons.lineBreak,
+  },
 
-  { label: 'Kagi', value: ChartType.KAGI, aggregationType: AggregationType.KAGI, icon: icons.kagi },
   {
     label: 'Renko',
-    value: ChartType.RENKO,
+    value: ChartType.None,
     aggregationType: AggregationType.RENKO,
     icon: icons.renko,
   },
   {
     label: 'Range Bars',
-    value: ChartType.RANGE_BARS,
+    value: ChartType.None,
     aggregationType: AggregationType.RANGEBARS,
     icon: icons.rangeBars,
   },
   {
     label: 'Point & Figure',
-    value: ChartType.PNDF,
+    value: ChartType.None,
     aggregationType: AggregationType.PANDF,
     icon: icons.pointAndFigure,
   },

@@ -3,12 +3,15 @@ import type { TextProps as RNTextProps } from 'react-native';
 import { StyleSheet, TextInput } from 'react-native';
 import Animated, { useAnimatedProps } from 'react-native-reanimated';
 
-const styles = StyleSheet.create({
-  baseStyle: {
-    color: 'black',
-    padding: 0,
-  },
-});
+import { Theme, useTheme } from '~/theme';
+
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    baseStyle: {
+      color: theme.colors.crosshairUpdateValueColor,
+      padding: 0,
+    },
+  });
 Animated.addWhitelistedNativeProps({ text: true });
 
 interface TextProps {
@@ -27,6 +30,8 @@ const ReText = (props: TextProps) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
   });
+  const theme = useTheme();
+  const styles = createStyles(theme);
   return (
     <AnimatedTextInput
       underlineColorAndroid="transparent"

@@ -17,7 +17,9 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import java.lang.Runnable
 
@@ -411,17 +413,22 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getStudyParameters(study: String, type: String, promise: Promise) {
     val parsedStudy = gson.fromJson(study, Study::class.java)
-    Log.println(Log.DEBUG, "getStudyParameters", parsedStudy.toString())
     val parsedType = StudyParameterType.values().find {
       it.name == type
     }
     if (parsedStudy != null && parsedType != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().getStudyParameters(parsedStudy, parsedType) {
-          Log.println(Log.DEBUG, "getStudyParameters", it.toString())
-          promise.resolve(gson.toJson(it))
+          val jsonArray = JsonArray()
+          for(field in it){
+            val fieldType = field.javaClass.name.split('$')[1]
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("fieldType", fieldType)
+            jsonObject.addProperty("fieldValue", gson.toJson(field))
+            jsonArray.add(jsonObject)
+          }
+          promise.resolve(gson.toJson(jsonArray))
         }
-
       })
     }
   }
@@ -443,7 +450,6 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     val parsedParameters = gson.fromJson<List<StudyParameterModel>>(parameters, collectionType)
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setStudyParameters(parsedStudy, parsedParameters) {
-        Log.println(Log.INFO, "setStudyParameters", it.toString())
         promise.resolve(gson.toJson(it))
       }
     })
@@ -462,7 +468,6 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getActiveSignals(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getActiveSignals {
-        Log.println(Log.DEBUG, "getActiveSignals", it.toString())
         promise.resolve(gson.toJson(it))
       }
     })
@@ -479,16 +484,11 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
   @ReactMethod
   fun addSignal(signal: String,editMode: Boolean) {
-    Log.println(Log.DEBUG, "addSignal", signal)
     val parsedSignal = gson.fromJson(signal, Signal::class.java)
-    Log.println(Log.DEBUG, "parsed addSignal", parsedSignal.toString())
-    Log.println(Log.DEBUG, "signal operator string", SignalOperator.CROSSES.toString())
-    if (parsedSignal != null) {
 
+    if (parsedSignal != null) {
       handler.post(Runnable {
-        Log.println(Log.DEBUG, "addSignal", "adding signal")
         chartIQViewModel.getChartIQ().saveSignal(parsedSignal, editMode)
-        Log.println(Log.DEBUG, "addSignal", "added signal")
       })
     }
   }

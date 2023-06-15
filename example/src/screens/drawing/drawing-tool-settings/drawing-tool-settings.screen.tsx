@@ -19,13 +19,13 @@ import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
+import { colorInitializer } from '~/shared/helpers';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import ColorSelector, { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
-import LineTypeSelector, {
-  LineTypeSelectorMethods,
-} from '~/ui/line-type-selector/line-type-selector.component';
+import LineTypeSelector from '~/ui/line-type-selector/line-type-selector.component';
 import { ListItem } from '~/ui/list-item';
 
 const DrawingToolSettings: React.FC = () => {
@@ -33,9 +33,8 @@ const DrawingToolSettings: React.FC = () => {
   const navigation = useNavigation<DrawingToolsSettings>();
   const theme = useTheme();
   const styles = createStyles(theme);
-  const fillColorSelectorRef = useRef<ColorSelectorMethods>(null);
-  const lineColorSelectorRef = useRef<ColorSelectorMethods>(null);
-  const lineTypeSelectorRef = useRef<LineTypeSelectorMethods>(null);
+  const colorSelectorRef = useRef<ColorSelectorMethods>(null);
+  const lineTypeSelectorRef = useRef<BottomSheetMethods>(null);
   const {
     drawingSettings,
     supportedSettings: {
@@ -52,15 +51,15 @@ const DrawingToolSettings: React.FC = () => {
     currentLineType,
   } = useContext(DrawingContext);
   const {
-    color: lineColor,
-    fillColor,
+    color: lineColorValue,
+    fillColor: fillColorValue,
     font,
     volumeProfile,
-    impulse,
-    corrective,
-    decoration,
-    showLines,
+    waveParameters,
   } = drawingSettings;
+
+  const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
+  const [lineColor, setLineColor] = useState(() => colorInitializer(lineColorValue, theme.isDark));
 
   const [axisLabel, setAxisLabel] = useState(() => drawingSettings.axisLabel);
   const [isBold, setIsBold] = useState(() => font.weight === 'bold');
@@ -76,13 +75,13 @@ const DrawingToolSettings: React.FC = () => {
   }, [navigation, params.title]);
 
   const toggleFillColor = () => {
-    fillColorSelectorRef.current?.open('');
+    colorSelectorRef.current?.present(DrawingParams.FILL_COLOR, fillColor);
   };
   const toggleLineColor = () => {
-    lineColorSelectorRef.current?.open('');
+    colorSelectorRef.current?.present(DrawingParams.LINE_COLOR, lineColor);
   };
   const toggleLineType = () => {
-    lineTypeSelectorRef.current?.open();
+    lineTypeSelectorRef.current?.present('');
   };
 
   const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
@@ -91,14 +90,19 @@ const DrawingToolSettings: React.FC = () => {
     setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
   };
 
-  const onFillColorChange = (color: string) => {
-    updateFillColor(color);
-    setDrawingParams(DrawingParams.FILL_COLOR, color);
-  };
+  const onColorChange = (color: string, id?: string | undefined) => {
+    if (!id) return;
 
-  const onLineColorChange = (color: string) => {
-    updateLineColor(color);
-    setDrawingParams(DrawingParams.LINE_COLOR, color);
+    if (id === DrawingParams.FILL_COLOR) {
+      updateFillColor(color);
+      setFillColor(color);
+      setDrawingParams(DrawingParams.FILL_COLOR, color);
+    }
+    if (id === DrawingParams.LINE_COLOR) {
+      updateLineColor(color);
+      setLineColor(color);
+      setDrawingParams(DrawingParams.LINE_COLOR, color);
+    }
   };
 
   const toggleBoldFontStyle = () => {
@@ -172,10 +176,13 @@ const DrawingToolSettings: React.FC = () => {
 
   const toggleShowLines = () => {
     updateDrawingSettings((prevState) => {
-      setDrawingParams(DrawingParams.SHOW_LINES, JSON.stringify(!prevState.showLines));
+      setDrawingParams(
+        DrawingParams.SHOW_LINES,
+        JSON.stringify(!prevState.waveParameters.showLines),
+      );
       return {
         ...prevState,
-        showLines: !prevState.showLines,
+        showLines: !prevState.waveParameters.showLines,
       };
     });
   };
@@ -267,7 +274,7 @@ const DrawingToolSettings: React.FC = () => {
             </ListItem>
           ) : null}
           {supportingVolumeProfile ? (
-            <ListItem title="Volume Profile">
+            <ListItem title="Price Buckets">
               <TextInput
                 value={volumeProfile.priceBuckets.toString()}
                 onChange={handleVolumeProfileChange}
@@ -281,7 +288,7 @@ const DrawingToolSettings: React.FC = () => {
                 title="Impulse"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{impulse}</Text>
+                  <Text style={styles.text}>{waveParameters.impulse}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
@@ -290,7 +297,7 @@ const DrawingToolSettings: React.FC = () => {
                 title="Corrective"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{corrective}</Text>
+                  <Text style={styles.text}>{waveParameters.corrective}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
@@ -300,20 +307,19 @@ const DrawingToolSettings: React.FC = () => {
                 title="Decoration"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{decoration}</Text>
+                  <Text style={styles.text}>{waveParameters.decoration}</Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
 
               <ListItem title="Show Lines">
-                <Switch onChange={toggleShowLines} value={showLines} />
+                <Switch onChange={toggleShowLines} value={waveParameters.showLines} />
               </ListItem>
             </>
           ) : null}
         </ScrollView>
       </SafeAreaView>
-      <ColorSelector ref={fillColorSelectorRef} onChange={onFillColorChange} />
-      <ColorSelector ref={lineColorSelectorRef} onChange={onLineColorChange} />
+      <ColorSelector ref={colorSelectorRef} onChange={onColorChange} />
       <LineTypeSelector
         selectedItem={currentLineType}
         ref={lineTypeSelectorRef}

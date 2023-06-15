@@ -44,11 +44,12 @@ const Settings: React.FC = () => {
       key: item.code,
       value: item.title,
     }));
-    selectFromListRef.current?.open(
+    selectFromListRef.current?.open({
       data,
-      data.find((item) => item.value === languageName)?.key || '',
-      'language',
-    );
+      selected: data.find((item) => item.value === languageName)?.key || '',
+      id: 'language',
+      title: translations['Choose language'],
+    });
   };
 
   const handleLanguageChange = ({ key }: { key: string; value: string }) => {
@@ -89,11 +90,7 @@ const Settings: React.FC = () => {
         <Text style={styles.sectionTitle}>Language Preferences</Text>
         <ListItem title="Language" onPress={onLanguage} value={languageName} />
       </ScrollView>
-      <SelectFromList
-        title={translations['Choose language']}
-        ref={selectFromListRef}
-        onChange={handleLanguageChange}
-      />
+      <SelectFromList ref={selectFromListRef} onChange={handleLanguageChange} />
     </View>
   );
 };

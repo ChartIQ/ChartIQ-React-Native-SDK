@@ -13,7 +13,7 @@ const DarkTheme: ColorPallette = {
   primaryButtonText: Colors.white,
   placeholderSecondaryColor: Colors.chineseBlack,
 
-  placeholder: Colors.paleGrey,
+  placeholder: Colors.cadetBlue,
   inputBackground: Colors.battleshipGrey24,
 
   cardTitle: Colors.white,
@@ -21,11 +21,17 @@ const DarkTheme: ColorPallette = {
 
   border: Colors.outerSpace,
   error: Colors.coralRed,
+  errorBackground: Colors.veryLightPink,
   white: Colors.white,
 
   favoriteBackground: Colors.brillianteAzure,
 
-  fullViewButtonBackground: Colors.darkGunmetal,
+  fullViewButtonBackground: Colors.white,
+  fullViewButtonForeground: Colors.darkElectricBlue,
+
+  crosshairUpdateValueColor: Colors.mayaBlue,
+  measureBackground: Colors.elevationDark48,
+  selectedColorBackground: Colors.battleshipGrey24,
 } as const;
 
 export default DarkTheme;

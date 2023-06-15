@@ -14,7 +14,7 @@ export interface CrosshairSharedValues {
   High: SharedValue<string>;
   Low: SharedValue<string>;
   Close: SharedValue<string>;
-  Volume: SharedValue<string>;
+  Vol: SharedValue<string>;
   Price: SharedValue<string>;
 }
 

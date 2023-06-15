@@ -60,13 +60,14 @@ const createStyles = (theme: Theme) =>
     container: {
       backgroundColor: theme.colors.background,
       paddingHorizontal: 12,
-      paddingBottom: 12,
+      paddingVertical: 12,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
-      height: 40,
+      borderTopStartRadius: 12,
+      borderTopEndRadius: 12,
     },
     text: {
       color: theme.colors.colorPrimary,

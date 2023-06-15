@@ -1,59 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  useWindowDimensions,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { SvgProps } from 'react-native-svg';
 
 import Icons from '~/assets/icons';
-import { CrosshairSharedValues } from '~/model';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { RootStack, SettingsNavigation } from '~/shared/navigation.types';
 
-import { Theme, useTheme } from '../../theme';
-import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.data';
+import { useTheme } from '../../theme';
 
 import { AnimatedCrosshairValues } from './components/animated-crosshair-values';
+import { HeaderButtons } from './components/header-buttons';
+import { createStyles } from './header.styles';
+import { HeaderItem, HeaderProps } from './header.types';
 
 const timingConfig = { duration: 200 };
-const CROSSHAIR_HEIGHT = 70;
-
-interface HeaderProps {
-  interval: string | null;
-  chartStyle: ChartStyleItem | null;
-  symbol: string | null;
-  handleSymbolSelector: () => void;
-  handleIntervalSelector: () => void;
-  handleChartStyleSelector: () => void;
-  handleCompareSymbolSelector: () => void;
-  handleDrawingTool: () => void;
-  handleCrosshair: (input: boolean) => void;
-  handleFullScreen: () => void;
-  isCrosshairEnabled: boolean;
-  crosshairState: CrosshairSharedValues;
-  isDrawing: boolean;
-  isLandscape: boolean;
-}
-
-interface HeaderItem {
-  onPress: () => void;
-  Icon: React.FC<SvgProps> | React.FC | null;
-  key: string;
-  style?: ViewStyle | ViewStyle[];
-  containerStyle?: ViewStyle | ViewStyle[];
-  fill?: string;
-}
+const CROSSHAIR_HEIGHT = 58;
 
 const Header: React.FC<HeaderProps> = ({
   symbol,
@@ -73,12 +40,11 @@ const Header: React.FC<HeaderProps> = ({
   isDrawing,
   isLandscape,
 }) => {
-  const { width } = useWindowDimensions();
   const theme = useTheme();
   const styles = createStyles(theme);
   const navigation = useNavigation<SettingsNavigation>();
   const { translationMap } = useTranslations();
-
+  const [width, setWidth] = useState(0);
   const [open, setOpen] = useState(false);
   const otherToolsHeight = useSharedValue(0);
   const crosshairHeight = useSharedValue(0);
@@ -90,6 +56,15 @@ const Header: React.FC<HeaderProps> = ({
 
     runOnJS(setOpen)((prevState) => !prevState);
   }, [open, otherToolsHeight]);
+
+  useEffect(() => {
+    if (open && isLandscape) {
+      otherToolsHeight.value = withTiming(0, timingConfig);
+      setOpen(false);
+      crosshairHeight.value = withTiming(0, timingConfig);
+      handleCrosshair(false);
+    }
+  }, [crosshairHeight, handleCrosshair, isLandscape, open, otherToolsHeight]);
 
   const onCrosshair = useCallback(() => {
     'worklet';
@@ -110,31 +85,22 @@ const Header: React.FC<HeaderProps> = ({
     [crosshairHeight],
   );
 
-  const displayStyle = { display: open ? 'flex' : 'none' } as ViewStyle;
-  const drawingStyle = useMemo(
-    () => (isDrawing ? [styles.chartStyleButton, styles.selectedButton] : styles.chartStyleButton),
-    [isDrawing, styles.chartStyleButton, styles.selectedButton],
-  );
-  const drawingFill = isDrawing ? theme.colors.background : theme.colors.buttonText;
-  const crosshairFill = isCrosshairEnabled ? theme.colors.background : theme.colors.buttonText;
-  const crosshairStyle: ViewStyle | ViewStyle[] = useMemo(
-    () =>
-      isCrosshairEnabled
-        ? [styles.chartStyleButton, styles.selectedButton]
-        : styles.chartStyleButton,
-    [isCrosshairEnabled, styles.chartStyleButton, styles.selectedButton],
+  const getFill = useCallback(
+    (condition: boolean) => (condition ? theme.colors.background : theme.colors.buttonText),
+    [theme.colors.background, theme.colors.buttonText],
   );
 
-  const iconProps = {
-    width: 24,
-    height: 24,
-    fill: theme.colors.buttonText,
-  };
+  const getContainerStyles = useCallback(
+    (condition: boolean) =>
+      condition
+        ? [styles.chartStyleButton, styles.selectedButton]
+        : (styles.chartStyleButton as ViewStyle | ViewStyle[]),
+    [styles.chartStyleButton, styles.selectedButton],
+  );
 
   const cardWidth = 24 + 16;
 
-  const numberOfVisibleItems = Math.floor(width / 2 / cardWidth);
-
+  const numberOfVisibleItems = Math.floor(width / cardWidth);
   const handleStudies = useCallback(() => {
     navigation.navigate(RootStack.Studies);
   }, [navigation]);
@@ -166,62 +132,80 @@ const Header: React.FC<HeaderProps> = ({
         onPress: () => {
           handleSignals();
         },
-        Icon: Icons.signals,
+        Icon: Icons.navSignals,
         key: 'signals',
+        stroke: theme.colors.buttonText,
       },
       {
         onPress: onCrosshair,
-        Icon: Icons.crosshair,
         key: 'crosshair',
-        containerStyle: crosshairStyle,
-        fill: crosshairFill,
+        activeImageType: 'crosshair',
+        active: isCrosshairEnabled,
       },
       {
         onPress: handleDrawingTool,
-        Icon: isDrawing ? Icons.drawActive : Icons.draw,
         key: 'draw',
-        fill: drawingFill,
-        containerStyle: drawingStyle,
+        activeImageType: 'drawings',
+        active: isDrawing,
       },
       {
         onPress: () => {
           navigation.navigate(RootStack.Settings);
         },
-        Icon: Icons.menuSettings,
+        Icon: Icons.settings,
+        fill: theme.colors.buttonText,
         key: 'settings',
       },
     ],
     [
       chartStyle?.icon,
-      crosshairFill,
-      crosshairStyle,
-      drawingFill,
-      drawingStyle,
       handleChartStyleSelector,
       handleCompareSymbolSelector,
       handleDrawingTool,
       handleSignals,
       handleStudies,
+      isCrosshairEnabled,
       isDrawing,
       navigation,
       onCrosshair,
+      theme.colors.buttonText,
     ],
   );
 
   const isAllItemsFits = items.length <= numberOfVisibleItems;
 
-  const visibleItems = useMemo(() => {
-    const visibleItems: HeaderItem[] = items.slice(
+  const [visibleItems, otherItems] = useMemo(() => {
+    let preparedItems = [...items];
+    if (isLandscape) {
+      const compareIndex = preparedItems.findIndex((item) => item.key === 'compare');
+      const signalIndex = preparedItems.findIndex((item) => item.key === 'signals');
+      let tmp = preparedItems[compareIndex];
+      if (
+        compareIndex !== -1 &&
+        signalIndex !== -1 &&
+        preparedItems[compareIndex] &&
+        preparedItems[signalIndex] &&
+        tmp
+      ) {
+        preparedItems[compareIndex] = preparedItems[signalIndex] as HeaderItem;
+        preparedItems[signalIndex] = tmp;
+      }
+    }
+    const visibleItems: HeaderItem[] = preparedItems.slice(
       0,
-      isAllItemsFits ? items.length : numberOfVisibleItems - 1,
+      isAllItemsFits ? preparedItems.length : numberOfVisibleItems - 1,
     );
+    let otherItems = preparedItems.slice(numberOfVisibleItems - 1, items.length);
 
     if (!isAllItemsFits) {
+      otherItems = [visibleItems.pop() as HeaderItem, ...otherItems];
       visibleItems.push({
         onPress: handleChevron,
         Icon: Icons.chevronRight,
         key: 'chevron',
-        style: { transform: [{ rotate: open ? '90deg' : '270deg' }] },
+        style: { transform: [{ rotate: open ? '270deg' : '90deg' }] },
+        containerStyle: getContainerStyles(open),
+        fill: getFill(open),
       });
     }
 
@@ -230,12 +214,16 @@ const Header: React.FC<HeaderProps> = ({
         onPress: () => {
           handleFullScreen();
         },
-        Icon: Icons.fullView,
         key: 'full-screen',
+        activeImageType: 'fillView',
+        active: false,
       });
     }
-    return visibleItems;
+
+    return [visibleItems, otherItems];
   }, [
+    getContainerStyles,
+    getFill,
     handleChevron,
     handleFullScreen,
     isAllItemsFits,
@@ -244,8 +232,6 @@ const Header: React.FC<HeaderProps> = ({
     numberOfVisibleItems,
     open,
   ]);
-
-  const otherItems = items.slice(numberOfVisibleItems - 1, items.length);
 
   return (
     <>
@@ -263,31 +249,21 @@ const Header: React.FC<HeaderProps> = ({
             <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.row}>
-          {visibleItems.map(({ Icon, key, onPress, style, containerStyle, fill }) => (
-            <View key={key} style={styles.itemContainer}>
-              <TouchableOpacity onPress={onPress} style={[styles.chartStyleButton, containerStyle]}>
-                {Icon ? (
-                  <Icon {...iconProps} fill={fill || theme.colors.buttonText} style={style} />
-                ) : null}
-              </TouchableOpacity>
-            </View>
-          ))}
+        <View
+          onLayout={({
+            nativeEvent: {
+              layout: { width },
+            },
+          }) => {
+            setWidth(width);
+          }}
+          style={styles.buttonsContainer}
+        >
+          <HeaderButtons type="main" items={visibleItems} open={open} />
         </View>
       </Animated.View>
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
-        {otherItems.map(({ Icon, key, onPress, style, containerStyle, fill }) => (
-          <View key={key} style={styles.itemContainer}>
-            <TouchableOpacity
-              onPress={onPress}
-              style={[containerStyle ? containerStyle : styles.chartStyleButton, displayStyle]}
-            >
-              {Icon ? (
-                <Icon {...iconProps} fill={fill || theme.colors.buttonText} style={style} />
-              ) : null}
-            </TouchableOpacity>
-          </View>
-        ))}
+        <HeaderButtons type="others" items={otherItems} open={open} />
       </Animated.View>
       <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}>
         <AnimatedCrosshairValues crosshair={crosshairState} />
@@ -295,66 +271,5 @@ const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
-
-const createStyles = (theme: Theme) =>
-  StyleSheet.create({
-    otherToolsContainer: {
-      width: '100%',
-      backgroundColor: theme.colors.background,
-      borderBottomColor: theme.colors.border,
-      borderBottomWidth: 1,
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      paddingHorizontal: 10,
-    },
-    crosshairContainer: {
-      backgroundColor: theme.colors.background,
-      width: '100%',
-    },
-    container: {
-      backgroundColor: theme.colors.background,
-      padding: 10,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    button: {
-      backgroundColor: theme.colors.buttonBackground,
-      height: 32,
-      width: 76,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    buttonText: {
-      color: theme.colors.buttonText,
-    },
-    selectedButtonText: {
-      color: theme.colors.buttonBackground,
-    },
-    space: {
-      width: 10,
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    chartStyleButton: {
-      borderRadius: 32,
-      backgroundColor: theme.colors.buttonBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 2,
-      width: 32,
-      height: 32,
-    },
-    selectedButton: {
-      backgroundColor: theme.colors.buttonText,
-    },
-    itemContainer: {
-      paddingHorizontal: 8,
-    },
-    iconMargin: {
-      margin: 4,
-    },
-  });
 
 export default Header;

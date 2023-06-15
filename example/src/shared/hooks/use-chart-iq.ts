@@ -1,14 +1,6 @@
-import {
-  Orientation,
-  OrientationChangeEvent,
-  addOrientationChangeListener,
-  getOrientationAsync,
-  removeOrientationChangeListeners,
-} from 'expo-screen-orientation';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
-  disableDrawing,
   enableDrawing,
   getDrawingParams,
   setInitialData,
@@ -28,29 +20,23 @@ import {
   getPeriodicity,
   getActiveSeries,
   QuoteFeedEvent,
+  disableDrawing,
+  setTheme,
 } from 'react-native-chart-iq-wrapper';
-import { set, useSharedValue } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 
 import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
 import { colorPickerColors } from '~/constants';
 import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
+import { useTheme } from '~/theme';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
   ChartStyleItem,
-  ChartStyleSelectorMethods,
   chartStyleSelectorData,
 } from '~/ui/chart-style-selector/chart-style-selector.data';
-import {
-  ColoredChartSymbol,
-  CompareSymbolSelectorMethods,
-} from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
+import { ColoredChartSymbol } from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
-import { DrawingToolSelectorMethods } from '~/ui/drawing-tools-selector/drawing-tools-selector.types';
-import {
-  IntervalItem,
-  IntervalSelectorMethods,
-  intervals,
-} from '~/ui/interval-selector/interval-selector.component';
-import { SymbolSelectorMethods } from '~/ui/symbol-selector/symbol-selector.component';
+import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selector.component';
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
@@ -70,6 +56,8 @@ const handleRequest = async (input: ChartIQDatafeedParams) => {
 const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
 
 export const useChartIQ = () => {
+  const [initialized, setChartInitialized] = React.useState(false);
+  const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
   const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
@@ -81,8 +69,7 @@ export const useChartIQ = () => {
   const [isCrosshairEnabled, setIsCrosshairEnabled] = React.useState(false);
   const measureValue = useSharedValue('');
 
-  const [isFullscreen, setIsFullScreen] = React.useState(false);
-  const [isLandscape, setIsLandscape] = React.useState(false);
+  const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
   const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
 
@@ -95,6 +82,15 @@ export const useChartIQ = () => {
   const onPullUpdateData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
     const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
     const response = await handleRequest(parsed);
+
+    if (!isCrosshairEnabled) {
+      const last = response[response.length - 1];
+      crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
+      crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
+      crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
+      crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
+      crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
+    }
     setUpdateData(JSON.stringify(response));
   };
 
@@ -102,37 +98,6 @@ export const useChartIQ = () => {
     const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
     const response = await handleRequest(parsed);
     setPagingData(JSON.stringify(response));
-  };
-
-  const symbolSelectorRef = React.useRef<SymbolSelectorMethods>(null);
-  const intervalSelectorRef = React.useRef<IntervalSelectorMethods>(null);
-  const chartStyleSelectorRef = React.useRef<ChartStyleSelectorMethods>(null);
-  const compareSymbolSelectorRef = React.useRef<CompareSymbolSelectorMethods>(null);
-  const drawingToolSelectorRef = React.useRef<DrawingToolSelectorMethods>(null);
-
-  const toggleSymbolSelector = () => {
-    symbolSelectorRef.current?.open();
-  };
-
-  const toggleIntervalSelector = () => {
-    intervalSelectorRef.current?.open();
-  };
-
-  const toggleChartStyleSelector = () => {
-    chartStyleSelectorRef.current?.open();
-  };
-
-  const toggleCompareSymbolSelector = () => {
-    compareSymbolSelectorRef.current?.open();
-  };
-
-  const toggleDrawingToolSelector = () => {
-    if (!isDrawing) {
-      return drawingToolSelectorRef.current?.open();
-    }
-    setIsDrawing(false);
-    setDrawingItem(null);
-    disableDrawing();
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
@@ -154,6 +119,15 @@ export const useChartIQ = () => {
     }
     setChartType(input.value);
   }, []);
+
+  const updateTheme = useCallback(() => {
+    if (isDark) {
+      setTheme('night');
+      return;
+    } else {
+      setTheme('day');
+    }
+  }, [isDark]);
 
   const onChartAggregationTypeChanged: (
     event: NativeSyntheticEvent<{
@@ -206,33 +180,28 @@ export const useChartIQ = () => {
     disableCrosshairs();
   };
 
-  const showDrawingToolsSelector = () => {
-    drawingToolSelectorRef.current?.open();
-  };
-
   const initChart = useCallback(async () => {
-    console.log('initChart');
-    getSymbol()
-      .then((symbol) => {
-        setSymbol(symbol);
-      })
-      .catch(() => {
-        setChartSymbol('AAPL');
-        setSymbol('AAPL');
-      });
-
-    // const chartType = await getChartType();
-    // handleChartTypeChanged(chartType);
+    setChartInitialized(true);
+    const symbol = await getSymbol();
+    if (!symbol) {
+      setSymbol('AAPL');
+    } else {
+      setSymbol(symbol);
+    }
 
     const periodicity = await getPeriodicity();
-    console.log('periodicity', periodicity);
-    // const parsedPeriodicity = JSON.parse(periodicity);
-    // const interval = JSON.parse(periodicity.interval);
-    setInterval(
+
+    const newInterval =
       intervals.find(
-        (item) => item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase(),
-      ) ?? null,
-    );
+        (item) =>
+          (item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase() &&
+            item.period === periodicity.periodicity &&
+            item.interval === periodicity.interval) ||
+          (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() &&
+            item.period === periodicity.periodicity),
+      ) ?? null;
+
+    setInterval(newInterval);
 
     const activeSeries = await getActiveSeries();
     const map = new Map();
@@ -269,19 +238,20 @@ export const useChartIQ = () => {
       });
       handleChartStyleChange(foundChartType);
     }
-  }, [handleChartStyleChange]);
+    updateTheme();
+  }, [handleChartStyleChange, updateTheme]);
 
-  React.useEffect(() => {
-    initChart();
-  }, [initChart]);
+  useEffect(() => {
+    if (initialized) updateTheme();
+  }, [initialized, updateTheme]);
 
   const crosshair: CrosshairSharedValues = {
-    Close: useSharedValue<string>('0'),
+    Price: useSharedValue<string>('0'),
     Open: useSharedValue<string>('0'),
+    Close: useSharedValue<string>('0'),
+    Vol: useSharedValue<string>('0'),
     High: useSharedValue<string>('0'),
     Low: useSharedValue<string>('0'),
-    Volume: useSharedValue<string>('0'),
-    Price: useSharedValue<string>('0'),
   };
   const handleChartTypeChanged = (chartType: string) => {
     const newChartType = chartStyleSelectorData.find(
@@ -302,46 +272,18 @@ export const useChartIQ = () => {
   const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
     const response: CrosshairState = JSON.parse(hud);
 
-    crosshair.Close.value = response.close ?? '0';
-    crosshair.Open.value = response.open ?? '0';
-    crosshair.High.value = response.high ?? '0';
-    crosshair.Low.value = response.low ?? '0';
-    crosshair.Volume.value = response.volume ?? '0';
-    crosshair.Price.value = response.price ?? '0';
+    crosshair.Close.value = response.close ?? crosshair.Close.value;
+    crosshair.Open.value = response.open ?? crosshair.Open.value;
+    crosshair.High.value = response.high ?? crosshair.High.value;
+    crosshair.Low.value = response.low ?? crosshair.Low.value;
+    crosshair.Vol.value = response.volume ?? crosshair.Vol.value;
+    crosshair.Price.value = response.price ?? crosshair.Price.value;
   };
 
   const onMeasureChanged = ({
     nativeEvent: { measure },
   }: NativeSyntheticEvent<{ measure: string }>) => {
     measureValue.value = measure;
-  };
-
-  React.useEffect(() => {
-    const callback = (orientation: Orientation) => {
-      setIsLandscape(
-        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT,
-      );
-      drawingToolSelectorRef.current?.close();
-      symbolSelectorRef.current?.close();
-      intervalSelectorRef.current?.close();
-      chartStyleSelectorRef.current?.close();
-      compareSymbolSelectorRef.current?.close();
-    };
-    getOrientationAsync().then(callback);
-
-    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-      callback(orientation);
-    });
-
-    return () => {
-      removeOrientationChangeListeners();
-    };
-  }, [setIsLandscape]);
-
-  const toggleFullScreen = () => {
-    setIsFullScreen((prevState) => {
-      return !prevState;
-    });
   };
 
   const onDrawingToolChanged = async (input: DrawingItem) => {
@@ -359,6 +301,15 @@ export const useChartIQ = () => {
     setIsDrawing(true);
   };
 
+  const toggleDrawingToolSelector = () => {
+    if (!isDrawing) {
+      return drawingToolSelectorRef.current?.present('');
+    }
+    setIsDrawing(false);
+    setDrawingItem(null);
+    disableDrawing();
+  };
+
   return {
     onChartTypeChanged,
     onHUDChanged,
@@ -369,14 +320,8 @@ export const useChartIQ = () => {
     onDrawingToolChanged,
     onChartAggregationTypeChanged,
 
-    toggleSymbolSelector,
-    toggleIntervalSelector,
-    toggleChartStyleSelector,
-    toggleCompareSymbolSelector,
-    toggleDrawingToolSelector,
-    showDrawingToolsSelector,
     toggleCrosshair,
-    toggleFullScreen,
+    toggleDrawingToolSelector,
 
     removeSymbol,
     addSymbol,
@@ -390,17 +335,14 @@ export const useChartIQ = () => {
     chartStyle,
     compareSymbols,
     isCrosshairEnabled,
-    isLandscape,
     isDrawing,
     drawingItem,
     measureValue,
     crosshair,
-    isFullscreen,
 
-    compareSymbolSelectorRef,
-    symbolSelectorRef,
-    intervalSelectorRef,
-    chartStyleSelectorRef,
     drawingToolSelectorRef,
+
+    initialized,
+    initChart,
   };
 };

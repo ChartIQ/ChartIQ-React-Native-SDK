@@ -1,4 +1,3 @@
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getChartAggregationType, getChartType } from 'react-native-chart-iq-wrapper';
@@ -8,17 +7,16 @@ import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
 
 import {
   ChartStyleItem,
   chartStyleSelectorData,
-  ChartStyleSelectorMethods,
   ChartStyleSelectorProps,
 } from './chart-style-selector.data';
 
-const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelectorProps>(
+const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProps>(
   ({ onChange }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
@@ -28,7 +26,7 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     const [data, setData] = React.useState<ChartStyleItem[]>(chartStyleSelectorData);
 
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
       Keyboard.dismiss();
     };
 
@@ -42,7 +40,7 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     }, [translationMap]);
 
     const handleOpen = async () => {
-      bottomSheetRef.current?.expand();
+      bottomSheetRef.current?.present();
       const aggregationType = await getChartAggregationType();
       const chartType = await getChartType();
 
@@ -68,13 +66,24 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
     };
 
     useImperativeHandle(ref, () => ({
-      open: handleOpen,
-      close: handleClose,
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
+      present: handleOpen,
+      dismiss: handleClose,
     }));
 
     const handleChange = (chartStyle: ChartStyleItem) => {
       onChange(chartStyle);
       handleClose();
+    };
+
+    const isItemSelected = (item: ChartStyleItem, selectedItem: ChartStyleItem | null) => {
+      if (!selectedItem) return false;
+
+      if (!selectedItem.aggregationType) {
+        return selectedItem?.value === item.value;
+      } else {
+        return selectedItem?.aggregationType === item?.aggregationType;
+      }
     };
 
     return (
@@ -101,10 +110,11 @@ const ChartStyleSelector = forwardRef<ChartStyleSelectorMethods, ChartStyleSelec
                     height={24}
                     color={theme.colors.cardTitle}
                     fill={theme.colors.buttonText}
+                    style={styles.image}
                   />
                   <Text style={styles.description}>{item.label}</Text>
                 </View>
-                {selectedChartStyle?.value === item.value ? (
+                {isItemSelected({ ...item, icon: Icon }, selectedChartStyle) ? (
                   <Icons.check width={16} height={16} fill={theme.colors.colorPrimary} />
                 ) : null}
               </TouchableOpacity>
@@ -156,8 +166,6 @@ const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
     },
     image: {
-      width: 24,
-      height: 24,
       marginRight: 16,
     },
   });

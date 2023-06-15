@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { encode } from 'base-64';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
@@ -13,15 +13,16 @@ import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 
-const FontFamilyScreen: React.FC = () => {
+const FibonacciSettings: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const { updateDrawingSettings } = useUpdateDrawingTool();
   const {
     drawingSettings: { fibs },
   } = useContext(DrawingContext);
+  const [customFib, setCustomFib] = useState<string>('');
 
-  const [settings, setSettings] = useState(() => fibs);
+  const [settings, setSettings] = useState(() => fibs.sort((a, b) => a.level - b.level));
   const navigation = useNavigation();
 
   const handlePress = (level: number) => {
@@ -62,24 +63,50 @@ const FontFamilyScreen: React.FC = () => {
     });
   }, [handleSave, navigation, styles.text, theme.colors.colorPrimary]);
 
+  const handleAdd = useCallback(() => {
+    const value = Number(Number(customFib).toFixed(2));
+    setCustomFib('');
+    setSettings((prevState) => {
+      if (isNaN(value)) return prevState;
+      if (prevState.find((item) => item.level === value)) return prevState;
+
+      return prevState.concat({ level: Number(Number(customFib).toFixed(2)), display: true });
+    });
+  }, [customFib]);
+
+  const onTextChange = useCallback((text: string) => {
+    setCustomFib(text);
+  }, []);
+
+  const Footer = useMemo(
+    () => (
+      <View style={styles.footerContainer}>
+        <TextInput
+          keyboardType="numeric"
+          onChangeText={onTextChange}
+          style={styles.textInput}
+          value={customFib}
+          placeholder="Custom %"
+        />
+        <Pressable onPress={() => handleAdd()} style={styles.button}>
+          <Text>Add</Text>
+        </Pressable>
+      </View>
+    ),
+    [customFib, handleAdd, onTextChange, styles.button, styles.footerContainer, styles.textInput],
+  );
   return (
     <SafeAreaView>
       <FlatList
         data={settings}
+        removeClippedSubviews={true}
         renderItem={({ item: { display, level } }) => (
           <ListItem onPress={() => handlePress(level)} title={`${level.toFixed(2)} %`}>
             {display ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
           </ListItem>
         )}
         keyExtractor={(item) => item.level.toString()}
-        ListFooterComponent={() => (
-          <View style={styles.footerContainer}>
-            <TextInput style={styles.textInput} placeholder="Custom %" />
-            <Pressable style={styles.button}>
-              <Text>Add</Text>
-            </Pressable>
-          </View>
-        )}
+        ListFooterComponent={Footer}
       />
     </SafeAreaView>
   );
@@ -114,4 +141,4 @@ const createStyles = (theme: Theme) =>
     },
   });
 
-export default FontFamilyScreen;
+export default FibonacciSettings;

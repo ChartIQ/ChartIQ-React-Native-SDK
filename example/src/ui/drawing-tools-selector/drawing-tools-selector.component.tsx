@@ -1,6 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useRef,
@@ -10,7 +9,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { View, Image, Text, Pressable } from 'react-native';
+import { View, Image, Text, Pressable, Alert } from 'react-native';
 import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -20,7 +19,7 @@ import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
 
-import { BottomSheet } from '../bottom-sheet';
+import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { FilterSelector } from '../selector-filters';
 import { SelectorHeader } from '../selector-header';
 
@@ -29,22 +28,19 @@ import {
   DrawingItem,
   drawingTools,
   DrawingToolTags,
-  filters,
+  filters as drawingFilters,
   specialTools,
 } from './drawing-tools-selector.data';
-import {
-  DrawingToolSelectorMethods,
-  DrawingToolSelectorProps,
-} from './drawing-tools-selector.types';
+import { DrawingToolSelectorProps } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
 
-const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSelectorProps>(
+const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorProps>(
   ({ onChange }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const textInputRef = useRef<TextInput>(null);
-    const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
+    const [selectedFilter, setSelectedFilter] = React.useState<string>(drawingFilters[0].value);
     const [tools, setTools] = useState(() =>
       drawingTools.map((item) => ({ ...item, favorite: false })),
     );
@@ -81,20 +77,21 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     }, [translationMap]);
 
     const handleClose = () => {
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
     };
 
     useImperativeHandle(ref, () => ({
-      open: () => {
-        bottomSheetRef.current?.expand();
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
+      present: (id) => {
+        bottomSheetRef.current?.present(id);
         textInputRef.current?.focus();
       },
       close: handleClose,
     }));
 
-    const handleSymbolChange = (symbol: DrawingItem) => {
-      setTool(symbol);
-      onChange(symbol);
+    const handleSymbolChange = (drawingItem: DrawingItem) => {
+      setTool(drawingItem);
+      onChange(drawingItem);
       handleClose();
     };
 
@@ -263,19 +260,54 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
     const onMore = () => {
       showActionSheetWithOptions(
         {
-          options: ['Reset Default Parameters', 'Clear Existing Drawings', 'Cancel'],
+          options: ['Restore Default Parameters', 'Clear Existing Drawings', 'Cancel'],
           cancelButtonIndex,
           destructiveButtonIndex,
+          userInterfaceStyle: theme.isDark ? 'dark' : 'light',
+          containerStyle: {
+            backgroundColor: theme.colors.background,
+          },
+          textStyle: {
+            color: theme.colors.buttonText,
+          },
         },
         (selectedIndex) => {
           switch (selectedIndex) {
             case 0:
-              restoreDefaultDrawingConfig(tool.name, false);
+              Alert.alert(
+                'Do You Want To Restore Default Parameters?',
+                'All your drawing parameters will be restored to defaults.',
+                [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Restore',
+                    onPress: () => {
+                      restoreDefaultDrawingConfig(tool.name, false);
+                    },
+                  },
+                ],
+              );
 
               break;
 
             case destructiveButtonIndex:
-              clearDrawing();
+              Alert.alert(
+                'Do You Want To Clear All Existing Drawings?',
+                'All your drawing will be cleared on the current chart.',
+                [
+                  {
+                    text: 'Cancel',
+                  },
+                  {
+                    text: 'Clear',
+                    onPress: () => {
+                      clearDrawing();
+                    },
+                  },
+                ],
+              );
               break;
 
             case cancelButtonIndex:
@@ -297,7 +329,11 @@ const DrawingToolSelector = forwardRef<DrawingToolSelectorMethods, DrawingToolSe
               </Pressable>
             }
           />
-          <FilterSelector handleFilterChange={handleFilterChange} selectedFilter={selectedFilter} />
+          <FilterSelector
+            handleFilterChange={handleFilterChange}
+            selectedFilter={selectedFilter}
+            filters={drawingFilters}
+          />
         </View>
         <BottomSheetSectionList
           stickyHeaderHiddenOnScroll

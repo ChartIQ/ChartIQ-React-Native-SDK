@@ -12,7 +12,7 @@ const SettingsNavigator: React.FC = () => {
   return (
     <Navigator>
       <Screen
-        options={{ title: translations.Settings }}
+        options={{ title: translations.Settings, headerTitleAlign: 'center' }}
         name={SettingsStack.Settings}
         component={SettingsScreen}
       />

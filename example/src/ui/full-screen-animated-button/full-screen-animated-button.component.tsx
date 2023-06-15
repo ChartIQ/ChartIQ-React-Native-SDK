@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -8,7 +8,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 
-import Icons from '~/assets/icons';
+import { ActiveImage } from '~/assets/images/active-image';
 import { useTheme } from '~/theme';
 
 enum Corners {
@@ -33,6 +33,13 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
   const { width, height } = useWindowDimensions();
   const translateX = useSharedValue(width - SPACE);
   const translateY = useSharedValue(PADDING);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (width) {
+      translateX.value = withTiming(width - SPACE);
+    }
+  }, [translateX, width]);
 
   const gestureDown = Gesture.Fling()
     .direction(Directions.DOWN)
@@ -40,7 +47,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
       const position = pos.value;
 
       if (position === Corners.TOP_LEFT || position === Corners.TOP_RIGHT) {
-        translateY.value = withTiming(height - SPACE);
+        translateY.value = withTiming(height - SPACE - PADDING);
       }
     })
     .onEnd(() => {
@@ -123,6 +130,18 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
     onChange(false);
   };
 
+  useEffect(() => {
+    if (isFullScreen && isFirstRender.current) {
+      translateX.value = width - SPACE;
+      translateY.value = PADDING;
+      isFirstRender.current = false;
+    }
+
+    return () => {
+      isFirstRender.current = true;
+    };
+  }, [isFullScreen, translateX, translateY, width]);
+
   if (!isFullScreen) {
     return null;
   }
@@ -145,12 +164,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
         ]}
       >
         <Pressable onPress={onPress} style={styles.button}>
-          <Icons.fullViewActive
-            width={44}
-            height={44}
-            fill={theme.colors.fullViewButtonBackground}
-            stroke={theme.colors.buttonText}
-          />
+          <ActiveImage type="fillView" active />
         </Pressable>
       </Animated.View>
     </GestureDetector>

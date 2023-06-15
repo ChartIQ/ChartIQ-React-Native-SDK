@@ -15,7 +15,9 @@ import {
   DrawingParams,
   DrawingSettings,
   DrawingTool,
+  StudyParameter,
   StudyParameterModel,
+  StudyParameterResponse,
 } from '~/model';
 import { ChartType } from '~/model/chart-type';
 import { Signal } from '~/model/signals';
@@ -44,6 +46,7 @@ const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
 export type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
 
 interface ChartIqWrapperProps extends ViewProps {
+  url: string;
   style: ViewStyle;
   url: string;
   onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
@@ -57,6 +60,7 @@ interface ChartIqWrapperProps extends ViewProps {
   ) => void;
   onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
   onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
+  onStart: (event: NativeSyntheticEvent<{}>) => void;
 }
 
 const ComponentName = 'ChartIqWrapperView';
@@ -165,7 +169,19 @@ export async function getSymbol(): Promise<string> {
 }
 
 export async function getPeriodicity() {
-  return ChartIQWrapperModule.getPeriodicity();
+  const periodicity = await ChartIQWrapperModule.getPeriodicity();
+
+  const parsed = JSON.parse(periodicity) as {
+    interval: string;
+    periodicity: number;
+    timeUnit: string;
+  };
+
+  if (parsed.interval.includes('"')) {
+    parsed.interval = JSON.parse(parsed.interval);
+  }
+
+  return parsed;
 }
 
 export async function getChartAggregationType() {
@@ -283,7 +299,15 @@ export async function getStudyParameters(
     type
   );
 
-  return JSON.parse(response);
+  const data = JSON.parse(response) as StudyParameterResponse[];
+
+  return data.map((item) => {
+    const value = JSON.parse(item.fieldValue);
+    return {
+      ...value,
+      fieldType: item.fieldType,
+    } as StudyParameter;
+  });
 }
 
 export function removeStudy(study: Study) {

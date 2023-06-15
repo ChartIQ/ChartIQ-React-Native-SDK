@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { getStudyParameters, setStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
+import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -27,7 +28,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: study.name });
+    navigation.setOptions({ title: formatStudyName(study.name) });
   }, [navigation, study.name]);
 
   const get = useCallback(async () => {

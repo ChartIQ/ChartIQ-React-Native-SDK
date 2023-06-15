@@ -2,7 +2,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList } from 'react-native';
-import { addSignal, addSignalStudy, getStudyList } from 'react-native-chart-iq-wrapper';
+import {
+  addSignal,
+  addSignalStudy,
+  getStudyList,
+  removeStudy,
+} from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
@@ -22,6 +27,7 @@ import ConditionItem from './components/condition-item/condition-item.component'
 import { JoinSelector } from './components/join-selector';
 
 const SELECT_STUDY = 'Select study';
+const DESCRIPTION_PLACEHOLDER = 'Description will appear in an infobox when the signal is clicked.';
 
 interface AddSignalProps
   extends NativeStackScreenProps<SignalsStackParamList, SignalsStack.AddSignal> {}
@@ -41,6 +47,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [descriptionPlaceholder, setDescriptionPlaceholder] = useState(DESCRIPTION_PLACEHOLDER);
 
   const onStudyChange = useCallback(async () => {
     if (changedStudy) {
@@ -105,16 +112,23 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   }, [get]);
 
   const handleSelectStudy = () => {
-    selectFromListRef.current?.open(
-      studies.map(({ name }) => ({ key: name, value: name })),
-      selectedStudy?.name ?? '',
-      SELECT_STUDY,
-    );
+    selectFromListRef.current?.open({
+      data: studies.map(({ name }) => ({ key: name, value: name })),
+      selected: selectedStudy?.name ?? '',
+      id: SELECT_STUDY,
+      title: 'Select study',
+    });
   };
 
   const handleStudyChange = async ({ value }: { value: string }) => {
     const item = studies.find((item) => item.name === value) ?? null;
     const study = await addSignalStudy(item?.shortName ?? '');
+
+    if (selectedStudy && selectedStudy.name !== study?.name) {
+      removeStudy(selectedStudy);
+      setConditions(new Map());
+    }
+
     setSelectedStudy(study);
   };
 
@@ -203,6 +217,33 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     }
   }, [navigation, signalForEdit]);
 
+  useEffect(() => {
+    if (selectedStudy && !isEdit) {
+      navigation.setOptions({
+        headerLeft: () => {
+          return (
+            <Text
+              style={styles.saveButton}
+              onPress={() => {
+                removeStudy(selectedStudy);
+                navigation.goBack();
+              }}
+            >
+              {translations.cancel}
+            </Text>
+          );
+        },
+      });
+    }
+  }, [
+    isEdit,
+    navigation,
+    selectedStudy,
+    styles.saveButton,
+    styles.saveButtonDisabled,
+    translations.cancel,
+  ]);
+
   const ListFooterComponent = (
     <>
       {selectedStudy ? (
@@ -216,13 +257,21 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         <ListItem
           titleComponent={
             <View>
-              <Text>Description</Text>
+              <Text style={styles.text}>Description</Text>
               <TextInput
                 style={styles.textInput}
                 multiline
+                numberOfLines={2}
                 defaultValue={description}
-                placeholder="Description will appear in an infobox when the signal is clicked."
+                placeholder={descriptionPlaceholder}
                 onChangeText={setDescription}
+                placeholderTextColor={theme.colors.placeholder}
+                onFocus={() => {
+                  setDescriptionPlaceholder('');
+                }}
+                onBlur={() => {
+                  setDescriptionPlaceholder(DESCRIPTION_PLACEHOLDER);
+                }}
               />
             </View>
           }
@@ -233,6 +282,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
             placeholder="Enter name"
             defaultValue={name}
             onChangeText={setName}
+            placeholderTextColor={theme.colors.placeholder}
           />
         </ListItem>
       </View>
@@ -318,7 +368,12 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         ListFooterComponent={ListFooterComponent}
       />
 
-      <SelectFromList title="Add study" ref={selectFromListRef} onChange={handleStudyChange} />
+      <SelectFromList
+        filtered
+        ref={selectFromListRef}
+        onChange={handleStudyChange}
+        showHeader={false}
+      />
     </View>
   );
 };
@@ -337,11 +392,15 @@ const createStyles = (theme: Theme) =>
     descriptionTitle: {
       color: theme.colors.cardSubtitle,
     },
+    text: {
+      color: theme.colors.buttonText,
+    },
     textInput: {
       padding: 0,
     },
     saveButton: {
       color: theme.colors.colorPrimary,
+      textTransform: 'capitalize',
     },
     saveButtonDisabled: {
       color: theme.colors.cardSubtitle,

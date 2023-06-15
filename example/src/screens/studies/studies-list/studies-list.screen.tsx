@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { addStudy, getActiveStudies, removeStudy } from 'react-native-chart-iq-wrapper';
+import Animated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
@@ -86,43 +87,50 @@ const Studies: React.FC = () => {
     <View style={styles.container}>
       <FlatList
         data={activeStudies}
+        keyExtractor={({ name }) => name}
         renderItem={({ item }) => {
           const [name, value] = item.name.split(' (', 2);
           return (
-            <SwipableItem
-              rightActionButtons={[
-                {
-                  key: 'study-item-remove',
-                  onPress: () => {
-                    handleRemove(item);
-                  },
-                  title: translations.Delete,
-                  backgroundColor: theme.colors.error,
-                  color: theme.colors.primaryButtonText,
-                },
-                {
-                  key: 'study-item-clone',
-                  onPress: () => {
-                    handleClone(item);
-                  },
-                  title: 'Clone',
-                  backgroundColor: theme.colors.favoriteBackground,
-                  color: theme.colors.primaryButtonText,
-                },
-              ]}
+            <Animated.View
+              exiting={SlideOutLeft.duration(1000)}
+              entering={SlideInRight.duration(100)}
             >
-              <ListItem
-                onPress={() => navigateStudyParams(item)}
-                titleComponent={
-                  <View>
-                    <Text style={styles.studyName}>{name}</Text>
-                    {value ? <Text style={styles.studyValue}>{`(${value}`}</Text> : null}
-                  </View>
-                }
+              <SwipableItem
+                rightActionButtons={[
+                  {
+                    key: 'study-item-remove',
+                    onPress: () => {
+                      handleRemove(item);
+                    },
+                    title: translations.Delete,
+                    backgroundColor: theme.colors.error,
+                    color: theme.colors.primaryButtonText,
+                    isOvershoot: true,
+                  },
+                  {
+                    key: 'study-item-clone',
+                    onPress: () => {
+                      handleClone(item);
+                    },
+                    title: 'Clone',
+                    backgroundColor: theme.colors.favoriteBackground,
+                    color: theme.colors.primaryButtonText,
+                  },
+                ]}
               >
-                <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-              </ListItem>
-            </SwipableItem>
+                <ListItem
+                  onPress={() => navigateStudyParams(item)}
+                  titleComponent={
+                    <View>
+                      <Text style={styles.studyName}>{name}</Text>
+                      {value ? <Text style={styles.studyValue}>{`(${value}`}</Text> : null}
+                    </View>
+                  }
+                >
+                  <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+                </ListItem>
+              </SwipableItem>
+            </Animated.View>
           );
         }}
         ListEmptyComponent={

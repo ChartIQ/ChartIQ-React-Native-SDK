@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useRef } from 'react';
-import { Pressable, Animated, StyleSheet } from 'react-native';
+import { Animated, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
 import { Theme, useTheme } from '~/theme';
@@ -12,15 +12,10 @@ interface SwipableSymbolProps extends PropsWithChildren {
     backgroundColor?: string;
     color?: string;
     width?: number;
+    isOvershoot?: boolean;
   }>;
   enabled?: boolean;
 }
-
-const buildInterpolationConfig = (width: number): Animated.InterpolationConfigType => ({
-  inputRange: [-width, 0],
-  outputRange: [-width / 4, width / 2],
-  extrapolate: 'clamp',
-});
 
 const SwipableItem: React.FC<SwipableSymbolProps> = ({
   children,
@@ -30,37 +25,55 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
   const theme = useTheme();
   const styles = createStyles(theme);
   const ref = useRef<Swipeable>(null);
+  const { width: screenWidth } = useWindowDimensions();
+  const buttons = [...rightActionButtons].reverse();
 
   const handlePress = (onPress: () => void) => {
     ref.current?.close();
     onPress();
   };
+  const buildInterpolationConfig = (width: number): Animated.InterpolationConfigType => ({
+    inputRange: [0, 1, 2.5],
+    outputRange: [width, 0, -screenWidth],
+    extrapolate: 'clamp',
+  });
+  const renderRightActions = (progress: Animated.AnimatedInterpolation<string | number>) => {
+    return (
+      <View style={styles.actionButtonsContainer}>
+        {buttons.map(({ onPress, title, backgroundColor, color, key, width = 80, isOvershoot }) => {
+          const trans = progress.interpolate(buildInterpolationConfig(width));
+          const style = { transform: [{ translateX: trans }] };
+          trans.addListener((value) => {
+            if (Math.abs(value.value) >= screenWidth * 0.8 && isOvershoot) {
+              onPress();
+            }
+          });
 
-  const renderRightActions = (
-    _: Animated.AnimatedInterpolation<string | number>,
-    dragX: Animated.AnimatedInterpolation<string | number>,
-  ) => {
-    return rightActionButtons.map(({ onPress, title, backgroundColor, color, key, width = 80 }) => {
-      const trans = dragX.interpolate(buildInterpolationConfig(width));
-      const style = { transform: [{ translateX: trans }] };
-      return (
-        <Pressable
-          key={key}
-          onPress={() => handlePress(onPress)}
-          style={[styles.actionButton, { backgroundColor, width }]}
-        >
-          <Animated.Text style={[styles.actionButtonText, style, { color }]}>{title}</Animated.Text>
-        </Pressable>
-      );
-    });
+          return (
+            <Animated.View
+              key={key}
+              style={[styles.actionButton, { backgroundColor, width }, style]}
+            >
+              <Pressable onPress={() => handlePress(onPress)}>
+                <Animated.Text style={[styles.actionButtonText, { color }]}>{title}</Animated.Text>
+              </Pressable>
+            </Animated.View>
+          );
+        })}
+      </View>
+    );
   };
 
   return (
     <Swipeable
       enabled={enabled}
       ref={ref}
-      // rightThreshold={ACTION_BUTTON_WIDTH * rightActionButtons.length}
       renderRightActions={renderRightActions}
+      containerStyle={{
+        backgroundColor: rightActionButtons[0]?.backgroundColor,
+      }}
+      overshootFriction={1}
+      overshootRight={true}
     >
       {children}
     </Swipeable>
@@ -80,7 +93,7 @@ const createStyles = (theme: Theme) =>
     },
     actionButton: {
       backgroundColor: theme.colors.backgroundSecondary,
-      alignItems: 'flex-end',
+      alignItems: 'center',
       justifyContent: 'center',
     },
     actionButtonText: {
@@ -93,6 +106,9 @@ const createStyles = (theme: Theme) =>
     selectedColor: {
       width: 22,
       height: 22,
+    },
+    actionButtonsContainer: {
+      flexDirection: 'row',
     },
   });
 

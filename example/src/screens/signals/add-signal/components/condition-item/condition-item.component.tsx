@@ -5,6 +5,7 @@ import Icons from '~/assets/icons';
 import { Condition } from '~/model/signals/condition';
 import { SignalJoiner } from '~/model/signals/signal';
 import { SignalOperator, SignalOperatorValues } from '~/model/signals/signal-operator';
+import { textOnColor } from '~/shared/helpers';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 
@@ -32,6 +33,10 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, onPress, index, jo
     condition.signalOperator === SignalOperator.DOES_NOT_CHANGE
       ? ''
       : rightIndicatorValue.split(' (')[0];
+  const fallbackColor = theme.isDark ? '#fff' : '#000';
+
+  const color =
+    condition.markerOption.color !== null ? condition.markerOption.color : fallbackColor;
 
   return (
     <>
@@ -40,8 +45,8 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, onPress, index, jo
         titleComponent={
           <View style={styles.row}>
             {index === 0 || joiner === SignalJoiner.OR ? (
-              <View style={[styles.colorBox, { backgroundColor: condition.markerOption.color }]}>
-                <Text style={styles.boxText}>
+              <View style={[styles.colorBox, { backgroundColor: color }]}>
+                <Text style={[styles.boxText, { color: textOnColor(color) }]}>
                   {condition.markerOption.label.length > 1 ? '...' : condition.markerOption.label}
                 </Text>
               </View>
@@ -75,13 +80,12 @@ const createStyles = (theme: Theme) =>
       width: 24,
       height: 24,
       alignItems: 'center',
-      justifyContent: 'center',
       marginRight: 8,
       borderRadius: 4,
     },
     boxText: {
       lineHeight: 24,
-      fontSize: 24,
+      fontSize: 20,
     },
     cardTitle: {
       color: theme.colors.cardTitle,

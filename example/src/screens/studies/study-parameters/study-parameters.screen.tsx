@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { getStudyParameters, removeStudy, setStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
+import { formatStudyName } from '~/shared/helpers';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ChangeStudyParameters } from '~/ui/change-study-parameters';
@@ -26,7 +27,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: study.name });
+    navigation.setOptions({ title: formatStudyName(study.name), headerTitleAlign: 'center' });
   }, [navigation, study.name]);
 
   const get = useCallback(async () => {
@@ -42,21 +43,56 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   }, [get]);
 
   const handleResetToDefaults = () => {
-    const inputParameters = inputParams.map(({ name, defaultValue }) => ({
-      fieldName: name,
-      fieldSelectedValue: defaultValue as string,
-    }));
-    const outputParameters = outputParams.map(({ name, defaultValue }) => ({
-      fieldName: name,
-      fieldSelectedValue: defaultValue as string,
-    }));
+    Alert.alert(
+      'Do You Want To Reset This Study To Defaults?',
+      'This study will be reset to default options',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Reset',
+          onPress: () => {
+            const inputParameters = inputParams.map(({ name, defaultValue }) => ({
+              fieldName: name,
+              fieldSelectedValue: defaultValue as string,
+            }));
+            const outputParameters = outputParams.map(({ name, defaultValue }) => ({
+              fieldName: name,
+              fieldSelectedValue: defaultValue as string,
+            }));
 
-    setStudyParameters(study, [...inputParameters, ...outputParameters]);
-    navigation.goBack();
+            setStudyParameters(study, [...inputParameters, ...outputParameters]);
+            setInputParams((prevState) =>
+              prevState.map((item) => ({ ...item, value: item.defaultValue })),
+            );
+            setOutputParams((prevState) =>
+              prevState.map((item) => ({ ...item, value: item.defaultValue })),
+            );
+          },
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   const handleRemoveStudy = () => {
-    removeStudy(study);
+    Alert.alert(
+      'Do You Want To Remove This Study?',
+      'This study will be removed from the current chart',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Remove',
+          onPress: () => {
+            removeStudy(study);
+            navigation.goBack();
+          },
+        },
+      ],
+    );
   };
 
   const handleSave = useCallback(() => {

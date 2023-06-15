@@ -5,16 +5,16 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
-import { filters } from '../drawing-tools-selector/drawing-tools-selector.data';
-
 interface SelectorFiltersProps {
   handleFilterChange: (value: string) => void;
   selectedFilter: string;
+  filters: { name: string; value: string }[];
 }
 
 const SelectorFilters: React.FC<SelectorFiltersProps> = ({
   handleFilterChange,
   selectedFilter,
+  filters,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);

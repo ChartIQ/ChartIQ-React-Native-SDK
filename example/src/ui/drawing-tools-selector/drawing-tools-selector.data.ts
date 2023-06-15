@@ -33,7 +33,7 @@ export const filters = [
   { name: 'Markings', value: DrawingToolTags.markings },
   { name: 'Fibonacci', value: DrawingToolTags.fibonacci },
   { name: 'Lines', value: DrawingToolTags.lines },
-] as const;
+];
 
 export const specialTools: DrawingItem[] = [
   {
@@ -107,13 +107,13 @@ export const drawingTools = [
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.elliotWave,
-    tags: [DrawingToolTags.markings],
+    tags: [DrawingToolTags.technicals],
     title: 'Elliot Wave',
     name: DrawingTool.ELLIOTT_WAVE,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.ellipse,
-    tags: [DrawingToolTags.lines],
+    tags: [DrawingToolTags.markings],
     title: 'Ellipse',
     name: DrawingTool.ELLIPSE,
   } as DrawingItem,
@@ -128,6 +128,12 @@ export const drawingTools = [
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Fan',
     name: DrawingTool.FIB_FAN,
+  } as DrawingItem,
+  {
+    Icon: Icons.drawingTools.fibProjection,
+    tags: [DrawingToolTags.fibonacci],
+    title: 'Fib Projection',
+    name: DrawingTool.FIB_PROJECTION,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.fibonacciRetracement,
@@ -238,10 +244,22 @@ export const drawingTools = [
     name: DrawingTool.TREND_LINE,
   } as DrawingItem,
   {
+    Icon: Icons.drawingTools.horizontalLine,
+    tags: [DrawingToolTags.lines],
+    title: 'Horizontal',
+    name: DrawingTool.HORIZONTAL_LINE,
+  } as DrawingItem,
+  {
     Icon: Icons.drawingTools.verticalLine,
     tags: [DrawingToolTags.lines],
     title: 'Vertical',
     name: DrawingTool.VERTICAL_LINE,
+  } as DrawingItem,
+  {
+    Icon: Icons.drawingTools.line,
+    tags: [DrawingToolTags.lines],
+    title: 'Line',
+    name: DrawingTool.LINE,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.volumeProfile,

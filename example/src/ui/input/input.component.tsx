@@ -1,15 +1,6 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputChangeEventData,
-  TouchableOpacity,
-  View,
-  Pressable,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -19,6 +10,7 @@ interface InputFieldProps {
   onChange: (input: string) => void;
   handleClose?: () => void;
   bottomSheet?: boolean;
+  handleClear?: () => void;
 }
 
 export interface InputFieldMethods {
@@ -27,21 +19,21 @@ export interface InputFieldMethods {
 }
 
 const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
-  ({ onChange, handleClose, bottomSheet = false }, ref) => {
+  ({ onChange, handleClose, bottomSheet = false, handleClear }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const [value, setValue] = useState('');
     const textInputRef = useRef<TextInput>(null);
     const { translations } = useTranslations();
 
-    const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-      onChange(event.nativeEvent.text);
-      setValue(event.nativeEvent.text);
+    const handleChange = (text: string) => {
+      onChange(text);
+      setValue(text);
     };
 
     const onClose = () => {
-      onChange('');
       setValue('');
+      handleClear && handleClear();
     };
 
     useImperativeHandle(ref, () => ({
@@ -64,20 +56,22 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
             <BottomSheetTextInput
               //@ts-ignore
               ref={textInputRef}
-              onChange={handleChange}
+              onChangeText={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
+              autoFocus
             />
           ) : (
             <TextInput
               ref={textInputRef}
-              onChange={handleChange}
+              onChangeText={handleChange}
               style={styles.textInput}
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
+              autoFocus
             />
           )}
           {value.length > 0 ? (
@@ -129,7 +123,6 @@ const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
       fontSize: 16,
       padding: 0,
-      textTransform: 'capitalize',
     },
     close: {
       backgroundColor: theme.colors.cardSubtitle,

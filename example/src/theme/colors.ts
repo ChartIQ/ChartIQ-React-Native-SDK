@@ -12,6 +12,7 @@ export const Colors = {
   yankeesBlue: '#153246',
   outerSpace: '#273843',
   coralRed: '#ff3b30',
+  veryLightPink: '#ffe9e7',
   black: '#000000',
   elevationDark: '#121212',
   scrim: '#51000000',
@@ -21,6 +22,8 @@ export const Colors = {
   paleGrey: '#ebebf5',
   battleshipGrey12: 'rgba(118, 118, 128, 0.12)',
   battleshipGrey24: 'rgba(118, 118, 128, 0.24)',
+  elevationDark48: 'rgba(18, 18, 18, 0.48)',
 
   brillianteAzure: '#3a8eff',
+  ghostWhite48: 'rgba(249, 249, 249, 0.48)',
 } as const;

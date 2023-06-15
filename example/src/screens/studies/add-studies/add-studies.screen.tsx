@@ -18,16 +18,18 @@ const AddStudies: React.FC = () => {
   const styles = createStyles(theme);
   const [studies, setStudies] = useState<Study[]>([]);
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState(new Set<number>());
+  const [selected, setSelected] = useState(new Set<string>());
   const navigation = useNavigation<NativeStackNavigationProp<StudiesStackParamList>>();
   const { translationMap } = useTranslations();
 
   const get = useCallback(async () => {
     const studiesList = await getStudyList();
-    const translatedStudies = studiesList.map((item) => ({
-      ...item,
-      name: translationMap[item.name] ?? item.name,
-    }));
+    const translatedStudies = studiesList
+      .map((item) => ({
+        ...item,
+        name: translationMap[item.name] ?? item.name,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
     setStudies(translatedStudies);
   }, [translationMap]);
 
@@ -37,9 +39,9 @@ const AddStudies: React.FC = () => {
 
   const handleSelect = useCallback(async () => {
     const activeStudies = await getActiveStudies();
+    selected.forEach((name) => {
+      const study = studies.find((item) => item.name === name);
 
-    selected.forEach((index) => {
-      const study = studies[index];
       if (study !== undefined) {
         const isClone = activeStudies.some((item) => study.name === item.name);
 
@@ -51,14 +53,14 @@ const AddStudies: React.FC = () => {
   }, [navigation, selected, studies]);
 
   const onPress = useCallback(
-    (index: number) => () => {
+    (name: string) => () => {
       setSelected((prevState) => {
         const newState = new Set(prevState);
 
-        if (newState.has(index)) {
-          newState.delete(index);
+        if (newState.has(name)) {
+          newState.delete(name);
         } else {
-          newState.add(index);
+          newState.add(name);
         }
 
         return newState;
@@ -84,10 +86,10 @@ const AddStudies: React.FC = () => {
     });
   }, [handleSelect, navigation, selected, styles.done]);
 
-  const renderItem = ({ item: { name }, index }: ListRenderItemInfo<Study>) => {
-    const isSelected = selected.has(index);
+  const renderItem = ({ item: { name } }: ListRenderItemInfo<Study>) => {
+    const isSelected = selected.has(name);
     return (
-      <ListItem onPress={onPress(index)} title={name}>
+      <ListItem onPress={onPress(name)} title={name}>
         {isSelected ? (
           <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
         ) : null}
@@ -103,6 +105,7 @@ const AddStudies: React.FC = () => {
         onChange={(input) => {
           setSearch(input);
         }}
+        handleClear={() => setSearch('')}
       />
       <FlatList
         data={filtered}

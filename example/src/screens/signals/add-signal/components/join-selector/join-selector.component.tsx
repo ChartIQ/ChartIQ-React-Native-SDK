@@ -66,6 +66,7 @@ const createStyles = (theme: Theme) =>
       borderWidth: 1,
       paddingVertical: 4,
       paddingHorizontal: 16,
+      color: theme.colors.buttonText,
     },
     selectedText: {
       borderColor: theme.colors.colorPrimary,
