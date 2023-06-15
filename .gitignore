@@ -39,6 +39,8 @@ project.xcworkspace
 .settings
 local.properties
 android.iml
+chart-iq-keystore
+*.apk
 
 # Cocoapods
 #
