@@ -5,9 +5,13 @@ class ChartIqWrapperView : UIView{
     internal var chartIQView: ChartIQView!
     internal var chartIQDatasource: ChartIQDataSource!
     public var chartIQHelper: ChartIQHelper!
+    internal var chartIQDelegate: ChartIQDelegate!
+    internal var updateStartParam: String = ""
+    internal var pagingStartParam: String = ""
     
     @objc var url: String = "" {
       didSet{
+          print("MyLog: setchartUrl, \(url)")
           chartIQView.setChartIQUrl(url)
       }
     }
@@ -22,10 +26,10 @@ class ChartIqWrapperView : UIView{
     func setUpChart(){
         chartIQView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(chartIQView)
-        
-        chartIQView.loadChart("AAPL")
-        chartIQView.setDataMethod(.pull)
+        print("MyLog: Load chart with url: \(url)")
+      
         chartIQView.dataSource = self
+        chartIQView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -40,12 +44,16 @@ extension ChartIqWrapperView: ChartIQDataSource {
     }
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
+        if(params.startDate == updateStartParam){return}
         RTEEventEmitter.shared?.emitEvent(withName: "DispatchOnPullUpdateData", body: convertParams(params: params))
+        updateStartParam = params.startDate
         chartIQHelper.onPullUpdateCompleationHandler = completionHandler
     }
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
+        if(params.startDate == pagingStartParam){return}
         RTEEventEmitter.shared?.emitEvent(withName: "DispatchOnPullPagingData", body: convertParams(params: params))
+        pagingStartParam = params.startDate
         chartIQHelper.onPullPagingCompleationHandler = completionHandler
     }
     
@@ -70,18 +78,7 @@ extension ChartIqWrapperView: RCTInvalidating {
 
 extension ChartIqWrapperView: ChartIQDelegate {
     func chartIQViewDidFinishLoading(_ chartIQView: ChartIQ.ChartIQView) {
-        print("chartIQViewDidFinishLoading")
-
-        self.chartIQView = chartIQView
-        let symbol = chartIQView.symbol ?? "AAPL"
-        let timeUnit = chartIQView.timeUnit ?? ChartIQTimeUnit.day
-        let periodicity = chartIQView.periodicity ?? 1
-        let interval = chartIQView.interval ?? "0"
-        print("chartIQViewDidFinishLoading, symbol: \(symbol), timeUnit: \(timeUnit), periodicity: \(periodicity), interval: \(interval)")
-
-        chartIQView.setPeriodicity(periodicity, interval: interval, timeUnit: timeUnit)
+        chartIQView.setDataMethod(.pull)
+        RTEEventEmitter.shared?.emitEvent(withName: "DispatchChartStart", body: "chartIQViewDidFinishLoading")
     }
-    
-    
 }
-

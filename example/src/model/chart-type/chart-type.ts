@@ -19,3 +19,12 @@ export enum ChartType {
   PNDF = 'Point & Figure',
   None = 'None',
 }
+
+export enum AggregationType {
+  HEIKINASHI = 'Heikin Ashi',
+  KAGI = 'Kagi',
+  LINEBREAK = 'Line Break',
+  RENKO = 'Renko',
+  RANGEBARS = 'Range Bars',
+  PANDF = 'Point & Figure',
+}

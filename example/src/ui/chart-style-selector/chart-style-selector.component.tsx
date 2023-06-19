@@ -40,7 +40,7 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
     }, [translationMap]);
 
     const handleOpen = async () => {
-      bottomSheetRef.current?.present();
+      bottomSheetRef.current?.present('');
       const aggregationType = await getChartAggregationType();
       const chartType = await getChartType();
 

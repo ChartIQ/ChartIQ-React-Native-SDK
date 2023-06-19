@@ -5,7 +5,7 @@ import Foundation
 class RTEEventEmitter : RCTEventEmitter {
     static var shared:RTEEventEmitter?
     
-    private var supportedEventNames: Set<String> = ["DispatchOnPullInitialData", "DispatchOnPullUpdateData", "DispatchOnPullPagingData"]
+    private var supportedEventNames: Set<String> = ["DispatchOnPullInitialData", "DispatchOnPullUpdateData", "DispatchOnPullPagingData", "DispatchChartStart"]
     private var hasAttachedListener = false
     
     // Allows a shared EventEmitter instance to avoid initializing without the RNBridge

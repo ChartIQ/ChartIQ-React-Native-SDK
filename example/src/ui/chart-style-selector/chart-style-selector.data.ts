@@ -2,17 +2,9 @@ import React from 'react';
 import { SvgProps } from 'react-native-svg';
 
 import { ChartType } from '~/model/chart-type';
+import { AggregationType } from '~/model/chart-type/chart-type';
 
 import icons from '../../assets/icons';
-
-export enum AggregationType {
-  HEIKINASHI = 'Heikin Ashi',
-  KAGI = 'Kagi',
-  LINEBREAK = 'Line Break',
-  RENKO = 'Renko',
-  RANGEBARS = 'Range Bars',
-  PANDF = 'Point & Figure',
-}
 
 export type ChartStyleItem = {
   label: string;

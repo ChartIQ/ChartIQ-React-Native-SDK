@@ -92,8 +92,8 @@ const Studies: React.FC = () => {
           const [name, value] = item.name.split(' (', 2);
           return (
             <Animated.View
-              exiting={SlideOutLeft.duration(1000)}
-              entering={SlideInRight.duration(100)}
+              exiting={SlideOutLeft.duration(200)}
+              entering={SlideInRight.duration(200)}
             >
               <SwipableItem
                 rightActionButtons={[

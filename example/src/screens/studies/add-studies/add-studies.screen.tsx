@@ -44,7 +44,6 @@ const AddStudies: React.FC = () => {
 
       if (study !== undefined) {
         const isClone = activeStudies.some((item) => study.name === item.name);
-
         addStudy(study, isClone);
       }
     });

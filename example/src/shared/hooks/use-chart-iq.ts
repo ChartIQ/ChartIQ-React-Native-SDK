@@ -181,8 +181,10 @@ export const useChartIQ = () => {
   };
 
   const initChart = useCallback(async () => {
+    console.log('On start called');
     setChartInitialized(true);
     const symbol = await getSymbol();
+    console.log({ symbol });
     if (!symbol) {
       setSymbol('AAPL');
     } else {
@@ -190,7 +192,7 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-
+    console.log(periodicity);
     const newInterval =
       intervals.find(
         (item) =>
@@ -213,15 +215,19 @@ export const useChartIQ = () => {
         funds: [],
       } as ColoredChartSymbol);
     });
+
     setCompareSymbols(map);
+
+    updateTheme();
 
     const aggregationType = await getChartAggregationType();
     const chartType = await getChartType();
+
     const foundAggregation = chartStyleSelectorData.find(
       (chartType) => chartType?.aggregationType === aggregationType,
     );
     const foundChartType = chartStyleSelectorData.find(
-      (type) => type?.value.toLocaleLowerCase() === chartType.toLocaleLowerCase(),
+      (type) => type?.value.toLowerCase() === chartType.toLowerCase(),
     );
 
     if (foundAggregation) {
@@ -236,9 +242,7 @@ export const useChartIQ = () => {
       setChartStyle((prevState) => {
         return foundChartType ?? prevState;
       });
-      handleChartStyleChange(foundChartType);
     }
-    updateTheme();
   }, [handleChartStyleChange, updateTheme]);
 
   useEffect(() => {

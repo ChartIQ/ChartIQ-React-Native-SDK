@@ -20,7 +20,6 @@ export interface Study {
   range: string;
   shortName: string;
   type: string;
-  underlay: boolean;
   yAxis: {
     [key: string]: any;
   };

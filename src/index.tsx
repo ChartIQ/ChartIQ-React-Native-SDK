@@ -43,12 +43,13 @@ const LINKING_ERROR =
 
 const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
 
-export type QuoteFeedEvent = { nativeEvent: { quoteFeedParam: string } };
+export type ChartIQNativeEvent<T> = { nativeEvent: T };
+export type QuoteFeedEvent = ChartIQNativeEvent<{ quoteFeedParam: string }>;
+export type OnStartEvent = ChartIQNativeEvent<{}>;
 
 interface ChartIqWrapperProps extends ViewProps {
   url: string;
   style: ViewStyle;
-  url: string;
   onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
   onPullUpdateData: (event: QuoteFeedEvent) => Promise<void>;
   onPullPagingData: (event: QuoteFeedEvent) => Promise<void>;
@@ -60,7 +61,7 @@ interface ChartIqWrapperProps extends ViewProps {
   ) => void;
   onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
   onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
-  onStart: (event: NativeSyntheticEvent<{}>) => void;
+  onStart: (event: OnStartEvent) => void;
 }
 
 const ComponentName = 'ChartIqWrapperView';
@@ -76,6 +77,7 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
   onPullInitialData,
   onPullUpdateData,
   onPullPagingData,
+  onStart,
   ...props
 }) => {
   useEffect(() => {
@@ -103,7 +105,10 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
         });
       }
     );
-  }, [onPullInitialData, onPullPagingData, onPullUpdateData]);
+    RTVEventEmitter.addListener('DispatchChartStart', () => {
+      onStart({ nativeEvent: {} });
+    });
+  }, [onPullInitialData, onPullPagingData, onPullUpdateData, onStart]);
 
   return <ChartIqWrapperViewComponent {...props} />;
 };
@@ -164,12 +169,15 @@ export function addSeries(
 }
 
 export async function getSymbol(): Promise<string> {
-  console.log('getSymbol');
   return await ChartIQWrapperModule.getSymbol();
 }
 
 export async function getPeriodicity() {
   const periodicity = await ChartIQWrapperModule.getPeriodicity();
+
+  if (Platform.OS === 'ios') {
+    return periodicity;
+  }
 
   const parsed = JSON.parse(periodicity) as {
     interval: string;
@@ -187,7 +195,7 @@ export async function getPeriodicity() {
 export async function getChartAggregationType() {
   const type = await ChartIQWrapperModule.getChartAggregationType();
 
-  return type as string | null;
+  return (type as string) ?? null;
 }
 
 export async function getActiveSeries(): Promise<
@@ -198,6 +206,9 @@ export async function getActiveSeries(): Promise<
 > {
   const response = await ChartIQWrapperModule.getActiveSeries();
 
+  if (Platform.OS === 'ios') {
+    return response;
+  }
   return JSON.parse(response);
 }
 
@@ -246,7 +257,11 @@ export async function redoDrawing(): Promise<boolean> {
 
 export async function getStudyList() {
   const response = await ChartIQWrapperModule.getStudyList();
-  console.log('getStudyList response: ', response);
+
+  if (Platform.OS === 'ios') {
+    return response as Array<Study>;
+  }
+
   return JSON.parse(response) as Array<Study>;
 }
 
@@ -280,12 +295,14 @@ export function setIsInvertYAxis(value: boolean) {
 
 export async function getActiveStudies() {
   const activeStudies = await ChartIQWrapperModule.getActiveStudies();
-  console.log('Active studies from native: ', activeStudies);
+  if (Platform.OS === 'ios') {
+    return activeStudies as Study[];
+  }
+
   return JSON.parse(activeStudies) as Study[];
 }
 
 export function addStudy(study: Study, isClone: boolean = false) {
-  return;
   return ChartIQWrapperModule.addStudy(JSON.stringify(study), isClone);
 }
 
@@ -293,11 +310,29 @@ export async function getStudyParameters(
   study: Study,
   type: StudyParameterType
 ) {
-  return;
   const response = await ChartIQWrapperModule.getStudyParameters(
     JSON.stringify(study),
     type
   );
+
+  if (Platform.OS == 'ios') {
+    return response.map((item: any) => {
+      console.log(`getStudyParameters for ${type}`, item);
+      if (item?.color) {
+        return {
+          ...item,
+          value: item.color,
+        } as StudyParameter;
+      }
+      const fieldType =
+        item.type[0].toUpperCase() + (item.type as string).slice(1);
+      console.log({ fieldType });
+      return {
+        ...item,
+        fieldType: fieldType,
+      } as StudyParameter;
+    });
+  }
 
   const data = JSON.parse(response) as StudyParameterResponse[];
 
@@ -311,7 +346,6 @@ export async function getStudyParameters(
 }
 
 export function removeStudy(study: Study) {
-  return;
   return ChartIQWrapperModule.removeStudy(JSON.stringify(study));
 }
 

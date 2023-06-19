@@ -13,35 +13,40 @@ struct DecodableChartIQData: Codable {
 @objc(ChartIQHelper)
 class ChartIQHelper: NSObject {
     let decoder = JSONDecoder()
+    let defaultQueue = DispatchQueue.global()
+
     public var onPullInitialCompleationHandler: (([ChartIQ.ChartIQData]) -> Void)!
     public var onPullUpdateCompleationHandler: (([ChartIQ.ChartIQData]) -> Void)!
     public var onPullPagingCompleationHandler: (([ChartIQ.ChartIQData]) -> Void)!
-    
-    func updateInitialData(data: String){
-       let transformed = transformChartIQData(data: data)
 
+    func updateInitialData(data: String){
         if(onPullInitialCompleationHandler != nil){
-            onPullInitialCompleationHandler!(transformed)
+            defaultQueue.async {
+                let transformed = self.transformChartIQData(data: data)
+                self.onPullInitialCompleationHandler!(transformed)
+            }
         }else{
             print("onPullInitialCompleationHandler == nil")
         }
     }
     
     func updateUpdateData(data: String){
-       let transformed = transformChartIQData(data: data)
-
         if(onPullUpdateCompleationHandler != nil){
-            onPullUpdateCompleationHandler!(transformed)
+            defaultQueue.async {
+                let transformed = self.transformChartIQData(data: data)
+                self.onPullUpdateCompleationHandler!(transformed)
+            }
         }else{
             print("onPullUpdateCompleationHandler == nil")
         }
     }
     
     func updatePagingData(data: String){
-       let transformed = transformChartIQData(data: data)
-
         if(onPullPagingCompleationHandler != nil){
-            onPullPagingCompleationHandler!(transformed)
+            defaultQueue.async {
+                let transformed = self.transformChartIQData(data: data)
+                self.onPullPagingCompleationHandler!(transformed)
+            }
         }else{
             print("onPullPagingCompleationHandler == nil")
         }

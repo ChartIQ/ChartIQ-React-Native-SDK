@@ -4,6 +4,7 @@ import { NavigationContainer, Theme } from '@react-navigation/native';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { DrawingContext, DrawingDispatchContext } from '~/context/drawing-context/drawing.context';
 import { drawingInitialState, drawingReducer } from '~/context/drawing-context/drawing.reducer';
@@ -38,29 +39,31 @@ export default function App() {
     dark: isDark,
   };
   return (
-    <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
-      <KeyboardAvoidingView
-        style={StyleSheet.absoluteFillObject}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-        enabled={Platform.OS === 'ios' ? true : false}
-      >
-        <ActionSheetProvider>
-          <TranslationsContext.Provider value={translationsState}>
-            <TranslationsDispatchContext.Provider value={dispatchTranslations}>
-              <DrawingContext.Provider value={drawingState}>
-                <DrawingDispatchContext.Provider value={dispatch}>
-                  <NavigationContainer theme={navigationTheme}>
-                    <BottomSheetModalProvider>
-                      <RootNavigator />
-                    </BottomSheetModalProvider>
-                  </NavigationContainer>
-                </DrawingDispatchContext.Provider>
-              </DrawingContext.Provider>
-            </TranslationsDispatchContext.Provider>
-          </TranslationsContext.Provider>
-        </ActionSheetProvider>
-      </KeyboardAvoidingView>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
+        <KeyboardAvoidingView
+          style={StyleSheet.absoluteFillObject}
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <ActionSheetProvider>
+            <TranslationsContext.Provider value={translationsState}>
+              <TranslationsDispatchContext.Provider value={dispatchTranslations}>
+                <DrawingContext.Provider value={drawingState}>
+                  <DrawingDispatchContext.Provider value={dispatch}>
+                    <NavigationContainer theme={navigationTheme}>
+                      <BottomSheetModalProvider>
+                        <RootNavigator />
+                      </BottomSheetModalProvider>
+                    </NavigationContainer>
+                  </DrawingDispatchContext.Provider>
+                </DrawingContext.Provider>
+              </TranslationsDispatchContext.Provider>
+            </TranslationsContext.Provider>
+          </ActionSheetProvider>
+        </KeyboardAvoidingView>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
