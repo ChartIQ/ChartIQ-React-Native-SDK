@@ -2,6 +2,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { PropsWithChildren, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Keyboard, StyleSheet } from 'react-native';
+import { runOnJS } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Theme, useTheme } from '~/theme';
@@ -40,7 +41,6 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
 
     const handleDismiss = (index: number) => {
       if (index === -1) {
-        Keyboard.dismiss();
         idRef.current = null;
       }
     };
