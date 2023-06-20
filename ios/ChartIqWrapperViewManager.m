@@ -20,6 +20,7 @@ RCT_EXTERN_METHOD(getChartType: (RCTPromiseResolveBlock)resolve rejecter: (RCTPr
 RCT_EXTERN_METHOD(getPeriodicity: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getChartAggregationType: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getActiveSeries: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(addSeries: (NSString *)symbol color: (NSString *)color isComparison: (BOOL)isComparison)
 
 RCT_EXTERN_METHOD(removeSeries: (NSString *)symbol)
 RCT_EXTERN_METHOD(enableDrawing: (NSString *)tool)
@@ -45,6 +46,8 @@ RCT_EXTERN_METHOD(disableCrosshairs)
 RCT_EXTERN_METHOD(addStudy: (NSString *)study isClone:(BOOL)isClone)
 RCT_EXTERN_METHOD(removeStudy: (NSString *)study)
 RCT_EXTERN_METHOD(getStudyParameters: (NSString *)study studyParameterType: (NSString *)studyParameterType resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setStudyParameter: (NSString *)study parameter:(NSString *)parameter)
+RCT_EXTERN_METHOD(setStudyParameters: (NSString *)study parameters:(NSString *)parameters resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 @end
 

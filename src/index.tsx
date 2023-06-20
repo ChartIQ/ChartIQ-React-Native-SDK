@@ -316,22 +316,7 @@ export async function getStudyParameters(
   );
 
   if (Platform.OS == 'ios') {
-    return response.map((item: any) => {
-      console.log(`getStudyParameters for ${type}`, item);
-      if (item?.color) {
-        return {
-          ...item,
-          value: item.color,
-        } as StudyParameter;
-      }
-      const fieldType =
-        item.type[0].toUpperCase() + (item.type as string).slice(1);
-      console.log({ fieldType });
-      return {
-        ...item,
-        fieldType: fieldType,
-      } as StudyParameter;
-    });
+    return response;
   }
 
   const data = JSON.parse(response) as StudyParameterResponse[];
@@ -353,7 +338,6 @@ export function setStudyParameter(
   study: Study,
   parameter: StudyParameterModel
 ) {
-  return;
   return ChartIQWrapperModule.setStudyParameter(
     JSON.stringify(study),
     JSON.stringify(parameter)
@@ -364,7 +348,6 @@ export async function setStudyParameters(
   study: Study,
   parameter: StudyParameterModel[]
 ) {
-  return;
   const response = await ChartIQWrapperModule.setStudyParameters(
     JSON.stringify(study),
     JSON.stringify(parameter)
