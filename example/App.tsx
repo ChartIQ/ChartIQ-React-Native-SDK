@@ -45,7 +45,7 @@ export default function App() {
           style={StyleSheet.absoluteFillObject}
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-          enabled={Platform.OS === 'ios' ? true : false}
+          enabled={Platform.OS === 'ios' ? false : true}
         >
           <ActionSheetProvider>
             <TranslationsContext.Provider value={translationsState}>

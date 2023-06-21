@@ -30,7 +30,7 @@ const Settings: React.FC = () => {
     const invertYAxis = await getIsInvertYAxis();
     const extendedHours = await getExtendedHours();
 
-    setLogScale(JSON.parse(logScale).toLowerCase() === 'log');
+    setLogScale(logScale === 'log');
     setInvertYAxis(invertYAxis);
     setExtendedHours(extendedHours);
   }, [setLogScale, setInvertYAxis, setExtendedHours]);

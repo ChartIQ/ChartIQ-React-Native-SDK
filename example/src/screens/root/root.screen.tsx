@@ -166,10 +166,8 @@ export default function Root() {
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
           onPullPagingData={onPullPagingData}
-          onChartTypeChanged={onChartTypeChanged}
           onHUDChanged={onHUDChanged}
           onMeasureChanged={onMeasureChanged}
-          onChartAggregationTypeChanged={onChartAggregationTypeChanged}
           style={styles.chartIq}
         />
         <DrawingMeasure isDrawing={isDrawing} measure={measureValue} />

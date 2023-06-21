@@ -17,6 +17,26 @@ interface SwipableSymbolProps extends PropsWithChildren {
   enabled?: boolean;
 }
 
+const buildInterpolationConfig = (
+  width: number,
+  length: number,
+  screenWidth: number,
+): Animated.InterpolationConfigType => {
+  if (length === 2) {
+    return {
+      inputRange: [0, 1, 2.5],
+      outputRange: [width, 0, -screenWidth],
+      extrapolate: 'clamp',
+    };
+  }
+
+  return {
+    inputRange: [0, 1, 2, 3],
+    outputRange: [width, 0, -width, -screenWidth],
+    extrapolate: 'clamp',
+  };
+};
+
 const SwipableItem: React.FC<SwipableSymbolProps> = ({
   children,
   rightActionButtons,
@@ -32,16 +52,14 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
     ref.current?.close();
     onPress();
   };
-  const buildInterpolationConfig = (width: number): Animated.InterpolationConfigType => ({
-    inputRange: [0, 1, 2.5],
-    outputRange: [width, 0, -screenWidth],
-    extrapolate: 'clamp',
-  });
+
   const renderRightActions = (progress: Animated.AnimatedInterpolation<string | number>) => {
     return (
       <View style={styles.actionButtonsContainer}>
         {buttons.map(({ onPress, title, backgroundColor, color, key, width = 80, isOvershoot }) => {
-          const trans = progress.interpolate(buildInterpolationConfig(width));
+          const trans = progress.interpolate(
+            buildInterpolationConfig(width, buttons.length, screenWidth),
+          );
           const style = { transform: [{ translateX: trans }] };
           trans.addListener((value) => {
             if (Math.abs(value.value) >= screenWidth * 0.8 && isOvershoot) {

@@ -22,6 +22,8 @@ import {
   QuoteFeedEvent,
   disableDrawing,
   setTheme,
+  OnMeasureChangeEvent,
+  OnHubChangeEvent,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
@@ -191,11 +193,11 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-
+    console.log({ periodicity });
     const newInterval =
       intervals.find(
         (item) =>
-          (item.timeUnit.toLowerCase() === periodicity.timeUnit.toLowerCase() &&
+          (item.timeUnit?.toLowerCase() === periodicity.timeUnit?.toLowerCase() &&
             item.period === periodicity.periodicity &&
             item.interval === periodicity.interval) ||
           (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() &&
@@ -222,7 +224,7 @@ export const useChartIQ = () => {
 
     const aggregationType = await getChartAggregationType();
     const chartType = await getChartType();
-
+    console.log({ aggregationType, chartType });
     const foundAggregation = chartStyleSelectorData.find(
       (chartType) => chartType?.aggregationType === aggregationType,
     );
@@ -273,9 +275,9 @@ export const useChartIQ = () => {
     handleChartTypeChanged(chartType);
   };
 
-  const onHUDChanged = ({ nativeEvent: { hud } }: NativeSyntheticEvent<{ hud: string }>) => {
-    const response: CrosshairState = JSON.parse(hud);
-
+  const onHUDChanged = ({ nativeEvent: { hud } }: OnHubChangeEvent) => {
+    const response = hud;
+    console.log({ hud });
     crosshair.Close.value = response.close ?? crosshair.Close.value;
     crosshair.Open.value = response.open ?? crosshair.Open.value;
     crosshair.High.value = response.high ?? crosshair.High.value;
@@ -284,9 +286,7 @@ export const useChartIQ = () => {
     crosshair.Price.value = response.price ?? crosshair.Price.value;
   };
 
-  const onMeasureChanged = ({
-    nativeEvent: { measure },
-  }: NativeSyntheticEvent<{ measure: string }>) => {
+  const onMeasureChanged = ({ nativeEvent: { measure } }: OnMeasureChangeEvent) => {
     measureValue.value = measure;
   };
 

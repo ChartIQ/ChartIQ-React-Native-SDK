@@ -12,6 +12,7 @@ import {
 
 import { TimeUnit } from '~/constants';
 import {
+  CrosshairState,
   DrawingParams,
   DrawingSettings,
   DrawingTool,
@@ -46,6 +47,10 @@ const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
 export type ChartIQNativeEvent<T> = { nativeEvent: T };
 export type QuoteFeedEvent = ChartIQNativeEvent<{ quoteFeedParam: string }>;
 export type OnStartEvent = ChartIQNativeEvent<{}>;
+export type OnMeasureChangeEvent = ChartIQNativeEvent<{ measure: string }>;
+export type OnChartTypeChangeEvent = ChartIQNativeEvent<{ chartType: string }>;
+export type On = ChartIQNativeEvent<{ chartType: string }>;
+export type OnHubChangeEvent = ChartIQNativeEvent<{ hud: CrosshairState }>;
 
 interface ChartIqWrapperProps extends ViewProps {
   url: string;
@@ -53,14 +58,8 @@ interface ChartIqWrapperProps extends ViewProps {
   onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
   onPullUpdateData: (event: QuoteFeedEvent) => Promise<void>;
   onPullPagingData: (event: QuoteFeedEvent) => Promise<void>;
-  onChartTypeChanged: (
-    event: NativeSyntheticEvent<{ chartType: string }>
-  ) => void;
-  onChartAggregationTypeChanged: (
-    event: NativeSyntheticEvent<{ aggregationType: string }>
-  ) => void;
-  onHUDChanged: (event: NativeSyntheticEvent<{ hud: string }>) => void;
-  onMeasureChanged: (event: NativeSyntheticEvent<{ measure: string }>) => void;
+  onHUDChanged: (event: OnHubChangeEvent) => void;
+  onMeasureChanged: (event: OnMeasureChangeEvent) => void;
   onStart: (event: OnStartEvent) => void;
 }
 
@@ -73,16 +72,29 @@ const ChartIqWrapperViewComponent =
         throw new Error(LINKING_ERROR);
       };
 
+enum IOSEventEmitterKeys {
+  DispatchOnPullInitialData = 'DispatchOnPullInitialData',
+  DispatchOnPullUpdateData = 'DispatchOnPullUpdateData',
+  DispatchOnPullPagingData = 'DispatchOnPullPagingData',
+  DispatchOnChartStart = 'DispatchOnChartStart',
+  DispatchOnLayoutUpdate = 'DispatchOnLayoutUpdate',
+  DispatchOnSymbolUpdate = 'DispatchOnSymbolUpdate',
+  DispatchOnDrawingUpdate = 'DispatchOnDrawingUpdate',
+  DispatchOnMeasureUpdate = 'DispatchOnMeasureUpdate',
+  DispatchOnHUDUpdate = 'DispatchOnHUDUpdate',
+}
 const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
   onPullInitialData,
   onPullUpdateData,
   onPullPagingData,
   onStart,
+  onMeasureChanged,
+  onHUDChanged,
   ...props
 }) => {
   useEffect(() => {
     RTVEventEmitter.addListener(
-      'DispatchOnPullInitialData',
+      IOSEventEmitterKeys.DispatchOnPullInitialData,
       (quote: { quoteFeedParam: string }) => {
         onPullInitialData({
           nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
@@ -90,7 +102,7 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
       }
     );
     RTVEventEmitter.addListener(
-      'DispatchOnPullUpdateData',
+      IOSEventEmitterKeys.DispatchOnPullUpdateData,
       (quote: { quoteFeedParam: string }) => {
         onPullUpdateData({
           nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
@@ -98,17 +110,57 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
       }
     );
     RTVEventEmitter.addListener(
-      'DispatchOnPullPagingData',
+      IOSEventEmitterKeys.DispatchOnPullPagingData,
       (quote: { quoteFeedParam: string }) => {
         onPullPagingData({
           nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
         });
       }
     );
-    RTVEventEmitter.addListener('DispatchChartStart', () => {
-      onStart({ nativeEvent: {} });
-    });
-  }, [onPullInitialData, onPullPagingData, onPullUpdateData, onStart]);
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnChartStart,
+      () => {
+        onStart({ nativeEvent: {} });
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnLayoutUpdate,
+      (payload) => {
+        console.log('DispatchOnLayoutUpdate', payload);
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnSymbolUpdate,
+      (payload) => {
+        console.log('DispatchOnSymbolUpdate', payload);
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnDrawingUpdate,
+      (payload) => {
+        console.log('DispatchOnDrawingUpdate', payload);
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnMeasureUpdate,
+      (payload: string) => {
+        onMeasureChanged({ nativeEvent: { measure: payload } });
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnHUDUpdate,
+      (payload: CrosshairState) => {
+        onHUDChanged({ nativeEvent: { hud: payload } });
+      }
+    );
+  }, [
+    onHUDChanged,
+    onMeasureChanged,
+    onPullInitialData,
+    onPullPagingData,
+    onPullUpdateData,
+    onStart,
+  ]);
 
   return <ChartIqWrapperViewComponent {...props} />;
 };
@@ -176,13 +228,17 @@ export async function getPeriodicity() {
   const periodicity = await ChartIQWrapperModule.getPeriodicity();
 
   if (Platform.OS === 'ios') {
-    return periodicity;
+    return periodicity as {
+      interval: string;
+      periodicity: number;
+      timeUnit: string | null;
+    };
   }
 
   const parsed = JSON.parse(periodicity) as {
     interval: string;
     periodicity: number;
-    timeUnit: string;
+    timeUnit: string | null;
   };
 
   if (parsed.interval.includes('"')) {
@@ -229,7 +285,9 @@ export function disableDrawing() {
 
 export async function getDrawingParams(tool: string): Promise<DrawingSettings> {
   const response = await ChartIQWrapperModule.getDrawingParams(tool);
-
+  if (Platform.OS === 'ios') {
+    return response;
+  }
   return JSON.parse(response);
 }
 

@@ -1,11 +1,33 @@
 
 import Foundation
 
+extension String {
+    public static let dispatchOnPullInitial = "DispatchOnPullInitialData"
+    public static let dispatchOnPullUpdate = "DispatchOnPullUpdateData"
+    public static let dispatchOnPullPaging = "DispatchOnPullPagingData"
+    public static let dispatchOnChartStart = "DispatchOnChartStart"
+    public static let dispatchOnLayoutUpdate = "DispatchOnLayoutUpdate"
+    public static let dispatchOnSymbolUpdate = "DispatchOnSymbolUpdate"
+    public static let dispatchOnDrawingUpdate = "DispatchOnDrawingUpdate"
+    public static let dispatchOnMeasureUpdate = "DispatchOnMeasureUpdate"
+    public static let dispatchOnHUDUpdate = "DispatchOnHUDUpdate"
+}
+
 @objc(RTEEventEmitter)
-class RTEEventEmitter : RCTEventEmitter {
-    static var shared:RTEEventEmitter?
+class RTEEventEmitter: RCTEventEmitter {
+    static var shared: RTEEventEmitter?
     
-    private var supportedEventNames: Set<String> = ["DispatchOnPullInitialData", "DispatchOnPullUpdateData", "DispatchOnPullPagingData", "DispatchChartStart"]
+    private var supportedEventNames: Set<String> = [
+        .dispatchOnPullInitial,
+        .dispatchOnPullUpdate,
+        .dispatchOnPullPaging,
+        .dispatchOnChartStart,
+        .dispatchOnLayoutUpdate,
+        .dispatchOnSymbolUpdate,
+        .dispatchOnDrawingUpdate,
+        .dispatchOnMeasureUpdate,
+        .dispatchOnHUDUpdate
+    ]
     private var hasAttachedListener = false
     
     // Allows a shared EventEmitter instance to avoid initializing without the RNBridge
@@ -24,6 +46,7 @@ class RTEEventEmitter : RCTEventEmitter {
     override func startObserving() {
         hasAttachedListener = true
     }
+
     override func stopObserving() {
         hasAttachedListener = false
     }
