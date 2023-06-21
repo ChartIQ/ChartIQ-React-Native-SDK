@@ -385,13 +385,14 @@ export function removeSignal(signal: Signal) {
 }
 
 export async function getTranslations(languageCode: string) {
-  return;
   const response = await ChartIQWrapperModule.getTranslations(languageCode);
 
+  if (Platform.OS === 'ios') {
+    return response;
+  }
   return JSON.parse(response);
 }
 
 export function setLanguage(languageCode: string) {
-  return;
   return ChartIQWrapperModule.setLanguage(languageCode);
 }

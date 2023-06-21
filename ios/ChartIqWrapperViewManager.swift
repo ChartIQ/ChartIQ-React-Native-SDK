@@ -104,7 +104,12 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func getActiveSeries(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
         defaultQueue.async {
-            resolve(self.chartIQWrapperView.chartIQView.getActiveSeries())
+            let activeSeries = self.chartIQWrapperView.chartIQView.getActiveSeries()
+            var activeSeriesDict: [[String:String]] = []
+            for series in activeSeries.indices {
+                activeSeriesDict.append(["symbolName": activeSeries[series].symbolName, "color": activeSeries[series].color.toHexString() ])
+            }
+            resolve(activeSeriesDict)
         }
     }
     
@@ -156,6 +161,16 @@ class ChartIqWrapperViewManager: RCTViewManager {
         defaultQueue.async {
             let list = self.chartIQWrapperView.chartIQView.getAllStudies()
             resolve(self.convertStudies(studies: list))
+        }
+    }
+    
+    @objc func setLanguage(_ languageCode: String){
+        chartIQWrapperView.chartIQView.setLanguage(languageCode)
+    }
+    @objc func getTranslations(_ languageCode: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock){
+        defaultQueue.async {
+            let translations = self.chartIQWrapperView.chartIQView.getTranslations(languageCode)
+            resolve(translations)
         }
     }
     
@@ -421,7 +436,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func disableCrosshairs(){
         chartIQWrapperView.chartIQView.enableCrosshairs(false)
     }
-    
+
 }
 
 extension ChartIqWrapperViewManager: RCTInvalidating {

@@ -15,6 +15,7 @@ import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
+import { useTranslations } from '~/shared/hooks/use-translations';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ChartStyleSelector } from '~/ui/chart-style-selector';
 import { CompareSymbolSelector } from '~/ui/compare-symbol-selector';
@@ -119,7 +120,7 @@ export default function Root() {
     drawingToolSelectorRef.current?.present('');
   };
 
-  // const { getTranslationsFromStorage } = useTranslations();
+  const { getTranslationsFromStorage } = useTranslations();
 
   const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
 
@@ -134,9 +135,9 @@ export default function Root() {
   React.useEffect(() => {
     if (initialized) {
       get();
-      // getTranslationsFromStorage();
+      getTranslationsFromStorage();
     }
-  }, [get, initialized]);
+  }, [get, getTranslationsFromStorage, initialized]);
 
   return (
     <SafeAreaView style={styles.box}>

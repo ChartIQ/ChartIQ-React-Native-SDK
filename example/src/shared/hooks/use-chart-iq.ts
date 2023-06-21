@@ -181,10 +181,9 @@ export const useChartIQ = () => {
   };
 
   const initChart = useCallback(async () => {
-    console.log('On start called');
     setChartInitialized(true);
     const symbol = await getSymbol();
-    console.log({ symbol });
+
     if (!symbol) {
       setSymbol('AAPL');
     } else {
@@ -192,7 +191,7 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-    console.log(periodicity);
+
     const newInterval =
       intervals.find(
         (item) =>
@@ -206,6 +205,7 @@ export const useChartIQ = () => {
     setInterval(newInterval);
 
     const activeSeries = await getActiveSeries();
+
     const map = new Map();
     activeSeries.forEach((item) => {
       map.set(item.symbolName, {
