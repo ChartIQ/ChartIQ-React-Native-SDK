@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
+import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
 import { getChartAggregationType, getStudyParameters } from 'react-native-chart-iq-wrapper';
 
 import { StudyParameter } from '~/model';
@@ -40,7 +40,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const colorSelectorRef = React.useRef<ColorSelectorMethods>(null);
   const markerOptionRef = React.useRef<MarkerOptionsFormMethods>(null);
   const [selectedCondition, setSelectedCondition] = useState<NullableCondition | null>(null);
-  const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>('0');
+  const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>('0.0');
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
   const [aggregationType, setAggregationType] = useState<string | null>(null);
 
@@ -294,6 +294,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
 
   const handleSecondIndicatorValue = (text: string) => {
     const number = Number(text);
+
     if (Number.isNaN(number)) {
       setSecondIndicatorValue((0.0).toString());
       return;
@@ -302,8 +303,15 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     setSecondIndicatorValue(text);
   };
 
+  const handleEndEditingSecondIndicatorValue = ({ nativeEvent: { text } }: any) => {
+    const number = Number(text);
+    if (number === 0) {
+      setSecondIndicatorValue('0.0');
+    }
+  };
+
   return (
-    <ScrollView>
+    <ScrollView onTouchStart={Keyboard.dismiss}>
       <Text style={styles.title}>Condition settings</Text>
       <ListItem
         onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
@@ -336,6 +344,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
                 value={secondIndicatorValue ?? undefined}
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.placeholder}
+                onEndEditing={handleEndEditingSecondIndicatorValue}
               />
             </ListItem>
           ) : null}

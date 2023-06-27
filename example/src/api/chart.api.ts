@@ -12,8 +12,12 @@ import type {
 } from './chart-api.types';
 
 export const fetchDataFeedAsync = async (input: ChartQuery) => {
+  console.log({ input: input.identifier });
   const { data } = await axios.get<OHLCParams[]>(`${HOST_SIMULATOR}/datafeed`, {
-    params: input,
+    params: {
+      ...input,
+      identifier: input.identifier,
+    },
   });
 
   return data;

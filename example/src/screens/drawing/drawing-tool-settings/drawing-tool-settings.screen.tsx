@@ -149,7 +149,6 @@ const DrawingToolSettings: React.FC = () => {
       | DrawingsStack.DrawingToolDecoration,
   ) => {
     if (DrawingsStack.DrawingToolsFibonacci === routeName) {
-      console.log(params.title, params.title === 'Fib Arc');
       navigation.navigate(routeName, { filterNegative: params.title === 'Fib Arc' });
       return;
     }

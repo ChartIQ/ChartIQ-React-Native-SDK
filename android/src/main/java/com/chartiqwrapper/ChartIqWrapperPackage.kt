@@ -13,11 +13,13 @@ import com.facebook.react.uimanager.ViewManager
 import kotlinx.coroutines.*
 
 
+
+data class RNDataSourceCallback(val callback: DataSourceCallback, val id: String)
 class ChartIQViewModel {
   private lateinit var chartIQ: ChartIQ
-  var initialCallback: DataSourceCallback? = null
-  var updateCallback: DataSourceCallback? = null
-  var pagingCallback: DataSourceCallback? = null
+  var initialCallbacks: MutableList<RNDataSourceCallback> = mutableListOf()
+  var updateCallbacks: MutableList<RNDataSourceCallback>  = mutableListOf()
+  var pagingCallbacks: MutableList<RNDataSourceCallback>  = mutableListOf()
 
   fun setChartIQ(input: ChartIQ): ChartIQ {
     chartIQ = input

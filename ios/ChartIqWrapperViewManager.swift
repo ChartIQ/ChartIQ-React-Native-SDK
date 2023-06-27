@@ -22,21 +22,21 @@ class ChartIqWrapperViewManager: RCTViewManager {
         return true
     }
     
-    @objc func setInitialData(_ data: [[String: Any]]) {
+    @objc func setInitialData(_ data: [[String: Any]], id: String) {
         defaultQueue.async {
-            self.chartIQHelper.updateInitialData(data: data)
+            self.chartIQHelper.updateInitialData(data: data, id: id)
         }
     }
     
-    @objc func setUpdateData(_ data: [[String: Any]]) {
+    @objc func setUpdateData(_ data: [[String: Any]], id: String) {
         defaultQueue.async {
-            self.chartIQHelper.updateUpdateData(data: data)
+            self.chartIQHelper.updateUpdateData(data: data, id: id)
         }
     }
     
-    @objc func setPagingData(_ data: [[String: Any]]) {
+    @objc func setPagingData(_ data: [[String: Any]], id: String) {
         defaultQueue.async {
-            self.chartIQHelper.updatePagingData(data: data)
+            self.chartIQHelper.updatePagingData(data: data, id: id)
         }
     }
     
@@ -163,7 +163,9 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     @objc func restoreDefaultDrawingConfig(_ tool: String, all: Bool) {
-        print("restoreDefaultDrawingConfig for tool: \(tool), all?: \(all)")
+        if let drawingTool = ChartIQDrawingTool(stringValue: tool) {
+            chartIQWrapperView.chartIQView.restoreDefaultDrawingConfig(drawingTool, all: all)
+        }
     }
     
     @objc func undoDrawing(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
@@ -289,7 +291,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 reject("0", "Error in setStudyParameters while parsing parameters", nil)
                 return
             }
-            
             guard let resolvedStudy = self.chartIQWrapperView.chartIQView.setStudyParameters(chartIQStudy, parameters: params) else {
                 reject("0", "Error, study parameters were not set", nil)
                 return

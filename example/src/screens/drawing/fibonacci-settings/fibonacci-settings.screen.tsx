@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
@@ -35,7 +34,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     drawingSettings: { fibs },
   } = useContext(DrawingContext);
   const [customFib, setCustomFib] = useState<string>('');
-  console.log({ route });
+
   const [settings, setSettings] = useState(() =>
     fibs
       .sort((a, b) => a.level - b.level)

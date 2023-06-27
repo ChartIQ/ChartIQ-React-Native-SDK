@@ -136,7 +136,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     )
   }
 
-  fun createQuoteFeedMap(params: QuoteFeedParams):WritableMap {
+  fun createQuoteFeedMap(params: QuoteFeedParams, id: String):WritableMap {
     try{
       var map = Arguments.createMap().apply {
         putString("end", params.end)
@@ -144,6 +144,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
         putString("interval", params.interval)
         putString("symbol", params.symbol)
         putInt("period", params.period!!)
+        putString("id", id)
 
         if (params.meta != null && params.meta is String) {
           val meta = gson.fromJson(params.meta as String, Map::class.java)
@@ -159,8 +160,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   }
 
   @ReactMethod
-  fun dispatchOnPullInitialData(params: QuoteFeedParams) {
-    val event: WritableMap = createQuoteFeedMap(params)
+  fun dispatchOnPullInitialData(params: QuoteFeedParams, id: String) {
+    val event: WritableMap = createQuoteFeedMap(params, id)
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
@@ -170,8 +171,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   }
 
   @ReactMethod
-  fun dispatchOnPullUpdateData(params: QuoteFeedParams) {
-    val event: WritableMap = createQuoteFeedMap(params)
+  fun dispatchOnPullUpdateData(params: QuoteFeedParams, id: String) {
+    val event: WritableMap = createQuoteFeedMap(params, id)
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
@@ -181,8 +182,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   }
 
   @ReactMethod
-  fun dispatchOnPullPagingData(params: QuoteFeedParams) {
-    val event: WritableMap = createQuoteFeedMap(params)
+  fun dispatchOnPullPagingData(params: QuoteFeedParams, id: String) {
+    val event: WritableMap = createQuoteFeedMap(params, id)
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
@@ -265,24 +266,24 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          chartIQViewModel.initialCallback = callback
-          dispatchOnPullInitialData(params)
+          chartIQViewModel.initialCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
+          dispatchOnPullInitialData(params, params.callbackId!!)
         }
 
         override fun pullUpdateData(
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          chartIQViewModel.updateCallback = callback
-          dispatchOnPullUpdateData(params)
+          chartIQViewModel.updateCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
+          dispatchOnPullUpdateData(params, params.callbackId!!)
         }
 
         override fun pullPaginationData(
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
-          chartIQViewModel.pagingCallback = callback
-          dispatchOnPullPagingData(params)
+          chartIQViewModel.pagingCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
+          dispatchOnPullPagingData(params, params.callbackId!!)
         }
       })
     }

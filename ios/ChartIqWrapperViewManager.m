@@ -5,9 +5,9 @@
 
 RCT_EXPORT_VIEW_PROPERTY(url, NSString)
 
-RCT_EXTERN_METHOD(setInitialData: (NSArray *)data)
-RCT_EXTERN_METHOD(setUpdateData: (NSArray *)data)
-RCT_EXTERN_METHOD(setPagingData: (NSArray *)data)
+RCT_EXTERN_METHOD(setInitialData: (NSArray *)data id:(NSString *)id)
+RCT_EXTERN_METHOD(setUpdateData: (NSArray *)data id:(NSString *)id)
+RCT_EXTERN_METHOD(setPagingData: (NSArray *)data id:(NSString *)id)
 
 RCT_EXTERN_METHOD(setSymbol: (NSString *)symbol)
 RCT_EXTERN_METHOD(setPeriodicity: (double)period interval: (NSString *)interval timeUnit: (NSString*)timeUnit)

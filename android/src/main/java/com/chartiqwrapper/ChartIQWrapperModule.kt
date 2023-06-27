@@ -2,6 +2,7 @@ package com.chartiqwrapper
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.chartiq.sdk.model.*
 import com.chartiq.sdk.model.charttype.ChartAggregationType
 import com.chartiq.sdk.model.charttype.ChartType
@@ -32,40 +33,44 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
 
   @ReactMethod
-  fun setInitialData(data: ReadableArray) {
+  fun setInitialData(data: ReadableArray, id: String) {
       val data = formatOHLC(data)
       if (data != null) {
         val handler = Handler(Looper.getMainLooper())
         handler.post(Runnable {
-          chartIQViewModel.initialCallback?.execute(data)
-        })
+          chartIQViewModel.initialCallbacks.find { it.id == id }?.let {
+            it.callback.execute(data)
+          }})
       }
   }
 
   @ReactMethod
-  fun setUpdateData(data: ReadableArray) {
+  fun setUpdateData(data: ReadableArray, id: String) {
     val data = formatOHLC(data)
     if (data != null) {
       val handler = Handler(Looper.getMainLooper())
       handler.post(Runnable {
-        chartIQViewModel.updateCallback?.execute(data)
-      })
+        chartIQViewModel.updateCallbacks.find { it.id == id }?.let {
+          it.callback.execute(data)
+        }})
     }
   }
 
   @ReactMethod
-  fun setPagingData(data: ReadableArray) {
+  fun setPagingData(data: ReadableArray, id: String) {
     val data = formatOHLC(data)
     if (data != null) {
       handler.post(Runnable {
-        chartIQViewModel.pagingCallback?.execute(data)
-      })
+        chartIQViewModel.pagingCallbacks.find { it.id == id }?.let {
+          it.callback.execute(data)
+        }})
     }
   }
 
   @ReactMethod
   fun setSymbol(symbol: String) {
     handler.post(Runnable {
+      Log.println(Log.INFO, "SET_SYMBOL", "setSymbol: $symbol")
       chartIQViewModel.getChartIQ().setSymbol(symbol)
     })
   }

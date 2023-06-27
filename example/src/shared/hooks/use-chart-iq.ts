@@ -40,7 +40,7 @@ import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selecto
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
-const handleRequest = async (input: ChartIQDatafeedParams) => {
+const handleRequest = async (input: Omit<ChartIQDatafeedParams, 'id'>) => {
   const params = {
     identifier: input.symbol,
     enddate: input.end,
@@ -72,13 +72,21 @@ export const useChartIQ = () => {
 
   const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
 
-  const onPullInitialData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const response = await handleRequest(quoteFeedParam);
-    setInitialData(response);
+  const onPullInitialData = async ({
+    nativeEvent: {
+      quoteFeedParam: { id, ...params },
+    },
+  }: QuoteFeedEvent) => {
+    const response = await handleRequest(params);
+    setInitialData(response, id);
   };
 
-  const onPullUpdateData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const response = await handleRequest(quoteFeedParam);
+  const onPullUpdateData = async ({
+    nativeEvent: {
+      quoteFeedParam: { id, ...params },
+    },
+  }: QuoteFeedEvent) => {
+    const response = await handleRequest(params);
 
     const last = response[response.length - 1];
     crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
@@ -87,12 +95,16 @@ export const useChartIQ = () => {
     crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
     crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
 
-    setUpdateData(response);
+    setUpdateData(response, id);
   };
 
-  const onPullPagingData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const response = await handleRequest(quoteFeedParam);
-    setPagingData(response);
+  const onPullPagingData = async ({
+    nativeEvent: {
+      quoteFeedParam: { id, ...params },
+    },
+  }: QuoteFeedEvent) => {
+    const response = await handleRequest(params);
+    setPagingData(response, id);
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
@@ -102,7 +114,6 @@ export const useChartIQ = () => {
 
   const handleIntervalChange = (input: IntervalItem) => {
     setInterval(input);
-
     setPeriodicity(input.period, input.interval, input.timeUnit);
   };
 
@@ -175,7 +186,7 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-    console.log('periodicity', periodicity);
+
     const newInterval =
       intervals.find((item) => {
         return (

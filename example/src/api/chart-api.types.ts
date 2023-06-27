@@ -51,4 +51,5 @@ export interface ChartIQDatafeedParams {
   start: string;
   end: string;
   interval: string;
+  id: string;
 }

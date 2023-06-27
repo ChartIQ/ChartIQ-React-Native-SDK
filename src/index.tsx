@@ -173,16 +173,16 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
 export const ChartIqWrapperView =
   Platform.OS !== 'ios' ? ChartIqWrapperViewComponent : IOSChartWrapperView;
 
-export function setInitialData(data: OHLCParams[]) {
-  return ChartIQWrapperModule.setInitialData(data);
+export function setInitialData(data: OHLCParams[], id: string) {
+  return ChartIQWrapperModule.setInitialData(data, id);
 }
 
-export function setUpdateData(data: OHLCParams[]) {
-  return ChartIQWrapperModule.setUpdateData(data);
+export function setUpdateData(data: OHLCParams[], id: string) {
+  return ChartIQWrapperModule.setUpdateData(data, id);
 }
 
-export function setPagingData(data: OHLCParams[]) {
-  return ChartIQWrapperModule.setPagingData(data);
+export function setPagingData(data: OHLCParams[], id: string) {
+  return ChartIQWrapperModule.setPagingData(data, id);
 }
 
 export function setSymbol(symbol: string) {

@@ -12,7 +12,6 @@ class ChartIqWrapperView: UIView {
 
     @objc var url: String = "" {
         didSet {
-            print("MyLog: setchartUrl, \(url)")
             chartIQView.setChartIQUrl(url)
         }
     }
@@ -27,7 +26,6 @@ class ChartIqWrapperView: UIView {
     func setUpChart() {
         chartIQView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(chartIQView)
-        print("MyLog: Load chart with url: \(url)")
       
         chartIQView.dataSource = self
         chartIQView.delegate = self
@@ -42,32 +40,37 @@ class ChartIqWrapperView: UIView {
 extension ChartIqWrapperView: ChartIQDataSource {
     func pullInitialData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            self.chartIQHelper.onPullInitialCompleationHandler = completionHandler
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params))
+            let id = UUID().uuidString
+            self.chartIQHelper.onPullInitialCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params, id: id))
         }
     }
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            self.chartIQHelper.onPullUpdateCompleationHandler = completionHandler
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params))
+            let id = UUID().uuidString
+            self.chartIQHelper.onPullUpdateCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params, id: id))
         }
     }
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            self.chartIQHelper.onPullPagingCompleationHandler = completionHandler
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params))
+            let id = UUID().uuidString
+            self.chartIQHelper.onPullPagingCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params, id: id))
         }
     }
     
-    func convertParams(params: ChartIQ.ChartIQQuoteFeedParams) -> [AnyHashable: Any] {
+    func convertParams(params: ChartIQ.ChartIQQuoteFeedParams, id: String) -> [AnyHashable: Any] {
         return ["quoteFeedParam": [
             "symbol": params.symbol,
             "start": params.startDate,
             "end": params.endDate,
             "interval": params.interval,
-            "period": params.period] as [String: Any]]
+            "period": params.period,
+            "id": id
+        ] as [String: Any]]
     }
 }
 
@@ -86,28 +89,24 @@ extension ChartIqWrapperView: ChartIQDelegate {
     }
     
     func chartIQView(_ chartIQView: ChartIQView, didUpdateLayout layout: Any) {
-        print("Layout changed, \(layout)")
         defaultQueue.async {
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnLayoutUpdate, body: layout)
         }
     }
     
     func chartIQView(_ chartIQView: ChartIQView, didUpdateSymbol symbol: String) {
-        print("Symbol changed, \(symbol)")
         defaultQueue.async {
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnSymbolUpdate, body: symbol)
         }
     }
 
     func chartIQView(_ chartIQView: ChartIQView, didUpdateDrawing drawings: Any) {
-        print("Drawing changed, \(drawings)")
         defaultQueue.async {
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnDrawingUpdate, body: drawings)
         }
     }
     
     func chartIQView(_ chartIQView: ChartIQView, didUpdateMeasure measure: String) {
-        print("Measure changed, \(!measure.isEmpty)")
         if !measure.isEmpty {
             defaultQueue.async {
                 RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnMeasureUpdate, body: measure)
