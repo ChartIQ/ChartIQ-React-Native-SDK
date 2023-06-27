@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { Alert } from 'react-native';
 
 import { HOST_SIMULATOR, HOST_SYMBOLS } from '../constants/network.constants';
 import type { OHLCParams } from '../model/ohlc-param';
@@ -11,20 +12,50 @@ import type {
   SymbolQueryParams,
 } from './chart-api.types';
 
+const customAxiosApi: AxiosInstance = axios.create({});
+
+interface RetryConfig extends AxiosRequestConfig {
+  retry: number;
+  retryDelay: number;
+}
+
+const globalConfig: RetryConfig = {
+  retry: 3,
+  retryDelay: 1000,
+};
+
+customAxiosApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { config } = error;
+
+    if (!config || !config.retry) {
+      return Promise.reject(`Retry error: ${error}`);
+    }
+    config.retry -= 1;
+    const delayRetryRequest = new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, config.retryDelay || 1000);
+    });
+    return delayRetryRequest.then(() => customAxiosApi(config));
+  },
+);
+
 export const fetchDataFeedAsync = async (input: ChartQuery) => {
-  console.log({ input: input.identifier });
-  const { data } = await axios.get<OHLCParams[]>(`${HOST_SIMULATOR}/datafeed`, {
+  const { data } = await customAxiosApi.get<OHLCParams[]>(`${HOST_SIMULATOR}/datafeed`, {
     params: {
       ...input,
       identifier: input.identifier,
     },
+    ...globalConfig,
   });
 
   return data;
 };
 
 export const fetchSymbolsAsync = async (input: SymbolParams) => {
-  const { data } = await axios.get<SymbolLookupResponse>(
+  const { data } = await customAxiosApi.get<SymbolLookupResponse>(
     `${HOST_SYMBOLS}/chiq.symbolserver.SymbolLookup.service`,
     {
       params: {
@@ -33,6 +64,7 @@ export const fetchSymbolsAsync = async (input: SymbolParams) => {
         x: input.fund,
         e: input.filter,
       } satisfies SymbolQueryParams,
+      ...globalConfig,
     },
   );
 
@@ -44,4 +76,18 @@ export const fetchSymbolsAsync = async (input: SymbolParams) => {
   }
 
   return [];
+};
+
+export const handleRetry = (onRetry: () => void) => {
+  Alert.alert('Something went wrong', 'The internet connection appears to be offline.', [
+    {
+      text: 'Cancel',
+    },
+    {
+      text: 'Retry',
+      onPress: () => {
+        onRetry();
+      },
+    },
+  ]);
 };

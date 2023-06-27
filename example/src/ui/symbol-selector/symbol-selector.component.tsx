@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { ChartSymbol, fetchSymbolsAsync } from '~/api';
+import { ChartSymbol, fetchSymbolsAsync, handleRetry } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
 import { useTheme, Theme } from '~/theme';
 
@@ -79,6 +79,11 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
           setNoDataFound(null);
         }
         setData(data);
+      })
+      .catch(() => {
+        handleRetry(() => {
+          fetchSymbols(input, filter);
+        });
       })
       .finally(() => setIsLoading(false));
   }, []);

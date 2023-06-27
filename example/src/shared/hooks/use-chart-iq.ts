@@ -25,7 +25,13 @@ import {
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
-import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
+import {
+  ChartIQDatafeedParams,
+  ChartQuery,
+  ChartSymbol,
+  fetchDataFeedAsync,
+  handleRetry,
+} from '~/api';
 import { colorPickerColors } from '~/constants';
 import { CrosshairSharedValues, DrawingTool } from '~/model';
 import { useTheme } from '~/theme';
@@ -77,8 +83,18 @@ export const useChartIQ = () => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    const response = await handleRequest(params);
-    setInitialData(response, id);
+    try {
+      const response = await handleRequest(params);
+      setInitialData(response, id);
+    } catch (e) {
+      handleRetry(() => {
+        onPullInitialData({
+          nativeEvent: {
+            quoteFeedParam: { id, ...params },
+          },
+        });
+      });
+    }
   };
 
   const onPullUpdateData = async ({
@@ -86,16 +102,26 @@ export const useChartIQ = () => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    const response = await handleRequest(params);
+    try {
+      const response = await handleRequest(params);
 
-    const last = response[response.length - 1];
-    crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
-    crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
-    crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
-    crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
-    crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
+      const last = response[response.length - 1];
+      crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
+      crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
+      crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
+      crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
+      crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
 
-    setUpdateData(response, id);
+      setUpdateData(response, id);
+    } catch (e) {
+      handleRetry(() => {
+        onPullUpdateData({
+          nativeEvent: {
+            quoteFeedParam: { id, ...params },
+          },
+        });
+      });
+    }
   };
 
   const onPullPagingData = async ({
@@ -103,8 +129,18 @@ export const useChartIQ = () => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    const response = await handleRequest(params);
-    setPagingData(response, id);
+    try {
+      const response = await handleRequest(params);
+      setPagingData(response, id);
+    } catch (e) {
+      handleRetry(() => {
+        onPullPagingData({
+          nativeEvent: {
+            quoteFeedParam: { id, ...params },
+          },
+        });
+      });
+    }
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
