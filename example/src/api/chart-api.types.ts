@@ -35,15 +35,6 @@ export interface ChartSymbol {
   funds: string[];
 }
 
-/* 
-end: "2023-04-27T09:41:16.052Z"
-interval: "day"
-meta: "{"func":"pullInitialData","symbol":"AAPL","period":1,"timeUnit":"day","start":"2022-12-20T23:00:00.000Z","end":"2023-04-27T09:41:16.052Z"}"
-period: 1
-start: "2022-12-20T23:00:00.000Z"
-symbol: "AAPL"
-*/
-
 export interface ChartIQDatafeedParamsMeta {
   func: string;
   symbol: string;
@@ -56,7 +47,7 @@ export interface ChartIQDatafeedParamsMeta {
 export interface ChartIQDatafeedParams {
   symbol: string;
   period: number;
-  meta: ChartIQDatafeedParamsMeta;
+  meta?: ChartIQDatafeedParamsMeta;
   start: string;
   end: string;
   interval: string;

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { disableCrosshairs, enableCrosshairs } from 'react-native-chart-iq-wrapper';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -31,11 +32,9 @@ const Header: React.FC<HeaderProps> = ({
   handleIntervalSelector,
   handleChartStyleSelector,
   handleCompareSymbolSelector,
-  handleCrosshair,
   handleDrawingTool,
   handleFullScreen,
 
-  isCrosshairEnabled,
   crosshairState,
   isDrawing,
   isLandscape,
@@ -48,6 +47,24 @@ const Header: React.FC<HeaderProps> = ({
   const [open, setOpen] = useState(false);
   const otherToolsHeight = useSharedValue(0);
   const crosshairHeight = useSharedValue(0);
+  const [isCrosshairEnabled, setIsCrosshairEnabled] = useState(false);
+
+  const toggleCrosshair = useCallback(
+    (nextState?: boolean) => {
+      setIsCrosshairEnabled((prevState) => {
+        const state = nextState !== undefined ? nextState : !prevState;
+        if (state) {
+          enableCrosshairs();
+          return state;
+        }
+
+        disableCrosshairs();
+
+        return state;
+      });
+    },
+    [setIsCrosshairEnabled],
+  );
 
   const handleChevron = useCallback(() => {
     'worklet';
@@ -62,18 +79,14 @@ const Header: React.FC<HeaderProps> = ({
       otherToolsHeight.value = withTiming(0, timingConfig);
       setOpen(false);
       crosshairHeight.value = withTiming(0, timingConfig);
-      handleCrosshair(false);
+      toggleCrosshair(false);
     }
-  }, [crosshairHeight, handleCrosshair, isLandscape, open, otherToolsHeight]);
+  }, [crosshairHeight, isLandscape, open, otherToolsHeight, toggleCrosshair]);
 
   const onCrosshair = useCallback(() => {
-    'worklet';
-
-    const toValue = isCrosshairEnabled ? 0 : CROSSHAIR_HEIGHT;
-    crosshairHeight.value = withTiming(toValue, timingConfig, () => {
-      runOnJS(handleCrosshair)(!isCrosshairEnabled);
-    });
-  }, [crosshairHeight, handleCrosshair, isCrosshairEnabled]);
+    ('worklet');
+    toggleCrosshair();
+  }, [toggleCrosshair]);
 
   const otherToolsHeightStyle = useAnimatedStyle(
     () => ({ height: otherToolsHeight.value }),
@@ -81,8 +94,25 @@ const Header: React.FC<HeaderProps> = ({
   );
 
   const crosshairHeightStyle = useAnimatedStyle(
-    () => ({ height: crosshairHeight.value }),
-    [crosshairHeight],
+    () => ({
+      height: withTiming(isCrosshairEnabled ? CROSSHAIR_HEIGHT : 0, timingConfig),
+    }),
+    [isCrosshairEnabled],
+  );
+  const opacityStyle = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(isCrosshairEnabled ? 1 : 0, timingConfig),
+      transform: [
+        {
+          translateY: withTiming(isCrosshairEnabled ? 0 : 50, timingConfig),
+        },
+      ],
+      position: 'absolute',
+      bottom: 12,
+      left: 0,
+      width: '100%',
+    }),
+    [isCrosshairEnabled],
   );
 
   const getFill = useCallback(
@@ -265,9 +295,8 @@ const Header: React.FC<HeaderProps> = ({
       <Animated.View style={[styles.otherToolsContainer, otherToolsHeightStyle]}>
         <HeaderButtons type="others" items={otherItems} open={open} />
       </Animated.View>
-      <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}>
-        <AnimatedCrosshairValues crosshair={crosshairState} />
-      </Animated.View>
+      <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}></Animated.View>
+      <AnimatedCrosshairValues opacityStyle={opacityStyle} crosshair={crosshairState} />
     </>
   );
 };

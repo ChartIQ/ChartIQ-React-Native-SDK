@@ -19,9 +19,9 @@ export type IntervalItem = {
 };
 
 export const intervals: Array<IntervalItem> = [
-  { label: '1D', timeUnit: TimeUnit.DAY, period: 1, interval: '0', description: '1 day' },
-  { label: '1W', timeUnit: TimeUnit.WEEK, period: 1, interval: '0', description: '1 week' },
-  { label: '1M', timeUnit: TimeUnit.MONTH, period: 1, interval: '0', description: '1 month' },
+  { label: '1D', timeUnit: TimeUnit.DAY, period: 1, interval: '1', description: '1 day' },
+  { label: '1W', timeUnit: TimeUnit.WEEK, period: 1, interval: '1', description: '1 week' },
+  { label: '1M', timeUnit: TimeUnit.MONTH, period: 1, interval: '1', description: '1 month' },
 
   { label: '1m', timeUnit: TimeUnit.MINUTE, period: 1, interval: '1', description: '1 minute' },
   { label: '5m', timeUnit: TimeUnit.MINUTE, description: '5 minute', interval: '1', period: 5 },

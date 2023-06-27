@@ -15,6 +15,7 @@ import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.QuoteFeedParams
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
@@ -135,10 +136,32 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     )
   }
 
+  fun createQuoteFeedMap(params: QuoteFeedParams):WritableMap {
+    try{
+      var map = Arguments.createMap().apply {
+        putString("end", params.end)
+        putString("start", params.start)
+        putString("interval", params.interval)
+        putString("symbol", params.symbol)
+        putInt("period", params.period!!)
+
+        if (params.meta != null && params.meta is String) {
+          val meta = gson.fromJson(params.meta as String, Map::class.java)
+          putMap("meta", Arguments.makeNativeMap(meta as Map<String, Any>))
+        }
+      }
+      return Arguments.createMap().apply {
+        putMap("quoteFeedParam", map)
+      }
+    }catch (error: Exception){
+      throw error
+    }
+  }
+
   @ReactMethod
   fun dispatchOnPullInitialData(params: QuoteFeedParams) {
-    val event: WritableMap = Arguments.createMap()
-    event.putString("quoteFeedParam", Gson().toJson(params))
+    val event: WritableMap = createQuoteFeedMap(params)
+
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
       "onPullInitialData",
@@ -148,8 +171,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
 
   @ReactMethod
   fun dispatchOnPullUpdateData(params: QuoteFeedParams) {
-    val event: WritableMap = Arguments.createMap()
-    event.putString("quoteFeedParam", Gson().toJson(params))
+    val event: WritableMap = createQuoteFeedMap(params)
+
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
       "onPullUpdateData",
@@ -159,8 +182,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
 
   @ReactMethod
   fun dispatchOnPullPagingData(params: QuoteFeedParams) {
-    val event: WritableMap = Arguments.createMap()
-    event.putString("quoteFeedParam", Gson().toJson(params))
+    val event: WritableMap = createQuoteFeedMap(params)
+
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
       view.id,
       "onPullPagingData",
@@ -202,7 +225,15 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   @ReactMethod
   fun dispatchOnHUDChanged(hud: CrosshairHUD) {
     val event: WritableMap = Arguments.createMap().apply {
-      putString("hud", gson.toJson(hud))
+      var map = Arguments.createMap().apply {
+        putString("close", hud.close)
+        putString("high", hud.high)
+        putString("low", hud.low)
+        putString("open", hud.open)
+        putString("volume", hud.volume)
+        putString("price", hud.price)
+      }
+      putMap("hud", map)
     }
 
     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(

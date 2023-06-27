@@ -1,7 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { encode } from 'base-64';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,19 +19,28 @@ import Icons from '~/assets/icons';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
+import { DrawingsStack, DrawingsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 
-const FibonacciSettings: React.FC = () => {
+export interface FibonacciSettingsProps
+  extends NativeStackScreenProps<DrawingsStackParamList, DrawingsStack.DrawingToolsFibonacci> {}
+
+const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const { updateDrawingSettings } = useUpdateDrawingTool();
+  const filterNegative = route.params?.filterNegative;
   const {
     drawingSettings: { fibs },
   } = useContext(DrawingContext);
   const [customFib, setCustomFib] = useState<string>('');
-
-  const [settings, setSettings] = useState(() => fibs.sort((a, b) => a.level - b.level));
+  console.log({ route });
+  const [settings, setSettings] = useState(() =>
+    fibs
+      .sort((a, b) => a.level - b.level)
+      .filter((item) => (filterNegative ? item.level >= 0 : true)),
+  );
   const navigation = useNavigation();
 
   const handlePress = (level: number) => {
@@ -96,10 +114,9 @@ const FibonacciSettings: React.FC = () => {
     [customFib, handleAdd, onTextChange, styles.button, styles.footerContainer, styles.textInput],
   );
   return (
-    <SafeAreaView>
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : undefined}>
       <FlatList
         data={settings}
-        removeClippedSubviews={true}
         renderItem={({ item: { display, level } }) => (
           <ListItem onPress={() => handlePress(level)} title={`${level.toFixed(2)} %`}>
             {display ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
@@ -108,7 +125,7 @@ const FibonacciSettings: React.FC = () => {
         keyExtractor={(item) => item.level.toString()}
         ListFooterComponent={Footer}
       />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -122,7 +139,7 @@ const createStyles = (theme: Theme) =>
     footerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginVertical: 40,
+      paddingVertical: 40,
     },
     textInput: {
       height: 45,

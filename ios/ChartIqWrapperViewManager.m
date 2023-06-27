@@ -5,9 +5,9 @@
 
 RCT_EXPORT_VIEW_PROPERTY(url, NSString)
 
-RCT_EXTERN_METHOD(setInitialData: (NSString *)data)
-RCT_EXTERN_METHOD(setUpdateData: (NSString *)data)
-RCT_EXTERN_METHOD(setPagingData: (NSString *)data)
+RCT_EXTERN_METHOD(setInitialData: (NSArray *)data)
+RCT_EXTERN_METHOD(setUpdateData: (NSArray *)data)
+RCT_EXTERN_METHOD(setPagingData: (NSArray *)data)
 
 RCT_EXTERN_METHOD(setSymbol: (NSString *)symbol)
 RCT_EXTERN_METHOD(setPeriodicity: (double)period interval: (NSString *)interval timeUnit: (NSString*)timeUnit)
@@ -51,6 +51,11 @@ RCT_EXTERN_METHOD(setStudyParameters: (NSString *)study parameters:(NSString *)p
 
 RCT_EXTERN_METHOD(setLanguage: (NSString *)languageCode)
 RCT_EXTERN_METHOD(getTranslations: (NSString *)languageCode resolver:(RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getActiveSignals: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(addSignalStudy: (NSString *)studyName resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(addSignal: (NSString *)signal editMode:(BOOL)editMode resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(toggleSignal: (NSString *)signal)
+RCT_EXTERN_METHOD(removeSignal: (NSString *)signal)
 
 @end
 

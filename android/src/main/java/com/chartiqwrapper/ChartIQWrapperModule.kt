@@ -2,26 +2,23 @@ package com.chartiqwrapper
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import com.chartiq.sdk.model.*
 import com.chartiq.sdk.model.charttype.ChartAggregationType
 import com.chartiq.sdk.model.charttype.ChartType
 import com.chartiq.sdk.model.drawingtool.DrawingParameterType
 import com.chartiq.sdk.model.drawingtool.DrawingTool
 import com.chartiq.sdk.model.signal.Signal
-import com.chartiq.sdk.model.signal.SignalOperator
 import com.chartiq.sdk.model.study.Study
 import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.*
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import java.lang.Runnable
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
@@ -35,18 +32,18 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
 
   @ReactMethod
-  fun setInitialData(data: String) {
-    val data = formatOHLC(data)
-    if (data != null) {
-      val handler = Handler(Looper.getMainLooper())
-      handler.post(Runnable {
-        chartIQViewModel.initialCallback?.execute(data)
-      })
-    }
+  fun setInitialData(data: ReadableArray) {
+      val data = formatOHLC(data)
+      if (data != null) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post(Runnable {
+          chartIQViewModel.initialCallback?.execute(data)
+        })
+      }
   }
 
   @ReactMethod
-  fun setUpdateData(data: String) {
+  fun setUpdateData(data: ReadableArray) {
     val data = formatOHLC(data)
     if (data != null) {
       val handler = Handler(Looper.getMainLooper())
@@ -57,7 +54,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setPagingData(data: String) {
+  fun setPagingData(data: ReadableArray) {
     val data = formatOHLC(data)
     if (data != null) {
       handler.post(Runnable {
@@ -183,14 +180,17 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
         it.getPeriodicity { periodicity ->
           it.getInterval { interval ->
             it.getTimeUnit { timeUnit ->
-
-              var response = JsonObject().apply {
-                addProperty("periodicity", periodicity)
-                addProperty("interval", interval)
-                addProperty("timeUnit", timeUnit)
-              }
-
-              promise.resolve(response.toString())
+                val map = Arguments.createMap().apply {
+                  putInt("periodicity", periodicity)
+                  if(interval == "\"day\"" || interval == "\"week\"" || interval == "\"month\""){
+                    putString("interval", "1")
+                    putString("timeUnit", interval.replace("\"", "").uppercase())
+                  } else {
+                    putString("interval", interval)
+                    putString("timeUnit", timeUnit)
+                  }
+                }
+              promise.resolve(map)
             }
           }
         }
@@ -202,9 +202,15 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getActiveSeries(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getActiveSeries { symbols ->
-        symbols.let {
-          promise.resolve(gson.toJson(it))
+        val array = Arguments.createArray()
+        symbols.forEach {
+          val map = Arguments.createMap().apply {
+            putString("symbol", it.symbolName)
+            putString("color", it.color)
+          }
+          array.pushMap(map)
         }
+        promise.resolve(array)
       }
     })
   }
@@ -317,8 +323,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getStudyList(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getStudyList { study ->
-        promise.resolve(gson.toJson(study))
+      chartIQViewModel.getChartIQ().getStudyList { studies ->
+        val formattedStudies = formatStudies(studies)
+        promise.resolve(formattedStudies)
       }
     })
   }
@@ -326,9 +333,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun getActiveStudies(promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getActiveStudies {
-        promise.resolve(gson.toJson(it))
-      }
+      chartIQViewModel.getChartIQ().getActiveStudies { studies ->
+        val formattedStudies = formatStudies(studies)
+        promise.resolve(formattedStudies)}
     })
   }
 
@@ -533,11 +540,49 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
 
 
-  private fun formatOHLC(input: String): List<OHLCParams>? {
-    return gson.fromJson<List<OHLCParams>>(
-      input, object : TypeToken<List<OHLCParams>>() {}.type
-    )
+  private fun formatOHLC(input: ReadableArray): List<OHLCParams> {
+    var list = mutableListOf<OHLCParams>()
+    input.toArrayList().forEach() { item  ->
+      if(item is HashMap<*, *>) {
+        val dt = item["DT"] as String?
+        val open = item["Open"] as Double?
+        val high = item["High"] as Double?
+        val low = item["Low"]   as Double?
+        val close = item["Close"] as Double?
+        val volume = item["Volume"] as Double?
+        val adjClose = item["Adj_Close"] as Double?
+        val localDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(dt)
+        val date = Date(localDate.time)
+        OHLCParams(date, open, high, low, close, volume, adjClose).let {
+          list.add(it)
+        }
+      }
+    }
+
+    return list
   }
 
-
+  private fun formatStudies(studies: List<Study>): WritableArray{
+      var array = Arguments.createArray()
+      studies.forEach {
+        val map = Arguments.createMap().apply {
+          putString("name", it.name)
+          putString("shortName", it.shortName)
+          putString("display", it.display)
+          putDouble("centerLine", it.centerLine)
+          putString("range", it.range)
+          putString("type", it.type)
+          putBoolean("overlay", it.overlay)
+          putBoolean("signalIQExclude", it.signalIQExclude)
+          putBoolean("customRemoval", it.customRemoval)
+          putMap("inputs", Arguments.makeNativeMap(it.inputs))
+          putMap("outputs", Arguments.makeNativeMap(it.outputs))
+          putMap("parameters", Arguments.makeNativeMap(it.parameters))
+          putMap("attributes", Arguments.makeNativeMap(it.attributes))
+          putMap("yAxis", Arguments.makeNativeMap(it.yAxis))
+        }
+        array.pushMap(map)
+      }
+        return array
+    }
 }

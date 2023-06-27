@@ -10,12 +10,14 @@ import {
   NativeEventEmitter,
 } from 'react-native';
 
+import { ChartIQDatafeedParams } from '~/api';
 import { TimeUnit } from '~/constants';
 import {
   CrosshairState,
   DrawingParams,
   DrawingSettings,
   DrawingTool,
+  OHLCParams,
   StudyParameter,
   StudyParameterModel,
   StudyParameterResponse,
@@ -45,12 +47,14 @@ const LINKING_ERROR =
 const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
 
 export type ChartIQNativeEvent<T> = { nativeEvent: T };
-export type QuoteFeedEvent = ChartIQNativeEvent<{ quoteFeedParam: string }>;
+export type QuoteFeedEvent = ChartIQNativeEvent<{
+  quoteFeedParam: ChartIQDatafeedParams;
+}>;
 export type OnStartEvent = ChartIQNativeEvent<{}>;
 export type OnMeasureChangeEvent = ChartIQNativeEvent<{ measure: string }>;
 export type OnChartTypeChangeEvent = ChartIQNativeEvent<{ chartType: string }>;
 export type On = ChartIQNativeEvent<{ chartType: string }>;
-export type OnHubChangeEvent = ChartIQNativeEvent<{ hud: CrosshairState }>;
+export type OnHudChangeEvent = ChartIQNativeEvent<{ hud: CrosshairState }>;
 
 interface ChartIqWrapperProps extends ViewProps {
   url: string;
@@ -58,7 +62,7 @@ interface ChartIqWrapperProps extends ViewProps {
   onPullInitialData: (event: QuoteFeedEvent) => Promise<void>;
   onPullUpdateData: (event: QuoteFeedEvent) => Promise<void>;
   onPullPagingData: (event: QuoteFeedEvent) => Promise<void>;
-  onHUDChanged: (event: OnHubChangeEvent) => void;
+  onHUDChanged: (event: OnHudChangeEvent) => void;
   onMeasureChanged: (event: OnMeasureChangeEvent) => void;
   onStart: (event: OnStartEvent) => void;
 }
@@ -95,25 +99,25 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
   useEffect(() => {
     RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullInitialData,
-      (quote: { quoteFeedParam: string }) => {
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullInitialData({
-          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+          nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
         });
       }
     );
     RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullUpdateData,
-      (quote: { quoteFeedParam: string }) => {
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullUpdateData({
-          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+          nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
         });
       }
     );
     RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullPagingData,
-      (quote: { quoteFeedParam: string }) => {
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullPagingData({
-          nativeEvent: { quoteFeedParam: JSON.stringify(quote.quoteFeedParam) },
+          nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
         });
       }
     );
@@ -121,24 +125,6 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
       IOSEventEmitterKeys.DispatchOnChartStart,
       () => {
         onStart({ nativeEvent: {} });
-      }
-    );
-    RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnLayoutUpdate,
-      (payload) => {
-        console.log('DispatchOnLayoutUpdate', payload);
-      }
-    );
-    RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnSymbolUpdate,
-      (payload) => {
-        console.log('DispatchOnSymbolUpdate', payload);
-      }
-    );
-    RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnDrawingUpdate,
-      (payload) => {
-        console.log('DispatchOnDrawingUpdate', payload);
       }
     );
     RTVEventEmitter.addListener(
@@ -151,6 +137,25 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
       IOSEventEmitterKeys.DispatchOnHUDUpdate,
       (payload: CrosshairState) => {
         onHUDChanged({ nativeEvent: { hud: payload } });
+      }
+    );
+    // NOTE: This event is not used in the app probably it is not needed
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnLayoutUpdate,
+      (payload) => {
+        // console.log('DispatchOnLayoutUpdate', payload);
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnSymbolUpdate,
+      (payload) => {
+        // console.log('DispatchOnSymbolUpdate', payload);
+      }
+    );
+    RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnDrawingUpdate,
+      (payload) => {
+        // console.log('DispatchOnDrawingUpdate', payload);
       }
     );
   }, [
@@ -168,15 +173,15 @@ const IOSChartWrapperView: React.FC<ChartIqWrapperProps> = ({
 export const ChartIqWrapperView =
   Platform.OS !== 'ios' ? ChartIqWrapperViewComponent : IOSChartWrapperView;
 
-export function setInitialData(data: string) {
+export function setInitialData(data: OHLCParams[]) {
   return ChartIQWrapperModule.setInitialData(data);
 }
 
-export function setUpdateData(data: string) {
+export function setUpdateData(data: OHLCParams[]) {
   return ChartIQWrapperModule.setUpdateData(data);
 }
 
-export function setPagingData(data: string) {
+export function setPagingData(data: OHLCParams[]) {
   return ChartIQWrapperModule.setPagingData(data);
 }
 
@@ -225,27 +230,11 @@ export async function getSymbol(): Promise<string> {
 }
 
 export async function getPeriodicity() {
-  const periodicity = await ChartIQWrapperModule.getPeriodicity();
-
-  if (Platform.OS === 'ios') {
-    return periodicity as {
-      interval: string;
-      periodicity: number;
-      timeUnit: string | null;
-    };
-  }
-
-  const parsed = JSON.parse(periodicity) as {
+  return (await ChartIQWrapperModule.getPeriodicity()) as {
     interval: string;
     periodicity: number;
-    timeUnit: string | null;
+    timeUnit: string;
   };
-
-  if (parsed.interval.includes('"')) {
-    parsed.interval = JSON.parse(parsed.interval);
-  }
-
-  return parsed;
 }
 
 export async function getChartAggregationType() {
@@ -260,12 +249,7 @@ export async function getActiveSeries(): Promise<
     symbolName: string;
   }>
 > {
-  const response = await ChartIQWrapperModule.getActiveSeries();
-
-  if (Platform.OS === 'ios') {
-    return response;
-  }
-  return JSON.parse(response);
+  return await ChartIQWrapperModule.getActiveSeries();
 }
 
 export function removeSeries(symbol: string) {
@@ -314,13 +298,7 @@ export async function redoDrawing(): Promise<boolean> {
 }
 
 export async function getStudyList() {
-  const response = await ChartIQWrapperModule.getStudyList();
-
-  if (Platform.OS === 'ios') {
-    return response as Array<Study>;
-  }
-
-  return JSON.parse(response) as Array<Study>;
+  return (await ChartIQWrapperModule.getStudyList()) as Array<Study>;
 }
 
 export async function getExtendedHours(): Promise<boolean> {
@@ -352,12 +330,7 @@ export function setIsInvertYAxis(value: boolean) {
 }
 
 export async function getActiveStudies() {
-  const activeStudies = await ChartIQWrapperModule.getActiveStudies();
-  if (Platform.OS === 'ios') {
-    return activeStudies as Study[];
-  }
-
-  return JSON.parse(activeStudies) as Study[];
+  return (await ChartIQWrapperModule.getActiveStudies()) as Study[];
 }
 
 export function addStudy(study: Study, isClone: boolean = false) {
@@ -410,35 +383,39 @@ export async function setStudyParameters(
     JSON.stringify(study),
     JSON.stringify(parameter)
   );
+
+  if (Platform.OS === 'ios') {
+    return response as StudySimplified;
+  }
+
   return JSON.parse(response) as StudySimplified;
 }
 
 export async function getActiveSignals() {
-  return;
   const response = await ChartIQWrapperModule.getActiveSignals();
-
+  if (Platform.OS === 'ios') {
+    return response;
+  }
   return JSON.parse(response) as Signal[];
 }
 
 export async function addSignalStudy(name: string) {
-  return;
   const response = await ChartIQWrapperModule.addSignalStudy(name);
-
+  if (Platform.OS === 'ios') {
+    return response as Study;
+  }
   return JSON.parse(response) as Study;
 }
 
 export function addSignal(signal: Signal, editMode: boolean = false) {
-  return;
   return ChartIQWrapperModule.addSignal(JSON.stringify(signal), editMode);
 }
 
 export function toggleSignal(signal: Signal) {
-  return;
   return ChartIQWrapperModule.toggleSignal(JSON.stringify(signal));
 }
 
 export function removeSignal(signal: Signal) {
-  return;
   return ChartIQWrapperModule.removeSignal(JSON.stringify(signal));
 }
 

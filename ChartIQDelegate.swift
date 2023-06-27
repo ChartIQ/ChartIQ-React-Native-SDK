@@ -19,10 +19,10 @@ class ChartIQHelper: NSObject {
     public var onPullUpdateCompleationHandler: (([ChartIQ.ChartIQData]) -> Void)!
     public var onPullPagingCompleationHandler: (([ChartIQ.ChartIQData]) -> Void)!
 
-    func updateInitialData(data: String){
+    func updateInitialData(data: [[String: Any]]){
         if(onPullInitialCompleationHandler != nil){
             defaultQueue.async {
-                let transformed = self.transformChartIQData(data: data)
+                let transformed = self.parseOHLCParams(params: data)
                 self.onPullInitialCompleationHandler!(transformed)
             }
         }else{
@@ -30,10 +30,10 @@ class ChartIQHelper: NSObject {
         }
     }
     
-    func updateUpdateData(data: String){
+    func updateUpdateData(data: [[String: Any]]){
         if(onPullUpdateCompleationHandler != nil){
             defaultQueue.async {
-                let transformed = self.transformChartIQData(data: data)
+                let transformed = self.parseOHLCParams(params: data)
                 self.onPullUpdateCompleationHandler!(transformed)
             }
         }else{
@@ -41,10 +41,10 @@ class ChartIQHelper: NSObject {
         }
     }
     
-    func updatePagingData(data: String){
+    func updatePagingData(data: [[String: Any]]){
         if(onPullPagingCompleationHandler != nil){
             defaultQueue.async {
-                let transformed = self.transformChartIQData(data: data)
+                let transformed = self.parseOHLCParams(params: data)
                 self.onPullPagingCompleationHandler!(transformed)
             }
         }else{
@@ -52,19 +52,12 @@ class ChartIQHelper: NSObject {
         }
     }
     
-    func transformChartIQData(data: String) -> Array<ChartIQData>{
-        let newData = try! decoder.decode(Array<DecodableChartIQData>.self, from: data.data(using: .utf8)!)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return newData.map({ decodableItem in
-            ChartIQData.init(
-                date: dateFormatter.date(from: decodableItem.DT ?? "") ?? Date(),
-                open: decodableItem.Open ?? 0,
-                high: decodableItem.High ?? 0,
-                low: decodableItem.Low ?? 0,
-                close: decodableItem.Close ?? 0,
-                volume: decodableItem.Volume ?? 0,
-                adjClose: decodableItem.AdjClose ?? 0)
-        })
+    func parseOHLCParams(params: [[String: Any]]) -> [ChartIQData]{
+        var array: [ChartIQData] = []
+        params.forEach{item in
+            let data = ChartIQData(dictionary: item)
+            array.append(data)
+        }
+        return array
     }
 }

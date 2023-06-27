@@ -47,6 +47,10 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
     const inputParameters = changeStudyParametersRef.current?.getInputParamsData() || [];
     const outputParameters = changeStudyParametersRef.current?.getOutputParamsData() || [];
 
+    if (inputParameters.length === 0 && outputParameters.length === 0) {
+      navigation.goBack();
+    }
+
     setStudyParameters(study, [...inputParameters, ...outputParameters]).then((data) => {
       navigation.navigate(SignalsStack.AddSignal, {
         changeStudy: {

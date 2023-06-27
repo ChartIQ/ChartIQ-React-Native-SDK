@@ -29,9 +29,10 @@ const DarkTheme: ColorPallette = {
   fullViewButtonBackground: Colors.white,
   fullViewButtonForeground: Colors.darkElectricBlue,
 
-  crosshairUpdateValueColor: Colors.mayaBlue,
   measureBackground: Colors.elevationDark48,
   selectedColorBackground: Colors.battleshipGrey24,
+  crosshairValue: Colors.mayaBlue,
+  crosshairItemTitle: Colors.cadetBlue,
 } as const;
 
 export default DarkTheme;

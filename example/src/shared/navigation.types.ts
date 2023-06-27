@@ -42,7 +42,7 @@ export type DrawingsStackParamList = {
   };
   [DrawingsStack.DrawingToolsFontFamily]: undefined;
   [DrawingsStack.DrawingToolsFontSizes]: undefined;
-  [DrawingsStack.DrawingToolsFibonacci]: undefined;
+  [DrawingsStack.DrawingToolsFibonacci]: { filterNegative?: boolean };
   [DrawingsStack.DrawingToolsSTDDeviation]: undefined;
   [DrawingsStack.DrawingToolsImpulse]: undefined;
   [DrawingsStack.DrawingToolCorrective]: undefined;

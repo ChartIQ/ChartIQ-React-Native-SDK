@@ -78,6 +78,8 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
       colorSelectorRef.current?.present(id);
     };
 
+    const isEmpty = data.size === 0;
+
     return (
       <>
         <BottomSheet ref={bottomSheetRef}>
@@ -85,8 +87,8 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
             title="Compare Symbols"
             leftActionTitle={translations.cancel}
             handleLeftAction={handleClose}
-            rightActionTitle={translations.Add}
-            handleRightAction={handleAddPress}
+            rightActionTitle={!isEmpty ? translations.Add : undefined}
+            handleRightAction={!isEmpty ? handleAddPress : undefined}
           />
           <FlatList
             data={Array.from(data.values())}

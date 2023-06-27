@@ -1,8 +1,7 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { PropsWithChildren, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Keyboard, StyleSheet } from 'react-native';
-import { runOnJS } from 'react-native-reanimated';
+import { View, LayoutChangeEvent, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Theme, useTheme } from '~/theme';
@@ -10,6 +9,7 @@ import { Theme, useTheme } from '~/theme';
 interface BottomSheetSelectorProps extends PropsWithChildren {
   snapPoints?: string[];
   onClose?: () => void;
+  onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
 }
 
 export interface BottomSheetMethods extends BottomSheetModalMethods {
@@ -20,7 +20,7 @@ export interface BottomSheetMethods extends BottomSheetModalMethods {
 const DEFAULT_SNAP_POINTS = ['100%'];
 
 const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorProps>(
-  ({ children, snapPoints = DEFAULT_SNAP_POINTS, onClose }, ref) => {
+  ({ children, snapPoints = DEFAULT_SNAP_POINTS, onClose, onLayout }, ref) => {
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const idRef = useRef<string | null>(null);
 
@@ -61,7 +61,11 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         style={styles.bottomSheet}
         animateOnMount
       >
-        <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          <View onLayout={onLayout} style={styles.container}>
+            {children}
+          </View>
+        </SafeAreaView>
       </BottomSheetModal>
     );
   },

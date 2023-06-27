@@ -41,27 +41,23 @@ class ChartIqWrapperView: UIView {
 
 extension ChartIqWrapperView: ChartIQDataSource {
     func pullInitialData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params))
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
             self.chartIQHelper.onPullInitialCompleationHandler = completionHandler
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params))
         }
     }
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        if params.startDate == updateStartParam { return }
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params))
-            self.updateStartParam = params.startDate
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
             self.chartIQHelper.onPullUpdateCompleationHandler = completionHandler
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params))
         }
     }
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        if params.startDate == pagingStartParam { return }
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params))
-            self.pagingStartParam = params.startDate
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
             self.chartIQHelper.onPullPagingCompleationHandler = completionHandler
+            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params))
         }
     }
     
@@ -71,7 +67,7 @@ extension ChartIqWrapperView: ChartIQDataSource {
             "start": params.startDate,
             "end": params.endDate,
             "interval": params.interval,
-            "period": params.period]]
+            "period": params.period] as [String: Any]]
     }
 }
 

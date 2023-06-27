@@ -41,28 +41,26 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
+          // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={StyleSheet.absoluteFillObject}
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-          enabled={Platform.OS === 'ios' ? false : true}
-        >
-          <ActionSheetProvider>
-            <TranslationsContext.Provider value={translationsState}>
-              <TranslationsDispatchContext.Provider value={dispatchTranslations}>
-                <DrawingContext.Provider value={drawingState}>
-                  <DrawingDispatchContext.Provider value={dispatch}>
-                    <NavigationContainer theme={navigationTheme}>
-                      <BottomSheetModalProvider>
-                        <RootNavigator />
-                      </BottomSheetModalProvider>
-                    </NavigationContainer>
-                  </DrawingDispatchContext.Provider>
-                </DrawingContext.Provider>
-              </TranslationsDispatchContext.Provider>
-            </TranslationsContext.Provider>
-          </ActionSheetProvider>
-        </KeyboardAvoidingView>
+        > */}
+        <ActionSheetProvider>
+          <TranslationsContext.Provider value={translationsState}>
+            <TranslationsDispatchContext.Provider value={dispatchTranslations}>
+              <DrawingContext.Provider value={drawingState}>
+                <DrawingDispatchContext.Provider value={dispatch}>
+                  <NavigationContainer theme={navigationTheme}>
+                    <BottomSheetModalProvider>
+                      <RootNavigator />
+                    </BottomSheetModalProvider>
+                  </NavigationContainer>
+                </DrawingDispatchContext.Provider>
+              </DrawingContext.Provider>
+            </TranslationsDispatchContext.Provider>
+          </TranslationsContext.Provider>
+        </ActionSheetProvider>
+        {/* </KeyboardAvoidingView> */}
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

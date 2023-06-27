@@ -22,19 +22,19 @@ class ChartIqWrapperViewManager: RCTViewManager {
         return true
     }
     
-    @objc func setInitialData(_ data: String) {
+    @objc func setInitialData(_ data: [[String: Any]]) {
         defaultQueue.async {
             self.chartIQHelper.updateInitialData(data: data)
         }
     }
     
-    @objc func setUpdateData(_ data: String) {
+    @objc func setUpdateData(_ data: [[String: Any]]) {
         defaultQueue.async {
             self.chartIQHelper.updateUpdateData(data: data)
         }
     }
     
-    @objc func setPagingData(_ data: String) {
+    @objc func setPagingData(_ data: [[String: Any]]) {
         defaultQueue.async {
             self.chartIQHelper.updatePagingData(data: data)
         }
@@ -80,23 +80,45 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func getChartType(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
-            resolve(self.chartIQWrapperView.chartIQView.chartType.stringValue)
+            let chartType = self.chartIQWrapperView.chartIQView.chartType.displayName.uppercased()
+            
+            resolve(chartType)
         }
     }
     
     @objc func getPeriodicity(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
+            let timeUnit = self.chartIQWrapperView.chartIQView.timeUnit
+            var timeUnitValue = ""
+            if timeUnit != nil {
+                timeUnitValue = timeUnit!.stringValue.uppercased()
+            }else{
+                timeUnitValue = ChartIQTimeUnit.day.stringValue.uppercased()
+            }
+            
+            var interval = self.chartIQWrapperView.chartIQView.interval
+            if(interval == nil){
+                interval = "1"
+            }
+            if (interval == "day" || interval == "week" || interval == "month"){
+                timeUnitValue = ChartIQTimeUnit.init(stringValue: interval ?? "day")?.stringValue.uppercased() ?? timeUnitValue
+                interval = "1"
+            }
+            
+        
+            
             resolve([
-                "timeUnit": self.chartIQWrapperView.chartIQView.timeUnit ?? "",
-                "periodicity": self.chartIQWrapperView.chartIQView.periodicity ?? "",
-                "interval": self.chartIQWrapperView.chartIQView.interval ?? ""
-            ])
+                "timeUnit": timeUnitValue,
+                "periodicity": self.chartIQWrapperView.chartIQView.periodicity ?? "1",
+                "interval":  interval ?? ""
+            ] as [String: Any])
         }
     }
     
     @objc func getChartAggregationType(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
-            resolve(self.chartIQWrapperView.chartIQView.chartAggregationType)
+            let aggregationType = self.chartIQWrapperView.chartIQView.chartAggregationType?.displayName
+            resolve(aggregationType)
         }
     }
     
@@ -159,7 +181,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func getStudyList(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
             let list = self.chartIQWrapperView.chartIQView.getAllStudies()
-            resolve(self.convertStudies(studies: list))
+            resolve(ChartIQHelperFunctions.convertStudies(studies: list))
         }
     }
     
@@ -174,73 +196,10 @@ class ChartIqWrapperViewManager: RCTViewManager {
         }
     }
     
-    func convertStudies(studies: [ChartIQStudy]) -> [[String: Any]] {
-        let formatted = studies.map { study in
-            ["name": study.fullName,
-             "shortName": study.shortName,
-             "inputs": study.inputs ?? [:],
-             "outputs": study.outputs ?? [:],
-             "parameters": study.parameters ?? [:],
-             "signalIQExclude": study.signalIQExclude,
-             "attributes": "",
-             "centerLine": "",
-             "yAxis": [:],
-             "type": "",
-             "range": "",
-             "nameParams": study.nameParams,
-             "fullName": study.fullName,
-             "originalName": study.originalName,
-             "uniqueId": study.uniqueId ?? ""]
-        }
-        return formatted
-    }
-    
-    func parseStudy(study: String) -> ChartIQStudy? {
-        if let data = study.data(using: .utf8) {
-            do {
-                guard let parsedStudy = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                    return nil
-                }
-                
-                guard let shortName = parsedStudy["shortName"] else {
-                    return nil
-                }
-                guard let fullName = parsedStudy["fullName"] else {
-                    return nil
-                }
-                guard let originalName = parsedStudy["originalName"] else {
-                    return nil
-                }
-                guard let uniqueId = parsedStudy["uniqueId"] else {
-                    return nil
-                }
-                guard let outputs = parsedStudy["outputs"] else {
-                    return nil
-                }
-                guard let parameters = parsedStudy["parameters"] else {
-                    return nil
-                }
-                guard let signalIQExclude = parsedStudy["signalIQExclude"] else {
-                    return nil
-                }
-                
-                guard var chartIQstudy: ChartIQStudy? = ChartIQStudy(shortName: shortName as! String, fullName: fullName as! String, originalName: originalName as! String, uniqueId: uniqueId as! String, outputs: outputs as! [String: Any], parameters: parameters as! [String: Any], signalIQExclude: signalIQExclude as! Bool) else {
-                    return nil
-                }
-                return chartIQstudy
-                
-            } catch {
-                print("StudyLog:parseStudy:\(error.localizedDescription)")
-            }
-        }
-        
-        return nil
-    }
-    
     @objc func addStudy(_ study: String, isClone: Bool) {
         defaultQueue.async {
             do {
-                guard let chartIQStudy = self.parseStudy(study: study) else {
+                guard let chartIQStudy = ChartIQHelperFunctions.parseStudy(study: study) else {
                     return
                 }
                 
@@ -253,7 +212,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func removeStudy(_ study: String) {
         defaultQueue.async {
-            guard let chartIQStudy = self.parseStudy(study: study) else {
+            guard let chartIQStudy = ChartIQHelperFunctions.parseStudy(study: study) else {
                 return
             }
             self.chartIQWrapperView.chartIQView.removeStudy(chartIQStudy)
@@ -261,7 +220,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     @objc func getStudyParameters(_ study: String, studyParameterType: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        guard let chartIQStudy = parseStudy(study: study) else {
+        guard let chartIQStudy = ChartIQHelperFunctions.parseStudy(study: study) else {
             return
         }
         
@@ -297,56 +256,11 @@ class ChartIqWrapperViewManager: RCTViewManager {
         }
     }
     
-    func parseFormat(parameter: String) -> [String: String]? {
-        if let data = parameter.data(using: .utf8) {
-            do {
-                guard let parsedParameter = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else {
-                    return nil
-                }
-                
-                guard let fieldName = parsedParameter["fieldName"] else {
-                    return nil
-                }
-                guard let fieldSelectedValue = parsedParameter["fieldSelectedValue"] else {
-                    return nil
-                }
-                
-                return ["key": fieldName, "value": fieldSelectedValue]
-                
-            } catch {
-                print("Error while parsing study parameter")
-            }
-        }
-        
-        return nil
-    }
-    
-    func parseParameters(parameters: String) -> [String: String]? {
-        if let data = parameters.data(using: .utf8) {
-            do {
-                guard let parsedParameter = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]] else {
-                    return nil
-                }
-                var parameters = [:] as [String: String]
-                for value in parsedParameter {
-                    guard let key = value["fieldName"] else {
-                        return nil
-                    }
-                    parameters[key] = value["fieldSelectedValue"]
-                }
-                return parameters
-            } catch {
-                return nil
-            }
-        }
-        return nil
-    }
-    
-    @objc func setStudyParameter(_ study: String, parameter: String) {
-        guard let chartIQStudy = parseStudy(study: study) else {
+    @objc func setStudyParameter(_ study: String, parameter: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard let chartIQStudy = ChartIQHelperFunctions.parseStudy(study: study) else {
             return
         }
-        guard let params = parseFormat(parameter: parameter) else {
+        guard let params = ChartIQHelperFunctions.parseFormat(parameter: parameter) else {
             return
         }
         guard let key = params["key"] else {
@@ -357,16 +271,21 @@ class ChartIqWrapperViewManager: RCTViewManager {
         }
         
         chartIQWrapperView.chartIQView.setStudyParameter(chartIQStudy.fullName, key: key, value: value)
+        resolve([
+            "studyName": chartIQStudy.name,
+            "type": nil,
+            "outputs": chartIQStudy.outputs ?? [:]
+        ] as [String: Any?])
     }
     
     @objc func setStudyParameters(_ study: String, parameters: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         defaultQueue.async {
-            guard let chartIQStudy = self.parseStudy(study: study) else {
+            guard let chartIQStudy = ChartIQHelperFunctions.parseStudy(study: study) else {
                 reject("0", "Error in setStudyParameters  while parsing study", nil)
                 return
             }
             
-            guard let params = self.parseParameters(parameters: parameters) else {
+            guard let params = ChartIQHelperFunctions.parseParameters(parameters: parameters) else {
                 reject("0", "Error in setStudyParameters while parsing parameters", nil)
                 return
             }
@@ -375,8 +294,8 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 reject("0", "Error, study parameters were not set", nil)
                 return
             }
-            
-            resolve(resolvedStudy)
+
+            resolve(ChartIQHelperFunctions.convertStudies(studies: [resolvedStudy])[0])
         }
     }
     
@@ -388,6 +307,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func setExtendedHours(_ value: Bool) {
         defaultQueue.async {
+            print("setExtendedHours: \(value)")
             self.chartIQWrapperView.chartIQView.setExtendHours(value)
         }
     }
@@ -427,7 +347,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func getActiveStudies(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
             let list = self.chartIQWrapperView.chartIQView.getActiveStudies()
-            resolve(self.convertStudies(studies: list))
+            resolve(ChartIQHelperFunctions.convertStudies(studies: list))
         }
     }
     
@@ -454,17 +374,19 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     func startCrosshairTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateCrosshairTimer), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateCrosshairTimer), userInfo: nil, repeats: true)
     }
-
+    
     @objc func updateCrosshairTimer() {
-        defaultQueue.async {
+        defaultQueue.async(qos: DispatchQoS.background,
+                           execute: {
             let hud = self.chartIQWrapperView.chartIQView.getHudDetails()
-           
-            if(self.currentHUD != nil && hud != nil){
-                if(self.currentHUD?.open == hud?.open
-                   && self.currentHUD?.high == hud?.high
-                   && self.currentHUD?.close == hud?.close && self.currentHUD?.low == hud?.low && self.currentHUD?.volume == hud?.volume && self.currentHUD?.price == hud?.price){
+            
+            if self.currentHUD != nil && hud != nil {
+                if self.currentHUD?.open == hud?.open
+                    && self.currentHUD?.high == hud?.high
+                    && self.currentHUD?.close == hud?.close && self.currentHUD?.low == hud?.low && self.currentHUD?.volume == hud?.volume && self.currentHUD?.price == hud?.price
+                {
                     return
                 }
             }
@@ -477,9 +399,9 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 "volume": hud?.volume,
                 "price": hud?.price
             ]
-
+            
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnHUDUpdate, body: hudDictionary)
-        }
+        })
     }
     
     @objc func getDrawingParams(_ tool: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -497,12 +419,69 @@ class ChartIqWrapperViewManager: RCTViewManager {
             self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName, value: value)
         }
     }
+    
+    @objc func getActiveSignals(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        defaultQueue.async {
+            let activeSignals = self.chartIQWrapperView.chartIQView.getActiveSignals()
+            let chartIQSignals = ChartIQHelperFunctions.convertSignals(signals: activeSignals)
+            resolve(chartIQSignals)
+        }
+    }
+    
+    @objc func addSignalStudy(_ studyName: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        defaultQueue.async {
+            let studies = self.chartIQWrapperView.chartIQView.getAllStudies().filter { $0.shortName == studyName }
+            if studies.isEmpty {
+                reject("0", "Error in addSignalStudy, couldn't find study for given studyName", nil)
+                return
+            }
+            let study = studies[0]
+            guard let signalStudy = self.chartIQWrapperView.chartIQView.addSignalStudy(study) else {
+                reject("0", "Error study for signal wasn't created", nil)
+                return
+            }
+            resolve(ChartIQHelperFunctions.convertStudies(studies: [signalStudy])[0])
+        }
+    }
+    
+    @objc func addSignal(_ signal: String, editMode: Bool, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        defaultQueue.async {
+            guard let chartIQSignal = ChartIQHelperFunctions.parseSignal(signal: signal) else {
+                reject("0", "Error while parsing signal", nil)
+                print("parseSignal: error while parsing signal")
+                return
+            }
+            self.chartIQWrapperView.chartIQView.saveSignal(chartIQSignal, isEdit: editMode)
+            resolve("")
+        }
+    }
+    
+    @objc func toggleSignal(_ signal: String) {
+        defaultQueue.async {
+            guard let chartIQSignal = ChartIQHelperFunctions.parseSignal(signal: signal) else {
+                return
+            }
+            self.chartIQWrapperView.chartIQView.toggleSignal(chartIQSignal)
+        }
+    }
+    
+    @objc func removeSignal(_ signal: String) {
+        defaultQueue.async {
+            guard let chartIQSignal = ChartIQHelperFunctions.parseSignal(signal: signal) else {
+                return
+            }
+            self.chartIQWrapperView.chartIQView.removeSignal(chartIQSignal)
+        }
+    }
 }
 
 extension ChartIqWrapperViewManager: RCTInvalidating {
     func invalidate() {
-        chartIQWrapperView.chartIQView.clearChart()
-        chartIQWrapperView.chartIQView.cleanup()
+        if chartIQWrapperView.chartIQView != nil {
+            chartIQWrapperView.chartIQView.clearChart()
+            chartIQWrapperView.chartIQView.cleanup()
+        }
+    
         timer?.invalidate()
         chartIQHelper = nil
         chartIQWrapperView = nil

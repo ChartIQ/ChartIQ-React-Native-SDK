@@ -28,9 +28,10 @@ const LightTheme: ColorPallette = {
   fullViewButtonBackground: Colors.darkElectricBlue,
   fullViewButtonForeground: Colors.white,
 
-  crosshairUpdateValueColor: Colors.elevationDark,
   measureBackground: Colors.ghostWhite48,
   selectedColorBackground: Colors.battleshipGrey24,
+  crosshairValue: Colors.yankeesBlue,
+  crosshairItemTitle: Colors.darkElectricBlue,
 };
 
 export default LightTheme;

@@ -5,5 +5,5 @@ export interface OHLCParams {
   Low?: number;
   Close?: number;
   Volume?: number;
-  AdjClose?: number;
+  Adj_Close?: number;
 }

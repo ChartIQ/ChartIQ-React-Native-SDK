@@ -82,16 +82,13 @@ export default function Root() {
   };
 
   const {
-    onChartTypeChanged,
     onHUDChanged,
     onMeasureChanged,
     onPullInitialData,
     onPullPagingData,
     onPullUpdateData,
     onDrawingToolChanged,
-    onChartAggregationTypeChanged,
 
-    toggleCrosshair,
     toggleDrawingToolSelector,
 
     addSymbol,
@@ -105,7 +102,6 @@ export default function Root() {
     crosshair,
     drawingItem,
     interval,
-    isCrosshairEnabled,
     isDrawing,
     measureValue,
     symbol,
@@ -146,13 +142,11 @@ export default function Root() {
           symbol={symbol}
           interval={interval?.label ?? null}
           chartStyle={chartStyle}
-          isCrosshairEnabled={isCrosshairEnabled}
           handleSymbolSelector={toggleSymbolSelector}
           handleIntervalSelector={toggleIntervalSelector}
           handleChartStyleSelector={toggleChartStyleSelector}
           handleCompareSymbolSelector={toggleCompareSymbolSelector}
           handleDrawingTool={toggleDrawingToolSelector}
-          handleCrosshair={toggleCrosshair}
           handleFullScreen={toggleFullScreen}
           isDrawing={isDrawing}
           crosshairState={crosshair}

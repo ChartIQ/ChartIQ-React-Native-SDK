@@ -148,7 +148,12 @@ const DrawingToolSettings: React.FC = () => {
       | DrawingsStack.DrawingToolCorrective
       | DrawingsStack.DrawingToolDecoration,
   ) => {
-    navigation.navigate(routeName);
+    if (DrawingsStack.DrawingToolsFibonacci === routeName) {
+      console.log(params.title, params.title === 'Fib Arc');
+      navigation.navigate(routeName, { filterNegative: params.title === 'Fib Arc' });
+      return;
+    }
+    navigation.navigate(routeName, undefined);
   };
 
   const handleAxisLabelChange = ({ nativeEvent: { value } }: SwitchChangeEvent) => {

@@ -12,8 +12,6 @@ import {
   setAggregationType,
   setChartType,
   removeSeries,
-  enableCrosshairs,
-  disableCrosshairs,
   getSymbol,
   getChartType,
   getChartAggregationType,
@@ -23,13 +21,13 @@ import {
   disableDrawing,
   setTheme,
   OnMeasureChangeEvent,
-  OnHubChangeEvent,
+  OnHudChangeEvent,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { ChartIQDatafeedParams, ChartQuery, ChartSymbol, fetchDataFeedAsync } from '~/api';
 import { colorPickerColors } from '~/constants';
-import { CrosshairSharedValues, CrosshairState, DrawingTool } from '~/model';
+import { CrosshairSharedValues, DrawingTool } from '~/model';
 import { useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
@@ -68,7 +66,6 @@ export const useChartIQ = () => {
   const [compareSymbols, setCompareSymbols] = React.useState<Map<string, ColoredChartSymbol>>(
     new Map(),
   );
-  const [isCrosshairEnabled, setIsCrosshairEnabled] = React.useState(false);
   const measureValue = useSharedValue('');
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
@@ -76,30 +73,26 @@ export const useChartIQ = () => {
   const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
 
   const onPullInitialData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
-    const response = await handleRequest(parsed);
-    setInitialData(JSON.stringify(response));
+    const response = await handleRequest(quoteFeedParam);
+    setInitialData(response);
   };
 
   const onPullUpdateData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
-    const response = await handleRequest(parsed);
+    const response = await handleRequest(quoteFeedParam);
 
-    if (!isCrosshairEnabled) {
-      const last = response[response.length - 1];
-      crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
-      crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
-      crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
-      crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
-      crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
-    }
-    setUpdateData(JSON.stringify(response));
+    const last = response[response.length - 1];
+    crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
+    crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
+    crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
+    crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
+    crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
+
+    setUpdateData(response);
   };
 
   const onPullPagingData = async ({ nativeEvent: { quoteFeedParam } }: QuoteFeedEvent) => {
-    const parsed: ChartIQDatafeedParams = JSON.parse(quoteFeedParam);
-    const response = await handleRequest(parsed);
-    setPagingData(JSON.stringify(response));
+    const response = await handleRequest(quoteFeedParam);
+    setPagingData(response);
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
@@ -171,17 +164,6 @@ export const useChartIQ = () => {
     removeSeries(input.symbol);
   };
 
-  const toggleCrosshair = (nextState: boolean) => {
-    setIsCrosshairEnabled(nextState);
-
-    if (nextState) {
-      enableCrosshairs();
-      return;
-    }
-
-    disableCrosshairs();
-  };
-
   const initChart = useCallback(async () => {
     setChartInitialized(true);
     const symbol = await getSymbol();
@@ -193,16 +175,15 @@ export const useChartIQ = () => {
     }
 
     const periodicity = await getPeriodicity();
-    console.log({ periodicity });
+    console.log('periodicity', periodicity);
     const newInterval =
-      intervals.find(
-        (item) =>
-          (item.timeUnit?.toLowerCase() === periodicity.timeUnit?.toLowerCase() &&
-            item.period === periodicity.periodicity &&
-            item.interval === periodicity.interval) ||
-          (item.timeUnit.toLowerCase() === periodicity.interval.toLowerCase() &&
-            item.period === periodicity.periodicity),
-      ) ?? null;
+      intervals.find((item) => {
+        return (
+          item.timeUnit?.toLowerCase() === periodicity.timeUnit?.toLowerCase() &&
+          item.period === periodicity.periodicity &&
+          item.interval === periodicity.interval
+        );
+      }) ?? null;
 
     setInterval(newInterval);
 
@@ -224,7 +205,7 @@ export const useChartIQ = () => {
 
     const aggregationType = await getChartAggregationType();
     const chartType = await getChartType();
-    console.log({ aggregationType, chartType });
+
     const foundAggregation = chartStyleSelectorData.find(
       (chartType) => chartType?.aggregationType === aggregationType,
     );
@@ -275,15 +256,13 @@ export const useChartIQ = () => {
     handleChartTypeChanged(chartType);
   };
 
-  const onHUDChanged = ({ nativeEvent: { hud } }: OnHubChangeEvent) => {
-    const response = hud;
-    console.log({ hud });
-    crosshair.Close.value = response.close ?? crosshair.Close.value;
-    crosshair.Open.value = response.open ?? crosshair.Open.value;
-    crosshair.High.value = response.high ?? crosshair.High.value;
-    crosshair.Low.value = response.low ?? crosshair.Low.value;
-    crosshair.Vol.value = response.volume ?? crosshair.Vol.value;
-    crosshair.Price.value = response.price ?? crosshair.Price.value;
+  const onHUDChanged = ({ nativeEvent: { hud } }: OnHudChangeEvent) => {
+    crosshair.Close.value = hud.close ?? crosshair.Close.value;
+    crosshair.Open.value = hud.open ?? crosshair.Open.value;
+    crosshair.High.value = hud.high ?? crosshair.High.value;
+    crosshair.Low.value = hud.low ?? crosshair.Low.value;
+    crosshair.Vol.value = hud.volume ?? crosshair.Vol.value;
+    crosshair.Price.value = hud.price ?? crosshair.Price.value;
   };
 
   const onMeasureChanged = ({ nativeEvent: { measure } }: OnMeasureChangeEvent) => {
@@ -324,7 +303,6 @@ export const useChartIQ = () => {
     onDrawingToolChanged,
     onChartAggregationTypeChanged,
 
-    toggleCrosshair,
     toggleDrawingToolSelector,
 
     removeSymbol,
@@ -338,7 +316,6 @@ export const useChartIQ = () => {
     interval,
     chartStyle,
     compareSymbols,
-    isCrosshairEnabled,
     isDrawing,
     drawingItem,
     measureValue,

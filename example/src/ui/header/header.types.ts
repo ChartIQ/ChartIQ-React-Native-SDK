@@ -27,9 +27,7 @@ export interface HeaderProps {
   handleChartStyleSelector: () => void;
   handleCompareSymbolSelector: () => void;
   handleDrawingTool: () => void;
-  handleCrosshair: (input: boolean) => void;
   handleFullScreen: () => void;
-  isCrosshairEnabled: boolean;
   crosshairState: CrosshairSharedValues;
   isDrawing: boolean;
   isLandscape: boolean;

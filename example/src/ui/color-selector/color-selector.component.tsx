@@ -5,7 +5,7 @@ import {
   getOrientationAsync,
 } from 'expo-screen-orientation';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { colorPickerColors } from '~/constants';
@@ -28,7 +28,7 @@ export interface ColorSelectorMethods extends BottomSheetMethods {
 const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ onChange }, ref) => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const { width } = useWindowDimensions();
+  const [width, setWidth] = React.useState(0);
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
   const [numberOfColumns, setNumberOfColumns] = React.useState<number>(VERTICAL_LIST_NUM_COLUMNS);
   const [isLandscape, setIsLandscape] = React.useState<boolean>(false);
@@ -83,7 +83,16 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
 
   return (
     <>
-      <BottomSheet ref={bottomSheetRef}>
+      <BottomSheet
+        onLayout={({
+          nativeEvent: {
+            layout: { width: containerWidth },
+          },
+        }) => {
+          setWidth(containerWidth);
+        }}
+        ref={bottomSheetRef}
+      >
         <SelectorHeader
           title="Select color"
           leftActionTitle="Cancel"
