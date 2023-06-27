@@ -76,6 +76,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
                 title: 'Delete',
                 backgroundColor: theme.colors.error,
                 color: theme.colors.primaryButtonText,
+                isOvershoot: true,
               },
             ]}
           >

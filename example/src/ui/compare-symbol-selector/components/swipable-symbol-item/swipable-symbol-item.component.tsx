@@ -29,6 +29,7 @@ const SwipableSymbol: React.FC<SwipableSymbolProps> = ({
           key: 'compare-symbol.delete',
           backgroundColor: theme.colors.error,
           color: theme.colors.white,
+          isOvershoot: true,
         },
       ]}
     >

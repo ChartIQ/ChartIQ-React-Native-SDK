@@ -342,6 +342,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
                   key: 'condition.delete',
                   backgroundColor: theme.colors.error,
                   color: theme.colors.primaryButtonText,
+                  isOvershoot: true,
                 },
               ]}
             >

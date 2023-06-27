@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import Reanimated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 import { Theme, useTheme } from '~/theme';
 
@@ -31,7 +32,7 @@ const buildInterpolationConfig = (
   }
 
   return {
-    inputRange: [0, 1, 2, 3],
+    inputRange: [0, 1, 2, 5],
     outputRange: [width, 0, -width, -screenWidth],
     extrapolate: 'clamp',
   };
@@ -83,18 +84,20 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
   };
 
   return (
-    <Swipeable
-      enabled={enabled}
-      ref={ref}
-      renderRightActions={renderRightActions}
-      containerStyle={{
-        backgroundColor: rightActionButtons[0]?.backgroundColor,
-      }}
-      overshootFriction={1}
-      overshootRight={true}
-    >
-      {children}
-    </Swipeable>
+    <Reanimated.View exiting={SlideOutLeft.duration(200)} entering={SlideInRight.duration(200)}>
+      <Swipeable
+        enabled={enabled}
+        ref={ref}
+        renderRightActions={renderRightActions}
+        containerStyle={{
+          backgroundColor: rightActionButtons[0]?.backgroundColor,
+        }}
+        overshootFriction={1}
+        overshootRight={true}
+      >
+        {children}
+      </Swipeable>
+    </Reanimated.View>
   );
 };
 
