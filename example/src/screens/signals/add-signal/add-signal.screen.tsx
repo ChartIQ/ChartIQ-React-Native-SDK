@@ -388,6 +388,7 @@ const createStyles = (theme: Theme) =>
     },
     selectStudy: {
       color: theme.colors.colorPrimary,
+      fontSize: 16,
     },
     descriptionTitle: {
       color: theme.colors.cardSubtitle,

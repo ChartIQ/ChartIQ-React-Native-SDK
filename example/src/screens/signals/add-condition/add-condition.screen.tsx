@@ -108,8 +108,9 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         }
 
         const color =
-          (outputParams.find(({ name }) => name === prevState.leftIndicator)?.value as string) ??
-          outputParams[0]?.value;
+          (outputParams.find(({ name }) => {
+            return leftIndicator.trim().includes(name.trim());
+          })?.value as string) ?? outputParams[0]?.value;
 
         return {
           ...prevState,
@@ -135,16 +136,14 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
             prevState.leftIndicator?.includes(name),
           )?.name;
         }
+
         return {
           ...prevState,
           leftIndicator: indicator?.name + ' ' + study.shortName,
           rightIndicator: rightIndValue,
           markerOption: {
             ...prevState.markerOption,
-            color:
-              (outputParams.find(({ name }) => {
-                return prevState.leftIndicator?.includes(name);
-              })?.value as string) ?? '',
+            color: indicator?.value as string,
           },
         };
       });
