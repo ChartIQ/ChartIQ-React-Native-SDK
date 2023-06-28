@@ -65,6 +65,9 @@ class ChartIqWrapperViewManager: RCTViewManager {
             if stringValue == "colored_hlc_bar" {
                 stringValue = stringValue.replace("_bar", with: "")
             }
+            if stringValue == "baseline" {
+                stringValue.append("_delta")
+            }
             guard let newType = ChartIQChartType(stringValue: stringValue) else {
                 return
             }
