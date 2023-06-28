@@ -12,10 +12,10 @@ import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
+import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ColorSelector } from '~/ui/color-selector';
 import { ColorSelectorMethods } from '~/ui/color-selector/color-selector.component';
 import { LineTypeSelector } from '~/ui/line-type-selector';
-import { LineTypeSelectorMethods } from '~/ui/line-type-selector/line-type-selector.component';
 import { ListItem } from '~/ui/list-item';
 
 type STDDeviations = '1' | '2' | '3';
@@ -64,13 +64,13 @@ const STDDeviationsSettingsScreen: React.FC = () => {
         defaultLineType,
       lineColor: drawingSettings.color3,
     },
-  ]);
+  ] satisfies STDDeviationItem[]);
 
   const [selectedLineType, setSelectedLineType] = useState<LineTypeItem>(defaultLineType);
   const [selectedColor, setSelectedColor] = useState<string>('#000000');
 
   const colorSelectorRef = useRef<ColorSelectorMethods>(null);
-  const lineTypeSelectorRef = useRef<LineTypeSelectorMethods>(null);
+  const lineTypeSelectorRef = useRef<BottomSheetMethods>(null);
 
   const navigation = useNavigation();
 
@@ -128,10 +128,9 @@ const STDDeviationsSettingsScreen: React.FC = () => {
 
   const handleLineColor = useCallback(
     (id: string) => {
-      setSelectedColor(
-        stdDeviationSettings.find((item) => item.name === id)?.lineColor || '#000000',
-      );
-      colorSelectorRef.current?.open(id);
+      const color = stdDeviationSettings.find((item) => item.name === id)?.lineColor || '#000000';
+      setSelectedColor(color);
+      colorSelectorRef.current?.present(id, color);
     },
     [stdDeviationSettings],
   );
@@ -176,7 +175,7 @@ const STDDeviationsSettingsScreen: React.FC = () => {
     setSelectedLineType(
       stdDeviationSettings.find((item) => item.name === id)?.lineType || defaultLineType,
     );
-    lineTypeSelectorRef.current?.open(id);
+    lineTypeSelectorRef.current?.present(id);
   };
 
   return (

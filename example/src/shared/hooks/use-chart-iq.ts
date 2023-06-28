@@ -22,6 +22,7 @@ import {
   setTheme,
   OnMeasureChangeEvent,
   OnHudChangeEvent,
+  restoreDefaultDrawingConfig,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
 
@@ -351,6 +352,18 @@ export const useChartIQ = () => {
     setIsDrawing(true);
   };
 
+  const handleRestoreDrawingParams = async (tool: DrawingTool) => {
+    await restoreDefaultDrawingConfig(tool, true);
+    await enableDrawing(tool);
+    const params = await getDrawingParams(tool);
+    updateDrawingSettings(() => params);
+
+    if (tool === DrawingTool.NO_TOOL) {
+      disableDrawing();
+      return setIsDrawing(false);
+    }
+  };
+
   const toggleDrawingToolSelector = () => {
     if (!isDrawing) {
       return drawingToolSelectorRef.current?.present('');
@@ -379,6 +392,7 @@ export const useChartIQ = () => {
     handleSymbolChange,
     handleIntervalChange,
     handleChartStyleChange,
+    handleRestoreDrawingParams,
 
     symbol,
     interval,

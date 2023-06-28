@@ -19,7 +19,9 @@ const ImpulseScreen: React.FC = () => {
   const navigation = useNavigation();
 
   const {
-    drawingSettings: { impulse },
+    drawingSettings: {
+      waveParameters: { impulse },
+    },
   } = useContext(DrawingContext);
 
   const handlePress = (value: Impulse) => {
@@ -28,7 +30,10 @@ const ImpulseScreen: React.FC = () => {
     setTimeout(() => {
       updateDrawingSettings((prevState) => ({
         ...prevState,
-        impulse: value,
+        waveParameters: {
+          ...prevState.waveParameters,
+          impulse: value,
+        },
       }));
 
       setDrawingParams(DrawingParams.IMPULSE, value);
@@ -40,7 +45,7 @@ const ImpulseScreen: React.FC = () => {
         data={items}
         renderItem={({ item: { name, value } }) => (
           <ListItem onPress={() => handlePress(value)} title={name}>
-            <Icons.chevronRight
+            <Icons.check
               fill={theme.colors.colorPrimary}
               style={{ display: value === impulse ? 'flex' : 'none' }}
             />

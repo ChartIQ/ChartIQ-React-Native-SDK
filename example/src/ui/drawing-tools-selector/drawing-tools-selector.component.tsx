@@ -35,7 +35,7 @@ import { DrawingToolSelectorProps } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
 
 const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorProps>(
-  ({ onChange }, ref) => {
+  ({ onChange, handleRestoreDrawingParams }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
@@ -284,7 +284,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   {
                     text: 'Restore',
                     onPress: () => {
-                      restoreDefaultDrawingConfig(tool.name, false);
+                      handleRestoreDrawingParams(tool.name);
                     },
                   },
                 ],

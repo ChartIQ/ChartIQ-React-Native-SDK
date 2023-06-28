@@ -19,7 +19,9 @@ const CorrectiveScreen: React.FC = () => {
   const navigation = useNavigation();
 
   const {
-    drawingSettings: { corrective },
+    drawingSettings: {
+      waveParameters: { corrective },
+    },
   } = useContext(DrawingContext);
 
   const handlePress = (value: Corrective) => {
@@ -28,7 +30,10 @@ const CorrectiveScreen: React.FC = () => {
     setTimeout(() => {
       updateDrawingSettings((prevState) => ({
         ...prevState,
-        corrective: value,
+        waveParameters: {
+          ...prevState.waveParameters,
+          corrective: value,
+        },
       }));
       setDrawingParams(DrawingParams.CORRECTIVE, value);
     });
@@ -40,7 +45,7 @@ const CorrectiveScreen: React.FC = () => {
         data={items}
         renderItem={({ item: { name, value } }) => (
           <ListItem onPress={() => handlePress(value)} title={name}>
-            <Icons.chevronRight
+            <Icons.check
               fill={theme.colors.colorPrimary}
               style={{ display: value === corrective ? 'flex' : 'none' }}
             />

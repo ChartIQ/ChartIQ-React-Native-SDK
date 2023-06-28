@@ -1,11 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FlatList } from 'react-native';
 import { setDrawingParams } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Icons from '~/assets/icons';
+import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
+import { useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 
 const fontFamilies = [
@@ -37,7 +40,13 @@ const fontFamilies = [
 
 const FontFamilyScreen: React.FC = () => {
   const { updateDrawingSettings } = useUpdateDrawingTool();
+  const theme = useTheme();
   const navigation = useNavigation();
+  const {
+    drawingSettings: {
+      font: { family },
+    },
+  } = useContext(DrawingContext);
 
   const handlePress = (value: string) => {
     updateDrawingSettings((prevState) => ({
@@ -56,7 +65,14 @@ const FontFamilyScreen: React.FC = () => {
       <FlatList
         data={fontFamilies}
         renderItem={({ item: { name, value } }) => (
-          <ListItem onPress={() => handlePress(value)} title={name} />
+          <ListItem onPress={() => handlePress(value)} title={name}>
+            <Icons.check
+              fill={theme.colors.colorPrimary}
+              style={{
+                display: value.toLowerCase() === family.toLowerCase() ? 'flex' : 'none',
+              }}
+            />
+          </ListItem>
         )}
         keyExtractor={(item) => item.value}
       />

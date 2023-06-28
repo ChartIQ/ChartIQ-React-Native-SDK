@@ -92,6 +92,7 @@ export default function Root() {
     handleSymbolChange,
     handleChartStyleChange,
     handleIntervalChange,
+    handleRestoreDrawingParams,
 
     chartStyle,
     compareSymbols,
@@ -183,7 +184,11 @@ export default function Root() {
         onChange={handleIntervalChange}
       />
       <ChartStyleSelector ref={chartStyleSelectorRef} onChange={handleChartStyleChange} />
-      <DrawingToolSelector onChange={onDrawingToolChanged} ref={drawingToolSelectorRef} />
+      <DrawingToolSelector
+        handleRestoreDrawingParams={handleRestoreDrawingParams}
+        onChange={onDrawingToolChanged}
+        ref={drawingToolSelectorRef}
+      />
       <FullScreenAnimatedButtonComponent isFullScreen={isFullscreen} onChange={toggleFullScreen} />
     </SafeAreaView>
   );

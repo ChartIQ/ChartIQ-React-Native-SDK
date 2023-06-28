@@ -1,7 +1,5 @@
 package com.chartiqwrapper
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -15,7 +13,6 @@ import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.QuoteFeedParams
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.SimpleViewManager
