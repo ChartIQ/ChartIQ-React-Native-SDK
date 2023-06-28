@@ -127,10 +127,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
   @ReactMethod
   fun setChartType(type: String) {
-    val newType = ChartType.values().find {
+    var newType = ChartType.values().find {
       it.value == type
     }
-
+    if(type == "Vertex Line"){
+        newType = ChartType.VERTEX_LINE
+    }
     if (newType != null) {
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().setChartType(newType)
