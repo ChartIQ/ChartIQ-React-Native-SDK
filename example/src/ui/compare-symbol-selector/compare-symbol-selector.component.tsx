@@ -9,6 +9,7 @@ import { Theme, useTheme } from '~/theme';
 
 import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { ColorSelector } from '../color-selector';
+import { ColorSelectorMethods } from '../color-selector/color-selector.component';
 import { SelectorHeader } from '../selector-header';
 import SymbolSelector from '../symbol-selector/symbol-selector.component';
 
@@ -30,7 +31,7 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
     const { translations } = useTranslations();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const symbolSelectorRef = useRef<BottomSheetMethods>(null);
-    const colorSelectorRef = useRef<BottomSheetMethods>(null);
+    const colorSelectorRef = useRef<ColorSelectorMethods>(null);
 
     const handleClose = () => {
       bottomSheetRef.current?.dismiss();
@@ -74,8 +75,8 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
       }
     };
 
-    const handleChangeColor = (id: string) => {
-      colorSelectorRef.current?.present(id);
+    const handleChangeColor = (item: ColoredChartSymbol) => {
+      colorSelectorRef.current?.present(item.symbol, item.color);
     };
 
     const isEmpty = data.size === 0;

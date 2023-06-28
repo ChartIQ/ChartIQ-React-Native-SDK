@@ -212,7 +212,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
         val array = Arguments.createArray()
         symbols.forEach {
           val map = Arguments.createMap().apply {
-            putString("symbol", it.symbolName)
+            putString("symbolName", it.symbolName)
             putString("color", it.color)
           }
           array.pushMap(map)

@@ -8,7 +8,7 @@ import { ColoredChartSymbol } from '../../compare-symbol-selector.component';
 
 interface SwipableSymbolProps {
   item: ColoredChartSymbol;
-  handleChangeColor: (id: string) => void;
+  handleChangeColor: (id: ColoredChartSymbol) => void;
   handleDelete: (id: ColoredChartSymbol) => void;
 }
 
@@ -36,7 +36,7 @@ const SwipableSymbol: React.FC<SwipableSymbolProps> = ({
       <View style={styles.itemContainer}>
         <Text style={styles.title}>{item.symbol}</Text>
         <Pressable
-          onPress={() => handleChangeColor(item.symbol)}
+          onPress={() => handleChangeColor(item)}
           style={[styles.selectedColor, { backgroundColor: item.color }]}
         />
       </View>

@@ -78,6 +78,26 @@ export const useChartIQ = () => {
 
   const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
 
+  const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
+
+  const toggleCompareSymbolSelector = () => {
+    getActiveSeries().then((activeSeries) => {
+      const map = new Map();
+      activeSeries.forEach((item) => {
+        map.set(item.symbolName, {
+          color: item.color,
+          symbol: item.symbolName,
+          description: '',
+          funds: [],
+        } as ColoredChartSymbol);
+      });
+
+      setCompareSymbols(map);
+    });
+
+    compareSymbolSelectorRef.current?.present('');
+  };
+
   const onPullInitialData = async ({
     nativeEvent: {
       quoteFeedParam: { id, ...params },
@@ -351,6 +371,7 @@ export const useChartIQ = () => {
     onChartAggregationTypeChanged,
 
     toggleDrawingToolSelector,
+    toggleCompareSymbolSelector,
 
     removeSymbol,
     addSymbol,
@@ -369,6 +390,7 @@ export const useChartIQ = () => {
     crosshair,
 
     drawingToolSelectorRef,
+    compareSymbolSelectorRef,
 
     initialized,
     initChart,

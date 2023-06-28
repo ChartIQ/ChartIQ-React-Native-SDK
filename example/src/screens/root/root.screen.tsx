@@ -34,7 +34,6 @@ export default function Root() {
   const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
   const intervalSelectorRef = React.useRef<BottomSheetMethods>(null);
   const chartStyleSelectorRef = React.useRef<BottomSheetMethods>(null);
-  const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
   const toggleSymbolSelector = () => {
     symbolSelectorRef.current?.present('');
@@ -46,10 +45,6 @@ export default function Root() {
 
   const toggleChartStyleSelector = () => {
     chartStyleSelectorRef.current?.present('');
-  };
-
-  const toggleCompareSymbolSelector = () => {
-    compareSymbolSelectorRef.current?.present('');
   };
 
   React.useEffect(() => {
@@ -90,6 +85,7 @@ export default function Root() {
     onDrawingToolChanged,
 
     toggleDrawingToolSelector,
+    toggleCompareSymbolSelector,
 
     addSymbol,
     removeSymbol,
@@ -107,6 +103,7 @@ export default function Root() {
     symbol,
 
     drawingToolSelectorRef,
+    compareSymbolSelectorRef,
 
     initChart,
     initialized,
