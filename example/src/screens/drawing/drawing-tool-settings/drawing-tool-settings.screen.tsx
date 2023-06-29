@@ -282,6 +282,7 @@ const DrawingToolSettings: React.FC = () => {
               <TextInput
                 value={volumeProfile.priceBuckets.toString()}
                 onChange={handleVolumeProfileChange}
+                style={styles.text}
               />
             </ListItem>
           ) : null}
