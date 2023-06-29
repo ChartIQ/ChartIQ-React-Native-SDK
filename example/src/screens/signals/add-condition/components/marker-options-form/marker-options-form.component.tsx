@@ -236,7 +236,12 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
             <>
               <ListItem onPress={handleShape} title="Shape" value={shape.value} />
               <ListItem title="Tag Mark">
-                <TextInput style={styles.input} defaultValue="X" onChangeText={handleTagMark} />
+                <TextInput
+                  style={styles.input}
+                  defaultValue="X"
+                  onChangeText={handleTagMark}
+                  value={tagMark}
+                />
               </ListItem>
               <ListItem onPress={handleSize} title="Size" value={size.value} />
               <ListItem onPress={handlePosition} title="Position" value={position.value} />
