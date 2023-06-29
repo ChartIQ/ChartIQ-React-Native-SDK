@@ -48,7 +48,7 @@ const Settings: React.FC = () => {
       data,
       selected: data.find((item) => item.value === languageName)?.key || '',
       id: 'language',
-      title: translations['Choose language'],
+      title: 'Language',
     });
   };
 
