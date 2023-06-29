@@ -15,6 +15,7 @@ import Icons from '~/assets/icons';
 import { Condition } from '~/model/signals/condition';
 import { Signal, SignalJoiner } from '~/model/signals/signal';
 import { Study } from '~/model/study';
+import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -302,7 +303,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         <ListItem
           onPress={handleChangeStudyParams}
           style={styles.firstListItem}
-          title={selectedStudy.name}
+          title={formatStudyName(selectedStudy.name)}
         >
           <Icons.chevronRight fill={theme.colors.cardSubtitle} />
         </ListItem>
