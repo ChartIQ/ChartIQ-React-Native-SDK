@@ -30,8 +30,8 @@ export const filters = [
   { name: 'Text', value: DrawingToolTags.text },
   { name: 'Statistic', value: DrawingToolTags.statistics },
   { name: 'Technicals', value: DrawingToolTags.technicals },
-  { name: 'Markings', value: DrawingToolTags.markings },
   { name: 'Fibonacci', value: DrawingToolTags.fibonacci },
+  { name: 'Markings', value: DrawingToolTags.markings },
   { name: 'Lines', value: DrawingToolTags.lines },
 ];
 
