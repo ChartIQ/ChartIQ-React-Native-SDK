@@ -96,7 +96,7 @@ const AddStudies: React.FC = () => {
     );
   };
 
-  const filtered = studies.filter((item) => item.name.includes(search));
+  const filtered = studies.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <View style={styles.container}>
