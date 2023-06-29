@@ -184,6 +184,7 @@ const createStyles = (theme: Theme) =>
     },
     studyName: {
       fontSize: 16,
+      color: theme.colors.cardTitle,
     },
     studyValue: {
       fontSize: 14,

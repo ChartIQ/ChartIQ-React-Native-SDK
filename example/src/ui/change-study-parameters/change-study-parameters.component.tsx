@@ -27,6 +27,16 @@ export interface ChangeStudyParameterMethods {
   getOutputParamsData: () => StudyParameterModel[];
 }
 
+const formatNumber = (text: string) => {
+  const number = Number(text);
+  const fixLength = text.split('.', 2)[1]?.length ?? 1;
+
+  if (isNaN(number) || number === Infinity || number === -Infinity) {
+    return '0.0';
+  }
+  return number.toFixed(fixLength);
+};
+
 const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStudyParametersProps>(
   ({ inputParameters, outputParameters, children }, ref) => {
     const theme = useTheme();
@@ -41,7 +51,17 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     const [outputParamsData, setOutputParamsData] = useState<Array<StudyParameterModel>>([]);
 
     useEffect(() => {
-      setInputParams(inputParameters);
+      setInputParams(
+        inputParameters.map((item) => {
+          if (item.fieldType === 'Number') {
+            return {
+              ...item,
+              value: formatNumber(item.value.toString()),
+            };
+          }
+          return item;
+        }),
+      );
       setOutputParams(outputParameters);
       setInputParamsData((prevState) =>
         prevState.map((item) => {
@@ -201,12 +221,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     }));
 
     const handleNumberChange = (text: string, name: string) => {
-      const number = Number(text);
-      if (isNaN(number) || number === Infinity || number === -Infinity) {
-        onValueChange(name, 0.0);
-        return;
-      }
-      onValueChange(name, number);
+      onValueChange(name, formatNumber(text));
     };
 
     return (
@@ -251,7 +266,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                       <TextInput
                         style={styles.input}
                         keyboardType="numeric"
-                        defaultValue={item.value.toString()}
+                        defaultValue={Number(item.value).toFixed(1)}
                         placeholder="0.0"
                         onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
                         onEndEditing={({ nativeEvent: { text } }) =>
@@ -321,6 +336,8 @@ const createStyles = (theme: Theme) =>
     },
     input: {
       padding: 0,
+      color: theme.colors.cardSubtitle,
+      fontSize: 16,
     },
   });
 
