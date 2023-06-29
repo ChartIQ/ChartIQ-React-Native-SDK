@@ -54,9 +54,17 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
       bottomSheetRef.current?.present(id);
     };
 
+    const onDismiss = () => {
+      setFilter('');
+      setSelectedItem('');
+      setTitle('');
+      bottomSheetRef.current?.dismiss();
+    };
+
     useImperativeHandle(ref, () => ({
       ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       open: onExpand,
+      dismiss: onDismiss,
     }));
 
     const filteredData = flatListData.filter(({ value }) =>
@@ -64,7 +72,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     );
 
     return (
-      <BottomSheet ref={bottomSheetRef}>
+      <BottomSheet ref={bottomSheetRef} onClose={onDismiss}>
         {title && showHeader ? (
           <SelectorHeader
             title={translationMap[title] || title}

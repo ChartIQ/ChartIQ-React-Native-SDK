@@ -111,7 +111,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
   );
 
   return (
-    <BottomSheet ref={bottomSheetRef}>
+    <BottomSheet ref={bottomSheetRef} onClose={handleClose}>
       <View>
         <Input
           bottomSheet
