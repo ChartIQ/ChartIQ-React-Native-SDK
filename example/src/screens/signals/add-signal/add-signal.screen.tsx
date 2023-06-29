@@ -399,6 +399,7 @@ const createStyles = (theme: Theme) =>
     },
     textInput: {
       padding: 0,
+      color: theme.colors.cardSubtitle,
     },
     saveButton: {
       color: theme.colors.colorPrimary,

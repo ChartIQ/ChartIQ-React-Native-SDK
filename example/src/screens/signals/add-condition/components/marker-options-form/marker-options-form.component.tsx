@@ -260,7 +260,7 @@ const MarkerOptionsForm = forwardRef<MarkerOptionsFormMethods, MarkerOptionsForm
 
 MarkerOptionsForm.displayName = 'MarkerOptionsForm';
 
-const createStyles = ({ colors: { cardSubtitle, error, errorBackground } }: Theme) =>
+const createStyles = ({ colors: { cardSubtitle, error, errorBackground, border } }: Theme) =>
   StyleSheet.create({
     title: {
       paddingVertical: 8,
@@ -276,6 +276,9 @@ const createStyles = ({ colors: { cardSubtitle, error, errorBackground } }: Them
     colorBox: {
       width: 24,
       height: 24,
+      borderWidth: 1,
+      borderRadius: 4,
+      borderColor: border,
     },
     warningContainer: {
       backgroundColor: errorBackground,
