@@ -130,7 +130,7 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     contentContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.backgroundSecondary,
     },
     text: {
       color: theme.colors.colorPrimary,
@@ -139,7 +139,7 @@ const createStyles = (theme: Theme) =>
     separator: {
       height: 1,
       backgroundColor: theme.colors.border,
-      marginHorizontal: 12,
+      marginLeft: 40,
     },
     itemContainer: {
       paddingVertical: 12,
