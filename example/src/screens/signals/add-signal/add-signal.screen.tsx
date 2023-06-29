@@ -374,7 +374,8 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         filtered
         ref={selectFromListRef}
         onChange={handleStudyChange}
-        showHeader={false}
+        showHeader
+        withSaveButton
       />
     </View>
   );

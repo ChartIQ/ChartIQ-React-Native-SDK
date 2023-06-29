@@ -14,6 +14,7 @@ interface SelectOptionFromListProps extends PropsWithChildren {
   onChange: (result: { value: string; key: string }, id: string) => void;
   filtered?: boolean;
   showHeader?: boolean;
+  withSaveButton?: boolean;
 }
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
@@ -28,19 +29,32 @@ export interface SelectOptionFromListMethods extends BottomSheetMethods {
   open: (params: Params) => void;
 }
 
+type Item = { key: string; value: string };
+
 const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptionFromListProps>(
-  ({ onChange, filtered = false, showHeader = true }, ref) => {
+  ({ onChange, filtered = false, showHeader = true, withSaveButton = false }, ref) => {
     const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const [flatListData, setFlatListData] = useState<Array<{ key: string; value: string }>>([]);
-    const [selectedItem, setSelectedItem] = useState('');
+    const [flatListData, setFlatListData] = useState<Array<Item>>([]);
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const { translationMap, translations } = useTranslations();
     const [filter, setFilter] = useState('');
     const [title, setTitle] = useState('');
 
-    const handleSelect = (value: string, key: string) => {
-      onChange({ key, value }, bottomSheetRef.current?.id ?? '');
+    const handleSelect = (item: Item) => {
+      onChange(item, bottomSheetRef.current?.id ?? '');
       bottomSheetRef.current?.dismiss();
+    };
+
+    const handlePreselect = (item: Item) => {
+      setSelectedItem(item);
+    };
+
+    const handleSave = () => {
+      if (selectedItem) {
+        onChange(selectedItem, bottomSheetRef.current?.id ?? '');
+        bottomSheetRef.current?.dismiss();
+      }
     };
 
     const onExpand = ({ data, id, selected, title }: Params) => {
@@ -50,13 +64,13 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
         setFlatListData(Object.entries(data).map(([key, value]) => ({ key, value })));
       }
       setTitle(title);
-      setSelectedItem(selected);
+      setSelectedItem({ key: selected, value: selected });
       bottomSheetRef.current?.present(id);
     };
 
     const onDismiss = () => {
       setFilter('');
-      setSelectedItem('');
+      setSelectedItem(null);
       setTitle('');
       bottomSheetRef.current?.dismiss();
     };
@@ -71,6 +85,15 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
       value.toLowerCase().includes(filter.toLowerCase()),
     );
 
+    const onPress = (item: Item) => {
+      if (withSaveButton) {
+        handlePreselect(item);
+        return;
+      }
+
+      handleSelect(item);
+    };
+
     return (
       <BottomSheet ref={bottomSheetRef} onClose={onDismiss}>
         {title && showHeader ? (
@@ -78,6 +101,8 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
             title={translationMap[title] || title}
             leftActionTitle={translations.close}
             handleLeftAction={() => bottomSheetRef.current?.dismiss()}
+            rightActionTitle={withSaveButton && selectedItem ? 'Save' : undefined}
+            handleRightAction={withSaveButton && selectedItem ? handleSave : undefined}
           />
         ) : null}
         {filtered ? (
@@ -85,14 +110,16 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
             bottomSheet
             onChange={setFilter}
             handleClear={() => setFilter('')}
-            handleClose={() => bottomSheetRef.current?.dismiss()}
+            handleClose={showHeader ? undefined : bottomSheetRef.current?.dismiss}
           />
         ) : null}
         <BottomSheetFlatList
           data={filteredData}
-          renderItem={({ item: { value, key } }) => (
-            <ListItem onPress={() => handleSelect(value, key)} title={value}>
-              {key === selectedItem ? <Icons.check fill={theme.colors.colorPrimary} /> : null}
+          renderItem={({ item }) => (
+            <ListItem onPress={() => onPress(item)} title={item.value}>
+              {item.key === selectedItem?.key ? (
+                <Icons.check fill={theme.colors.colorPrimary} />
+              ) : null}
             </ListItem>
           )}
         />
