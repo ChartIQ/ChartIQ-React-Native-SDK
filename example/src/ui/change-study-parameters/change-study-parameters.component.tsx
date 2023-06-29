@@ -220,7 +220,13 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                 if (item.fieldType === 'Select') {
                   return (
                     <ListItem
-                      onPress={() => handleSelectOption(item.options, item.value, item.name)}
+                      onPress={() =>
+                        handleSelectOption(
+                          item.options as { [key: string]: string },
+                          item.value as string,
+                          item.name,
+                        )
+                      }
                       title={item.name}
                     >
                       <Text>{item.value}</Text>
@@ -247,7 +253,8 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                         keyboardType="numeric"
                         defaultValue={item.value.toString()}
                         placeholder="0.0"
-                        onChange={({ nativeEvent: { text } }) =>
+                        onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
+                        onEndEditing={({ nativeEvent: { text } }) =>
                           handleNumberChange(text, item.name)
                         }
                         value={item.value.toString()}
