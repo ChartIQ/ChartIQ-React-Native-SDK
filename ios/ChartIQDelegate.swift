@@ -58,7 +58,7 @@ class ChartIQHelper: NSObject {
     func parseOHLCParams(params: [[String: Any]]) -> [ChartIQData] {
         var array: [ChartIQData] = []
         params.forEach { item in
-            let data = ChartIQData(dictionary: item)
+            let data = ChartIQData.init(dictionary: item)
             array.append(data)
         }
         return array
