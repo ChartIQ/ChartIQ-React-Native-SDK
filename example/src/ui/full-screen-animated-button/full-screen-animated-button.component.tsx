@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -41,83 +41,141 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
     }
   }, [translateX, width]);
 
+  const positionsMap = useMemo(
+    () => ({
+      [Corners.TOP_RIGHT]: {
+        x: width - SPACE,
+        y: PADDING,
+      },
+      [Corners.BOTTOM_RIGHT]: {
+        x: width - SPACE,
+        y: height - SPACE - PADDING,
+      },
+      [Corners.TOP_LEFT]: {
+        x: PADDING,
+        y: PADDING,
+      },
+      [Corners.BOTTOM_LEFT]: {
+        x: PADDING,
+        y: height - SPACE - PADDING,
+      },
+    }),
+    [height, width],
+  );
+
   const gestureDown = Gesture.Fling()
     .direction(Directions.DOWN)
     .onStart(() => {
       const position = pos.value;
-
-      if (position === Corners.TOP_LEFT || position === Corners.TOP_RIGHT) {
-        translateY.value = withTiming(height - SPACE - PADDING);
+      switch (position) {
+        case Corners.TOP_LEFT: {
+          pos.value = Corners.BOTTOM_LEFT;
+          break;
+        }
+        case Corners.TOP_RIGHT: {
+          pos.value = Corners.BOTTOM_RIGHT;
+          break;
+        }
+        default: {
+          return;
+        }
       }
     })
     .onEnd(() => {
       const position = pos.value;
-
-      if (position === Corners.TOP_LEFT) {
-        pos.value = Corners.BOTTOM_LEFT;
-      }
-      if (position === Corners.TOP_RIGHT) {
-        pos.value = Corners.BOTTOM_RIGHT;
-      }
+      translateY.value = withTiming(positionsMap[position].y);
     });
 
   const gestureUp = Gesture.Fling()
     .direction(Directions.UP)
     .onStart(() => {
       const position = pos.value;
-
-      if (position === Corners.BOTTOM_LEFT || position === Corners.BOTTOM_RIGHT) {
-        translateY.value = withTiming(PADDING);
+      switch (position) {
+        case Corners.BOTTOM_LEFT: {
+          pos.value = Corners.TOP_LEFT;
+          break;
+        }
+        case Corners.BOTTOM_RIGHT: {
+          pos.value = Corners.TOP_RIGHT;
+          break;
+        }
+        default: {
+          return;
+        }
       }
     })
     .onEnd(() => {
       const position = pos.value;
-      if (position === Corners.BOTTOM_LEFT) {
-        pos.value = Corners.TOP_LEFT;
-      }
-      if (position === Corners.BOTTOM_RIGHT) {
-        pos.value = Corners.TOP_RIGHT;
-      }
+      translateY.value = withTiming(positionsMap[position].y);
     });
 
   const gestureLeft = Gesture.Fling()
     .direction(Directions.LEFT)
     .onStart(() => {
       const position = pos.value;
-      if (position === Corners.TOP_RIGHT || position === Corners.BOTTOM_RIGHT) {
-        translateX.value = withTiming(PADDING);
+      switch (position) {
+        case Corners.TOP_RIGHT: {
+          pos.value = Corners.TOP_LEFT;
+          break;
+        }
+        case Corners.BOTTOM_RIGHT: {
+          pos.value = Corners.BOTTOM_LEFT;
+          break;
+        }
+        default: {
+          return;
+        }
       }
     })
     .onEnd(() => {
       const position = pos.value;
-
-      if (position === Corners.TOP_RIGHT) {
-        pos.value = Corners.TOP_LEFT;
-      }
-      if (position === Corners.BOTTOM_RIGHT) {
-        pos.value = Corners.BOTTOM_LEFT;
-      }
+      translateX.value = withTiming(positionsMap[position].x);
     });
 
   const gestureRight = Gesture.Fling()
     .direction(Directions.RIGHT)
     .onStart(() => {
       const position = pos.value;
-      if (position === Corners.TOP_LEFT || position === Corners.BOTTOM_LEFT) {
-        translateX.value = withTiming(width - SPACE);
+      switch (position) {
+        case Corners.TOP_LEFT: {
+          pos.value = Corners.TOP_RIGHT;
+          break;
+        }
+        case Corners.BOTTOM_LEFT: {
+          pos.value = Corners.BOTTOM_RIGHT;
+          break;
+        }
+        default: {
+          return;
+        }
       }
     })
     .onEnd(() => {
       const position = pos.value;
-      if (position === Corners.TOP_LEFT) {
-        pos.value = Corners.TOP_RIGHT;
-      }
-      if (position === Corners.BOTTOM_LEFT) {
-        pos.value = Corners.BOTTOM_RIGHT;
-      }
+      translateX.value = withTiming(positionsMap[position].x);
     });
 
   const gesture = Gesture.Race(gestureLeft, gestureRight, gestureDown, gestureUp);
+
+  const onPress = () => {
+    onChange(false);
+  };
+
+  useEffect(() => {
+    if (isFullScreen) {
+      if (isFirstRender.current) {
+        pos.value = Corners.TOP_RIGHT;
+        translateX.value = positionsMap[pos.value].x;
+        translateY.value = positionsMap[pos.value].y;
+        isFirstRender.current = false;
+      } else {
+        const value = positionsMap[pos.value];
+
+        translateX.value = value.x;
+        translateY.value = value.y;
+      }
+    }
+  }, [isFullScreen, pos, positionsMap, translateX, translateY, width]);
 
   const style = useAnimatedStyle(
     () => ({
@@ -125,26 +183,6 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
     }),
     [translateY, translateX],
   );
-
-  const onPress = () => {
-    onChange(false);
-  };
-
-  useEffect(() => {
-    if (isFullScreen && isFirstRender.current) {
-      translateX.value = width - SPACE;
-      translateY.value = PADDING;
-      isFirstRender.current = false;
-    }
-
-    return () => {
-      isFirstRender.current = true;
-    };
-  }, [isFullScreen, translateX, translateY, width]);
-
-  if (!isFullScreen) {
-    return null;
-  }
 
   return (
     <GestureDetector gesture={gesture}>
@@ -159,6 +197,7 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
             top: 0,
             left: 0,
             borderRadius: BOX_SIZE,
+            display: isFullScreen ? 'flex' : 'none',
           },
           style,
         ]}
