@@ -87,6 +87,7 @@ const createStyles = (theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       margin: 12,
+      paddingRight: 20,
     },
     item: {
       width: 64,

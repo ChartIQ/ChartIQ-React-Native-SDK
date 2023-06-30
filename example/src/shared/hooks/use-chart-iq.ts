@@ -33,6 +33,7 @@ import {
   fetchDataFeedAsync,
   handleRetry,
 } from '~/api';
+import { findLineTypeItemByPatternAndWidth } from '~/assets/icons/line-types/line-types';
 import { colorPickerColors } from '~/constants';
 import { CrosshairSharedValues, DrawingTool } from '~/model';
 import { useTheme } from '~/theme';
@@ -77,7 +78,8 @@ export const useChartIQ = () => {
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
-  const { updateDrawingSettings, updateSupportedSettings } = useUpdateDrawingTool();
+  const { updateDrawingSettings, updateSupportedSettings, updateLineTypeItem } =
+    useUpdateDrawingTool();
 
   const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
@@ -340,28 +342,24 @@ export const useChartIQ = () => {
   const onDrawingToolChanged = async (input: DrawingItem) => {
     enableDrawing(input.name);
     const params = await getDrawingParams(input.name);
-
+    const lineTypeItem = findLineTypeItemByPatternAndWidth(params.pattern, params.lineWidth);
+    if (lineTypeItem) {
+      updateLineTypeItem(lineTypeItem);
+    }
     updateDrawingSettings(() => params);
 
-    updateSupportedSettings(input.name);
-    setDrawingItem(input);
     if (input.name === DrawingTool.NO_TOOL) {
       return setIsDrawing(false);
     }
 
+    updateSupportedSettings(input.name);
+    setDrawingItem(input);
     setIsDrawing(true);
   };
 
-  const handleRestoreDrawingParams = async (tool: DrawingTool) => {
-    await restoreDefaultDrawingConfig(tool, true);
-    await enableDrawing(tool);
-    const params = await getDrawingParams(tool);
-    updateDrawingSettings(() => params);
-
-    if (tool === DrawingTool.NO_TOOL) {
-      disableDrawing();
-      return setIsDrawing(false);
-    }
+  const handleRestoreDrawingParams = async (tool: DrawingItem) => {
+    await restoreDefaultDrawingConfig(tool.name, true);
+    onDrawingToolChanged(tool);
   };
 
   const toggleDrawingToolSelector = () => {

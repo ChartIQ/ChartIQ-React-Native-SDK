@@ -18,10 +18,16 @@ export const lineTypePickerData: LineTypeItem[] = [
     lineWidth: 1,
   },
   {
-    name: 'dash',
-    Icon: lineTypes.dash,
-    value: 'dashed',
-    lineWidth: 1,
+    name: 'solidBold',
+    Icon: lineTypes.solidBold,
+    value: 'solid',
+    lineWidth: 2,
+  },
+  {
+    name: 'solidBoldest',
+    Icon: lineTypes.solidBoldest,
+    value: 'solid',
+    lineWidth: 3,
   },
   {
     name: 'dotted',
@@ -30,28 +36,22 @@ export const lineTypePickerData: LineTypeItem[] = [
     lineWidth: 1,
   },
   {
-    name: 'solidBold',
-    Icon: lineTypes.solidBold,
-    value: 'solid',
-    lineWidth: 2,
-  },
-  {
-    name: 'dashBold',
-    Icon: lineTypes.dashBold,
-    value: 'dashed',
-    lineWidth: 2,
-  },
-  {
     name: 'dottedBold',
     Icon: lineTypes.dottedBold,
     value: 'dotted',
     lineWidth: 2,
   },
   {
-    name: 'solidBoldest',
-    Icon: lineTypes.solidBoldest,
-    value: 'solid',
-    lineWidth: 3,
+    name: 'dash',
+    Icon: lineTypes.dash,
+    value: 'dashed',
+    lineWidth: 1,
+  },
+  {
+    name: 'dashBold',
+    Icon: lineTypes.dashBold,
+    value: 'dashed',
+    lineWidth: 2,
   },
 ];
 

@@ -47,7 +47,6 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem>(drawingTools[0]);
     const { translationMap } = useTranslations();
-
     useEffect(() => {
       const getFavoriteItems = async () => {
         const storageFavoriteItems =
@@ -284,7 +283,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   {
                     text: 'Restore',
                     onPress: () => {
-                      handleRestoreDrawingParams(tool.name);
+                      handleRestoreDrawingParams(tool);
                     },
                   },
                 ],

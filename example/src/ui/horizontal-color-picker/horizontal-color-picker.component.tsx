@@ -96,6 +96,7 @@ const createStyles = (theme: Theme) =>
     contentContainer: {
       alignItems: 'center',
       justifyContent: 'center',
+      paddingRight: 20,
     },
     item: {
       width: 44,

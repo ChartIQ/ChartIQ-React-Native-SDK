@@ -41,10 +41,10 @@ export const useUpdateDrawingTool = () => {
     dispatch(DrawingActions.setDrawingSettings({ ...drawingSettings, lineWidth }));
   };
 
-  const updateLineTypeItem = (lineTypeItems: LineTypeItem) => {
-    dispatch(DrawingActions.setDrawingLineTypeItem(lineTypeItems));
-    updateLineType(lineTypeItems.value);
-    updateLineWidth(lineTypeItems.lineWidth);
+  const updateLineTypeItem = (lineTypeItem: LineTypeItem) => {
+    dispatch(DrawingActions.setDrawingLineTypeItem(lineTypeItem));
+    updateLineType(lineTypeItem.value);
+    updateLineWidth(lineTypeItem.lineWidth);
   };
 
   return {

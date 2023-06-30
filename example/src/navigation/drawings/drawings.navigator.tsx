@@ -10,6 +10,7 @@ import { FontSizesScreen } from '~/screens/drawing/font-size';
 import { ImpulseScreen } from '~/screens/drawing/impulse';
 import { STDDeviationsSettingsScreen } from '~/screens/drawing/std-deviation-settings';
 import { DrawingsStack, DrawingsStackParamList } from '~/shared/navigation.types';
+import { ChevronBack } from '~/ui/back-chevron';
 
 const { Navigator, Screen } = createNativeStackNavigator<DrawingsStackParamList>();
 
@@ -19,7 +20,7 @@ const DrawingsNavigator: React.FC = () => {
       <Screen
         name={DrawingsStack.DrawingToolsSettings}
         component={DrawingToolSettingsScreen}
-        options={{ headerTitleAlign: 'center' }}
+        options={{ headerTitleAlign: 'center', headerLeft: ChevronBack }}
       />
       <Screen
         options={{ title: 'Select font family', headerTitleAlign: 'center' }}

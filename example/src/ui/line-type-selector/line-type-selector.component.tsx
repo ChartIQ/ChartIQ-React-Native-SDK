@@ -32,7 +32,11 @@ const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
 
     return (
       <BottomSheet ref={bottomSheetRef}>
-        <SelectorHeader title="Select line type" />
+        <SelectorHeader
+          leftActionTitle="Cancel"
+          handleLeftAction={handleClose}
+          title="Select line type"
+        />
         <FlatList
           data={lineTypePickerData}
           numColumns={4}
