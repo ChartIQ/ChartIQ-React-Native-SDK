@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated';
 
+import Icons from '~/assets/icons';
 import { colorPickerColors } from '~/constants';
 import { Theme, useTheme } from '~/theme';
 
@@ -62,7 +63,18 @@ const HorizontalColorPicker: React.FC<HorizontalColorPickerProps> = ({
               { backgroundColor: item },
               activeColor === item && styles.selectedItem,
             ]}
-          />
+          >
+            {activeColor === item && styles.selectedItem ? (
+              <View style={styles.check}>
+                <Icons.check
+                  width={16}
+                  height={16}
+                  fill={theme.colors.white}
+                  stroke={theme.colors.white}
+                />
+              </View>
+            ) : null}
+          </TouchableOpacity>
         )}
       />
     </Animated.View>
@@ -92,10 +104,17 @@ const createStyles = (theme: Theme) =>
       borderWidth: 1,
       borderColor: theme.colors.border,
       marginHorizontal: 6,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     selectedItem: {
       borderWidth: 2,
       borderColor: theme.colors.colorPrimary,
+    },
+    check: {
+      backgroundColor: theme.colors.selectedColorBackground,
+      borderRadius: 22,
+      padding: 4,
     },
   });
 
