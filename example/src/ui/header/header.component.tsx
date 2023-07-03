@@ -22,6 +22,8 @@ import { HeaderItem, HeaderProps } from './header.types';
 
 const timingConfig = { duration: 200 };
 const CROSSHAIR_HEIGHT = 58;
+const MIN_VISIBLE_ITEMS = 3 + 1;
+const DEFAULT_CARD_SIZE = 24 + 16;
 
 const Header: React.FC<HeaderProps> = ({
   symbol,
@@ -128,9 +130,8 @@ const Header: React.FC<HeaderProps> = ({
     [styles.chartStyleButton, styles.selectedButton],
   );
 
-  const cardWidth = 24 + 16;
+  const numberOfVisibleItems = Math.max(Math.floor(width / DEFAULT_CARD_SIZE), MIN_VISIBLE_ITEMS);
 
-  const numberOfVisibleItems = Math.floor(width / cardWidth);
   const handleStudies = useCallback(() => {
     navigation.navigate(RootStack.Studies);
   }, [navigation]);
@@ -225,6 +226,7 @@ const Header: React.FC<HeaderProps> = ({
       0,
       isAllItemsFits ? preparedItems.length : numberOfVisibleItems - 1,
     );
+
     let otherItems = preparedItems.slice(numberOfVisibleItems - 1, items.length);
 
     if (!isAllItemsFits) {

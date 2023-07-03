@@ -56,12 +56,11 @@ export const createStyles = (theme: Theme) =>
     selectedButton: {
       backgroundColor: theme.colors.buttonText,
     },
-
     iconMargin: {
       margin: 4,
     },
     itemContainer: {
-      paddingHorizontal: 8,
+      paddingHorizontal: 4,
     },
     buttonsContainer: {
       flex: 1,
