@@ -47,29 +47,6 @@ export default function Root() {
     chartStyleSelectorRef.current?.present('');
   };
 
-  React.useEffect(() => {
-    const callback = (orientation: Orientation) => {
-      const landscape =
-        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT;
-      if (landscape) {
-        setIsLandscape(landscape);
-        setIsFullScreen(landscape);
-      } else {
-        setIsFullScreen(false);
-        setIsLandscape(false);
-      }
-    };
-    getOrientationAsync().then(callback);
-
-    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-      callback(orientation);
-    });
-
-    return () => {
-      removeOrientationChangeListeners();
-    };
-  }, [setIsLandscape]);
-
   const toggleFullScreen = () => {
     setIsFullScreen((prevState) => {
       return !prevState;
@@ -109,6 +86,37 @@ export default function Root() {
     initChart,
     initialized,
   } = useChartIQ();
+
+  React.useEffect(() => {
+    const callback = (orientation: Orientation) => {
+      const landscape =
+        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT;
+      if (landscape) {
+        setIsLandscape(true);
+      } else {
+        setIsLandscape(false);
+      }
+    };
+    getOrientationAsync().then(callback);
+
+    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+      callback(orientation);
+    });
+
+    return () => {
+      removeOrientationChangeListeners();
+    };
+  }, [setIsLandscape]);
+
+  React.useEffect(() => {
+    if (isLandscape && !isDrawing) {
+      setIsFullScreen(true);
+    } else {
+      setIsFullScreen(false);
+    }
+    // isDrawing is absent in dependency array for skip callback run when drawing tool disables in full screen mode
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLandscape]);
 
   const showDrawingToolsSelector = () => {
     drawingToolSelectorRef.current?.present('');
