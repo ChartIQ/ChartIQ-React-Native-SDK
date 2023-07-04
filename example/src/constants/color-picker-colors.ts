@@ -40,3 +40,20 @@ export const colorPickerColors = [
   '#f29bc1',
   '#000000',
 ];
+
+export const compareColors = [
+  '#8ec648',
+  '#00afed',
+  '#ee652e',
+  '#912a8e',
+  '#fff126',
+  '#e9088c',
+  '#ea1d2c',
+  '#00a553',
+  '#00a99c',
+  '#0056a4',
+  '#f4932f',
+  '#0073ba',
+  '#66308f',
+  '#323390',
+] as const;
