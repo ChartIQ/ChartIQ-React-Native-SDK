@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -6,8 +6,11 @@ import Animated, {
   useSharedValue,
   withTiming,
   FadeIn,
+  FadeOutLeft,
+  FadeOutDown,
 } from 'react-native-reanimated';
 
+import images from '~/assets/images';
 import { ActiveImage } from '~/assets/images/active-image';
 import { useTheme } from '~/theme';
 
@@ -34,6 +37,8 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
   const translateX = useSharedValue(width - SPACE);
   const translateY = useSharedValue(PADDING);
   const isFirstRender = useRef(true);
+  const imageOpacity = useSharedValue(0);
+  const [arrowVisible, setArrowsVisible] = useState(true);
 
   useEffect(() => {
     if (width) {
@@ -170,7 +175,6 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
         isFirstRender.current = false;
       } else {
         const value = positionsMap[pos.value];
-
         translateX.value = value.x;
         translateY.value = value.y;
       }
@@ -183,6 +187,26 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
     }),
     [translateY, translateX],
   );
+
+  const imageStyle = useAnimatedStyle(() => {
+    return {
+      opacity: imageOpacity.value,
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isFullScreen && pos.value === Corners.TOP_RIGHT) {
+      setArrowsVisible(true);
+    }
+  }, [isFullScreen, pos.value]);
+
+  useEffect(() => {
+    if (arrowVisible) {
+      setTimeout(() => {
+        setArrowsVisible(false);
+      }, 4000);
+    }
+  }, [arrowVisible]);
 
   return (
     <GestureDetector gesture={gesture}>
@@ -205,6 +229,22 @@ const FullScreenButton: React.FC<FullScreenButtonProps> = ({ isFullScreen, onCha
         <Pressable onPress={onPress} style={styles.button}>
           <ActiveImage type="fillView" active />
         </Pressable>
+        {arrowVisible ? (
+          <>
+            <Animated.Image
+              entering={FadeIn.delay(1500).duration(300)}
+              exiting={FadeOutDown}
+              source={images.arrowBottom}
+              style={[styles.bottomArrow, imageStyle]}
+            />
+            <Animated.Image
+              entering={FadeIn.delay(1500).duration(300)}
+              exiting={FadeOutLeft}
+              source={images.arrowLeft}
+              style={[styles.leftArrow, imageStyle]}
+            />
+          </>
+        ) : null}
       </Animated.View>
     </GestureDetector>
   );
@@ -215,6 +255,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  bottomArrow: {
+    position: 'absolute',
+    bottom: -32,
+    left: 8,
+  },
+  leftArrow: {
+    position: 'absolute',
+    top: 4,
+    left: -32,
   },
 });
 
