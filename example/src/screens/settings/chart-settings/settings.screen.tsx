@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-import {
-  getChartScale,
-  getExtendedHours,
-  getIsInvertYAxis,
-  setChartScale,
-  setIsInvertYAxis,
-  setExtendedHours as setChartExtendedHours,
-} from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 
 import { ChartIQLanguages } from '~/constants/languages';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -26,9 +19,9 @@ const Settings: React.FC = () => {
   const { languageName, setLanguage, translations } = useTranslations();
 
   const getValues = useCallback(async () => {
-    const logScale = await getChartScale();
-    const invertYAxis = await getIsInvertYAxis();
-    const extendedHours = await getExtendedHours();
+    const logScale = await ChartIQ.getChartScale();
+    const invertYAxis = await ChartIQ.getIsInvertYAxis();
+    const extendedHours = await ChartIQ.getExtendedHours();
 
     setLogScale(logScale === 'log');
     setInvertYAxis(invertYAxis);
@@ -64,7 +57,7 @@ const Settings: React.FC = () => {
           <Switch
             value={logScale}
             onChange={({ nativeEvent: { value } }) => {
-              setChartScale(value ? 'log' : 'linear');
+              ChartIQ.setChartScale(value ? 'log' : 'linear');
               setLogScale(value);
             }}
           />
@@ -73,7 +66,7 @@ const Settings: React.FC = () => {
           <Switch
             value={invertYAxis}
             onChange={({ nativeEvent: { value } }) => {
-              setIsInvertYAxis(value);
+              ChartIQ.setIsInvertYAxis(value);
               setInvertYAxis(value);
             }}
           />
@@ -82,7 +75,7 @@ const Settings: React.FC = () => {
           <Switch
             value={extendedHours}
             onChange={({ nativeEvent: { value } }) => {
-              setChartExtendedHours(value);
+              ChartIQ.setExtendedHours(value);
               setExtendedHours(value);
             }}
           />

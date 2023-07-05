@@ -7,9 +7,10 @@ import {
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
+import { ChartSymbol } from 'react-native-chart-iq-wrapper';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { ChartSymbol, fetchSymbolsAsync, handleRetry } from '~/api';
+import { fetchSymbolsAsync, handleRetry } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
 import { useTheme, Theme } from '~/theme';
 

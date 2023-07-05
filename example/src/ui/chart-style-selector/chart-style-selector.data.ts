@@ -1,8 +1,6 @@
 import React from 'react';
+import { ChartType, AggregationType } from 'react-native-chart-iq-wrapper';
 import { SvgProps } from 'react-native-svg';
-
-import { ChartType } from '~/model/chart-type';
-import { AggregationType } from '~/model/chart-type/chart-type';
 
 import icons from '../../assets/icons';
 

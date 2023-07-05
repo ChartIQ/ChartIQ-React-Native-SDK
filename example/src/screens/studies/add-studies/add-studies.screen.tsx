@@ -2,11 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ListRenderItemInfo, Pressable, StyleSheet, Text, View } from 'react-native';
-import { addStudy, getActiveStudies, getStudyList } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
 import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
-import { Study } from '~/model/study';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -23,7 +22,7 @@ const AddStudies: React.FC = () => {
   const { translationMap } = useTranslations();
 
   const get = useCallback(async () => {
-    const studiesList = await getStudyList();
+    const studiesList = await ChartIQ.getStudyList();
     const translatedStudies = studiesList
       .map((item) => ({
         ...item,
@@ -38,13 +37,13 @@ const AddStudies: React.FC = () => {
   }, [get]);
 
   const handleSelect = useCallback(async () => {
-    const activeStudies = await getActiveStudies();
+    const activeStudies = await ChartIQ.getActiveStudies();
     selected.forEach((name) => {
       const study = studies.find((item) => item.name === name);
 
       if (study !== undefined) {
         const isClone = activeStudies.some((item) => study.name === item.name);
-        addStudy(study, isClone);
+        ChartIQ.addStudy(study, isClone);
       }
     });
 

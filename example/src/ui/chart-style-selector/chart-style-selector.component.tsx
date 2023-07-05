@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { getChartAggregationType, getChartType } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
@@ -41,8 +41,8 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
 
     const handleOpen = async () => {
       bottomSheetRef.current?.present('');
-      const aggregationType = await getChartAggregationType();
-      const chartType = await getChartType();
+      const aggregationType = await ChartIQ.getChartAggregationType();
+      const chartType = await ChartIQ.getChartType();
 
       if (aggregationType) {
         setSelectedChartStyle((prevState) => {

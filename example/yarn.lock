@@ -186,6 +186,11 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.21.5.tgz#345f2377d05a720a4e5ecfa39cbf4474a4daed56"
   integrity sha512-0WDaIlXKOX/3KfBK/dwP1oQGiPh6rjMkT7HIRv7i5RR2VUMwrx5ZL0dwBkKx7+SW1zwNdgjHd34IMk5ZjTeHVg==
 
+"@babel/helper-plugin-utils@^7.22.5":
+  version "7.22.5"
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.22.5.tgz#dd7ee3735e8a313b9f7b05a773d892e88e6d7295"
+  integrity sha512-uLls06UVKgFG9QD4OeFYLEGteMIAa5kpTPcFL28yuCIIzsf6ZyKZMllKVOCZFhiZ5ptnwX4mtKdWCBE/uT4amg==
+
 "@babel/helper-remap-async-to-generator@^7.18.9":
   version "7.18.9"
   resolved "https://registry.yarnpkg.com/@babel/helper-remap-async-to-generator/-/helper-remap-async-to-generator-7.18.9.tgz#997458a0e3357080e54e1d79ec347f8a8cd28519"
@@ -670,6 +675,14 @@
   dependencies:
     "@babel/helper-builder-binary-assignment-operator-visitor" "^7.18.6"
     "@babel/helper-plugin-utils" "^7.18.6"
+
+"@babel/plugin-transform-export-namespace-from@^7.22.5":
+  version "7.22.5"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-export-namespace-from/-/plugin-transform-export-namespace-from-7.22.5.tgz#57c41cb1d0613d22f548fddd8b288eedb9973a5b"
+  integrity sha512-X4hhm7FRnPgd4nDA4b/5V280xCx6oL7Oob5+9qVS5C13Zq4bh1qq7LU0GgRU6b5dBWBvhGaXYVB4AcN6+ol6vg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.22.5"
+    "@babel/plugin-syntax-export-namespace-from" "^7.8.3"
 
 "@babel/plugin-transform-flow-strip-types@^7.0.0", "@babel/plugin-transform-flow-strip-types@^7.21.0":
   version "7.21.0"
@@ -1439,10 +1452,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@gorhom/bottom-sheet@^4":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.4.6.tgz#49fa6728f10133de772baaeb67ebe0f63125cf80"
-  integrity sha512-okqJPtFQjfqPZdh6wGDzQKkMevG1IfplQeoWY0VqOFCp3E0p7WHNeW41voK7KXXCVTQaGXibPfd9GNGjXgFNyg==
+"@gorhom/bottom-sheet@^4.4.7":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.4.7.tgz#fc80b3f0b7ebab056ce226f3aa3a89b2db8660dd"
+  integrity sha512-ukTuTqDQi2heo68hAJsBpUQeEkdqP9REBcn47OpuvPKhdPuO1RBOOADjqXJNCnZZRcY+HqbnGPMSLFVc31zylQ==
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"

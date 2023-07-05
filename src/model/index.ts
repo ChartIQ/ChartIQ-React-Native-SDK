@@ -5,3 +5,8 @@ export * from './study/study-parameter-model';
 export * from './drawingtool';
 export * from './layout';
 export * from './crosshair';
+export * from './time-unit';
+export * from './chart-api.types';
+export * from './chart-type';
+export * from './signals';
+export * from './study';

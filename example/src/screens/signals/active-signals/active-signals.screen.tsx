@@ -2,10 +2,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { getActiveSignals, removeSignal, toggleSignal } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Signal } from 'react-native-chart-iq-wrapper';
 
 import images from '~/assets/images';
-import { Signal } from '~/model/signals';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -27,7 +26,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   }, [navigation]);
 
   const get = useCallback(async () => {
-    const response = await getActiveSignals();
+    const response = await ChartIQ.getActiveSignals();
 
     setActiveSignal(response);
   }, []);
@@ -50,8 +49,8 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
     }
   }, [activeSignals.length, handleAddSignal, navigation, styles.headerButton, translations.Add]);
 
-  const handleToggleSignal = (value: boolean, signal: Signal) => {
-    toggleSignal(signal);
+  const handleToggleSignal = (_: boolean, signal: Signal) => {
+    ChartIQ.toggleSignal(signal);
     get();
   };
 
@@ -70,7 +69,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
               {
                 key: 'delete-signal-item',
                 onPress: () => {
-                  removeSignal(item);
+                  ChartIQ.removeSignal(item);
                   get();
                 },
                 title: 'Delete',

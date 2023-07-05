@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, ViewStyle, View, StyleSheet } from 'react-native';
-import { redoDrawing, undoDrawing } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 import Icons from '~/assets/icons';
@@ -19,10 +19,10 @@ const DrawingMeasure: React.FC<DrawingMeasureProps> = ({ isDrawing, measure }) =
   const displayUndo: ViewStyle = { display: isDrawing ? 'flex' : 'none' };
 
   const undo = () => {
-    undoDrawing();
+    ChartIQ.undoDrawing();
   };
   const redo = () => {
-    redoDrawing();
+    ChartIQ.redoDrawing();
   };
 
   const measureStyle = useAnimatedStyle(() => {

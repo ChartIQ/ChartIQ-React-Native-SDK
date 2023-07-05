@@ -1,175 +1,279 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useContext, useEffect } from 'react';
-import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import React, { useState, useContext, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { Pressable, StyleSheet, ScrollView, ActivityIndicator, View } from 'react-native';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
 import { colorInitializer } from '~/shared/helpers';
 import { DrawingsStack, RootStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 
 import Icons from '../../assets/icons';
 import { useUpdateDrawingTool } from '../../shared/hooks/use-update-drawing-tool';
-import { DrawingItem } from '../drawing-tools-selector/drawing-tools-selector.data';
 import { HorizontalColorPicker } from '../horizontal-color-picker';
 import { HorizontalLineTypePicker } from '../horizontal-line-type-picker';
 
 interface DrawingToolManagerProps {
-  drawingItem: DrawingItem;
   handleDrawingTool: () => void;
+}
+export interface DrawingToolManagerMethods {
+  show: () => void;
+  hide: () => void;
+  loading: (value: boolean) => void;
 }
 type DrawingTool = 'line-color' | 'fill-color' | 'line-type';
 
-const DrawingToolManager: React.FC<DrawingToolManagerProps> = ({
-  drawingItem,
-  handleDrawingTool,
-}) => {
-  const navigation = useNavigation();
-  const theme = useTheme();
-  const styles = createStyles(theme);
-  const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
-  const { drawingSettings, supportedSettings, currentLineType } = useContext(DrawingContext);
-  const { updateFillColor, updateLineColor, updateLineTypeItem } = useUpdateDrawingTool();
-  const { color: lineColorValue, pattern: lineType, fillColor: fillColorValue } = drawingSettings;
-  const { supportingFillColor, supportingLineColor, supportingLineType, supportingSettings } =
-    supportedSettings;
+const PICKER_HEIGHT = 70;
 
-  const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
-  const [lineColor, setLineColor] = useState(() => colorInitializer(lineColorValue, theme.isDark));
-  const toggleFillColor = () => {
-    setActiveTool(activeTool === 'fill-color' ? null : 'fill-color');
-  };
+const DrawingToolManager = forwardRef<DrawingToolManagerMethods, DrawingToolManagerProps>(
+  ({ handleDrawingTool }, ref) => {
+    const navigation = useNavigation();
+    const theme = useTheme();
+    const styles = createStyles(theme);
+    const { bottom } = useSafeAreaInsets();
 
-  useEffect(() => {
-    if (lineColorValue) {
-      setLineColor(colorInitializer(lineColorValue, theme.isDark));
-    }
-    if (fillColorValue) {
-      setFillColor(colorInitializer(fillColorValue, theme.isDark));
-    }
-  }, [fillColorValue, lineColorValue, theme.isDark]);
+    const [activeTool, setActiveTool] = useState<DrawingTool | null>(null);
+    const { drawingSettings, supportedSettings, currentLineType, name, title } =
+      useContext(DrawingContext);
+    const { updateFillColor, updateLineColor, updateLineTypeItem } = useUpdateDrawingTool();
+    const { color: lineColorValue, pattern: lineType, fillColor: fillColorValue } = drawingSettings;
+    const { supportingFillColor, supportingLineColor, supportingLineType, supportingSettings } =
+      supportedSettings;
+    const [loading, setLoading] = useState(false);
+    const pickerHeight = useSharedValue(0);
 
-  const handleFillColorChange = (color?: string) => {
-    setActiveTool(null);
+    const [fillColor, setFillColor] = useState(() =>
+      colorInitializer(fillColorValue, theme.isDark),
+    );
+    const [lineColor, setLineColor] = useState(() =>
+      colorInitializer(lineColorValue, theme.isDark),
+    );
+    const toggleFillColor = () => {
+      pickerHeight.value = withTiming(activeTool === 'fill-color' ? 0 : PICKER_HEIGHT, {
+        duration: 200,
+      });
+      setActiveTool(activeTool === 'fill-color' ? null : 'fill-color');
+    };
+    const translate = useSharedValue(100);
+    const height = useSharedValue(0);
 
-    if (color) {
-      setFillColor(color);
-      setDrawingParams(DrawingParams.FILL_COLOR, color);
-      updateFillColor(color);
-    }
-  };
+    const animatedStyles = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateY: translate.value }],
+        height: height.value + pickerHeight.value,
+      };
+    });
 
-  const toggleLineColor = () => {
-    setActiveTool(activeTool === 'line-color' ? null : 'line-color');
-  };
+    const handleOpen = () => {
+      'worklet';
+      translate.value = withTiming(0, { duration: 300 });
+      height.value = withTiming(50, { duration: 300 });
+    };
 
-  const handleLineColorChange = (color?: string) => {
-    setActiveTool(null);
+    const handleClose = () => {
+      'worklet';
+      translate.value = withTiming(100, { duration: 300 });
+      height.value = withTiming(0, { duration: 300 });
+      runOnJS(setActiveTool)(null);
+    };
 
-    if (color) {
-      setLineColor(color);
-      setDrawingParams(DrawingParams.LINE_COLOR, color);
+    useImperativeHandle(ref, () => ({
+      show: handleOpen,
+      hide: handleClose,
+      loading: (value: boolean) => {
+        setLoading(value);
+      },
+    }));
 
-      updateLineColor(color);
-    }
-  };
+    useEffect(() => {
+      if (lineColorValue) {
+        setLineColor(colorInitializer(lineColorValue, theme.isDark));
+      }
+      if (fillColorValue) {
+        setFillColor(colorInitializer(fillColorValue, theme.isDark));
+      }
+    }, [fillColorValue, lineColorValue, theme.isDark]);
 
-  const toggleLineType = () => {
-    setActiveTool(activeTool === 'line-type' ? null : 'line-type');
-  };
+    const handleFillColorChange = (color?: string) => {
+      'worklet';
+      pickerHeight.value = withTiming(0, { duration: 200 });
 
-  const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
-    setActiveTool(null);
-    updateLineTypeItem(lineTypeItem);
-    setDrawingParams(DrawingParams.LINE_TYPE, lineTypeItem.value);
-    setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
-  };
+      setActiveTool(null);
 
-  const handleSettingsPress = () => {
-    // @ts-ignore
-    navigation.navigate({
-      name: RootStack.Drawings,
-      params: {
-        screen: DrawingsStack.DrawingToolsSettings,
+      if (color) {
+        setFillColor(color);
+        ChartIQ.setDrawingParams(DrawingParams.FILL_COLOR, color);
+        updateFillColor(color);
+      }
+    };
+
+    const toggleLineColor = () => {
+      pickerHeight.value = withTiming(activeTool === 'line-color' ? 0 : PICKER_HEIGHT, {
+        duration: 200,
+      });
+      setActiveTool(activeTool === 'line-color' ? null : 'line-color');
+    };
+
+    const handleLineColorChange = (color?: string) => {
+      setActiveTool(null);
+      pickerHeight.value = withTiming(0, { duration: 200 });
+      if (color) {
+        setLineColor(color);
+        ChartIQ.setDrawingParams(DrawingParams.LINE_COLOR, color);
+
+        updateLineColor(color);
+      }
+    };
+
+    const toggleLineType = () => {
+      pickerHeight.value = withTiming(activeTool === 'line-type' ? 0 : PICKER_HEIGHT, {
+        duration: 200,
+      });
+      setActiveTool(activeTool === 'line-type' ? null : 'line-type');
+    };
+
+    const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
+      setActiveTool(null);
+      pickerHeight.value = withTiming(0, { duration: 200 });
+      updateLineTypeItem(lineTypeItem);
+      ChartIQ.setDrawingParams(DrawingParams.LINE_TYPE, lineTypeItem.value);
+      ChartIQ.setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
+    };
+
+    const handleSettingsPress = () => {
+      // @ts-ignore
+      navigation.navigate({
+        name: RootStack.Drawings,
         params: {
-          title: drawingItem.title,
-          name: drawingItem.name,
-          settings: {
-            ...drawingSettings,
-            fillColor,
-            color: lineColor,
-            pattern: lineType,
+          screen: DrawingsStack.DrawingToolsSettings,
+          params: {
+            title: title,
+            name: name,
+            settings: {
+              ...drawingSettings,
+              fillColor,
+              color: lineColor,
+              pattern: lineType,
+            },
           },
         },
-      },
-    });
-  };
+      });
+    };
 
-  return (
-    <View>
-      <HorizontalColorPicker
-        active={activeTool === 'fill-color'}
-        onChange={handleFillColorChange}
-        activeColor={fillColor ?? null}
-      />
-      <HorizontalColorPicker
-        active={activeTool === 'line-color'}
-        onChange={handleLineColorChange}
-        activeColor={lineColor ?? null}
-      />
-      <HorizontalLineTypePicker
-        active={activeTool === 'line-type'}
-        activeItem={currentLineType}
-        onChange={onLineTypeChange}
-      />
-      <View style={styles.container}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.contentContainer}
-          scrollEnabled={false}
-        >
-          <Pressable onPress={handleDrawingTool} style={styles.itemContainer}>
-            <drawingItem.Icon
-              width={24}
-              height={24}
-              fill={theme.colors.buttonText}
-              stroke={theme.colors.buttonText}
-            />
-          </Pressable>
-          {supportingFillColor && (
-            <Pressable style={[styles.itemContainer]} onPress={toggleFillColor}>
-              <Icons.FillColor iconColor={theme.colors.buttonText} selectedColor={fillColor} />
+    const pickerContainerStyle = useAnimatedStyle(() => ({
+      height: pickerHeight.value,
+      backgroundColor: theme.colors.backgroundSecondary,
+    }));
+
+    const onDrawingToolChange = () => {
+      'worklet';
+      setActiveTool(null);
+      pickerHeight.value = withTiming(0, { duration: 200 });
+      handleDrawingTool();
+    };
+
+    const Icon = Icons.drawingTools[name];
+    const LineTypeIcon = currentLineType.Icon;
+
+    return (
+      <Animated.View style={[animatedStyles]}>
+        <Animated.View style={pickerContainerStyle}>
+          <HorizontalColorPicker
+            active={activeTool === 'fill-color'}
+            onChange={handleFillColorChange}
+            activeColor={fillColor ?? null}
+          />
+          <HorizontalColorPicker
+            active={activeTool === 'line-color'}
+            onChange={handleLineColorChange}
+            activeColor={lineColor ?? null}
+          />
+          <HorizontalLineTypePicker
+            active={activeTool === 'line-type'}
+            activeItem={currentLineType}
+            onChange={onLineTypeChange}
+          />
+        </Animated.View>
+        <Animated.View style={[styles.container]}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.contentContainer}
+            scrollEnabled={false}
+          >
+            <Pressable onPress={onDrawingToolChange} style={styles.itemContainer}>
+              {!loading ? (
+                <Icon
+                  width={24}
+                  height={24}
+                  fill={theme.colors.buttonText}
+                  stroke={theme.colors.buttonText}
+                />
+              ) : (
+                <ActivityIndicator style={styles.loading} color={theme.colors.colorPrimary} />
+              )}
             </Pressable>
-          )}
-          {supportingLineColor && (
-            <Pressable style={[styles.itemContainer]} onPress={toggleLineColor}>
-              <Icons.LineColor iconColor={theme.colors.buttonText} selectedColor={lineColor} />
-            </Pressable>
-          )}
-          {supportingLineType ? (
-            <Pressable onPress={toggleLineType} style={styles.itemContainer}>
-              <currentLineType.Icon
-                width={24}
-                height={24}
-                fill={theme.colors.buttonText}
-                stroke={theme.colors.buttonText}
-                strokeWidth={currentLineType.lineWidth}
-              />
-            </Pressable>
-          ) : null}
-          {supportingSettings && (
-            <Pressable onPress={handleSettingsPress} style={styles.itemContainer}>
-              <Icons.menuSettings width={24} height={24} fill={theme.colors.buttonText} />
-            </Pressable>
-          )}
-        </ScrollView>
-      </View>
-    </View>
-  );
-};
+            {loading ? null : (
+              <>
+                {supportingFillColor && (
+                  <Pressable style={[styles.itemContainer]} onPress={toggleFillColor}>
+                    <Icons.FillColor
+                      iconColor={theme.colors.buttonText}
+                      selectedColor={fillColor}
+                    />
+                  </Pressable>
+                )}
+                {supportingLineColor && (
+                  <Pressable style={[styles.itemContainer]} onPress={toggleLineColor}>
+                    <Icons.LineColor
+                      iconColor={theme.colors.buttonText}
+                      selectedColor={lineColor}
+                    />
+                  </Pressable>
+                )}
+                {supportingLineType ? (
+                  <Pressable onPress={toggleLineType} style={styles.itemContainer}>
+                    <LineTypeIcon
+                      width={24}
+                      height={24}
+                      fill={theme.colors.buttonText}
+                      stroke={theme.colors.buttonText}
+                      strokeWidth={currentLineType.lineWidth}
+                    />
+                  </Pressable>
+                ) : null}
+                {supportingSettings && (
+                  <Pressable onPress={handleSettingsPress} style={styles.itemContainer}>
+                    <Icons.menuSettings width={24} height={24} fill={theme.colors.buttonText} />
+                  </Pressable>
+                )}
+              </>
+            )}
+          </ScrollView>
+          <View
+            style={[
+              styles.safeView,
+              {
+                bottom: -bottom,
+                height: bottom,
+              },
+            ]}
+          />
+        </Animated.View>
+      </Animated.View>
+    );
+  },
+);
+
+DrawingToolManager.displayName = 'DrawingToolManager';
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
@@ -190,6 +294,16 @@ const createStyles = (theme: Theme) =>
       width: 32,
       height: 32,
       marginRight: 16,
+    },
+    loading: {
+      width: 24,
+      height: 24,
+    },
+    safeView: {
+      position: 'absolute',
+      left: 0,
+      width: '100%',
+      backgroundColor: theme.colors.backgroundSecondary,
     },
   });
 

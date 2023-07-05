@@ -8,7 +8,7 @@ import { Theme, useTheme } from '~/theme';
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
     baseStyle: {
-      color: theme.colors.crosshairUpdateValueColor,
+      color: theme.colors.crosshairValue,
       padding: 0,
     },
   });

@@ -1,7 +1,6 @@
 import React from 'react';
+import { DrawingTool } from 'react-native-chart-iq-wrapper';
 import { SvgProps } from 'react-native-svg';
-
-import { DrawingTool } from '~/model';
 
 import Icons from '../../assets/icons';
 
@@ -58,7 +57,7 @@ export const drawingTools = [
     name: DrawingTool.ARROW,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.averageLine,
+    Icon: Icons.drawingTools.average,
     tags: [DrawingToolTags.statistics],
     title: 'Average Line',
     name: DrawingTool.AVERAGE_LINE,
@@ -82,31 +81,31 @@ export const drawingTools = [
     name: DrawingTool.CHECK,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.continuosLine,
+    Icon: Icons.drawingTools.continuous,
     tags: [DrawingToolTags.lines],
     title: 'Continuos',
     name: DrawingTool.CONTINUOUS_LINE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.cross,
+    Icon: Icons.drawingTools.xcross,
     tags: [DrawingToolTags.markings],
     title: 'Cross',
     name: DrawingTool.CROSS,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.crossLine,
+    Icon: Icons.drawingTools.crossline,
     tags: [DrawingToolTags.lines],
     title: 'Cross Line',
     name: DrawingTool.CROSSLINE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.doodle,
+    Icon: Icons.drawingTools.freeform,
     tags: [DrawingToolTags.lines],
     title: 'Doodle',
     name: DrawingTool.DOODLE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.elliotWave,
+    Icon: Icons.drawingTools.elliottwave,
     tags: [DrawingToolTags.technicals],
     title: 'Elliot Wave',
     name: DrawingTool.ELLIOTT_WAVE,
@@ -118,43 +117,43 @@ export const drawingTools = [
     name: DrawingTool.ELLIPSE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.fibonacciArc,
+    Icon: Icons.drawingTools.fibarc,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Arc',
     name: DrawingTool.FIB_ARC,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.fibonacciFan,
+    Icon: Icons.drawingTools.fibfan,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Fan',
     name: DrawingTool.FIB_FAN,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.fibProjection,
+    Icon: Icons.drawingTools.fibprojection,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Projection',
     name: DrawingTool.FIB_PROJECTION,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.fibonacciRetracement,
+    Icon: Icons.drawingTools.retracement,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Retracement',
     name: DrawingTool.FIB_RETRACEMENT,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.fibonacciTimezone,
+    Icon: Icons.drawingTools.fibtimezone,
     tags: [DrawingToolTags.fibonacci],
     title: 'Fib Timezone',
     name: DrawingTool.FIB_TIME_ZONE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.focus,
+    Icon: Icons.drawingTools.focusarrow,
     tags: [DrawingToolTags.markings],
     title: 'Focus',
     name: DrawingTool.FOCUS,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.gannFan,
+    Icon: Icons.drawingTools.gannfan,
     tags: [DrawingToolTags.technicals],
     title: 'Gann Fan',
     name: DrawingTool.GANN_FAN,
@@ -172,7 +171,7 @@ export const drawingTools = [
     name: DrawingTool.HEART,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.horizontalLine,
+    Icon: Icons.drawingTools.horizontal,
     tags: [DrawingToolTags.lines],
     title: 'Horizontal',
     name: DrawingTool.HORIZONTAL_LINE,
@@ -190,7 +189,7 @@ export const drawingTools = [
     name: DrawingTool.PITCHFORK,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.quadrantLines,
+    Icon: Icons.drawingTools.quadrant,
     tags: [DrawingToolTags.statistics],
     title: 'Quadrant Lines',
     name: DrawingTool.QUADRANT_LINES,
@@ -208,7 +207,7 @@ export const drawingTools = [
     name: DrawingTool.RECTANGLE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.regressionLine,
+    Icon: Icons.drawingTools.regression,
     tags: [DrawingToolTags.statistics],
     title: 'Regression Line',
     name: DrawingTool.REGRESSION_LINE,
@@ -220,13 +219,13 @@ export const drawingTools = [
     name: DrawingTool.SEGMENT,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.speedResistanceArc,
+    Icon: Icons.drawingTools.speedarc,
     tags: [DrawingToolTags.technicals],
     title: 'Speed Resistance Arc',
     name: DrawingTool.SPEED_RESISTANCE_ARC,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.speedResistanceLine,
+    Icon: Icons.drawingTools.speedline,
     tags: [DrawingToolTags.technicals],
     title: 'Speed Resistance Line',
     name: DrawingTool.SPEED_RESISTANCE_LINE,
@@ -238,32 +237,31 @@ export const drawingTools = [
     name: DrawingTool.STAR,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.timeCycle,
+    Icon: Icons.drawingTools.timecycle,
     tags: [DrawingToolTags.technicals],
     title: 'Time Cycle',
     name: DrawingTool.TIME_CYCLE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.trioneLevel,
+    Icon: Icons.drawingTools.tirone,
     tags: [DrawingToolTags.statistics],
     title: 'Tirone Level',
     name: DrawingTool.TIRONE_LEVELS,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.trendLine,
+    Icon: Icons.drawingTools.trendline,
     tags: [DrawingToolTags.text],
     title: 'Trend Line',
     name: DrawingTool.TREND_LINE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.verticalLine,
+    Icon: Icons.drawingTools.vertical,
     tags: [DrawingToolTags.lines],
     title: 'Vertical',
     name: DrawingTool.VERTICAL_LINE,
   } as DrawingItem,
-
   {
-    Icon: Icons.drawingTools.volumeProfile,
+    Icon: Icons.drawingTools.volumeprofile,
     tags: [DrawingToolTags.statistics],
     title: 'Volume Profile',
     name: DrawingTool.VOLUME_PROFILE,

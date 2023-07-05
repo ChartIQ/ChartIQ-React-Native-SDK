@@ -11,12 +11,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingsStack, DrawingsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -65,7 +64,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     // NOTE: setDrawingParams in case of "fibs" takes a stringified and encoded string, thus I encode it here
     const fibParams = encode(JSON.stringify(settings));
 
-    setDrawingParams(DrawingParams.FIBS, fibParams);
+    ChartIQ.setDrawingParams(DrawingParams.FIBS, fibParams);
 
     navigation.goBack();
   }, [navigation, settings, updateDrawingSettings]);

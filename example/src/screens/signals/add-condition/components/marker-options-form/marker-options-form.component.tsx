@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-
 import {
   MarkerOption,
   NullableMarkerOption,
@@ -8,7 +7,8 @@ import {
   SignalPosition,
   SignalShape,
   SignalSize,
-} from '~/model/signals/marker-option';
+} from 'react-native-chart-iq-wrapper';
+
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
 import { SelectFromList } from '~/ui/select-from-list';

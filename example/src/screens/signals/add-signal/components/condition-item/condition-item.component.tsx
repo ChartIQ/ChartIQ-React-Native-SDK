@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {
+  Condition,
+  SignalJoiner,
+  SignalOperator,
+  SignalOperatorValues,
+} from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
-import { Condition } from '~/model/signals/condition';
-import { SignalJoiner } from '~/model/signals/signal';
-import { SignalOperator, SignalOperatorValues } from '~/model/signals/signal-operator';
 import { textOnColor } from '~/shared/helpers';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';

@@ -1,5 +1,5 @@
 {
-  "name": "ChartIqWrapperExample",
+  "name": "chart-iq-example",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/plugin-transform-export-namespace-from": "^7.22.5",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@types/base-64": "^1.0.0",

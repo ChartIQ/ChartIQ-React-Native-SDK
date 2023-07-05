@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { SignalJoiner } from 'react-native-chart-iq-wrapper';
 
-import { SignalJoiner } from '~/model/signals/signal';
 import { Theme, useTheme } from '~/theme';
 
 interface JoinSelectorProps {

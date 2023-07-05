@@ -1,7 +1,8 @@
 import { useContext, useRef } from 'react';
+import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from 'react-native-chart-iq-wrapper';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from '~/model';
+import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
 
 import { DrawingActions } from '../../context/drawing-context/drawing-actions';
 import {
@@ -24,6 +25,12 @@ export const useUpdateDrawingTool = () => {
         drawingToolManager.current.getAvailableDrawingTools(input),
       ),
     );
+  };
+
+  const updateDrawingTool = (drawingTool: DrawingItem) => {
+    dispatch(DrawingActions.setDrawingTool(drawingTool.name));
+    dispatch(DrawingActions.setDrawingTitle(drawingTool.title));
+    updateSupportedSettings(drawingTool.name);
   };
 
   const updateLineColor = (color: string) => {
@@ -55,5 +62,6 @@ export const useUpdateDrawingTool = () => {
     updateDrawingSettings,
     updateLineWidth,
     updateLineTypeItem,
+    updateDrawingTool,
   };
 };

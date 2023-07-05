@@ -1,8 +1,8 @@
 import { ViewStyle } from 'react-native';
+import { CrosshairSharedValues } from 'react-native-chart-iq-wrapper';
 import { SvgProps } from 'react-native-svg';
 
 import { ActiveImageType } from '~/assets/images/active-image/active-image.types';
-import { CrosshairSharedValues } from '~/model';
 
 import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.data';
 
@@ -31,4 +31,5 @@ export interface HeaderProps {
   crosshairState: CrosshairSharedValues;
   isDrawing: boolean;
   isLandscape: boolean;
+  loading: boolean;
 }

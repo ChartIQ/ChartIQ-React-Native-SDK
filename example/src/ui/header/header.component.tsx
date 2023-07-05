@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { disableCrosshairs, enableCrosshairs } from 'react-native-chart-iq-wrapper';
+import { ActivityIndicator, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
   crosshairState,
   isDrawing,
   isLandscape,
+  loading,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -56,11 +57,11 @@ const Header: React.FC<HeaderProps> = ({
       setIsCrosshairEnabled((prevState) => {
         const state = nextState !== undefined ? nextState : !prevState;
         if (state) {
-          enableCrosshairs();
+          ChartIQ.enableCrosshairs();
           return state;
         }
 
-        disableCrosshairs();
+        ChartIQ.disableCrosshairs();
 
         return state;
       });
@@ -270,15 +271,21 @@ const Header: React.FC<HeaderProps> = ({
       <Animated.View style={[styles.container]}>
         <View style={styles.row}>
           <TouchableOpacity onPress={handleSymbolSelector} style={styles.button}>
-            {symbol ? (
+            {symbol && !loading ? (
               <Text numberOfLines={1} ellipsizeMode="middle" style={styles.buttonText}>
                 {symbol}
               </Text>
-            ) : null}
+            ) : (
+              <ActivityIndicator size="small" color={theme.colors.colorPrimary} />
+            )}
           </TouchableOpacity>
           <View style={styles.space} />
           <TouchableOpacity onPress={handleIntervalSelector} style={styles.button}>
-            <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
+            {!loading ? (
+              <Text style={styles.buttonText}>{translationMap[interval ?? ''] || interval}</Text>
+            ) : (
+              <ActivityIndicator size="small" color={theme.colors.colorPrimary} />
+            )}
           </TouchableOpacity>
         </View>
         <View

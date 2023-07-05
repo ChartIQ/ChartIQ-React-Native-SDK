@@ -8,7 +8,7 @@ import {
 } from 'expo-screen-orientation';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIqWrapperView, setLanguage } from 'react-native-chart-iq-wrapper';
+import { ChartIQWebView, ChartIQ } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { WEB_VIEW_SOURCE } from '~/constants';
@@ -74,7 +74,6 @@ export default function Root() {
     chartStyle,
     compareSymbols,
     crosshair,
-    drawingItem,
     interval,
     isDrawing,
     measureValue,
@@ -82,6 +81,7 @@ export default function Root() {
 
     drawingToolSelectorRef,
     compareSymbolSelectorRef,
+    drawingManagerRef,
 
     initChart,
     initialized,
@@ -131,7 +131,7 @@ export default function Root() {
       (await AsyncStorage.getItem(asyncStorageKeys.languageCode)) ?? ChartIQLanguages.EN.code;
 
     AsyncStorage.setItem(asyncStorageKeys.languageCode, userLanguage);
-    setLanguage(userLanguage);
+    ChartIQ.setLanguage(userLanguage);
   }, []);
 
   React.useEffect(() => {
@@ -157,10 +157,11 @@ export default function Root() {
           isDrawing={isDrawing}
           crosshairState={crosshair}
           isLandscape={isLandscape}
+          loading={!initialized}
         />
       </View>
       <View style={[{ flex: 1 }]}>
-        <ChartIqWrapperView
+        <ChartIQWebView
           url={WEB_VIEW_SOURCE}
           onStart={initChart}
           onPullInitialData={onPullInitialData}
@@ -171,12 +172,7 @@ export default function Root() {
           style={styles.chartIq}
         />
         <DrawingMeasure isDrawing={isDrawing} measure={measureValue} />
-        {drawingItem !== null ? (
-          <DrawingToolManager
-            handleDrawingTool={showDrawingToolsSelector}
-            drawingItem={drawingItem}
-          />
-        ) : null}
+        <DrawingToolManager ref={drawingManagerRef} handleDrawingTool={showDrawingToolsSelector} />
       </View>
 
       <CompareSymbolSelector

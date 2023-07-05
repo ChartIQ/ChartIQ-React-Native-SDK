@@ -1,4 +1,3 @@
-import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import {
   Corrective,
   Decoration,
@@ -7,7 +6,9 @@ import {
   Impulse,
   SupportedSettings,
   Template,
-} from '~/model';
+} from 'react-native-chart-iq-wrapper';
+
+import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 
 import lineTypes from '../../assets/icons/line-types';
 
@@ -84,6 +85,7 @@ export function drawingReducer(drawingState: DrawingState, action: Action) {
       return {
         ...drawingState,
         name: action.payload as DrawingTool,
+        title: action.payload as string,
       };
     }
     case DrawingAction.SET_DRAWING_SETTINGS: {

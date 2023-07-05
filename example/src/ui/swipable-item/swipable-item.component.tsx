@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import Reanimated, { SlideInRight, SlideOutLeft } from 'react-native-reanimated';
+import Reanimated, { SlideOutLeft } from 'react-native-reanimated';
 
 import { Theme, useTheme } from '~/theme';
 
@@ -84,7 +84,7 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
   };
 
   return (
-    <Reanimated.View exiting={SlideOutLeft.duration(200)} entering={SlideInRight.duration(200)}>
+    <Reanimated.View exiting={SlideOutLeft.duration(200)}>
       <Swipeable
         enabled={enabled}
         ref={ref}

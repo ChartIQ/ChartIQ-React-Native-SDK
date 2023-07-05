@@ -1,9 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import { getStudyParameters, removeStudy, setStudyParameters } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, StudyParameter } from 'react-native-chart-iq-wrapper';
 
-import { StudyParameter } from '~/model';
 import { formatStudyName } from '~/shared/helpers';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -31,8 +30,8 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   }, [navigation, study.name]);
 
   const get = useCallback(async () => {
-    const inputs = await getStudyParameters(study, 'Inputs');
-    const outputs = await getStudyParameters(study, 'Outputs');
+    const inputs = await ChartIQ.getStudyParameters(study, 'Inputs');
+    const outputs = await ChartIQ.getStudyParameters(study, 'Outputs');
 
     setInputParams(inputs);
     setOutputParams(outputs);
@@ -62,7 +61,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
               fieldSelectedValue: defaultValue as string,
             }));
 
-            setStudyParameters(study, [...inputParameters, ...outputParameters]);
+            ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]);
             setInputParams((prevState) =>
               prevState.map((item) => ({ ...item, value: item.defaultValue })),
             );
@@ -87,7 +86,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
         {
           text: 'Remove',
           onPress: () => {
-            removeStudy(study);
+            ChartIQ.removeStudy(study);
             navigation.goBack();
           },
         },
@@ -99,7 +98,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
     const inputParameters = changeStudyParametersRef.current?.getInputParamsData() || [];
     const outputParameters = changeStudyParametersRef.current?.getOutputParamsData() || [];
 
-    setStudyParameters(study, [...inputParameters, ...outputParameters]);
+    ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]);
 
     navigation.goBack();
   }, [navigation, study]);

@@ -1,16 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Alert } from 'react-native';
-
-import { HOST_SIMULATOR, HOST_SYMBOLS } from '../constants/network.constants';
-import type { OHLCParams } from '../model/ohlc-param';
-
-import type {
+import {
   ChartQuery,
   ChartSymbol,
+  OHLCParams,
   SymbolLookupResponse,
   SymbolParams,
   SymbolQueryParams,
-} from './chart-api.types';
+} from 'react-native-chart-iq-wrapper';
+
+import { HOST_SIMULATOR, HOST_SYMBOLS } from '../constants/network.constants';
 
 const customAxiosApi: AxiosInstance = axios.create({});
 

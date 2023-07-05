@@ -11,14 +11,13 @@ import {
   TextInputChangeEventData,
   NativeSyntheticEvent,
 } from 'react-native';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
 import { colorInitializer } from '~/shared/helpers';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingToolsRoute, DrawingToolsSettings, DrawingsStack } from '~/shared/navigation.types';
@@ -86,8 +85,8 @@ const DrawingToolSettings: React.FC = () => {
 
   const onLineTypeChange = (lineTypeItem: LineTypeItem) => {
     updateLineTypeItem(lineTypeItem);
-    setDrawingParams(DrawingParams.LINE_TYPE, lineTypeItem.value);
-    setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
+    ChartIQ.setDrawingParams(DrawingParams.LINE_TYPE, lineTypeItem.value);
+    ChartIQ.setDrawingParams(DrawingParams.LINE_WIDTH, lineTypeItem.lineWidth.toString());
   };
 
   const onColorChange = (color: string, id?: string | undefined) => {
@@ -96,12 +95,12 @@ const DrawingToolSettings: React.FC = () => {
     if (id === DrawingParams.FILL_COLOR) {
       updateFillColor(color);
       setFillColor(color);
-      setDrawingParams(DrawingParams.FILL_COLOR, color);
+      ChartIQ.setDrawingParams(DrawingParams.FILL_COLOR, color);
     }
     if (id === DrawingParams.LINE_COLOR) {
       updateLineColor(color);
       setLineColor(color);
-      setDrawingParams(DrawingParams.LINE_COLOR, color);
+      ChartIQ.setDrawingParams(DrawingParams.LINE_COLOR, color);
     }
   };
 
@@ -109,7 +108,7 @@ const DrawingToolSettings: React.FC = () => {
     setIsBold((prevState) => !prevState);
     setTimeout(() => {
       const newWeight = font.weight === '300' ? 'bold' : '300';
-      setDrawingParams(DrawingParams.WEIGHT, newWeight);
+      ChartIQ.setDrawingParams(DrawingParams.WEIGHT, newWeight);
 
       updateDrawingSettings((prevState) => ({
         ...prevState,
@@ -126,7 +125,7 @@ const DrawingToolSettings: React.FC = () => {
     setTimeout(() => {
       const newStyle = font.style === 'normal' ? 'bold' : 'normal';
 
-      setDrawingParams(DrawingParams.STYLE, newStyle);
+      ChartIQ.setDrawingParams(DrawingParams.STYLE, newStyle);
 
       updateDrawingSettings((prevState) => ({
         ...prevState,
@@ -162,7 +161,7 @@ const DrawingToolSettings: React.FC = () => {
       axisLabel: value,
     }));
 
-    setDrawingParams(DrawingParams.AXIS_LABEL, JSON.stringify(value));
+    ChartIQ.setDrawingParams(DrawingParams.AXIS_LABEL, JSON.stringify(value));
   };
 
   const handleVolumeProfileChange = ({
@@ -175,12 +174,12 @@ const DrawingToolSettings: React.FC = () => {
       },
     }));
 
-    setDrawingParams(DrawingParams.PRICE_BUCKETS, text);
+    ChartIQ.setDrawingParams(DrawingParams.PRICE_BUCKETS, text);
   };
 
   const toggleShowLines = () => {
     updateDrawingSettings((prevState) => {
-      setDrawingParams(
+      ChartIQ.setDrawingParams(
         DrawingParams.SHOW_LINES,
         JSON.stringify(!prevState.waveParameters.showLines),
       );

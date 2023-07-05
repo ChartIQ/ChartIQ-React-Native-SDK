@@ -10,7 +10,7 @@ import React, {
   useEffect,
 } from 'react';
 import { View, Image, Text, Pressable, Alert } from 'react-native';
-import { clearDrawing, restoreDefaultDrawingConfig } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
 import icons from '~/assets/icons';
@@ -302,7 +302,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   {
                     text: 'Clear',
                     onPress: () => {
-                      clearDrawing();
+                      ChartIQ.clearDrawing();
                     },
                   },
                 ],

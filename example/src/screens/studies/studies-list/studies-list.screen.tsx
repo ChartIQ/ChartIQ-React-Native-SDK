@@ -2,11 +2,10 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { addStudy, getActiveStudies, removeStudy } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
-import { Study } from '~/model/study';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -31,7 +30,7 @@ const Studies: React.FC = () => {
   }, [navigation]);
 
   const get = useCallback(async () => {
-    const response = await getActiveStudies();
+    const response = await ChartIQ.getActiveStudies();
 
     const translatedStudies = response.map((item) => {
       return {
@@ -73,12 +72,12 @@ const Studies: React.FC = () => {
   };
 
   const handleRemove = (study: Study) => {
-    removeStudy(study);
+    ChartIQ.removeStudy(study);
     get();
   };
 
   const handleClone = (study: Study) => {
-    addStudy(study, true);
+    ChartIQ.addStudy(study, true);
     get();
   };
 

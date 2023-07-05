@@ -1,5 +1,6 @@
+import { DrawingSettings, DrawingTool, SupportedSettings } from 'react-native-chart-iq-wrapper';
+
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
-import { DrawingSettings, DrawingTool, SupportedSettings } from '~/model';
 
 export enum DrawingAction {
   SET_DRAWING_TOOL = 'SET_DRAWING_TOOL',

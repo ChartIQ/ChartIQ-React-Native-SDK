@@ -5,7 +5,12 @@ export interface StudyParameterModel {
   fieldSelectedValue: string;
 }
 
-type StudyParameterFieldType = 'Select' | 'TextColor' | 'Number' | 'Text' | 'Checkbox';
+type StudyParameterFieldType =
+  | 'Select'
+  | 'TextColor'
+  | 'Number'
+  | 'Text'
+  | 'Checkbox';
 
 export type StudyParameterResponse = {
   fieldType: StudyParameterFieldType;

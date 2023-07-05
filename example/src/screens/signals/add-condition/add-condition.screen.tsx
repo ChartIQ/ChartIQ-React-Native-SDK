@@ -1,13 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
-import { getChartAggregationType, getStudyParameters } from 'react-native-chart-iq-wrapper';
+import {
+  ChartIQ,
+  SignalOperatorValues,
+  SignalOperator,
+  SignalJoiner,
+  MarkerOption,
+  Condition,
+  NullableCondition,
+  StudyParameter,
+} from 'react-native-chart-iq-wrapper';
 
-import { StudyParameter } from '~/model';
-import { Condition, NullableCondition } from '~/model/signals/condition';
-import { MarkerOption } from '~/model/signals/marker-option';
-import { SignalJoiner } from '~/model/signals/signal';
-import { SignalOperatorValues, SignalOperator } from '~/model/signals/signal-operator';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -51,8 +55,8 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   }, [navigation, params.index]);
 
   const get = useCallback(async () => {
-    const outputs = await getStudyParameters(study, 'Outputs');
-    const aggregation = await getChartAggregationType();
+    const outputs = await ChartIQ.getStudyParameters(study, 'Outputs');
+    const aggregation = await ChartIQ.getChartAggregationType();
     setAggregationType(aggregation);
     setOutputParams(outputs);
     if (condition) {

@@ -1,9 +1,9 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TimeUnit } from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
-import { TimeUnit } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 

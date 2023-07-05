@@ -7,8 +7,8 @@ import React, {
   useState,
 } from 'react';
 import { SectionList, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { StudyParameter, StudyParameterModel } from 'react-native-chart-iq-wrapper';
 
-import { StudyParameter, StudyParameterModel } from '~/model';
 import { Theme, useTheme } from '~/theme';
 
 import { ColorSelector } from '../color-selector';

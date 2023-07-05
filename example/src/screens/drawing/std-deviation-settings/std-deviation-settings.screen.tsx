@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
 
 import icons from '~/assets/icons';
 import {
@@ -9,7 +9,6 @@ import {
   findLineTypeItemByPatternAndWidth,
 } from '~/assets/icons/line-types/line-types';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
@@ -92,23 +91,41 @@ const STDDeviationsSettingsScreen: React.FC = () => {
         lineWidth3: stdDeviationSettings[2].lineType.lineWidth,
       };
     });
-    setDrawingParams(DrawingParams.ACTIVE_1, JSON.stringify(stdDeviationSettings[0].showLine));
-    setDrawingParams(DrawingParams.ACTIVE_2, JSON.stringify(stdDeviationSettings[1].showLine));
-    setDrawingParams(DrawingParams.ACTIVE_3, JSON.stringify(stdDeviationSettings[2].showLine));
+    ChartIQ.setDrawingParams(
+      DrawingParams.ACTIVE_1,
+      JSON.stringify(stdDeviationSettings[0].showLine),
+    );
+    ChartIQ.setDrawingParams(
+      DrawingParams.ACTIVE_2,
+      JSON.stringify(stdDeviationSettings[1].showLine),
+    );
+    ChartIQ.setDrawingParams(
+      DrawingParams.ACTIVE_3,
+      JSON.stringify(stdDeviationSettings[2].showLine),
+    );
 
-    setDrawingParams(DrawingParams.COLOR_1, JSON.stringify(stdDeviationSettings[0].lineColor));
-    setDrawingParams(DrawingParams.ACTIVE_2, JSON.stringify(stdDeviationSettings[1].lineColor));
-    setDrawingParams(DrawingParams.ACTIVE_3, JSON.stringify(stdDeviationSettings[2].lineColor));
+    ChartIQ.setDrawingParams(
+      DrawingParams.COLOR_1,
+      JSON.stringify(stdDeviationSettings[0].lineColor),
+    );
+    ChartIQ.setDrawingParams(
+      DrawingParams.ACTIVE_2,
+      JSON.stringify(stdDeviationSettings[1].lineColor),
+    );
+    ChartIQ.setDrawingParams(
+      DrawingParams.ACTIVE_3,
+      JSON.stringify(stdDeviationSettings[2].lineColor),
+    );
 
-    setDrawingParams(
+    ChartIQ.setDrawingParams(
       DrawingParams.PATTERN_1,
       JSON.stringify(stdDeviationSettings[0].lineType.value),
     );
-    setDrawingParams(
+    ChartIQ.setDrawingParams(
       DrawingParams.PATTERN_2,
       JSON.stringify(stdDeviationSettings[1].lineType.value),
     );
-    setDrawingParams(
+    ChartIQ.setDrawingParams(
       DrawingParams.PATTERN_3,
       JSON.stringify(stdDeviationSettings[2].lineType.value),
     );

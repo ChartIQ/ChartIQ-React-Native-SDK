@@ -22,18 +22,15 @@ const HorizontalColorPicker: React.FC<HorizontalColorPickerProps> = ({
   const styles = createStyles(theme);
   const ref = useRef<FlatList>(null);
 
-  const translateY = useDerivedValue(() => (active ? -70 : 0), [active]);
-  const height = useDerivedValue(() => (active ? 70 : 50), [active]);
+  const translateY = useDerivedValue(() => {
+    return active ? withTiming(16) : withTiming(100);
+  }, [active]);
 
-  const transform = useAnimatedStyle(() => {
-    const toValue = withTiming(translateY.value, { duration: 200 });
-    const heightValue = withTiming(height.value, { duration: 200 });
-
+  const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateY: toValue }],
-      height: heightValue,
+      transform: [{ translateY: translateY.value }],
     };
-  }, [translateY]);
+  });
 
   const handlePress = (color: string) => {
     onChange(color);
@@ -47,7 +44,7 @@ const HorizontalColorPicker: React.FC<HorizontalColorPickerProps> = ({
   }, [active, activeColor]);
 
   return (
-    <Animated.View style={[styles.container, transform]}>
+    <Animated.View style={[styles.container, animatedStyle]}>
       <FlatList
         ref={ref}
         horizontal
@@ -86,7 +83,6 @@ const createStyles = (theme: Theme) =>
     container: {
       position: 'absolute',
       top: 0,
-      left: 0,
       width: '100%',
       backgroundColor: theme.colors.backgroundSecondary,
     },

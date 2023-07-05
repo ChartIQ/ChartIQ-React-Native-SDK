@@ -1,11 +1,11 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+import { CrosshairSharedValues } from 'react-native-chart-iq-wrapper';
 import Animated from 'react-native-reanimated';
 
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { ReText } from '~/ui/re-text';
 
-import { CrosshairSharedValues } from '../../../../model';
 import { Theme, useTheme } from '../../../../theme';
 
 interface AnimatedCrosshairValuesProps {

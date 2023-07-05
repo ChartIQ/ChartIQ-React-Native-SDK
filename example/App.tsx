@@ -2,7 +2,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer, Theme } from '@react-navigation/native';
 import * as React from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -41,10 +41,6 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
-        {/* <KeyboardAvoidingView
-          // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={StyleSheet.absoluteFillObject}
-        > */}
         <ActionSheetProvider>
           <TranslationsContext.Provider value={translationsState}>
             <TranslationsDispatchContext.Provider value={dispatchTranslations}>
@@ -60,7 +56,6 @@ export default function App() {
             </TranslationsDispatchContext.Provider>
           </TranslationsContext.Provider>
         </ActionSheetProvider>
-        {/* </KeyboardAvoidingView> */}
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

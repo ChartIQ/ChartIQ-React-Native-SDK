@@ -1,11 +1,13 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import { DrawingSettings, DrawingTool } from '~/model';
-import { Signal } from '~/model/signals';
-import { Condition } from '~/model/signals/condition';
-import { SignalJoiner } from '~/model/signals/signal';
-import { Study } from '~/model/study';
+import {
+  DrawingSettings,
+  DrawingTool,
+  Signal,
+  Condition,
+  SignalJoiner,
+  Study,
+} from 'react-native-chart-iq-wrapper';
 
 export enum RootStack {
   Main = '[Root stack] Main',

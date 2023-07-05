@@ -79,7 +79,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint": "^8.27.0",
     "eslint-config-universe": "^11.2.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "@babel/plugin-transform-export-namespace-from": "^7.22.5"
   },
   "resolutions": {
     "@types/react": "17.0.21"

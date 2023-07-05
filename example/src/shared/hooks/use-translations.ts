@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useContext, useMemo } from 'react';
-import { setLanguage as setChartIQLanguage, getTranslations } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq-wrapper';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages, defaultENTranslations } from '~/constants/languages';
@@ -16,8 +16,8 @@ export const useTranslations = () => {
 
   const setLanguage = useCallback(
     async (languageCode: string) => {
-      setChartIQLanguage(languageCode);
-      const newTranslationsMap = await getTranslations(languageCode);
+      ChartIQ.setLanguage(languageCode);
+      const newTranslationsMap = await ChartIQ.getTranslations(languageCode);
 
       AsyncStorage.setItem(asyncStorageKeys.languageCode, languageCode);
       AsyncStorage.setItem(asyncStorageKeys.translations, JSON.stringify(newTranslationsMap));

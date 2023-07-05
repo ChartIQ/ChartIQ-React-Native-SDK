@@ -2,19 +2,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList } from 'react-native';
-import {
-  addSignal,
-  addSignalStudy,
-  getStudyList,
-  removeStudy,
-} from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
-import { Condition } from '~/model/signals/condition';
-import { Signal, SignalJoiner } from '~/model/signals/signal';
-import { Study } from '~/model/study';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -98,7 +90,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   );
 
   const get = useCallback(async () => {
-    const studiesList = await getStudyList();
+    const studiesList = await ChartIQ.getStudyList();
 
     setStudies(
       studiesList
@@ -123,10 +115,10 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
 
   const handleStudyChange = async ({ value }: { value: string }) => {
     const item = studies.find((item) => item.name === value) ?? null;
-    const study = await addSignalStudy(item?.shortName ?? '');
+    const study = await ChartIQ.addSignalStudy(item?.shortName ?? '');
 
     if (selectedStudy && selectedStudy.name !== study?.name) {
-      removeStudy(selectedStudy);
+      ChartIQ.removeStudy(selectedStudy);
       setConditions(new Map());
     }
 
@@ -164,7 +156,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         uniqueId: '',
       };
 
-      addSignal(signal, isEdit);
+      ChartIQ.addSignal(signal, isEdit);
       navigation.goBack();
     }
   }, [conditions, description, isEdit, joiner, name, navigation, selectedStudy]);
@@ -226,7 +218,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
             <Text
               style={styles.saveButton}
               onPress={() => {
-                removeStudy(selectedStudy);
+                ChartIQ.removeStudy(selectedStudy);
                 navigation.goBack();
               }}
             >

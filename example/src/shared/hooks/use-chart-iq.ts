@@ -1,41 +1,21 @@
 import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
-  enableDrawing,
-  getDrawingParams,
-  setInitialData,
-  setPagingData,
-  setUpdateData,
-  addSeries,
-  setSymbol as setChartSymbol,
-  setPeriodicity,
-  setAggregationType,
-  setChartType,
-  removeSeries,
-  getSymbol,
-  getChartType,
-  getChartAggregationType,
-  getPeriodicity,
-  getActiveSeries,
-  QuoteFeedEvent,
-  disableDrawing,
-  setTheme,
-  OnMeasureChangeEvent,
+  ChartIQ,
   OnHudChangeEvent,
-  restoreDefaultDrawingConfig,
-} from 'react-native-chart-iq-wrapper';
-import { useSharedValue } from 'react-native-reanimated';
-
-import {
+  OnMeasureChangeEvent,
+  QuoteFeedEvent,
   ChartIQDatafeedParams,
   ChartQuery,
   ChartSymbol,
-  fetchDataFeedAsync,
-  handleRetry,
-} from '~/api';
+  CrosshairSharedValues,
+  DrawingTool,
+} from 'react-native-chart-iq-wrapper';
+import { useSharedValue } from 'react-native-reanimated';
+
+import { fetchDataFeedAsync, handleRetry } from '~/api';
 import { findLineTypeItemByPatternAndWidth } from '~/assets/icons/line-types/line-types';
 import { colorPickerColors } from '~/constants';
-import { CrosshairSharedValues, DrawingTool } from '~/model';
 import { useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
@@ -43,6 +23,7 @@ import {
   chartStyleSelectorData,
 } from '~/ui/chart-style-selector/chart-style-selector.data';
 import { ColoredChartSymbol } from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
+import { DrawingToolManagerMethods } from '~/ui/drawing-tool-manager/drawing-tool-manager.component';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
 import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selector.component';
 
@@ -70,7 +51,6 @@ export const useChartIQ = () => {
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
   const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
   const [isDrawing, setIsDrawing] = React.useState(false);
-  const [drawingItem, setDrawingItem] = React.useState<DrawingItem | null>(null);
   const [compareSymbols, setCompareSymbols] = React.useState<Map<string, ColoredChartSymbol>>(
     new Map(),
   );
@@ -78,13 +58,13 @@ export const useChartIQ = () => {
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
-  const { updateDrawingSettings, updateSupportedSettings, updateLineTypeItem } =
-    useUpdateDrawingTool();
+  const { updateDrawingSettings, updateDrawingTool, updateLineTypeItem } = useUpdateDrawingTool();
 
   const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
+  const drawingManagerRef = React.useRef<DrawingToolManagerMethods>(null);
 
   const toggleCompareSymbolSelector = () => {
-    getActiveSeries().then((activeSeries) => {
+    ChartIQ.getActiveSeries().then((activeSeries) => {
       const map = new Map();
       activeSeries.forEach((item) => {
         map.set(item.symbolName, {
@@ -108,7 +88,7 @@ export const useChartIQ = () => {
   }: QuoteFeedEvent) => {
     try {
       const response = await handleRequest(params);
-      setInitialData(response, id);
+      ChartIQ.setInitialData(response, id);
     } catch (e) {
       handleRetry(() => {
         onPullInitialData({
@@ -135,7 +115,7 @@ export const useChartIQ = () => {
       crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
       crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
 
-      setUpdateData(response, id);
+      ChartIQ.setUpdateData(response, id);
     } catch (e) {
       handleRetry(() => {
         onPullUpdateData({
@@ -154,7 +134,7 @@ export const useChartIQ = () => {
   }: QuoteFeedEvent) => {
     try {
       const response = await handleRequest(params);
-      setPagingData(response, id);
+      ChartIQ.setPagingData(response, id);
     } catch (e) {
       handleRetry(() => {
         onPullPagingData({
@@ -168,29 +148,29 @@ export const useChartIQ = () => {
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
     setSymbol(symbol);
-    setChartSymbol(symbol);
+    ChartIQ.setSymbol(symbol);
   };
 
   const handleIntervalChange = (input: IntervalItem) => {
     setInterval(input);
-    setPeriodicity(input.period, input.interval, input.timeUnit);
+    ChartIQ.setPeriodicity(input.period, input.interval, input.timeUnit);
   };
 
   const handleChartStyleChange = useCallback((input: ChartStyleItem) => {
     setChartStyle(input);
     if (input.aggregationType) {
-      setAggregationType(input.aggregationType);
+      ChartIQ.setAggregationType(input.aggregationType);
       return;
     }
-    setChartType(input.value);
+    ChartIQ.setChartType(input.value);
   }, []);
 
   const updateTheme = useCallback(() => {
     if (isDark) {
-      setTheme('night');
+      ChartIQ.setTheme('night');
       return;
     } else {
-      setTheme('day');
+      ChartIQ.setTheme('day');
     }
   }, [isDark]);
 
@@ -222,7 +202,11 @@ export const useChartIQ = () => {
       });
     });
 
-    addSeries(input.symbol, input.color ? input.color : colorPickerColors[0] ?? 'black', true);
+    ChartIQ.addSeries(
+      input.symbol,
+      input.color ? input.color : colorPickerColors[0] ?? 'black',
+      true,
+    );
   };
 
   const removeSymbol = (input: ColoredChartSymbol) => {
@@ -231,12 +215,12 @@ export const useChartIQ = () => {
       map.delete(input.symbol);
       return map;
     });
-    removeSeries(input.symbol);
+    ChartIQ.removeSeries(input.symbol);
   };
 
   const initChart = useCallback(async () => {
     setChartInitialized(true);
-    const symbol = await getSymbol();
+    const symbol = await ChartIQ.getSymbol();
 
     if (!symbol) {
       setSymbol('AAPL');
@@ -244,7 +228,7 @@ export const useChartIQ = () => {
       setSymbol(symbol);
     }
 
-    const periodicity = await getPeriodicity();
+    const periodicity = await ChartIQ.getPeriodicity();
 
     const newInterval =
       intervals.find((item) => {
@@ -257,7 +241,7 @@ export const useChartIQ = () => {
 
     setInterval(newInterval);
 
-    const activeSeries = await getActiveSeries();
+    const activeSeries = await ChartIQ.getActiveSeries();
 
     const map = new Map();
     activeSeries.forEach((item) => {
@@ -273,8 +257,8 @@ export const useChartIQ = () => {
 
     updateTheme();
 
-    const aggregationType = await getChartAggregationType();
-    const chartType = await getChartType();
+    const aggregationType = await ChartIQ.getChartAggregationType();
+    const chartType = await ChartIQ.getChartType();
 
     const foundAggregation = chartStyleSelectorData.find(
       (chartType) => chartType?.aggregationType === aggregationType,
@@ -340,26 +324,30 @@ export const useChartIQ = () => {
   };
 
   const onDrawingToolChanged = async (input: DrawingItem) => {
-    enableDrawing(input.name);
-    const params = await getDrawingParams(input.name);
+    drawingManagerRef.current?.loading(true);
+    drawingManagerRef.current?.show();
+
+    ChartIQ.enableDrawing(input.name);
+    const params = await ChartIQ.getDrawingParams(input.name);
     const lineTypeItem = findLineTypeItemByPatternAndWidth(params.pattern, params.lineWidth);
     if (lineTypeItem) {
       updateLineTypeItem(lineTypeItem);
     }
     updateDrawingSettings(() => params);
+    updateDrawingTool(input);
+    drawingManagerRef.current?.loading(false);
 
     if (input.name === DrawingTool.NO_TOOL) {
+      drawingManagerRef.current?.hide();
       return setIsDrawing(false);
     }
 
-    updateSupportedSettings(input.name);
-    setDrawingItem(input);
     setIsDrawing(true);
   };
 
   const handleRestoreDrawingParams = async (tool: DrawingItem) => {
-    await restoreDefaultDrawingConfig(tool.name, true);
-    onDrawingToolChanged(tool);
+    await ChartIQ.restoreDefaultDrawingConfig(tool.name, true);
+    await onDrawingToolChanged(tool);
   };
 
   const toggleDrawingToolSelector = () => {
@@ -367,8 +355,8 @@ export const useChartIQ = () => {
       return drawingToolSelectorRef.current?.present('');
     }
     setIsDrawing(false);
-    setDrawingItem(null);
-    disableDrawing();
+    drawingManagerRef.current?.hide();
+    ChartIQ.disableDrawing();
   };
 
   return {
@@ -397,12 +385,12 @@ export const useChartIQ = () => {
     chartStyle,
     compareSymbols,
     isDrawing,
-    drawingItem,
     measureValue,
     crosshair,
 
     drawingToolSelectorRef,
     compareSymbolSelectorRef,
+    drawingManagerRef,
 
     initialized,
     initChart,

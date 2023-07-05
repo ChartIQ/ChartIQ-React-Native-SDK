@@ -1,12 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import { FlatList } from 'react-native';
-import { setDrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
-import { DrawingParams } from '~/model';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';
@@ -77,7 +76,7 @@ const FontSizeScreen: React.FC = () => {
         size: value,
       },
     }));
-    setDrawingParams(DrawingParams.SIZE, value);
+    ChartIQ.setDrawingParams(DrawingParams.SIZE, value);
 
     navigation.goBack();
   };
