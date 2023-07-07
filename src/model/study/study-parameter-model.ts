@@ -2,10 +2,10 @@ import { StudyParameterType } from './study';
 
 export interface StudyParameterModel {
   fieldName: string;
-  fieldSelectedValue: string;
+  fieldSelectedValue: string | number | boolean;
 }
 
-type StudyParameterFieldType =
+export type StudyParameterFieldType =
   | 'Select'
   | 'TextColor'
   | 'Number'

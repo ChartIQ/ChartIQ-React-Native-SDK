@@ -175,7 +175,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
             if (item.fieldName === fieldName) {
               return {
                 ...item,
-                fieldSelectedValue: fieldSelectedValue.toString(),
+                fieldSelectedValue: fieldSelectedValue,
               };
             }
             return item;
@@ -183,7 +183,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
         });
       } else {
         setInputParamsData((prevState) => {
-          return [...prevState, { fieldName, fieldSelectedValue: fieldSelectedValue.toString() }];
+          return [...prevState, { fieldName, fieldSelectedValue: fieldSelectedValue }];
         });
       }
 
