@@ -28,7 +28,6 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
   onPullPagingData,
   onStart,
   onMeasureChanged,
-  onHUDChanged,
   ...props
 }) => {
   useEffect(() => {
@@ -72,12 +71,7 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
           onMeasureChanged({ nativeEvent: { measure: payload } });
       }
     );
-    RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnHUDUpdate,
-      (payload: CrosshairState) => {
-        onHUDChanged && onHUDChanged({ nativeEvent: { hud: payload } });
-      }
-    );
+
     // NOTE: This event is not used in the app probably it is not needed
     RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnLayoutUpdate,
@@ -98,7 +92,6 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
       }
     );
   }, [
-    onHUDChanged,
     onMeasureChanged,
     onPullInitialData,
     onPullPagingData,

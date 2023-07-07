@@ -1,5 +1,3 @@
-import { SharedValue } from 'react-native-reanimated';
-
 export interface CrosshairState {
   close: string;
   high: string;
@@ -7,15 +5,6 @@ export interface CrosshairState {
   open: string;
   volume: string;
   price: string;
-}
-
-export interface CrosshairSharedValues {
-  Open: SharedValue<string>;
-  High: SharedValue<string>;
-  Low: SharedValue<string>;
-  Close: SharedValue<string>;
-  Vol: SharedValue<string>;
-  Price: SharedValue<string>;
 }
 
 export const defaultCrosshairState: CrosshairState = {

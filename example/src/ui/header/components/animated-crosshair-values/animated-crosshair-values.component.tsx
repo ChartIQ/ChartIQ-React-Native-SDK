@@ -1,32 +1,50 @@
-import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import { CrosshairSharedValues } from 'react-native-chart-iq-wrapper';
+import React, { useCallback, useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { ChartIQ, CrosshairState } from 'react-native-chart-iq-wrapper';
 import Animated from 'react-native-reanimated';
 
 import { useTranslations } from '~/shared/hooks/use-translations';
-import { ReText } from '~/ui/re-text';
 
 import { Theme, useTheme } from '../../../../theme';
 
 interface AnimatedCrosshairValuesProps {
-  crosshair: CrosshairSharedValues;
   opacityStyle: {
     opacity: 0 | 1;
   };
+  enabled: boolean;
 }
 
 const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
-  crosshair,
   opacityStyle,
+  enabled,
 }) => {
   const { translationMap } = useTranslations();
+  const [hudState, setHudState] = React.useState<CrosshairState>({
+    price: '',
+    volume: '',
+    open: '',
+    high: '',
+    low: '',
+    close: '',
+  });
+
+  const crosshairUpdate = useCallback(async () => {
+    if (enabled) {
+      const hud = await ChartIQ.getHudDetails();
+      setHudState(hud);
+    }
+  }, [enabled]);
+
+  useEffect(() => {
+    const crosshairUpdateInterval = setInterval(crosshairUpdate, 300);
+
+    return () => {
+      clearInterval(crosshairUpdateInterval);
+    };
+  }, [crosshairUpdate]);
 
   const theme = useTheme();
   const styles = createStyles(theme);
-  const textValueStyles = Platform.select({
-    ios: styles.textValueStylesIOS,
-    android: styles.textValueStylesAndroid,
-  });
 
   return (
     <Animated.View style={[styles.container, opacityStyle]}>
@@ -42,8 +60,8 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
           </Text>
         </View>
         <View style={styles.rowValue}>
-          <ReText style={textValueStyles} text={crosshair.Price} />
-          <ReText style={textValueStyles} text={crosshair.Vol} />
+          <Text style={styles.textValue}>{hudState.price}</Text>
+          <Text style={styles.textValue}>{hudState.volume}</Text>
         </View>
       </View>
       <View style={[styles.columnItem, { justifyContent: 'center' }]}>
@@ -58,8 +76,8 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
           </Text>
         </View>
         <View style={styles.rowValue}>
-          <ReText style={textValueStyles} text={crosshair.Open} />
-          <ReText style={textValueStyles} text={crosshair.High} />
+          <Text style={styles.textValue}>{hudState.open}</Text>
+          <Text style={styles.textValue}>{hudState.high}</Text>
         </View>
       </View>
       <View style={[styles.columnItem, { justifyContent: 'flex-end' }]}>
@@ -74,8 +92,8 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
           </Text>
         </View>
         <View style={styles.rowValue}>
-          <ReText style={textValueStyles} text={crosshair.Close} />
-          <ReText style={textValueStyles} text={crosshair.Low} />
+          <Text style={styles.textValue}>{hudState.close}</Text>
+          <Text style={styles.textValue}>{hudState.high}</Text>
         </View>
       </View>
     </Animated.View>
@@ -102,19 +120,11 @@ const createStyles = (theme: Theme) =>
       textAlign: 'center',
       letterSpacing: -0.29,
     },
-    textValueStylesIOS: {
+    textValue: {
       fontSize: 12,
-      lineHeight: 14,
+      // lineHeight: 14,
       color: theme.colors.crosshairValue,
-      letterSpacing: -0.29,
-      textAlign: 'left',
-      width: 50,
-      height: 16,
-    },
-    textValueStylesAndroid: {
-      fontSize: 12,
-      color: theme.colors.crosshairValue,
-      letterSpacing: -0.29,
+      // letterSpacing: -0.29,
       textAlign: 'left',
       width: 50,
       height: 16,

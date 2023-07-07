@@ -17,7 +17,6 @@ export interface ChartIqWrapperProps extends ViewProps {
   onPullInitialData?: (event: QuoteFeedEvent) => Promise<void>;
   onPullUpdateData?: (event: QuoteFeedEvent) => Promise<void>;
   onPullPagingData?: (event: QuoteFeedEvent) => Promise<void>;
-  onHUDChanged?: (event: OnHudChangeEvent) => void;
   onMeasureChanged?: (event: OnMeasureChangeEvent) => void;
   onStart?: (event: OnStartEvent) => void;
 }

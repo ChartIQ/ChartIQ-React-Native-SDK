@@ -10,7 +10,6 @@ extension String {
     public static let dispatchOnSymbolUpdate = "DispatchOnSymbolUpdate"
     public static let dispatchOnDrawingUpdate = "DispatchOnDrawingUpdate"
     public static let dispatchOnMeasureUpdate = "DispatchOnMeasureUpdate"
-    public static let dispatchOnHUDUpdate = "DispatchOnHUDUpdate"
 }
 
 @objc(RTEEventEmitter)
@@ -26,7 +25,6 @@ class RTEEventEmitter: RCTEventEmitter {
         .dispatchOnSymbolUpdate,
         .dispatchOnDrawingUpdate,
         .dispatchOnMeasureUpdate,
-        .dispatchOnHUDUpdate
     ]
     private var hasAttachedListener = false
     

@@ -95,25 +95,23 @@ class ChartIqWrapperViewManager: RCTViewManager {
             var timeUnitValue = ""
             if timeUnit != nil {
                 timeUnitValue = timeUnit!.stringValue.uppercased()
-            }else{
+            } else {
                 timeUnitValue = ChartIQTimeUnit.day.stringValue.uppercased()
             }
             
             var interval = self.chartIQWrapperView.chartIQView.interval
-            if(interval == nil){
+            if interval == nil {
                 interval = "1"
             }
-            if (interval == "day" || interval == "week" || interval == "month"){
-                timeUnitValue = ChartIQTimeUnit.init(stringValue: interval ?? "day")?.stringValue.uppercased() ?? timeUnitValue
+            if interval == "day" || interval == "week" || interval == "month" {
+                timeUnitValue = ChartIQTimeUnit(stringValue: interval ?? "day")?.stringValue.uppercased() ?? timeUnitValue
                 interval = "1"
             }
-            
-        
             
             resolve([
                 "timeUnit": timeUnitValue,
                 "periodicity": self.chartIQWrapperView.chartIQView.periodicity ?? "1",
-                "interval":  interval ?? ""
+                "interval": interval ?? ""
             ] as [String: Any])
         }
     }
@@ -365,47 +363,43 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func enableCrosshairs() {
         defaultQueue.async {
-            self.startCrosshairTimer()
             self.chartIQWrapperView.chartIQView.enableCrosshairs(true)
         }
     }
     
     @objc func disableCrosshairs() {
         defaultQueue.async {
-            self.timer?.invalidate()
             self.chartIQWrapperView.chartIQView.enableCrosshairs(false)
         }
     }
     
-    func startCrosshairTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateCrosshairTimer), userInfo: nil, repeats: true)
-    }
-    
-    @objc func updateCrosshairTimer() {
-        defaultQueue.async(qos: DispatchQoS.background,
-                           execute: {
-            let hud = self.chartIQWrapperView.chartIQView.getHudDetails()
-            
-            if self.currentHUD != nil && hud != nil {
-                if self.currentHUD?.open == hud?.open
-                    && self.currentHUD?.high == hud?.high
-                    && self.currentHUD?.close == hud?.close && self.currentHUD?.low == hud?.low && self.currentHUD?.volume == hud?.volume && self.currentHUD?.price == hud?.price
-                {
-                    return
-                }
+    @objc func getHudDetails(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        defaultQueue.async {
+            guard let hud = self.chartIQWrapperView.chartIQView.getHudDetails() else {
+                let hudDictionary = [
+                    "close": "",
+                    "high": "",
+                    "low": "",
+                    "open": "",
+                    "volume": "",
+                    "price": ""
+                ]
+                    
+                resolve(hudDictionary)
+                return
             }
+                
             self.currentHUD = hud
             let hudDictionary = [
-                "close": hud?.close,
-                "high": hud?.high,
-                "low": hud?.low,
-                "open": hud?.open,
-                "volume": hud?.volume,
-                "price": hud?.price
+                "close": hud.close,
+                "high": hud.high,
+                "low": hud.low,
+                "open": hud.open,
+                "volume": hud.volume,
+                "price": hud.price
             ]
-            
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnHUDUpdate, body: hudDictionary)
-        })
+            resolve(hudDictionary)
+        }
     }
     
     @objc func getDrawingParams(_ tool: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {

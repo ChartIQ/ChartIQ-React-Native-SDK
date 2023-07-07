@@ -1,5 +1,4 @@
 import { ViewStyle } from 'react-native';
-import { CrosshairSharedValues } from 'react-native-chart-iq-wrapper';
 import { SvgProps } from 'react-native-svg';
 
 import { ActiveImageType } from '~/assets/images/active-image/active-image.types';
@@ -28,7 +27,6 @@ export interface HeaderProps {
   handleCompareSymbolSelector: () => void;
   handleDrawingTool: () => void;
   handleFullScreen: () => void;
-  crosshairState: CrosshairSharedValues;
   isDrawing: boolean;
   isLandscape: boolean;
   loading: boolean;

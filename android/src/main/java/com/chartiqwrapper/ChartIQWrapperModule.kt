@@ -98,6 +98,25 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
+  fun getHudDetails(promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().getHUDDetails() { hudDetails ->
+        hudDetails.let {
+          val response = Arguments.createMap().apply {
+            putString("open", it.open)
+            putString("high", it.high)
+            putString("low", it.low)
+            putString("close", it.close)
+            putString("volume", it.volume)
+            putString("price", it.price)
+          }
+          promise.resolve(response)
+        }
+      }
+    })
+  }
+
+  @ReactMethod
   fun enableDrawing(tool: String) {
     val newTool = DrawingTool.values().find {
       it.value == tool

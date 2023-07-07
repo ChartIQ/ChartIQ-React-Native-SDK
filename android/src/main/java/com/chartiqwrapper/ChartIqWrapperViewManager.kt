@@ -29,7 +29,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   private var reactContext: ThemedReactContext? = null
   private lateinit var chartIQ: ChartIQ
   private val job = Job()
-  private val chartScope = CoroutineScope(job + Dispatchers.IO)
   private lateinit var view: LinearLayout
 
   private var startCallback: OnStartCallback = OnStartCallback {
@@ -38,38 +37,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   private var url: String = ""
   override fun getName() = "ChartIqWrapperView"
 
-  private val crosshairsHUD = MutableLiveData<CrosshairHUD>()
-
   @ReactProp(name = "url")
   fun setUrl(view: ViewGroup, url: String?){
     if(url != null){
       this.url = url
       initChartIQ(view)
-    }
-  }
-  private fun fetchCrosshairsState() {
-    launchCrosshairsUpdate()
-  }
-
-  private fun getHUDDetails() {
-    chartIQ.getHUDDetails { hud ->
-      crosshairsHUD.value = hud
-      dispatchOnHUDChanged(hud)
-    }
-  }
-
-  private fun launchCrosshairsUpdate() {
-    chartScope.launch {
-      while (true) {
-        delay(CROSSHAIRS_UPDATE_PERIOD)
-        withContext(Dispatchers.Main) {
-          chartIQ.isCrosshairsEnabled { enabled ->
-            if (enabled) {
-              getHUDDetails()
-            }
-          }
-        }
-      }
     }
   }
 
@@ -85,7 +57,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       "onPullUpdateData" to MapBuilder.of("registrationName", "onPullUpdateData"),
       "onPullPagingData" to MapBuilder.of("registrationName", "onPullPagingData"),
       "onChartTypeChanged" to MapBuilder.of("registrationName", "onChartTypeChanged"),
-      "onHUDChanged" to MapBuilder.of("registrationName", "onHUDChanged"),
       "onMeasureChanged" to MapBuilder.of("registrationName", "onMeasureChanged"),
       "onChartAggregationTypeChanged" to MapBuilder.of("registrationName", "onChartAggregationTypeChanged"),
       "onStart" to MapBuilder.of("registrationName", "onStart"),
@@ -117,7 +88,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       initDatasource()
       dispatchOnChartTypeChanged()
       dispatchOnChartAggregationTypeChanged()
-      fetchCrosshairsState()
       addMeasureListener()
     }
   }
@@ -218,27 +188,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
      )
    }
 
-  }
-
-  @ReactMethod
-  fun dispatchOnHUDChanged(hud: CrosshairHUD) {
-    val event: WritableMap = Arguments.createMap().apply {
-      var map = Arguments.createMap().apply {
-        putString("close", hud.close)
-        putString("high", hud.high)
-        putString("low", hud.low)
-        putString("open", hud.open)
-        putString("volume", hud.volume)
-        putString("price", hud.price)
-      }
-      putMap("hud", map)
-    }
-
-    reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-      view.id,
-      "onHUDChanged",
-      event,
-    )
   }
 
   @ReactMethod

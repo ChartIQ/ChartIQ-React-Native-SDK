@@ -62,8 +62,17 @@ export function disableCrosshairs() {
   return ChartIQWrapperModule.disableCrosshairs();
 }
 
+export async function getHudDetails() {
+  return (await ChartIQWrapperModule.getHudDetails()) as CrosshairState;
+}
+
+/**
+ * Set chart type
+ * @param type ChartType
+ * @returns void
+ */
 export function setChartType(type: ChartType) {
-  return ChartIQWrapperModule.setChartType(type);
+  ChartIQWrapperModule.setChartType(type);
 }
 
 export function getChartType(): Promise<string> {

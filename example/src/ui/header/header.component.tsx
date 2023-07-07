@@ -37,7 +37,6 @@ const Header: React.FC<HeaderProps> = ({
   handleDrawingTool,
   handleFullScreen,
 
-  crosshairState,
   isDrawing,
   isLandscape,
   loading,
@@ -305,7 +304,7 @@ const Header: React.FC<HeaderProps> = ({
         <HeaderButtons type="others" items={otherItems} open={open} />
       </Animated.View>
       <Animated.View style={[styles.crosshairContainer, crosshairHeightStyle]}></Animated.View>
-      <AnimatedCrosshairValues opacityStyle={opacityStyle} crosshair={crosshairState} />
+      <AnimatedCrosshairValues enabled={isCrosshairEnabled} opacityStyle={opacityStyle} />
     </>
   );
 };

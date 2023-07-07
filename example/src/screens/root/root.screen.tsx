@@ -54,7 +54,6 @@ export default function Root() {
   };
 
   const {
-    onHUDChanged,
     onMeasureChanged,
     onPullInitialData,
     onPullPagingData,
@@ -73,7 +72,6 @@ export default function Root() {
 
     chartStyle,
     compareSymbols,
-    crosshair,
     interval,
     isDrawing,
     measureValue,
@@ -155,7 +153,6 @@ export default function Root() {
           handleDrawingTool={toggleDrawingToolSelector}
           handleFullScreen={toggleFullScreen}
           isDrawing={isDrawing}
-          crosshairState={crosshair}
           isLandscape={isLandscape}
           loading={!initialized}
         />
@@ -167,7 +164,6 @@ export default function Root() {
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
           onPullPagingData={onPullPagingData}
-          onHUDChanged={onHUDChanged}
           onMeasureChanged={onMeasureChanged}
           style={styles.chartIq}
         />

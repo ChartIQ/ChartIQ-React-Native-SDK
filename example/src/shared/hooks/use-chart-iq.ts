@@ -2,13 +2,11 @@ import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
   ChartIQ,
-  OnHudChangeEvent,
   OnMeasureChangeEvent,
   QuoteFeedEvent,
   ChartIQDatafeedParams,
   ChartQuery,
   ChartSymbol,
-  CrosshairSharedValues,
   DrawingTool,
 } from 'react-native-chart-iq-wrapper';
 import { useSharedValue } from 'react-native-reanimated';
@@ -107,13 +105,6 @@ export const useChartIQ = () => {
   }: QuoteFeedEvent) => {
     try {
       const response = await handleRequest(params);
-
-      const last = response[response.length - 1];
-      crosshair.Close.value = last?.Close?.toString() ?? crosshair.Close.value;
-      crosshair.Open.value = last?.Open?.toString() ?? crosshair.Open.value;
-      crosshair.High.value = last?.High?.toString() ?? crosshair.High.value;
-      crosshair.Low.value = last?.Low?.toString() ?? crosshair.Low.value;
-      crosshair.Vol.value = last?.Volume?.toString() ?? crosshair.Vol.value;
 
       ChartIQ.setUpdateData(response, id);
     } catch (e) {
@@ -286,14 +277,6 @@ export const useChartIQ = () => {
     if (initialized) updateTheme();
   }, [initialized, updateTheme]);
 
-  const crosshair: CrosshairSharedValues = {
-    Price: useSharedValue<string>('0'),
-    Open: useSharedValue<string>('0'),
-    Close: useSharedValue<string>('0'),
-    Vol: useSharedValue<string>('0'),
-    High: useSharedValue<string>('0'),
-    Low: useSharedValue<string>('0'),
-  };
   const handleChartTypeChanged = (chartType: string) => {
     const newChartType = chartStyleSelectorData.find(
       (item) => item.value.toLocaleLowerCase() === chartType.toLocaleLowerCase(),
@@ -308,15 +291,6 @@ export const useChartIQ = () => {
     nativeEvent: { chartType },
   }: NativeSyntheticEvent<{ chartType: string }>) => {
     handleChartTypeChanged(chartType);
-  };
-
-  const onHUDChanged = ({ nativeEvent: { hud } }: OnHudChangeEvent) => {
-    crosshair.Close.value = hud.close ?? crosshair.Close.value;
-    crosshair.Open.value = hud.open ?? crosshair.Open.value;
-    crosshair.High.value = hud.high ?? crosshair.High.value;
-    crosshair.Low.value = hud.low ?? crosshair.Low.value;
-    crosshair.Vol.value = hud.volume ?? crosshair.Vol.value;
-    crosshair.Price.value = hud.price ?? crosshair.Price.value;
   };
 
   const onMeasureChanged = ({ nativeEvent: { measure } }: OnMeasureChangeEvent) => {
@@ -357,7 +331,6 @@ export const useChartIQ = () => {
 
   return {
     onChartTypeChanged,
-    onHUDChanged,
     onMeasureChanged,
     onPullInitialData,
     onPullUpdateData,
@@ -382,7 +355,6 @@ export const useChartIQ = () => {
     compareSymbols,
     isDrawing,
     measureValue,
-    crosshair,
 
     drawingToolSelectorRef,
     compareSymbolSelectorRef,

@@ -56,6 +56,7 @@ RCT_EXTERN_METHOD(addSignalStudy: (NSString *)studyName resolver: (RCTPromiseRes
 RCT_EXTERN_METHOD(addSignal: (NSString *)signal editMode:(BOOL)editMode resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(toggleSignal: (NSString *)signal)
 RCT_EXTERN_METHOD(removeSignal: (NSString *)signal)
+RCT_EXTERN_METHOD(getHudDetails: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 @end
 
