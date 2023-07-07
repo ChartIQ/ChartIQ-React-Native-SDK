@@ -102,6 +102,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
           onChangeText={onTextChange}
           style={styles.textInput}
           value={customFib}
+          placeholderTextColor={theme.colors.placeholder}
           placeholder="Custom %"
         />
         <Pressable onPress={() => handleAdd()} style={styles.button}>
@@ -109,7 +110,15 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
         </Pressable>
       </View>
     ),
-    [customFib, handleAdd, onTextChange, styles.button, styles.footerContainer, styles.textInput],
+    [
+      customFib,
+      handleAdd,
+      onTextChange,
+      styles.button,
+      styles.footerContainer,
+      styles.textInput,
+      theme.colors.placeholder,
+    ],
   );
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : undefined}>
