@@ -105,7 +105,7 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
                 <View style={styles.space64} />
                 <Icons.search width={120} height={120} fill={theme.colors.inputBackground} />
                 <View style={styles.space32} />
-                <Text style={styles.emptyListTextTitle}>No symbols to compare yet</Text>
+                <Text style={styles.emptyListTextTitle}>No Symbols to compare yet</Text>
                 <View style={styles.space16} />
                 <View style={styles.space32} />
                 <TouchableOpacity style={styles.primaryButton} onPress={handleAddPress}>
