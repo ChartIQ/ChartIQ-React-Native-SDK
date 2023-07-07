@@ -58,7 +58,7 @@ export const useChartIQ = () => {
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
 
-  const { updateDrawingSettings, updateDrawingTool, updateLineTypeItem } = useUpdateDrawingTool();
+  const { updateDrawingTool } = useUpdateDrawingTool();
 
   const compareSymbolSelectorRef = React.useRef<BottomSheetMethods>(null);
   const drawingManagerRef = React.useRef<DrawingToolManagerMethods>(null);
@@ -330,13 +330,9 @@ export const useChartIQ = () => {
     ChartIQ.enableDrawing(input.name);
     const params = await ChartIQ.getDrawingParams(input.name);
     const lineTypeItem = findLineTypeItemByPatternAndWidth(params.pattern, params.lineWidth);
-    if (lineTypeItem) {
-      updateLineTypeItem(lineTypeItem);
-    }
-    updateDrawingSettings(() => params);
-    updateDrawingTool(input);
-    drawingManagerRef.current?.loading(false);
 
+    updateDrawingTool(input, params, lineTypeItem);
+    drawingManagerRef.current?.loading(false);
     if (input.name === DrawingTool.NO_TOOL) {
       drawingManagerRef.current?.hide();
       return setIsDrawing(false);

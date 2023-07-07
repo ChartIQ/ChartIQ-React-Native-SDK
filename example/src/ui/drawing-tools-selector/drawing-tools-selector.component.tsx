@@ -45,7 +45,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       drawingTools.map((item) => ({ ...item, favorite: false })),
     );
     const { showActionSheetWithOptions } = useActionSheet();
-    const [tool, setTool] = useState<DrawingItem>(drawingTools[0]);
+    const [tool, setTool] = useState<DrawingItem | null>(null);
     const { translationMap } = useTranslations();
     useEffect(() => {
       const getFavoriteItems = async () => {
@@ -197,6 +197,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   item={item}
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
+                  active={item.name === tool?.name}
                 />
               ),
               title: 'Other tools',
@@ -209,6 +210,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   item={item}
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
+                  active={item.name === tool?.name}
                 />
               ),
               title: 'Main Tools',
@@ -223,6 +225,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   item={item}
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
+                  active={item.name === tool?.name}
                 />
               ),
               title: 'Main Tools',
@@ -283,7 +286,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   {
                     text: 'Restore',
                     onPress: () => {
-                      handleRestoreDrawingParams(tool);
+                      if (tool) handleRestoreDrawingParams(tool);
                     },
                   },
                 ],

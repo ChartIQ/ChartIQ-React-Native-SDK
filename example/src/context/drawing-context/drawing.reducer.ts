@@ -17,7 +17,7 @@ import { DrawingState } from './drawing-state.types';
 
 export type Action = {
   type: DrawingAction;
-  payload: DrawingSettings | DrawingTool | SupportedSettings | LineTypeItem | string;
+  payload: DrawingState | DrawingSettings | DrawingTool | SupportedSettings | LineTypeItem | string;
 };
 
 export const drawingInitialState: DrawingState = {
@@ -84,8 +84,7 @@ export function drawingReducer(drawingState: DrawingState, action: Action) {
     case DrawingAction.SET_DRAWING_TOOL: {
       return {
         ...drawingState,
-        name: action.payload as DrawingTool,
-        title: action.payload as string,
+        ...(action.payload as DrawingState),
       };
     }
     case DrawingAction.SET_DRAWING_SETTINGS: {

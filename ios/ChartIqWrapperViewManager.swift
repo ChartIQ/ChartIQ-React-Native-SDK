@@ -436,7 +436,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
         defaultQueue.async {
             let studies = self.chartIQWrapperView.chartIQView.getAllStudies().filter { $0.shortName == studyName }
             if studies.isEmpty {
-                reject("0", "Error in addSignalStudy, couldn't find study for given studyName", nil)
+                reject("0", "Error in addSignalStudy, couldn't find study for given studyName \(studyName)", nil)
                 return
             }
             let study = studies[0]
@@ -444,7 +444,8 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 reject("0", "Error study for signal wasn't created", nil)
                 return
             }
-            resolve(ChartIQHelperFunctions.convertStudies(studies: [signalStudy])[0])
+            let response = ChartIQHelperFunctions.convertStudies(studies: [signalStudy])[0]
+            resolve(response)
         }
     }
     
@@ -452,7 +453,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
         defaultQueue.async {
             guard let chartIQSignal = ChartIQHelperFunctions.parseSignal(signal: signal) else {
                 reject("0", "Error while parsing signal", nil)
-                print("parseSignal: error while parsing signal")
                 return
             }
             self.chartIQWrapperView.chartIQView.saveSignal(chartIQSignal, isEdit: editMode)

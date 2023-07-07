@@ -1,15 +1,5 @@
 import ChartIQ
 
-struct DecodableChartIQData: Codable {
-    let Close: Double?
-    let Open: Double?
-    let High: Double?
-    let Low: Double?
-    let Volume: Double?
-    let DT: String?
-    let AdjClose: Double?
-}
-
 class RNPullCallback {
     let callback: ([ChartIQ.ChartIQData]) -> Void
     let id: String
@@ -34,6 +24,11 @@ class ChartIQHelper: NSObject {
             self.onPullInitialCompleationHandlers.first(where: {
                 $0.id == id
             })?.callback(transformed)
+            if let index = self.onPullInitialCompleationHandlers.firstIndex(where: {
+                $0.id == id
+            }){
+                self.onPullInitialCompleationHandlers.remove(at: index)
+            }
         }
     }
     
@@ -43,6 +38,11 @@ class ChartIQHelper: NSObject {
             self.onPullUpdateCompleationHandlers.first(where: {
                 $0.id == id
             })?.callback(transformed)
+            if let index = self.onPullUpdateCompleationHandlers.firstIndex(where: {
+                $0.id == id
+            }){
+                self.onPullUpdateCompleationHandlers.remove(at: index)
+            }
         }
     }
     
@@ -52,6 +52,11 @@ class ChartIQHelper: NSObject {
             self.onPullPagingCompleationHandlers.first(where: {
                 $0.id == id
             })?.callback(transformed)
+            if let index = self.onPullPagingCompleationHandlers.firstIndex(where: {
+                $0.id == id
+            }){
+                self.onPullPagingCompleationHandlers.remove(at: index)
+            }
         }
     }
     

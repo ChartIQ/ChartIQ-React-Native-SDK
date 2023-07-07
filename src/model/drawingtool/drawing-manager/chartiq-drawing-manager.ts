@@ -1,3 +1,5 @@
+import { lineTypePickerData } from '~/assets/icons/line-types/line-types';
+
 import { DrawingTool } from '../drawingtools';
 
 import { DrawingManager } from './drawing-manager';
@@ -153,4 +155,10 @@ export class ChartIQDrawingManager implements DrawingManager {
       supportingVolumeProfile,
     };
   }
+
+  findLineTypeItemByPatternAndWidth = (pattern: string, width: number) => {
+    return lineTypePickerData.find(
+      (item) => item.value === pattern && item.lineWidth === width
+    );
+  };
 }

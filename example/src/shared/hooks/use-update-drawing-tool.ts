@@ -12,7 +12,7 @@ import {
 
 export const useUpdateDrawingTool = () => {
   const drawingToolManager = useRef(new ChartIQDrawingManager());
-  const { drawingSettings } = useContext(DrawingContext);
+  const { drawingSettings, currentLineType } = useContext(DrawingContext);
   const dispatch = useContext(DrawingDispatchContext);
 
   const updateDrawingSettings = (callback: (input: DrawingSettings) => DrawingSettings) => {
@@ -27,10 +27,28 @@ export const useUpdateDrawingTool = () => {
     );
   };
 
-  const updateDrawingTool = (drawingTool: DrawingItem) => {
-    dispatch(DrawingActions.setDrawingTool(drawingTool.name));
-    dispatch(DrawingActions.setDrawingTitle(drawingTool.title));
-    updateSupportedSettings(drawingTool.name);
+  const updateDrawingTool = (
+    drawingTool: DrawingItem,
+    params: DrawingSettings,
+    line?: LineTypeItem,
+  ) => {
+    const settings = drawingToolManager.current.getAvailableDrawingTools(drawingTool.name);
+    let lineItem =
+      drawingToolManager.current.findLineTypeItemByPatternAndWidth(
+        line?.value ?? '',
+        line?.lineWidth ?? 1,
+      ) ?? currentLineType;
+
+    dispatch(
+      DrawingActions.setDrawingTool({
+        ...drawingSettings,
+        currentLineType: lineItem,
+        drawingSettings: params,
+        name: drawingTool.name,
+        supportedSettings: settings,
+        title: drawingTool.title,
+      }),
+    );
   };
 
   const updateLineColor = (color: string) => {
