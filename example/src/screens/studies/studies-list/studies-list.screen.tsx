@@ -57,6 +57,10 @@ const Studies: React.FC = () => {
           </Pressable>
         ),
       });
+    } else {
+      navigation.setOptions({
+        headerRight: () => null,
+      });
     }
   }, [
     activeStudies,
