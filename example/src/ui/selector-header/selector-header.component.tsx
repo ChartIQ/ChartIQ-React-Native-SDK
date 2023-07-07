@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
+import { defaultHitSlop } from '~/constants';
 import { Theme, useTheme } from '~/theme';
 
 interface SelectorHeaderProps {
@@ -27,7 +28,7 @@ const SelectorHeader: React.FC<SelectorHeaderProps> = ({
     <View style={styles.container}>
       <View style={[styles.button, styles.alignLeft]}>
         {handleLeftAction ? (
-          <TouchableOpacity onPress={handleLeftAction}>
+          <TouchableOpacity hitSlop={defaultHitSlop} onPress={handleLeftAction}>
             <Text numberOfLines={1} style={[styles.text]}>
               {leftActionTitle}
             </Text>
@@ -41,7 +42,7 @@ const SelectorHeader: React.FC<SelectorHeaderProps> = ({
       </View>
       <View style={[styles.button, styles.alignRight]}>
         {handleRightAction ? (
-          <TouchableOpacity onPress={handleRightAction}>
+          <TouchableOpacity hitSlop={defaultHitSlop} onPress={handleRightAction}>
             {rightActionTitle ? (
               <Text numberOfLines={1} style={styles.text}>
                 {rightActionTitle}

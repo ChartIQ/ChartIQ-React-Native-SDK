@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
+import { defaultHitSlop } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
@@ -12,7 +13,7 @@ const BackButton = () => {
   const { translations } = useTranslations();
 
   return (
-    <Pressable onPress={navigation.goBack}>
+    <Pressable hitSlop={defaultHitSlop} onPress={navigation.goBack}>
       <Text style={styles.text}>{translations.cancel}</Text>
     </Pressable>
   );
