@@ -32,14 +32,7 @@ const Studies: React.FC = () => {
   const get = useCallback(async () => {
     const response = await ChartIQ.getActiveStudies();
 
-    const translatedStudies = response.map((item) => {
-      return {
-        ...item,
-        name: item.name,
-      };
-    });
-
-    setActiveStudies(translatedStudies);
+    setActiveStudies(response);
   }, []);
 
   useFocusEffect(
@@ -89,9 +82,9 @@ const Studies: React.FC = () => {
     <View style={styles.container}>
       <FlatList
         data={activeStudies}
-        keyExtractor={({ name }) => name}
+        keyExtractor={({ display }) => display}
         renderItem={({ item }) => {
-          const [name, value] = item.name.split(' (', 2);
+          const [name, value] = item.display.split(' (', 2);
           return (
             <SwipableItem
               rightActionButtons={[

@@ -1,5 +1,7 @@
 export interface Study {
   name: string;
+  fullName: string;
+  originalName?: string;
   attributes: {
     [key: string]: any;
   };
@@ -24,6 +26,7 @@ export interface Study {
     [key: string]: any;
   };
   signalIQExclude: boolean;
+  uniqueId?: string;
 }
 
 export type StudySimplified = {

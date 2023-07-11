@@ -26,8 +26,8 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: formatStudyName(study.name), headerTitleAlign: 'center' });
-  }, [navigation, study.name]);
+    navigation.setOptions({ title: formatStudyName(study.display), headerTitleAlign: 'center' });
+  }, [navigation, study.display]);
 
   const get = useCallback(async () => {
     const inputs = await ChartIQ.getStudyParameters(study, 'Inputs');
@@ -54,11 +54,11 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
           onPress: () => {
             const inputParameters = inputParams.map(({ name, defaultValue }) => ({
               fieldName: name,
-              fieldSelectedValue: defaultValue as string,
+              fieldSelectedValue: defaultValue.toString(),
             }));
             const outputParameters = outputParams.map(({ name, defaultValue }) => ({
               fieldName: name,
-              fieldSelectedValue: defaultValue as string,
+              fieldSelectedValue: defaultValue.toString(),
             }));
 
             ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]);
@@ -95,8 +95,14 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   };
 
   const handleSave = useCallback(() => {
-    const inputParameters = changeStudyParametersRef.current?.getInputParamsData() || [];
-    const outputParameters = changeStudyParametersRef.current?.getOutputParamsData() || [];
+    const inputParameters =
+      changeStudyParametersRef.current
+        ?.getInputParamsData()
+        .map((item) => ({ ...item, fieldSelectedValue: item.fieldSelectedValue.toString() })) || [];
+    const outputParameters =
+      changeStudyParametersRef.current
+        ?.getOutputParamsData()
+        .map((item) => ({ ...item, fieldSelectedValue: item.fieldSelectedValue.toString() })) || [];
 
     ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]);
 

@@ -43,19 +43,19 @@ RCT_EXTERN_METHOD(getActiveStudies: (RCTPromiseResolveBlock)resolve rejecter: (R
 RCT_EXTERN_METHOD(enableCrosshairs)
 RCT_EXTERN_METHOD(disableCrosshairs)
 
-RCT_EXTERN_METHOD(addStudy: (NSString *)study isClone:(BOOL)isClone)
-RCT_EXTERN_METHOD(removeStudy: (NSString *)study)
-RCT_EXTERN_METHOD(getStudyParameters: (NSString *)study studyParameterType: (NSString *)studyParameterType resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(setStudyParameter: (NSString *)study parameter:(NSString *)parameter)
-RCT_EXTERN_METHOD(setStudyParameters: (NSString *)study parameters:(NSString *)parameters resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(addStudy: (NSDictionary *)study isClone:(BOOL)isClone)
+RCT_EXTERN_METHOD(removeStudy: (NSDictionary *)study)
+RCT_EXTERN_METHOD(getStudyParameters: (NSDictionary *)study studyParameterType: (NSString *)studyParameterType resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setStudyParameter: (NSDictionary *)study parameter:(NSDictionary *)parameter)
+RCT_EXTERN_METHOD(setStudyParameters: (NSDictionary *)study parameters:(NSArray *)parameters resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(setLanguage: (NSString *)languageCode)
 RCT_EXTERN_METHOD(getTranslations: (NSString *)languageCode resolver:(RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getActiveSignals: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(addSignalStudy: (NSString *)studyName resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(addSignal: (NSString *)signal editMode:(BOOL)editMode resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(toggleSignal: (NSString *)signal)
-RCT_EXTERN_METHOD(removeSignal: (NSString *)signal)
+RCT_EXTERN_METHOD(addSignal: (NSDictionary *)signal editMode:(BOOL)editMode resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(toggleSignal: (NSDictionary *)signal)
+RCT_EXTERN_METHOD(removeSignal: (NSDictionary *)signal)
 RCT_EXTERN_METHOD(getHudDetails: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 @end

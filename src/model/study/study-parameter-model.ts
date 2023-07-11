@@ -5,6 +5,11 @@ export interface StudyParameterModel {
   fieldSelectedValue: string | number | boolean;
 }
 
+export interface ChartIQStudyParameterModel {
+  fieldName: string;
+  fieldSelectedValue: string;
+}
+
 export type StudyParameterFieldType =
   | 'Select'
   | 'TextColor'

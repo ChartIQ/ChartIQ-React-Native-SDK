@@ -26,7 +26,17 @@ class ChartIqWrapperView: UIView {
     func setUpChart() {
         chartIQView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(chartIQView)
-      
+        print("log_chart, start")
+        if #available(iOS 16.4, *) {
+            print("Is web view inspectable \(chartIQView.getWebView().isInspectable)")
+            if(!chartIQView.getWebView().isInspectable){
+                chartIQView.getWebView().isInspectable = true
+            }
+        } else {
+            // Fallback on earlier versions
+            print("LOL, not avb")
+        }
+       
         chartIQView.dataSource = self
         chartIQView.delegate = self
     }
@@ -39,27 +49,30 @@ class ChartIqWrapperView: UIView {
 
 extension ChartIqWrapperView: ChartIQDataSource {
     func pullInitialData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+            print("log_chart, pullInitialData")
+
             let id = UUID().uuidString
             self.chartIQHelper.onPullInitialCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params, id: id))
-        }
+        
     }
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+            print("log_chart, pullUpdateData")
+
             let id = UUID().uuidString
             self.chartIQHelper.onPullUpdateCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params, id: id))
-        }
+        
     }
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+            print("log_chart, pullPaginationData")
+
             let id = UUID().uuidString
             self.chartIQHelper.onPullPagingCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params, id: id))
-        }
+        
     }
     
     func convertParams(params: ChartIQ.ChartIQQuoteFeedParams, id: String) -> [AnyHashable: Any] {
@@ -79,11 +92,14 @@ extension ChartIqWrapperView: RCTInvalidating {
         chartIQHelper = nil
         chartIQView = nil
         chartIQDatasource = nil
+        chartIQDelegate = nil
     }
 }
 
 extension ChartIqWrapperView: ChartIQDelegate {
     func chartIQViewDidFinishLoading(_ chartIQView: ChartIQ.ChartIQView) {
+        print("log_chart, chartIQViewDidFinishLoading")
+
         chartIQView.setDataMethod(.pull)
         RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnChartStart, body: "chartIQViewDidFinishLoading")
     }

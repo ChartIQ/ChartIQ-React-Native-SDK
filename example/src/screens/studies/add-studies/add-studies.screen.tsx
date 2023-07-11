@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ListRenderItemInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
 import { FlatList } from 'react-native-gesture-handler';
+import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -26,9 +27,9 @@ const AddStudies: React.FC = () => {
     const translatedStudies = studiesList
       .map((item) => ({
         ...item,
-        name: translationMap[item.name] ?? item.name,
+        display: translationMap[item.display] ?? item.display,
       }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.display.localeCompare(b.display));
     setStudies(translatedStudies);
   }, [translationMap]);
 
@@ -38,12 +39,12 @@ const AddStudies: React.FC = () => {
 
   const handleSelect = useCallback(async () => {
     const activeStudies = await ChartIQ.getActiveStudies();
-    selected.forEach((name) => {
-      const study = studies.find((item) => item.name === name);
+    selected.forEach((display) => {
+      const study = studies.find((item) => item.display === display);
 
       if (study !== undefined) {
-        const isClone = activeStudies.some((item) => study.name === item.name);
-        ChartIQ.addStudy(study, isClone);
+        const isClone = activeStudies.some((item) => study.display === item.display);
+        ChartIQ.addStudy({ ...study, uniqueId: uuid.v4() as string }, isClone);
       }
     });
 
@@ -84,10 +85,10 @@ const AddStudies: React.FC = () => {
     });
   }, [handleSelect, navigation, selected, styles.done]);
 
-  const renderItem = ({ item: { name } }: ListRenderItemInfo<Study>) => {
-    const isSelected = selected.has(name);
+  const renderItem = ({ item: { display } }: ListRenderItemInfo<Study>) => {
+    const isSelected = selected.has(display);
     return (
-      <ListItem onPress={onPress(name)} title={name}>
+      <ListItem onPress={onPress(display)} title={display}>
         {isSelected ? (
           <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
         ) : null}
@@ -95,7 +96,9 @@ const AddStudies: React.FC = () => {
     );
   };
 
-  const filtered = studies.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = studies.filter((item) =>
+    item.display.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <View style={styles.container}>
@@ -108,7 +111,7 @@ const AddStudies: React.FC = () => {
       <FlatList
         data={filtered}
         renderItem={renderItem}
-        keyExtractor={({ name }) => name}
+        keyExtractor={({ display }) => display}
         extraData={selected}
       />
     </View>

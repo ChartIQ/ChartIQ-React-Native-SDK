@@ -31,7 +31,7 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
   ...props
 }) => {
   useEffect(() => {
-    RTVEventEmitter.addListener(
+    const pullInitialSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullInitialData,
       (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullInitialData &&
@@ -40,7 +40,7 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
           });
       }
     );
-    RTVEventEmitter.addListener(
+    const pullUpdateSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullUpdateData,
       (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullUpdateData &&
@@ -49,7 +49,7 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
           });
       }
     );
-    RTVEventEmitter.addListener(
+    const pullPagingSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnPullPagingData,
       (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
         onPullPagingData &&
@@ -58,13 +58,13 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
           });
       }
     );
-    RTVEventEmitter.addListener(
+    const pullStartSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnChartStart,
       () => {
         onStart && onStart({ nativeEvent: {} });
       }
     );
-    RTVEventEmitter.addListener(
+    const pullMeasureSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnMeasureUpdate,
       (payload: string) => {
         onMeasureChanged &&
@@ -73,31 +73,36 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
     );
 
     // NOTE: This event is not used in the app probably it is not needed
-    RTVEventEmitter.addListener(
+    const pullLayoutSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnLayoutUpdate,
       (payload) => {
         // console.log('DispatchOnLayoutUpdate', payload);
       }
     );
-    RTVEventEmitter.addListener(
+    const pullSymbolUpdateSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnSymbolUpdate,
       (payload) => {
         // console.log('DispatchOnSymbolUpdate', payload);
       }
     );
-    RTVEventEmitter.addListener(
+    const pullDrawingUpdateSubscription = RTVEventEmitter.addListener(
       IOSEventEmitterKeys.DispatchOnDrawingUpdate,
       (payload) => {
         // console.log('DispatchOnDrawingUpdate', payload);
       }
     );
-  }, [
-    onMeasureChanged,
-    onPullInitialData,
-    onPullPagingData,
-    onPullUpdateData,
-    onStart,
-  ]);
+
+    return () => {
+      pullInitialSubscription.remove();
+      pullUpdateSubscription.remove();
+      pullPagingSubscription.remove();
+      pullStartSubscription.remove();
+      pullMeasureSubscription.remove();
+      pullLayoutSubscription.remove();
+      pullSymbolUpdateSubscription.remove();
+      pullDrawingUpdateSubscription.remove();
+    };
+  }, []);
 
   return <ChartIqWrapperViewComponent {...props} />;
 };

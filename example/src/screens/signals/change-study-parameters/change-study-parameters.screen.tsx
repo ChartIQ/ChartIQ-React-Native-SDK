@@ -27,8 +27,8 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: formatStudyName(study.name) });
-  }, [navigation, study.name]);
+    navigation.setOptions({ title: formatStudyName(study.display) });
+  }, [navigation, study.display]);
 
   const get = useCallback(async () => {
     const inputs = await ChartIQ.getStudyParameters(study, 'Inputs');
@@ -43,8 +43,16 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   }, [get]);
 
   const handleSave = useCallback(() => {
-    const inputParameters = changeStudyParametersRef.current?.getInputParamsData() || [];
-    const outputParameters = changeStudyParametersRef.current?.getOutputParamsData() || [];
+    const inputParameters =
+      changeStudyParametersRef.current?.getInputParamsData().map((item) => ({
+        ...item,
+        fieldSelectedValue: item.fieldSelectedValue.toString(),
+      })) || [];
+    const outputParameters =
+      changeStudyParametersRef.current?.getOutputParamsData().map((item) => ({
+        ...item,
+        fieldSelectedValue: item.fieldSelectedValue.toString(),
+      })) || [];
 
     if (inputParameters.length === 0 && outputParameters.length === 0) {
       navigation.goBack();

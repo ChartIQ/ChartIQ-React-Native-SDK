@@ -106,18 +106,18 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
 
   const handleSelectStudy = () => {
     selectFromListRef.current?.open({
-      data: studies.map(({ name }) => ({ key: name, value: name })),
-      selected: selectedStudy?.name ?? '',
+      data: studies.map(({ display }) => ({ key: display, value: display })),
+      selected: selectedStudy?.display ?? '',
       id: SELECT_STUDY,
       title: 'Select study',
     });
   };
 
   const handleStudyChange = async ({ value }: { value: string }) => {
-    const item = studies.find((item) => item.name === value) ?? null;
-    const study = await ChartIQ.addSignalStudy(item?.shortName ?? '');
+    const item = studies.find((item) => item.display === value) ?? null;
+    const study = await ChartIQ.addSignalStudy(item?.display ?? '');
 
-    if (selectedStudy && selectedStudy.name !== study?.name) {
+    if (selectedStudy && selectedStudy.display !== study?.display) {
       ChartIQ.removeStudy(selectedStudy);
       setConditions(new Map());
     }
