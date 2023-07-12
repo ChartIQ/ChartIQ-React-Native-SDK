@@ -303,7 +303,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         {!isEdit ? (
           <ListItem
             onPress={handleSelectStudy}
-            title="Change study"
+            title="Change Study"
             textStyle={styles.selectStudy}
           />
         ) : null}

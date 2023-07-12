@@ -7,7 +7,11 @@ import React, {
   useState,
 } from 'react';
 import { SectionList, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
-import { StudyParameter, StudyParameterModel } from 'react-native-chart-iq-wrapper';
+import {
+  StudyParameter,
+  StudyParameterFieldType,
+  StudyParameterModel,
+} from 'react-native-chart-iq-wrapper';
 
 import { Theme, useTheme } from '~/theme';
 
@@ -28,6 +32,8 @@ export interface ChangeStudyParameterMethods {
 }
 
 const formatNumber = (text: string) => {
+  if (!text) return '0.0';
+
   const number = Number(text);
   const fixLength = text.split('.', 2)[1]?.length ?? 1;
 
@@ -167,7 +173,12 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       });
     };
 
-    const onValueChange = (fieldName: string, fieldSelectedValue: string | number | boolean) => {
+    const onValueChange = (
+      fieldName: string,
+      fieldSelectedValue: string | number | boolean,
+      type?: StudyParameterFieldType,
+    ) => {
+      const value = type === 'Number' && !fieldSelectedValue ? '0.0' : fieldSelectedValue;
       const itemToChange = inputParamsData.find((item) => item.fieldName === fieldName);
       if (itemToChange) {
         setInputParamsData((prevState) => {
@@ -175,7 +186,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
             if (item.fieldName === fieldName) {
               return {
                 ...item,
-                fieldSelectedValue: fieldSelectedValue,
+                fieldSelectedValue: value,
               };
             }
             return item;
@@ -183,7 +194,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
         });
       } else {
         setInputParamsData((prevState) => {
-          return [...prevState, { fieldName, fieldSelectedValue: fieldSelectedValue }];
+          return [...prevState, { fieldName, fieldSelectedValue: value }];
         });
       }
 
@@ -192,7 +203,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
           if (item.name === fieldName) {
             return {
               ...item,
-              value: fieldSelectedValue,
+              value: value,
             };
           }
           return item;
@@ -202,9 +213,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
 
     useImperativeHandle(ref, () => ({
       getInputParamsData: () => inputParamsData,
-      getOutputParamsData: () => {
-        return outputParamsData;
-      },
+      getOutputParamsData: () => outputParamsData,
     }));
 
     const inputData = inputParams.map((item) => ({
@@ -254,7 +263,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                       <TextInput
                         style={styles.input}
                         defaultValue={item.value.toString()}
-                        onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
+                        onChangeText={(text) => onValueChange(item.name, text)}
                         value={item.value.toString()}
                       />
                     </ListItem>
@@ -268,7 +277,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                         keyboardType="numeric"
                         defaultValue={Number(item.value).toFixed(1)}
                         placeholder="0.0"
-                        onChange={({ nativeEvent: { text } }) => onValueChange(item.name, text)}
+                        onChangeText={(text) => onValueChange(item.name, text, 'Number')}
                         onEndEditing={({ nativeEvent: { text } }) =>
                           handleNumberChange(text, item.name)
                         }
@@ -338,6 +347,8 @@ const createStyles = (theme: Theme) =>
       padding: 0,
       color: theme.colors.cardSubtitle,
       fontSize: 16,
+      minWidth: 100,
+      textAlign: 'right',
     },
   });
 

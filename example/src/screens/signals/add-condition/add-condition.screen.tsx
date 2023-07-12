@@ -226,12 +226,12 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     if (!markerOption) {
       return;
     }
-
+    const value = secondIndicatorValue || '0.0';
     const leftIndicator =
       selectedCondition?.leftIndicator || (outputParams[0]?.name ?? '' + ' ' + study.shortName);
     const rightIndicator =
       selectedCondition?.rightIndicator === 'Value'
-        ? secondIndicatorValue
+        ? value
         : selectedCondition?.rightIndicator + ' ' + study.shortName ?? null;
     const signalOperator = selectedCondition?.signalOperator ?? SignalOperator.DOES_NOT_CHANGE;
 
@@ -348,6 +348,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
                 value={secondIndicatorValue ?? undefined}
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.placeholder}
+                onBlur={handleEndEditingSecondIndicatorValue}
                 onEndEditing={handleEndEditingSecondIndicatorValue}
               />
             </ListItem>
@@ -390,6 +391,8 @@ const createStyles = ({ colors }: Theme) =>
     textInput: {
       padding: 0,
       color: colors.cardSubtitle,
+      minWidth: 100,
+      textAlign: 'right',
     },
   });
 

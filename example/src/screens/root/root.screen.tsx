@@ -55,11 +55,10 @@ export default function Root() {
 
   const {
     onMeasureChanged,
+    onDrawingToolChanged,
     onPullInitialData,
     onPullPagingData,
     onPullUpdateData,
-    onDrawingToolChanged,
-
     toggleDrawingToolSelector,
     toggleCompareSymbolSelector,
 
