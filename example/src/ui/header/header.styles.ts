@@ -33,6 +33,9 @@ export const createStyles = (theme: Theme) =>
     },
     buttonText: {
       color: theme.colors.buttonText,
+      paddingHorizontal: 4,
+      textAlign: 'center',
+      width: 68,
     },
     selectedButtonText: {
       color: theme.colors.buttonBackground,

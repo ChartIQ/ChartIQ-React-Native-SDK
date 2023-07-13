@@ -31,7 +31,15 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
   const crosshairUpdate = useCallback(async () => {
     if (enabled) {
       const hud = await ChartIQ.getHudDetails();
-      setHudState(hud);
+      setHudState(
+        Object.entries(hud).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [key]: Number(value).toFixed(3),
+          }),
+          {} as CrosshairState,
+        ),
+      );
     }
   }, [enabled]);
 
