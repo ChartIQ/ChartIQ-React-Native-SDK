@@ -48,29 +48,30 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem | null>(null);
     const { translationMap } = useTranslations();
+
     useEffect(() => {
       const getFavoriteItems = async () => {
         const storageFavoriteItems =
           (await AsyncStorage.getItem(asyncStorageKeys.drawingToolsFavorite)) ?? '[]';
 
         const favoriteItems = JSON.parse(storageFavoriteItems) as DrawingItem[];
-
-        setTools((prevTools) => {
-          const translated = prevTools.map((item) => ({
+        const translated = drawingTools.map((item) => {
+          return {
             ...item,
             title: translationMap[item.title] ?? item.title,
-          }));
-          return translated.map((tool) => {
-            if (favoriteItems.find((item) => item.name === tool.name)) {
-              return {
-                ...tool,
-                favorite: true,
-              };
-            }
-
-            return tool;
-          });
+          };
         });
+        const newDrawingTools = translated.map((tool) => {
+          if (favoriteItems.find((item) => item.name === tool.name)) {
+            return {
+              ...tool,
+              favorite: true,
+            };
+          }
+
+          return { ...tool, favorite: false };
+        });
+        setTools(newDrawingTools);
       };
 
       getFavoriteItems();

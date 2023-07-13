@@ -6,7 +6,6 @@ import {
   DrawingTool,
   OHLCParams,
   StudyParameter,
-  StudyParameterModel,
   StudyParameterResponse,
   TimeUnit,
   ChartType,
