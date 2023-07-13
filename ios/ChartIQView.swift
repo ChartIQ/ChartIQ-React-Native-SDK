@@ -49,30 +49,33 @@ class ChartIqWrapperView: UIView {
 
 extension ChartIqWrapperView: ChartIQDataSource {
     func pullInitialData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
             print("log_chart, pullInitialData")
-
+            
             let id = UUID().uuidString
             self.chartIQHelper.onPullInitialCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullInitial, body: self.convertParams(params: params, id: id))
-        
+        }
     }
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
             print("log_chart, pullUpdateData")
-
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+            
             let id = UUID().uuidString
             self.chartIQHelper.onPullUpdateCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullUpdate, body: self.convertParams(params: params, id: id))
-        
+        }
     }
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
             print("log_chart, pullPaginationData")
-
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
+            
             let id = UUID().uuidString
             self.chartIQHelper.onPullPagingCompleationHandlers.append(RNPullCallback(callback: completionHandler, id: id))
             RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnPullPaging, body: self.convertParams(params: params, id: id))
-        
+        }
     }
     
     func convertParams(params: ChartIQ.ChartIQQuoteFeedParams, id: String) -> [AnyHashable: Any] {

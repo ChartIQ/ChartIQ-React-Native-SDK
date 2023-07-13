@@ -236,8 +236,8 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     const signalOperator = selectedCondition?.signalOperator ?? SignalOperator.DOES_NOT_CHANGE;
 
     const addCondition: Condition = {
-      leftIndicator,
-      rightIndicator,
+      leftIndicator: leftIndicator.trim(),
+      rightIndicator: rightIndicator?.trim(),
       markerOption,
       signalOperator,
     };

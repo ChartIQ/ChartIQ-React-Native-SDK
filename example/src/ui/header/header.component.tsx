@@ -230,7 +230,16 @@ const Header: React.FC<HeaderProps> = ({
     let otherItems = preparedItems.slice(numberOfVisibleItems - 1, items.length);
 
     if (!isAllItemsFits) {
-      otherItems = [visibleItems.pop() as HeaderItem, ...otherItems];
+      const signalButton = otherItems.find((item) => item.key === 'signals');
+      const restButtons = otherItems.filter((item) => item.key !== 'signals');
+
+      if (!signalButton && visibleItems[0]) {
+        //@ts-ignore
+        otherItems = [visibleItems.pop(), ...otherItems];
+      } else if (signalButton) {
+        otherItems = [signalButton, visibleItems.pop() as HeaderItem, ...restButtons];
+      }
+
       visibleItems.push({
         onPress: handleChevron,
         Icon: Icons.chevronRight,
