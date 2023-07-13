@@ -6,6 +6,7 @@ import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
+import { defaultHitSlop } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -45,7 +46,7 @@ const Studies: React.FC = () => {
     if (activeStudies.length !== 0) {
       navigation.setOptions({
         headerRight: () => (
-          <Pressable onPress={handleAddStudies}>
+          <Pressable hitSlop={defaultHitSlop} onPress={handleAddStudies}>
             <Text style={styles.headerButton}>{translations.Add}</Text>
           </Pressable>
         ),

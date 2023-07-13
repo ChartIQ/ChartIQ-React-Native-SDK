@@ -11,6 +11,11 @@ interface ListItemProps extends PropsWithChildren {
   onPress?: () => void;
   value?: string;
   style?: StyleProp<ViewStyle>;
+  topBorder?: boolean;
+  bottomBorder?: boolean;
+  topBorderStyles?: ViewStyle;
+  bottomBorderStyles?: ViewStyle;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
@@ -21,31 +26,42 @@ const ListItem: React.FC<ListItemProps> = ({
   onPress,
   value,
   style,
+  topBorder = false,
+  bottomBorder = true,
+  bottomBorderStyles,
+  topBorderStyles,
+  containerStyle,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
   return (
-    <Pressable onPress={onPress} style={[styles.container, style]}>
-      {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
-      {value ? (
-        <View style={styles.row}>
-          <Text style={[styles.description, textStyle]}>{value}</Text>
-          {onPress ? <Icons.chevronRight fill={theme.colors.cardSubtitle} /> : null}
-        </View>
-      ) : null}
-      {titleComponent ? titleComponent : null}
-      {children}
-    </Pressable>
+    <View style={containerStyle}>
+      {topBorder ? <View style={[styles.border, topBorderStyles]} /> : null}
+      <Pressable onPress={onPress} style={[styles.container, style]}>
+        {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
+        {value ? (
+          <View style={styles.row}>
+            <Text style={[styles.description, textStyle]}>{value}</Text>
+            {onPress ? <Icons.chevronRight fill={theme.colors.cardSubtitle} /> : null}
+          </View>
+        ) : null}
+        {titleComponent ? titleComponent : null}
+        {children}
+      </Pressable>
+      {bottomBorder ? <View style={[styles.border, bottomBorderStyles]} /> : null}
+    </View>
   );
 };
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    border: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
     container: {
       backgroundColor: theme.colors.backgroundSecondary,
-      borderBottomWidth: 1,
-      borderColor: theme.colors.border,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',

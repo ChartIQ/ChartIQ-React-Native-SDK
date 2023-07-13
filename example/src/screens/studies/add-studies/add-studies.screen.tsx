@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
+import { defaultHitSlop } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -78,7 +79,7 @@ const AddStudies: React.FC = () => {
 
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSelect}>
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSelect}>
           <Text style={styles.done}>Done</Text>
         </Pressable>
       ),

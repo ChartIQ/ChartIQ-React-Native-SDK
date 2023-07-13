@@ -1,8 +1,9 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { Theme, useTheme } from '~/theme';
+import { ListItem } from '~/ui/list-item';
 import { SwipableItem } from '~/ui/swipable-item';
 
 import { DrawingItem } from '../../drawing-tools-selector.data';
@@ -14,6 +15,7 @@ interface SwipableToolItemProps {
   onPress: (item: DrawingItem) => void;
   enabled?: boolean;
   active?: boolean;
+  listItemProps?: React.ComponentProps<typeof ListItem>;
 }
 
 const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
@@ -23,6 +25,7 @@ const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
   onPress,
   enabled = true,
   active = false,
+  listItemProps,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -51,16 +54,16 @@ const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
 
   return (
     <SwipableItem enabled={enabled} rightActionButtons={rightActionButtons}>
-      <Pressable
+      <ListItem
         onPress={() => {
           onPress(item);
         }}
-        style={styles.card}
+        {...listItemProps}
       >
         <View style={[styles.row]}>
           <item.Icon
-            width={32}
-            height={32}
+            width={24}
+            height={24}
             fill={theme.colors.buttonText}
             stroke={theme.colors.buttonText}
           />
@@ -74,7 +77,7 @@ const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
             </View>
           ) : null}
         </View>
-      </Pressable>
+      </ListItem>
     </SwipableItem>
   );
 };

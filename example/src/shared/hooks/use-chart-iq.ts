@@ -222,7 +222,7 @@ export const useChartIQ = () => {
     const periodicity = await ChartIQ.getPeriodicity();
 
     const newInterval =
-      intervals.find((item) => {
+      [...intervals.first, ...intervals.second, ...intervals.third].find((item) => {
         return (
           item.timeUnit?.toLowerCase() === periodicity.timeUnit?.toLowerCase() &&
           item.period === periodicity.periodicity &&

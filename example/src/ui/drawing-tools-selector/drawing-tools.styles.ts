@@ -112,4 +112,7 @@ export const createStyles = (theme: Theme) =>
     more: {
       transform: [{ rotateZ: '90deg' }],
     },
+    bottomBorderStyle: {
+      marginLeft: 16,
+    },
   });

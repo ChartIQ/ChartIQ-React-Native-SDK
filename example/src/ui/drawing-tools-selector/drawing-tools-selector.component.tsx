@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { View, Image, Text, Pressable, Alert } from 'react-native';
+import { View, Image, Text, Pressable, Alert, SectionListData } from 'react-native';
 import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -32,7 +32,7 @@ import {
   filters as drawingFilters,
   specialTools,
 } from './drawing-tools-selector.data';
-import { DrawingToolSelectorProps } from './drawing-tools-selector.types';
+import { DrawingToolSelectorProps, RenderSectionHeader } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
 
 const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorProps>(
@@ -166,32 +166,23 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       });
     };
 
-    const renderSectionHeader = ({
-      section,
-    }: {
-      section: {
+    const filteredSection: SectionListData<
+      DrawingItem,
+      {
         title: string;
         data: DrawingItem[];
-        renderItem: (item: { item: DrawingItem }) => JSX.Element;
-      };
-    }) => {
-      if (selectedFilter !== DrawingToolTags.favorites) {
-        return (
-          <View style={styles.sectionHeaderContainer}>
-            <Text style={styles.sectionHeaderText}>{section.title}</Text>
-          </View>
-        );
+        renderItem: (item: {
+          item: DrawingItem;
+          index: number;
+          section: { data: DrawingItem[] };
+        }) => Element;
       }
-
-      return null;
-    };
-
-    const filteredSection =
+    >[] =
       selectedFilter === DrawingToolTags.all
         ? [
             {
               data: specialTools,
-              renderItem: ({ item }: { item: DrawingItem }) => (
+              renderItem: ({ item, index }) => (
                 <SwipableToolItem
                   enabled={false}
                   addToFavorites={handleAddToFavorites}
@@ -199,19 +190,29 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
                   active={item.name === tool?.name}
+                  listItemProps={{
+                    topBorder: index === 0,
+                    containerStyle: { backgroundColor: theme.colors.backgroundSecondary },
+                  }}
                 />
               ),
               title: 'Other tools',
             },
             {
               data: filteredData,
-              renderItem: ({ item }: { item: DrawingItem }) => (
+              renderItem: ({ item, index, section }) => (
                 <SwipableToolItem
                   addToFavorites={handleAddToFavorites}
                   item={item}
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
                   active={item.name === tool?.name}
+                  listItemProps={{
+                    topBorder: index === 0,
+                    bottomBorderStyles:
+                      index === section.data.length - 1 ? {} : styles.bottomBorderStyle,
+                    containerStyle: { backgroundColor: theme.colors.backgroundSecondary },
+                  }}
                 />
               ),
               title: 'Main Tools',
@@ -220,21 +221,27 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
         : [
             {
               data: filteredData,
-              renderItem: ({ item }: { item: DrawingItem }) => (
+              renderItem: ({ item, index, section }) => (
                 <SwipableToolItem
                   addToFavorites={handleAddToFavorites}
                   item={item}
                   onPress={handleSymbolChange}
                   removeFromFavorites={handleRemoveFromFavorites}
                   active={item.name === tool?.name}
+                  listItemProps={{
+                    topBorder: index === 0,
+                    bottomBorderStyles:
+                      index === section.data.length - 1 ? {} : styles.bottomBorderStyle,
+                    containerStyle: { backgroundColor: theme.colors.backgroundSecondary },
+                  }}
                 />
               ),
               title: 'Main Tools',
             },
           ];
 
-    const renderSectionFooter = () => {
-      if (selectedFilter === DrawingToolTags.favorites && filteredSection[0]?.data?.length === 0) {
+    const SectionFooter: RenderSectionHeader = ({ section: { data } }) => {
+      if (selectedFilter === DrawingToolTags.favorites && data.length === 0) {
         return (
           <View style={styles.listEmptyContainer}>
             <View style={styles.space64} />
@@ -319,6 +326,30 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       );
     };
 
+    const SectionHeader: RenderSectionHeader = ({ section: { data } }) => {
+      if (selectedFilter === DrawingToolTags.favorites && data.length === 0) {
+        return (
+          <View style={styles.listEmptyContainer}>
+            <View style={styles.space64} />
+
+            <Image
+              source={theme.isDark ? images.favoritesEmpty.dark : images.favoritesEmpty.light}
+            />
+            <View style={styles.space32} />
+            <>
+              <Text style={styles.emptyListTextTitle}>No Favorite Drawing Tools yet</Text>
+              <View style={styles.space16} />
+              <Text style={styles.emptyListTextDescription}>
+                Swipe left to Add/Remove Drawing Tool to Favorites
+              </Text>
+            </>
+          </View>
+        );
+      }
+
+      return null;
+    };
+
     return (
       <BottomSheet ref={bottomSheetRef}>
         <View>
@@ -341,12 +372,12 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
         <BottomSheetSectionList
           stickyHeaderHiddenOnScroll
           sections={filteredSection}
-          renderSectionHeader={renderSectionHeader}
+          renderSectionHeader={SectionHeader}
           style={styles.contentContainer}
           contentContainerStyle={styles.contentContainer}
+          renderSectionFooter={SectionFooter}
           keyExtractor={(item) => item.name}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderSectionFooter={renderSectionFooter}
+          SectionSeparatorComponent={() => <View style={styles.space16} />}
         />
       </BottomSheet>
     );

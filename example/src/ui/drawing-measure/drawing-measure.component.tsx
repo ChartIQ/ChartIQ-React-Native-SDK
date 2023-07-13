@@ -4,6 +4,7 @@ import { ChartIQ } from 'react-native-chart-iq-wrapper';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 import Icons from '~/assets/icons';
+import { defaultHitSlop } from '~/constants';
 import { Theme, useTheme } from '~/theme';
 
 import { ReText } from '../re-text';
@@ -34,7 +35,7 @@ const DrawingMeasure: React.FC<DrawingMeasureProps> = ({ isDrawing, measure }) =
   return (
     <View style={[styles.absolute, displayUndo]}>
       <View style={styles.undoHeader}>
-        <Pressable onPress={undo} style={styles.undoButton}>
+        <Pressable hitSlop={defaultHitSlop} onPress={undo} style={styles.undoButton}>
           <Icons.undo
             width={32}
             height={32}
@@ -42,7 +43,7 @@ const DrawingMeasure: React.FC<DrawingMeasureProps> = ({ isDrawing, measure }) =
             stroke={theme.colors.buttonText}
           />
         </Pressable>
-        <Pressable onPress={redo} style={styles.undoButton}>
+        <Pressable hitSlop={defaultHitSlop} onPress={redo} style={styles.undoButton}>
           <Icons.undo
             width={32}
             height={32}
