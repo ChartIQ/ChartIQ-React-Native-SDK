@@ -27,7 +27,7 @@ export const filters = [
   { name: 'All', value: DrawingToolTags.all },
   { name: 'Favorites', value: DrawingToolTags.favorites },
   { name: 'Text', value: DrawingToolTags.text },
-  { name: 'Statistic', value: DrawingToolTags.statistics },
+  { name: 'Statistics', value: DrawingToolTags.statistics },
   { name: 'Technicals', value: DrawingToolTags.technicals },
   { name: 'Fibonacci', value: DrawingToolTags.fibonacci },
   { name: 'Markings', value: DrawingToolTags.markings },

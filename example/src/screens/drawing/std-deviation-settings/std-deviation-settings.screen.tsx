@@ -8,6 +8,7 @@ import {
   LineTypeItem,
   findLineTypeItemByPatternAndWidth,
 } from '~/assets/icons/line-types/line-types';
+import { defaultHitSlop } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
@@ -136,7 +137,7 @@ const STDDeviationsSettingsScreen: React.FC = () => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSave}>
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
           <Text style={styles.text}>Save</Text>
         </Pressable>
       ),

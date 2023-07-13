@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { ChartIQ, StudyParameter } from 'react-native-chart-iq-wrapper';
 
+import { defaultHitSlop } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -112,7 +113,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSave}>
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
           <Text style={styles.buttonText}>Save</Text>
         </Pressable>
       ),

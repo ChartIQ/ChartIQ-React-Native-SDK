@@ -12,6 +12,7 @@ import {
   StudyParameter,
 } from 'react-native-chart-iq-wrapper';
 
+import { defaultHitSlop } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -258,7 +259,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     if (selectedCondition?.signalOperator) {
       navigation.setOptions({
         headerRight: () => (
-          <Pressable onPress={handleSave}>
+          <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
             <Text style={styles.headerRight}>{translations.Save}</Text>
           </Pressable>
         ),

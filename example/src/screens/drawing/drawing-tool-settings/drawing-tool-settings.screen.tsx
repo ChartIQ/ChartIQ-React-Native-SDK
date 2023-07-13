@@ -311,7 +311,9 @@ const DrawingToolSettings: React.FC = () => {
                 title="Decoration"
               >
                 <View style={styles.listItemDescriptionContainer}>
-                  <Text style={styles.text}>{waveParameters.decoration}</Text>
+                  <Text style={[styles.text, styles.decorationTextStyle]}>
+                    {waveParameters.decoration}
+                  </Text>
                   <Icons.chevronRight fill={theme.colors.cardSubtitle} />
                 </View>
               </ListItem>
@@ -369,6 +371,9 @@ const createStyles = (theme: Theme) =>
     },
     text: {
       color: theme.colors.cardSubtitle,
+    },
+    decorationTextStyle: {
+      textTransform: 'capitalize',
     },
     listItemDescriptionContainer: {
       flexDirection: 'row',

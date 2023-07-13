@@ -3,6 +3,7 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable } from 'react-native';
 
 import Icons from '~/assets/icons';
+import { defaultHitSlop } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 
@@ -75,7 +76,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
             />
           )}
           {value.length > 0 ? (
-            <Pressable onPress={onClose} style={styles.close}>
+            <Pressable hitSlop={defaultHitSlop} onPress={onClose} style={styles.close}>
               <Icons.close width={12} height={12} fill={theme.colors.background} />
             </Pressable>
           ) : null}

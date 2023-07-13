@@ -15,6 +15,7 @@ import { TextInput } from 'react-native-gesture-handler';
 
 import icons from '~/assets/icons';
 import images from '~/assets/images';
+import { defaultHitSlop } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { useTheme } from '~/theme';
@@ -326,7 +327,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
             leftActionTitle="Cancel"
             handleLeftAction={handleClose}
             RightActionIcon={
-              <Pressable onPress={onMore} style={styles.moreContainer}>
+              <Pressable hitSlop={defaultHitSlop} onPress={onMore} style={styles.moreContainer}>
                 <icons.moreVertical fill={theme.colors.colorPrimary} style={styles.more} />
               </Pressable>
             }

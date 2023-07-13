@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { ChartIQ, StudyParameter } from 'react-native-chart-iq-wrapper';
 
+import { defaultHitSlop } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -76,7 +77,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSave}>
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
           <Text style={styles.buttonText}>{translations.Save}</Text>
         </Pressable>
       ),

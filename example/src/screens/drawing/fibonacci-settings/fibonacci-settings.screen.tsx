@@ -15,6 +15,7 @@ import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
+import { defaultHitSlop } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { DrawingsStack, DrawingsStackParamList } from '~/shared/navigation.types';
@@ -72,7 +73,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSave}>
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
           <Text style={styles.text}>Save</Text>
         </Pressable>
       ),

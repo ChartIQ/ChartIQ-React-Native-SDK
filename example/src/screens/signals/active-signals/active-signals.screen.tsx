@@ -5,6 +5,7 @@ import { FlatList, Image, Pressable, StyleSheet, Switch, Text, View } from 'reac
 import { ChartIQ, Signal } from 'react-native-chart-iq-wrapper';
 
 import images from '~/assets/images';
+import { defaultHitSlop } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -41,7 +42,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
     if (activeSignals.length !== 0) {
       navigation.setOptions({
         headerRight: () => (
-          <Pressable onPress={handleAddSignal}>
+          <Pressable hitSlop={defaultHitSlop} onPress={handleAddSignal}>
             <Text style={styles.headerButton}>{translations.Add}</Text>
           </Pressable>
         ),
