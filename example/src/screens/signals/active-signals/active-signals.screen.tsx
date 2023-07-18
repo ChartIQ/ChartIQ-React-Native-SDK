@@ -82,6 +82,10 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
           >
             <ListItem onPress={() => handleEditSignal(item)} title={item.name}>
               <Switch
+                trackColor={{
+                  false: theme.colors.border,
+                  true: theme.colors.colorPrimary,
+                }}
                 value={!item.disabled}
                 onValueChange={(value) => handleToggleSignal(value, item)}
               />

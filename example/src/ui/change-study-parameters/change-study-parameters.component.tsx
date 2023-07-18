@@ -290,6 +290,10 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                   return (
                     <ListItem title={item.name}>
                       <Switch
+                        trackColor={{
+                          false: theme.colors.border,
+                          true: theme.colors.colorPrimary,
+                        }}
                         value={item.value as boolean}
                         onValueChange={(value) => onValueChange(item.name, value)}
                       />
@@ -336,6 +340,8 @@ const createStyles = (theme: Theme) =>
     box: {
       width: 24,
       height: 24,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
     },
     footerContainer: {
       paddingTop: 24,

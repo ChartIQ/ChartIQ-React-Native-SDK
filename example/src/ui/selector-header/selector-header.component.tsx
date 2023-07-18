@@ -36,7 +36,7 @@ const SelectorHeader: React.FC<SelectorHeaderProps> = ({
         ) : null}
       </View>
       <View style={[styles.flex, styles.aligned]}>
-        <Text numberOfLines={1} style={styles.title}>
+        <Text adjustsFontSizeToFit numberOfLines={1} style={styles.title}>
           {title}
         </Text>
       </View>

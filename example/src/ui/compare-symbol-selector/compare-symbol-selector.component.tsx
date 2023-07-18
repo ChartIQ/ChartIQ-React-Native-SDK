@@ -91,7 +91,6 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
             data={Array.from(data.values())}
             contentContainerStyle={styles.contentContainer}
             style={styles.contentContainer}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
             keyExtractor={(item) => item.symbol}
             renderItem={({ item }) => (
               <SwipableSymbol

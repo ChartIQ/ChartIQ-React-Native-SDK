@@ -62,7 +62,7 @@ const DrawingToolSettings: React.FC = () => {
 
   const [axisLabel, setAxisLabel] = useState(() => drawingSettings.axisLabel);
   const [isBold, setIsBold] = useState(() => font.weight === 'bold');
-  const [isItalic, setIsItalic] = useState(() => font.size === 'italic');
+  const [isItalic, setIsItalic] = useState(() => font.style === 'italic');
 
   const { updateFillColor, updateLineColor, updateLineTypeItem, updateDrawingSettings } =
     useUpdateDrawingTool();
@@ -123,7 +123,7 @@ const DrawingToolSettings: React.FC = () => {
   const toggleItalicFontStyle = () => {
     setIsItalic((prevState) => !prevState);
     setTimeout(() => {
-      const newStyle = font.style === 'normal' ? 'bold' : 'normal';
+      const newStyle = font.style === 'normal' ? 'italic' : 'normal';
 
       ChartIQ.setDrawingParams(DrawingParams.STYLE, newStyle);
 
@@ -346,7 +346,10 @@ const createStyles = (theme: Theme) =>
       borderRadius: 4,
     },
     fontStyle: {
-      paddingHorizontal: 8,
+      width: 32,
+      height: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
       borderWidth: 1,
       borderColor: theme.colors.border,
       marginHorizontal: 4,
@@ -359,8 +362,6 @@ const createStyles = (theme: Theme) =>
       flexDirection: 'row',
     },
     letter: {
-      width: 22,
-      height: 22,
       textAlign: 'center',
     },
     italic: {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 
-import { ChartIQDatafeedParams, CrosshairState } from '../model';
+import { ChartIQDatafeedParams } from '../model';
 
 import { ChartIqWrapperViewComponent } from './chart-iq-web-view.data';
 import { ChartIqWrapperProps } from './chart-iq-web-view.types';
@@ -72,35 +72,12 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
       }
     );
 
-    // NOTE: This event is not used in the app probably it is not needed
-    const pullLayoutSubscription = RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnLayoutUpdate,
-      (payload) => {
-        // console.log('DispatchOnLayoutUpdate', payload);
-      }
-    );
-    const pullSymbolUpdateSubscription = RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnSymbolUpdate,
-      (payload) => {
-        // console.log('DispatchOnSymbolUpdate', payload);
-      }
-    );
-    const pullDrawingUpdateSubscription = RTVEventEmitter.addListener(
-      IOSEventEmitterKeys.DispatchOnDrawingUpdate,
-      (payload) => {
-        // console.log('DispatchOnDrawingUpdate', payload);
-      }
-    );
-
     return () => {
       pullInitialSubscription.remove();
       pullUpdateSubscription.remove();
       pullPagingSubscription.remove();
       pullStartSubscription.remove();
       pullMeasureSubscription.remove();
-      pullLayoutSubscription.remove();
-      pullSymbolUpdateSubscription.remove();
-      pullDrawingUpdateSubscription.remove();
     };
   }, []);
 

@@ -67,7 +67,6 @@ const STDDeviationsSettingsScreen: React.FC = () => {
   ] satisfies STDDeviationItem[]);
 
   const [selectedLineType, setSelectedLineType] = useState<LineTypeItem>(defaultLineType);
-  const [selectedColor, setSelectedColor] = useState<string>('#000000');
 
   const colorSelectorRef = useRef<ColorSelectorMethods>(null);
   const lineTypeSelectorRef = useRef<BottomSheetMethods>(null);
@@ -105,31 +104,13 @@ const STDDeviationsSettingsScreen: React.FC = () => {
       JSON.stringify(stdDeviationSettings[2].showLine),
     );
 
-    ChartIQ.setDrawingParams(
-      DrawingParams.COLOR_1,
-      JSON.stringify(stdDeviationSettings[0].lineColor),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.ACTIVE_2,
-      JSON.stringify(stdDeviationSettings[1].lineColor),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.ACTIVE_3,
-      JSON.stringify(stdDeviationSettings[2].lineColor),
-    );
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_1, stdDeviationSettings[0].lineColor);
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_2, stdDeviationSettings[1].lineColor);
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_3, stdDeviationSettings[2].lineColor);
 
-    ChartIQ.setDrawingParams(
-      DrawingParams.PATTERN_1,
-      JSON.stringify(stdDeviationSettings[0].lineType.value),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.PATTERN_2,
-      JSON.stringify(stdDeviationSettings[1].lineType.value),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.PATTERN_3,
-      JSON.stringify(stdDeviationSettings[2].lineType.value),
-    );
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_1, stdDeviationSettings[0].lineType.value);
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_2, stdDeviationSettings[1].lineType.value);
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_3, stdDeviationSettings[2].lineType.value);
 
     navigation.goBack();
   }, [navigation, stdDeviationSettings, updateDrawingSettings]);
@@ -144,50 +125,49 @@ const STDDeviationsSettingsScreen: React.FC = () => {
     });
   }, [handleSave, navigation, styles.text, theme.colors.colorPrimary]);
 
+  const defaultColor = theme.isDark ? theme.colors.white : 'black';
+
   const handleLineColor = useCallback(
     (id: string) => {
-      const color = stdDeviationSettings.find((item) => item.name === id)?.lineColor || '#000000';
-      setSelectedColor(color);
+      const color =
+        stdDeviationSettings.find((item) => item.name === id)?.lineColor || defaultColor;
       colorSelectorRef.current?.present(id, color);
     },
-    [stdDeviationSettings],
+    [defaultColor, stdDeviationSettings],
   );
 
-  const handleColorChange = (input: string, id?: string) => {
-    const newSettings = stdDeviationSettings.map((item) => {
-      if (item.name === id) {
-        return { ...item, lineColor: input };
-      }
-      return item;
-    });
-
-    setStdDeviationSettings(newSettings);
+  const handleColorChange = (input: string, id: string) => {
+    setStdDeviationSettings((prevState) =>
+      prevState.map((item) => {
+        if (item.name === id) {
+          return { ...item, lineColor: input };
+        }
+        return item;
+      }),
+    );
   };
 
   const handleLineTypeChange = (input: LineTypeItem, id?: string) => {
-    const newSettings = stdDeviationSettings.map((item) => {
-      if (item.name === id) {
-        return { ...item, lineType: input };
-      }
-      return item;
-    });
-
-    setStdDeviationSettings(newSettings);
+    setStdDeviationSettings((prevState) =>
+      prevState.map((item) => {
+        if (item.name === id) {
+          return { ...item, lineType: input };
+        }
+        return item;
+      }),
+    );
   };
 
-  const handleShowLine = useCallback(
-    (id: string) => {
-      const newSettings = stdDeviationSettings.map((item) => {
+  const handleShowLine = useCallback((id: string) => {
+    setStdDeviationSettings((prevState) =>
+      prevState.map((item) => {
         if (item.name === id) {
           return { ...item, showLine: !item.showLine };
         }
         return item;
-      });
-
-      setStdDeviationSettings(newSettings);
-    },
-    [stdDeviationSettings],
-  );
+      }),
+    );
+  }, []);
 
   const handleLineType = (id: string) => {
     setSelectedLineType(
@@ -211,27 +191,34 @@ const STDDeviationsSettingsScreen: React.FC = () => {
           return (
             <>
               <ListItem title={`Show Line ${name}`}>
-                <Switch value={showLine} onChange={() => handleShowLine(name)} />
+                <Switch
+                  trackColor={{
+                    false: theme.colors.border,
+                    true: theme.colors.colorPrimary,
+                  }}
+                  value={showLine}
+                  onChange={() => handleShowLine(name)}
+                />
               </ListItem>
-
               <ListItem onPress={() => handleLineColor(name)} title={`Line ${name} color`}>
-                <View style={[styles.colorBox, { backgroundColor: lineColor }]} />
+                <View style={[styles.colorBox, { backgroundColor: lineColor || defaultColor }]} />
               </ListItem>
               <ListItem title={`Line ${name} type`}>
                 <Pressable onPress={() => handleLineType(name)} style={styles.lineContainer}>
-                  <Icon width={40} height={40} fill="black" stroke="black" />
+                  <Icon
+                    width={40}
+                    height={40}
+                    fill={theme.colors.buttonText}
+                    stroke={theme.colors.buttonText}
+                  />
                 </Pressable>
               </ListItem>
             </>
           );
         }}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item) => item.name + ' deviation'}
       />
-      <ColorSelector
-        ref={colorSelectorRef}
-        onChange={handleColorChange}
-        selectedColor={selectedColor}
-      />
+      <ColorSelector ref={colorSelectorRef} onChange={handleColorChange} />
       <LineTypeSelector
         ref={lineTypeSelectorRef}
         onChange={handleLineTypeChange}

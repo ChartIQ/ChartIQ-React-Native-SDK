@@ -16,6 +16,7 @@ import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { useTranslations } from '~/shared/hooks/use-translations';
+import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ChartStyleSelector } from '~/ui/chart-style-selector';
 import { CompareSymbolSelector } from '~/ui/compare-symbol-selector';
@@ -28,6 +29,8 @@ import { IntervalSelector } from '~/ui/interval-selector';
 import SymbolSelector from '~/ui/symbol-selector/symbol-selector.component';
 
 export default function Root() {
+  const theme = useTheme();
+  const styles = createStyles(theme);
   const [isFullscreen, setIsFullScreen] = React.useState(false);
   const [isLandscape, setIsLandscape] = React.useState(false);
 
@@ -156,7 +159,7 @@ export default function Root() {
           loading={!initialized}
         />
       </View>
-      <View style={[{ flex: 1 }]}>
+      <View style={styles.chartContainer}>
         <ChartIQWebView
           url={WEB_VIEW_SOURCE}
           onStart={initChart}
@@ -166,6 +169,7 @@ export default function Root() {
           onMeasureChanged={onMeasureChanged}
           style={styles.chartIq}
         />
+        <View style={initialized ? {} : styles.overlay} />
         <DrawingMeasure isDrawing={isDrawing} measure={measureValue} />
         <DrawingToolManager ref={drawingManagerRef} handleDrawingTool={showDrawingToolsSelector} />
       </View>
@@ -193,16 +197,25 @@ export default function Root() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    flex: 1,
-  },
-  chartIq: {
-    flex: 1,
-  },
-});
+const createStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    chartContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    box: {
+      flex: 1,
+    },
+    chartIq: {
+      flex: 1,
+    },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.colors.background,
+    },
+  });

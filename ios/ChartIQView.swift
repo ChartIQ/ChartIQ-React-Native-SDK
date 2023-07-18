@@ -104,25 +104,8 @@ extension ChartIqWrapperView: ChartIQDelegate {
         print("log_chart, chartIQViewDidFinishLoading")
 
         chartIQView.setDataMethod(.pull)
+        chartIQView.setVoiceoverFields(default: true)
         RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnChartStart, body: "chartIQViewDidFinishLoading")
-    }
-    
-    func chartIQView(_ chartIQView: ChartIQView, didUpdateLayout layout: Any) {
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnLayoutUpdate, body: layout)
-        }
-    }
-    
-    func chartIQView(_ chartIQView: ChartIQView, didUpdateSymbol symbol: String) {
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnSymbolUpdate, body: symbol)
-        }
-    }
-
-    func chartIQView(_ chartIQView: ChartIQView, didUpdateDrawing drawings: Any) {
-        defaultQueue.async {
-            RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnDrawingUpdate, body: drawings)
-        }
     }
     
     func chartIQView(_ chartIQView: ChartIQView, didUpdateMeasure measure: String) {

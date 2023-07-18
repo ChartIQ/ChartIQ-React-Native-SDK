@@ -1,7 +1,16 @@
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, StyleSheet, View, FlatList } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq-wrapper';
 import { TextInput } from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
@@ -28,6 +37,7 @@ interface AddSignalProps
 const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const { width: screenWidth } = useWindowDimensions();
   const { translations, translationMap } = useTranslations();
   const selectFromListRef = React.useRef<SelectOptionFromListMethods>(null);
   const [studies, setStudies] = useState<Study[]>([]);
@@ -41,6 +51,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const [description, setDescription] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [descriptionPlaceholder, setDescriptionPlaceholder] = useState(DESCRIPTION_PLACEHOLDER);
+  const height = useHeaderHeight();
 
   const onStudyChange = useCallback(async () => {
     if (changedStudy) {
@@ -95,8 +106,8 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     setStudies(
       studiesList
         .filter(({ signalIQExclude }) => !signalIQExclude)
-        .map((item) => ({ ...item, name: translationMap[item.name] ?? item.name }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        .map((item) => ({ ...item, name: translationMap[item.display] ?? item.display }))
+        .sort((a, b) => a.display.localeCompare(b.display)),
     );
   }, [translationMap]);
 
@@ -115,7 +126,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
 
   const handleStudyChange = async ({ value }: { value: string }) => {
     const item = studies.find((item) => item.display === value) ?? null;
-    const study = await ChartIQ.addSignalStudy(item?.display ?? '');
+    const study = await ChartIQ.addSignalStudy(item?.shortName ?? '');
 
     if (selectedStudy && selectedStudy.display !== study?.display) {
       ChartIQ.removeStudy(selectedStudy);
@@ -244,15 +255,22 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           onPress={() => handleAddCondition(uuid.v4() as string, data.length)}
           title="Add Condition"
           textStyle={styles.selectStudy}
+          topBorder
         />
       ) : null}
       <View style={styles.firstListItem}>
         <ListItem
+          topBorder
           titleComponent={
             <View>
               <Text style={styles.text}>Description</Text>
               <TextInput
-                style={styles.textInput}
+                style={[
+                  styles.multilineInput,
+                  {
+                    width: screenWidth - 32,
+                  },
+                ]}
                 multiline
                 numberOfLines={2}
                 defaultValue={description}
@@ -268,6 +286,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
               />
             </View>
           }
+          bottomBorderStyles={styles.bottomBorder}
         />
         <ListItem title="Name">
           <TextInput
@@ -282,33 +301,40 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     </>
   );
 
-  const ListHeaderComponent =
-    selectedStudy === null ? (
-      <ListItem
-        style={styles.firstListItem}
-        title="Select study"
-        textStyle={styles.selectStudy}
-        onPress={handleSelectStudy}
-      />
-    ) : (
-      <>
+  const ListHeaderComponent = (
+    <View style={styles.firstListItem}>
+      {selectedStudy === null ? (
         <ListItem
-          onPress={handleChangeStudyParams}
-          style={styles.firstListItem}
-          title={formatStudyName(selectedStudy.name)}
-        >
-          <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-        </ListItem>
-
-        {!isEdit ? (
+          title="Select study"
+          textStyle={styles.selectStudy}
+          onPress={handleSelectStudy}
+          topBorder
+        />
+      ) : (
+        <>
           <ListItem
-            onPress={handleSelectStudy}
-            title="Change Study"
-            textStyle={styles.selectStudy}
-          />
-        ) : null}
-      </>
-    );
+            topBorder
+            onPress={handleChangeStudyParams}
+            title={formatStudyName(selectedStudy.name)}
+            bottomBorderStyles={styles.bottomBorder}
+          >
+            <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+          </ListItem>
+
+          {!isEdit ? (
+            <>
+              <ListItem
+                onPress={handleSelectStudy}
+                title="Change Study"
+                textStyle={styles.selectStudy}
+              />
+              <View style={styles.space32} />
+            </>
+          ) : null}
+        </>
+      )}
+    </View>
+  );
 
   const handleDeleteCondition = (id: string) => {
     setConditions((conditions) => {
@@ -320,7 +346,11 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'height' : undefined}
+      keyboardVerticalOffset={height}
+      style={styles.container}
+    >
       <FlatList
         data={data}
         renderItem={({ item: { condition, id }, index }) => (
@@ -360,6 +390,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         keyExtractor={({ id }) => id}
         ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={ListFooterComponent}
+        contentContainerStyle={{ paddingBottom: 124 }}
       />
 
       <SelectFromList
@@ -369,7 +400,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         showHeader
         withSaveButton
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -377,9 +408,11 @@ const createStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: theme.colors.background,
     },
     firstListItem: {
-      marginTop: 24,
+      marginTop: 32,
+      backgroundColor: theme.colors.backgroundSecondary,
     },
     selectStudy: {
       color: theme.colors.colorPrimary,
@@ -395,12 +428,25 @@ const createStyles = (theme: Theme) =>
       padding: 0,
       color: theme.colors.cardSubtitle,
     },
+    multilineInput: {
+      minHeight: 40,
+    },
     saveButton: {
       color: theme.colors.colorPrimary,
       textTransform: 'capitalize',
     },
     saveButtonDisabled: {
       color: theme.colors.cardSubtitle,
+    },
+    footerContainer: {
+      paddingBottom: 24,
+    },
+    bottomBorder: {
+      marginLeft: 16,
+    },
+    space32: {
+      height: 32,
+      backgroundColor: theme.colors.background,
     },
   });
 

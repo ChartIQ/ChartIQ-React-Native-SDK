@@ -48,7 +48,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func setSymbol(_ symbol: String) {
         print("log_chart, setSymbol")
 
-        
         defaultQueue.async {
             self.chartIQWrapperView.chartIQView.loadChart(symbol)
         }
@@ -254,8 +253,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
                     return
                 }
                 try self.chartIQWrapperView.chartIQView.addStudy(chartIQStudy, forClone: isClone)
-            } catch {
-            }
+            } catch {}
         }
     }
     
@@ -507,7 +505,8 @@ class ChartIqWrapperViewManager: RCTViewManager {
         print("log_chart, addSignalStudy")
 
         defaultQueue.async {
-            let studies = self.chartIQWrapperView.chartIQView.getAllStudies().filter { $0.shortName == studyName }
+            let studies = self.chartIQWrapperView.chartIQView.getAllStudies().filter {
+                $0.shortName == studyName }
             if studies.isEmpty {
                 reject("0", "Error in addSignalStudy, couldn't find study for given studyName \(studyName)", nil)
                 return

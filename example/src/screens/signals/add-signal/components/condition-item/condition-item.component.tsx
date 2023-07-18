@@ -44,6 +44,7 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, onPress, index, jo
   return (
     <>
       <ListItem
+        topBorder={index === 0}
         onPress={onPress}
         titleComponent={
           <View style={styles.row}>

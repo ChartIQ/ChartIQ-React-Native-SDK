@@ -31,3 +31,12 @@ export const formatStudyName = (name?: string | null) => {
 
   return name.split(' (')[0];
 };
+
+export function setFloat(v: string, fun: (input: string) => void): void {
+  if (v.length === 0) return fun(v);
+  if (v.length > 1 && v[0] === '0' && v[1] !== '.') v = v.slice(1);
+  if (v.match(/\./g)?.length > 1) return;
+  if (/\d|\./.test(v[v.length - 1])) {
+    fun(v);
+  }
+}

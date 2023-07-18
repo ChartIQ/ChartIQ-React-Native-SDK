@@ -55,6 +55,10 @@ const Settings: React.FC = () => {
         <Text style={styles.sectionTitle}>{translations['Chart Preferences']}</Text>
         <ListItem title={translations['Log Scale']}>
           <Switch
+            trackColor={{
+              false: theme.colors.border,
+              true: theme.colors.colorPrimary,
+            }}
             value={logScale}
             onChange={({ nativeEvent: { value } }) => {
               ChartIQ.setChartScale(value ? 'log' : 'linear');
@@ -64,6 +68,10 @@ const Settings: React.FC = () => {
         </ListItem>
         <ListItem title="Invert Y-Axis">
           <Switch
+            trackColor={{
+              false: theme.colors.border,
+              true: theme.colors.colorPrimary,
+            }}
             value={invertYAxis}
             onChange={({ nativeEvent: { value } }) => {
               ChartIQ.setIsInvertYAxis(value);
@@ -73,6 +81,10 @@ const Settings: React.FC = () => {
         </ListItem>
         <ListItem title={translations['Extended Hours']}>
           <Switch
+            trackColor={{
+              false: theme.colors.border,
+              true: theme.colors.colorPrimary,
+            }}
             value={extendedHours}
             onChange={({ nativeEvent: { value } }) => {
               ChartIQ.setExtendedHours(value);

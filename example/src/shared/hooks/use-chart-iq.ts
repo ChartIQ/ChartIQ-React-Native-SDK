@@ -210,6 +210,7 @@ export const useChartIQ = () => {
   };
 
   const initChart = useCallback(async () => {
+    updateTheme();
     setChartInitialized(true);
     const symbol = await ChartIQ.getSymbol();
 
@@ -245,8 +246,6 @@ export const useChartIQ = () => {
     });
 
     setCompareSymbols(map);
-
-    updateTheme();
 
     const aggregationType = await ChartIQ.getChartAggregationType();
     const chartType = await ChartIQ.getChartType();

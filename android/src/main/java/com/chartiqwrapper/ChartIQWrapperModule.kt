@@ -384,7 +384,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun getChartScale(promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getChartScale {
-        promise.resolve(gson.toJson(it))
+        promise.resolve(it.value.lowercase())
       }
     })
   }

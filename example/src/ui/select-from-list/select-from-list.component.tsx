@@ -111,13 +111,14 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
             onChange={setFilter}
             handleClear={() => setFilter('')}
             handleClose={showHeader ? undefined : bottomSheetRef.current?.dismiss}
+            autofocus={false}
           />
         ) : null}
         <BottomSheetFlatList
           data={filteredData}
           renderItem={({ item }) => (
             <ListItem onPress={() => onPress(item)} title={item.value}>
-              {item.key === selectedItem?.key ? (
+              {selectedItem?.key === item.key ? (
                 <Icons.check fill={theme.colors.colorPrimary} />
               ) : null}
             </ListItem>

@@ -108,6 +108,7 @@ const AddStudies: React.FC = () => {
           setSearch(input);
         }}
         handleClear={() => setSearch('')}
+        autofocus={false}
       />
       <FlatList
         data={filtered}

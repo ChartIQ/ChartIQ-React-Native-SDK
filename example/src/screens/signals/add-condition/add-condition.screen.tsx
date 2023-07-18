@@ -1,6 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
+import {
+  Keyboard,
+  NativeSyntheticEvent,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputChangeEventData,
+  TextInputEndEditingEventData,
+} from 'react-native';
 import {
   ChartIQ,
   SignalOperatorValues,
@@ -13,7 +24,7 @@ import {
 } from 'react-native-chart-iq-wrapper';
 
 import { defaultHitSlop } from '~/constants';
-import { formatStudyName } from '~/shared/helpers';
+import { formatStudyName, setFloat } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -72,8 +83,12 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         setSecondIndicatorValue(condition.rightIndicator);
       }
     } else {
+      const display = Platform.select({
+        ios: study.display,
+        android: study.shortName,
+      });
       setSelectedCondition({
-        leftIndicator: outputs[0]?.name ? `${outputs[0]?.name} ${study.shortName}` : null,
+        leftIndicator: outputs[0]?.name ? `${outputs[0]?.name} ${display}` : null,
         signalOperator: null,
         markerOption: {
           color: (outputs[0]?.value as string) ?? '#000000',
@@ -134,17 +149,23 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         if (!prevState) {
           return null;
         }
-
         let rightIndValue = prevState.rightIndicator;
         if (rightIndValue === null) {
           rightIndValue = outputParams.find(({ name }) =>
             prevState.leftIndicator?.includes(name),
           )?.name;
         }
+        if (key === prevState.rightIndicator) {
+          rightIndValue = outputParams.find(({ name }) => !name.includes(key))?.name;
+        }
 
+        const display = Platform.select({
+          ios: study.display,
+          android: study.shortName,
+        });
         return {
           ...prevState,
-          leftIndicator: indicator?.name + ' ' + study.shortName,
+          leftIndicator: indicator?.name + ' ' + display,
           rightIndicator: rightIndValue,
           markerOption: {
             ...prevState.markerOption,
@@ -168,9 +189,13 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   };
 
   const handleIndicator = (id: string, selected?: string) => {
+    const display = Platform.select({
+      ios: study.display,
+      android: study.shortName,
+    });
     let data = outputParams.map(({ name }) => ({
       key: name,
-      value: `${name} ${study.shortName}`,
+      value: `${name} ${display}`,
     }));
 
     if (id === SECOND_INDICATOR) {
@@ -308,10 +333,17 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     setSecondIndicatorValue(text);
   };
 
-  const handleEndEditingSecondIndicatorValue = ({ nativeEvent: { text } }: any) => {
+  const handleEndEditingSecondIndicatorValue = ({
+    nativeEvent: { text },
+  }: NativeSyntheticEvent<TextInputChangeEventData | TextInputEndEditingEventData>) => {
     const number = Number(text);
+    const [_, decimal] = text?.split('.') ?? ['', ''];
+
     if (number === 0) {
       setSecondIndicatorValue('0.0');
+    }
+    if (!decimal?.length) {
+      setSecondIndicatorValue(number.toFixed(1));
     }
   };
 
@@ -343,13 +375,12 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
           {showValueSelector ? (
             <ListItem title="Value">
               <TextInput
-                onChangeText={handleSecondIndicatorValue}
-                keyboardType="numeric"
+                onChangeText={(text) => setFloat(text, handleSecondIndicatorValue)}
+                keyboardType="numbers-and-punctuation"
                 defaultValue="0.0"
                 value={secondIndicatorValue ?? undefined}
                 style={styles.textInput}
                 placeholderTextColor={theme.colors.placeholder}
-                onBlur={handleEndEditingSecondIndicatorValue}
                 onEndEditing={handleEndEditingSecondIndicatorValue}
               />
             </ListItem>

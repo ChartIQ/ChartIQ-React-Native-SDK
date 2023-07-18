@@ -70,7 +70,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
 
   const handleChange = (input: string) => {
     onChange(input, bottomSheetRef.current?.id ?? '');
-    bottomSheetRef?.current?.dismiss();
+    handleDismiss();
   };
 
   useEffect(() => {

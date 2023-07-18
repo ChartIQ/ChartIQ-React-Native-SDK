@@ -1,3 +1,4 @@
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { encode } from 'base-64';
@@ -28,6 +29,7 @@ export interface FibonacciSettingsProps
 const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const height = useHeaderHeight();
   const { updateDrawingSettings } = useUpdateDrawingTool();
   const filterNegative = route.params?.filterNegative;
   const {
@@ -122,7 +124,10 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     ],
   );
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : undefined}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'height' : undefined}
+      keyboardVerticalOffset={height}
+    >
       <FlatList
         data={settings}
         renderItem={({ item: { display, level } }) => (

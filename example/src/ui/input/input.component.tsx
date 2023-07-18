@@ -12,6 +12,7 @@ interface InputFieldProps {
   handleClose?: () => void;
   bottomSheet?: boolean;
   handleClear?: () => void;
+  autofocus?: boolean;
 }
 
 export interface InputFieldMethods {
@@ -20,7 +21,7 @@ export interface InputFieldMethods {
 }
 
 const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
-  ({ onChange, handleClose, bottomSheet = false, handleClear }, ref) => {
+  ({ onChange, handleClose, bottomSheet = false, handleClear, autofocus = true }, ref) => {
     const theme = useTheme();
     const styles = createStyles(theme);
     const [value, setValue] = useState('');
@@ -62,7 +63,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
-              autoFocus
+              autoFocus={autofocus}
             />
           ) : (
             <TextInput
@@ -72,7 +73,7 @@ const InputField = forwardRef<InputFieldMethods, InputFieldProps>(
               placeholderTextColor={theme.colors.placeholder}
               placeholder={translations.Search}
               value={value}
-              autoFocus
+              autoFocus={autofocus}
             />
           )}
           {value.length > 0 ? (
