@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { ChartIQ, StudyParameter } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, StudyParameter } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -85,16 +86,21 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
   }, [handleSave, navigation, study, styles.buttonText, translations.Save]);
 
   return (
-    <ChangeStudyParameters
-      ref={changeStudyParametersRef}
-      inputParameters={inputParams}
-      outputParameters={outputParams}
-    />
+    <SafeAreaView edges={edges} style={styles.container}>
+      <ChangeStudyParameters
+        ref={changeStudyParametersRef}
+        inputParameters={inputParams}
+        outputParameters={outputParams}
+      />
+    </SafeAreaView>
   );
 };
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+    },
     box: {
       width: 24,
       height: 24,

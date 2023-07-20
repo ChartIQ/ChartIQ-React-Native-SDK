@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useContext, useMemo } from 'react';
-import { ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq';
 
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages, defaultENTranslations } from '~/constants/languages';

@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ListRenderItemInfo, Pressable, StyleSheet, Text, View } from 'react-native';
-import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
+import { ListRenderItemInfo, Pressable, StyleSheet, Text } from 'react-native';
+import { ChartIQ, Study } from 'react-native-chart-iq';
 import { FlatList } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
@@ -102,7 +103,7 @@ const AddStudies: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Input
         onChange={(input) => {
           setSearch(input);
@@ -116,7 +117,7 @@ const AddStudies: React.FC = () => {
         keyExtractor={({ display }) => display}
         extraData={selected}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useContext, useRef } from 'react';
-import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from 'react-native-chart-iq-wrapper';
+import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from 'react-native-chart-iq';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';

@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import { ChartIQ, StudyParameter } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, StudyParameter } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { defaultHitSlop } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
@@ -144,6 +145,11 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 0,
+      backgroundColor: theme.colors.background,
+      justifyContent: 'flex-start',
+    },
     box: {
       width: 24,
       height: 24,

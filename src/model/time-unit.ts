@@ -1,3 +1,6 @@
+/**
+ * @enum TimeUnit
+ */
 export enum TimeUnit {
   TICK = 'TICK',
   SECOND = 'SECOND',

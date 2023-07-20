@@ -1,6 +1,6 @@
 //
 //  ChartIQSignal+Extension.swift
-//  react-native-chart-iq-wrapper
+//  react-native-chart-iq
 //
 //  Created by mac on 10/07/2023.
 //

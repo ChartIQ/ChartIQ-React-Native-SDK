@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, ViewStyle, View, StyleSheet } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 import Icons from '~/assets/icons';

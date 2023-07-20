@@ -1,4 +1,4 @@
-import { DrawingSettings, SupportedSettings } from 'react-native-chart-iq-wrapper';
+import { DrawingSettings, SupportedSettings } from 'react-native-chart-iq';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 

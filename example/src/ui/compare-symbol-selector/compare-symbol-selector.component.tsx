@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { FlatList, Keyboard, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { ChartSymbol } from 'react-native-chart-iq-wrapper';
+import { ChartSymbol } from 'react-native-chart-iq';
 
 import Icons from '~/assets/icons';
 import { compareColors } from '~/constants';

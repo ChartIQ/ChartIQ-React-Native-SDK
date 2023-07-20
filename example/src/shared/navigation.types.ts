@@ -7,7 +7,7 @@ import {
   Condition,
   SignalJoiner,
   Study,
-} from 'react-native-chart-iq-wrapper';
+} from 'react-native-chart-iq';
 
 export enum RootStack {
   Main = '[Root stack] Main',

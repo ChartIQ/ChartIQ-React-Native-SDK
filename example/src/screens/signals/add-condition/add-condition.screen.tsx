@@ -21,9 +21,10 @@ import {
   Condition,
   NullableCondition,
   StudyParameter,
-} from 'react-native-chart-iq-wrapper';
+} from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { formatStudyName, setFloat } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -348,62 +349,68 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   };
 
   return (
-    <ScrollView onTouchStart={Keyboard.dismiss}>
-      <Text style={styles.title}>Condition settings</Text>
-      <ListItem
-        onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
-        title="Indicator 1"
-        value={formatStudyName(leftIndicatorDescription) ?? undefined}
-      />
-      <ListItem
-        onPress={handleAddCondition}
-        title="Condition "
-        value={selectedOperator?.description ?? 'Select Action'}
-      />
+    <SafeAreaView edges={edges} style={styles.container}>
+      <ScrollView onTouchStart={Keyboard.dismiss}>
+        <Text style={styles.title}>Condition settings</Text>
+        <ListItem
+          onPress={() => handleIndicator(FIRST_INDICATOR, selectedCondition?.leftIndicator ?? '')}
+          title="Indicator 1"
+          value={formatStudyName(leftIndicatorDescription) ?? undefined}
+        />
+        <ListItem
+          onPress={handleAddCondition}
+          title="Condition "
+          value={selectedOperator?.description ?? 'Select Action'}
+        />
 
-      {selectedCondition?.signalOperator ? (
-        <>
-          {hideSecondIndicator ? null : (
-            <ListItem
-              onPress={() =>
-                handleIndicator(SECOND_INDICATOR, selectedCondition?.rightIndicator ?? '')
-              }
-              title="Indicator 2"
-              value={formatStudyName(rightIndicatorDescription)}
-            />
-          )}
-          {showValueSelector ? (
-            <ListItem title="Value">
-              <TextInput
-                onChangeText={(text) => setFloat(text, handleSecondIndicatorValue)}
-                keyboardType="numbers-and-punctuation"
-                defaultValue="0.0"
-                value={secondIndicatorValue ?? undefined}
-                style={styles.textInput}
-                placeholderTextColor={theme.colors.placeholder}
-                onEndEditing={handleEndEditingSecondIndicatorValue}
+        {selectedCondition?.signalOperator ? (
+          <>
+            {hideSecondIndicator ? null : (
+              <ListItem
+                onPress={() =>
+                  handleIndicator(SECOND_INDICATOR, selectedCondition?.rightIndicator ?? '')
+                }
+                title="Indicator 2"
+                value={formatStudyName(rightIndicatorDescription)}
               />
-            </ListItem>
-          ) : null}
+            )}
+            {showValueSelector ? (
+              <ListItem title="Value">
+                <TextInput
+                  onChangeText={(text) => setFloat(text, handleSecondIndicatorValue)}
+                  keyboardType="numbers-and-punctuation"
+                  defaultValue="0.0"
+                  value={secondIndicatorValue ?? undefined}
+                  style={styles.textInput}
+                  placeholderTextColor={theme.colors.placeholder}
+                  onEndEditing={handleEndEditingSecondIndicatorValue}
+                />
+              </ListItem>
+            ) : null}
 
-          <MarkerOptionsForm
-            showAppearance={params.index === 0 || joiner === SignalJoiner.OR}
-            color={markerColor}
-            onColorPressed={handleColor}
-            ref={markerOptionRef}
-            markerOptions={selectedCondition?.markerOption ?? undefined}
-            aggregationType={aggregationType}
-          />
-        </>
-      ) : null}
-      <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
-      <ColorSelector onChange={handleColorChange} ref={colorSelectorRef} />
-    </ScrollView>
+            <MarkerOptionsForm
+              showAppearance={params.index === 0 || joiner === SignalJoiner.OR}
+              color={markerColor}
+              onColorPressed={handleColor}
+              ref={markerOptionRef}
+              markerOptions={selectedCondition?.markerOption ?? undefined}
+              aggregationType={aggregationType}
+            />
+          </>
+        ) : null}
+        <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
+        <ColorSelector onChange={handleColorChange} ref={colorSelectorRef} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const createStyles = ({ colors }: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
     title: {
       paddingVertical: 8,
       paddingLeft: 16,

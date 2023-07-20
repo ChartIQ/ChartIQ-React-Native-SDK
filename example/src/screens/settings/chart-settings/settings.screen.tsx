@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ChartIQLanguages } from '~/constants/languages';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -50,7 +51,7 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={styles.sectionTitle}>{translations['Chart Preferences']}</Text>
         <ListItem title={translations['Log Scale']}>
@@ -96,7 +97,7 @@ const Settings: React.FC = () => {
         <ListItem title="Language" onPress={onLanguage} value={languageName} />
       </ScrollView>
       <SelectFromList ref={selectFromListRef} onChange={handleLanguageChange} />
-    </View>
+    </SafeAreaView>
   );
 };
 

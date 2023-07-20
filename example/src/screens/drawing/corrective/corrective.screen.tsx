@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import { FlatList } from 'react-native';
-import { ChartIQ, Corrective, DrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Corrective, DrawingParams } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';

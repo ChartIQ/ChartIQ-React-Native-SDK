@@ -7,7 +7,7 @@ import {
   SignalPosition,
   SignalShape,
   SignalSize,
-} from 'react-native-chart-iq-wrapper';
+} from 'react-native-chart-iq';
 
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';

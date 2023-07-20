@@ -2,10 +2,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ, Signal } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Signal } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import images from '~/assets/images';
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -60,7 +61,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={edges} style={styles.container}>
       <FlatList
         data={activeSignals}
         contentContainerStyle={{ flex: 1 }}
@@ -107,7 +108,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

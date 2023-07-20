@@ -11,12 +11,13 @@ import {
   TextInputChangeEventData,
   NativeSyntheticEvent,
 } from 'react-native';
-import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
+import { edges } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { colorInitializer } from '~/shared/helpers';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
@@ -192,7 +193,7 @@ const DrawingToolSettings: React.FC = () => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={edges} style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.container}>
           {supportingFillColor ? (
             <ListItem onPress={toggleFillColor} key="Fill color" title="Fill color">

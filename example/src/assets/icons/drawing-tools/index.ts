@@ -1,4 +1,4 @@
-import { DrawingTool } from 'react-native-chart-iq-wrapper';
+import { DrawingTool } from 'react-native-chart-iq';
 
 import Annotation from './annotation.svg';
 import Arrow from './arrow.svg';

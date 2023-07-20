@@ -8,7 +8,7 @@ import {
   ChartQuery,
   ChartSymbol,
   DrawingTool,
-} from 'react-native-chart-iq-wrapper';
+} from 'react-native-chart-iq';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { fetchDataFeedAsync, handleRetry } from '~/api';

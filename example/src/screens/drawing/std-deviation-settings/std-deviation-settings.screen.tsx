@@ -1,14 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ, DrawingParams } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, DrawingParams } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import icons from '~/assets/icons';
 import {
   LineTypeItem,
   findLineTypeItemByPatternAndWidth,
 } from '~/assets/icons/line-types/line-types';
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
 import { Theme, useTheme } from '~/theme';
@@ -177,7 +178,7 @@ const STDDeviationsSettingsScreen: React.FC = () => {
   };
 
   return (
-    <>
+    <SafeAreaView edges={edges} style={styles.container}>
       <FlatList
         data={stdDeviationSettings}
         renderItem={({
@@ -224,12 +225,15 @@ const STDDeviationsSettingsScreen: React.FC = () => {
         onChange={handleLineTypeChange}
         selectedItem={selectedLineType}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+    },
     text: {
       color: theme.colors.colorPrimary,
       fontWeight: 'bold',

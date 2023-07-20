@@ -2,11 +2,12 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { ChartIQ, Study } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Study } from 'react-native-chart-iq';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Icons from '~/assets/icons';
 import images from '~/assets/images';
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStack, StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -80,7 +81,7 @@ const Studies: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={edges} style={styles.container}>
       <FlatList
         data={activeStudies}
         keyExtractor={({ display }) => display}
@@ -139,7 +140,7 @@ const Studies: React.FC = () => {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -148,13 +149,12 @@ const createStyles = (theme: Theme) =>
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
-      justifyContent: 'space-between',
     },
     image: {
       marginBottom: 32,
     },
     emptyView: {
-      paddingTop: 128, //
+      paddingTop: 128,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',

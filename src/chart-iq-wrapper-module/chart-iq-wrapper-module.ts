@@ -29,9 +29,6 @@ const ChartIQWrapperModule = Platform.select({
 
 /**
  * Set data for the returned onPullInitialData quote feed params by it's id
- * @param data OHLCParams[]
- * @param id string
- * @returns void
  *   **/
 export function setInitialData(data: OHLCParams[], id: string) {
   ChartIQWrapperModule.setInitialData(data, id);
@@ -39,11 +36,12 @@ export function setInitialData(data: OHLCParams[], id: string) {
 
 /**
  * Set data for the returned onPullUpdateData quote feed params by it's id
- * @param data OHLCParams[]
+ *
+ * @param {OHLCParams[]} data
  * @param id string
  * @returns void
  *   **/
-export function setUpdateData(data: OHLCParams[], id: string) {
+export function setUpdateData(data: OHLCParams, id: string) {
   ChartIQWrapperModule.setUpdateData(data, id);
 }
 
@@ -132,7 +130,7 @@ export function getChartType(): Promise<string> {
  * @param symbol string
  * @param color string
  * @param isComparison boolean
- * @returns void
+ * @returns {void}
  */
 export function addSeries(
   symbol: string,
@@ -144,7 +142,7 @@ export function addSeries(
 
 /**
  * Get current symbol
- * @returns Promise<string>
+ * @returns {Promise<string[]>} symbol
  */
 export async function getSymbol(): Promise<string> {
   return await ChartIQWrapperModule.getSymbol();
@@ -152,7 +150,6 @@ export async function getSymbol(): Promise<string> {
 
 /**
  * Get periodicity
- * @returns Promise<{ interval: string; periodicity: number; timeUnit: string; }>
  */
 export async function getPeriodicity() {
   return (await ChartIQWrapperModule.getPeriodicity()) as {
@@ -164,7 +161,6 @@ export async function getPeriodicity() {
 
 /**
  * Get chart aggregation type
- * @returns Promise<string>
  */
 export async function getChartAggregationType() {
   const type = await ChartIQWrapperModule.getChartAggregationType();
@@ -174,10 +170,6 @@ export async function getChartAggregationType() {
 
 /**
  * Get chart compare symbols
- * @returns Promise<Array<{
-    color: string;
-    symbolName: string;
-  }>
  */
 export async function getActiveSeries(): Promise<
   Array<{
@@ -191,7 +183,6 @@ export async function getActiveSeries(): Promise<
 /**
  * Remove series by it's name
  * @param symbol string
- * @returns void
  */
 export function removeSeries(symbol: string) {
   ChartIQWrapperModule.removeSeries(symbol);
@@ -200,7 +191,6 @@ export function removeSeries(symbol: string) {
 /**
  * Set chart aggregation type
  * @param type string
- * @returns void
  */
 export function setAggregationType(type: string) {
   ChartIQWrapperModule.setAggregationType(type);
@@ -226,7 +216,6 @@ export function disableDrawing() {
 /**
  * Get drawing parameters
  * @param tool string
- * @returns Promise<DrawingSettings>
  *
  */
 export async function getDrawingParams(tool: string): Promise<DrawingSettings> {
@@ -237,25 +226,40 @@ export async function getDrawingParams(tool: string): Promise<DrawingSettings> {
   return JSON.parse(response);
 }
 
-/** */
+/**
+ * Set drawing parameters
+ * @param parameterName DrawingParams
+ * @param value string
+ */
 export function setDrawingParams(parameterName: DrawingParams, value: string) {
   return ChartIQWrapperModule.setDrawingParams(parameterName, value);
 }
 
-/** */
+/**
+ * Get drawing parameters
+ * @param parameterName DrawingParams
+ * @returns void
+ */
 export function clearDrawing() {
-  return ChartIQWrapperModule.clearDrawing();
+  ChartIQWrapperModule.clearDrawing();
 }
 
-/** */
+/**
+ * Get drawing parameters
+ * @param parameterName DrawingParams
+ * @returns void
+ */
 export function restoreDefaultDrawingConfig(
   tool: DrawingTool,
   all: boolean = false
 ) {
-  return ChartIQWrapperModule.restoreDefaultDrawingConfig(tool, all);
+  ChartIQWrapperModule.restoreDefaultDrawingConfig(tool, all);
 }
 
-/** */
+/**
+ * Undo drawing
+ * @returns {Promise}
+ */
 export async function undoDrawing(): Promise<boolean> {
   return ChartIQWrapperModule.undoDrawing();
 }
@@ -390,12 +394,12 @@ export async function addSignalStudy(name: string) {
 
 /** */
 export function addSignal(signal: Signal, editMode: boolean = false) {
-  return ChartIQWrapperModule.addSignal(signal, editMode);
+  ChartIQWrapperModule.addSignal(signal, editMode);
 }
 
 /** */
 export function toggleSignal(signal: Signal) {
-  return ChartIQWrapperModule.toggleSignal(signal);
+  ChartIQWrapperModule.toggleSignal(signal);
 }
 
 /** */

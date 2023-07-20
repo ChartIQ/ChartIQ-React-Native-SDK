@@ -8,7 +8,7 @@ import {
 } from 'expo-screen-orientation';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIQWebView, ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQWebView, ChartIQ } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 

@@ -11,11 +11,13 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq';
 import { TextInput } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
+import { edges } from '~/constants';
 import { formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
@@ -346,61 +348,63 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'height' : undefined}
-      keyboardVerticalOffset={height}
-      style={styles.container}
-    >
-      <FlatList
-        data={data}
-        renderItem={({ item: { condition, id }, index }) => (
-          <>
-            <SwipableItem
-              rightActionButtons={[
-                {
-                  title: 'Delete',
-                  onPress: () => {
-                    handleDeleteCondition(id);
+    <SafeAreaView edges={edges} style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'height' : undefined}
+        keyboardVerticalOffset={height}
+        style={styles.container}
+      >
+        <FlatList
+          data={data}
+          renderItem={({ item: { condition, id }, index }) => (
+            <>
+              <SwipableItem
+                rightActionButtons={[
+                  {
+                    title: 'Delete',
+                    onPress: () => {
+                      handleDeleteCondition(id);
+                    },
+                    key: 'condition.delete',
+                    backgroundColor: theme.colors.error,
+                    color: theme.colors.primaryButtonText,
+                    isOvershoot: true,
                   },
-                  key: 'condition.delete',
-                  backgroundColor: theme.colors.error,
-                  color: theme.colors.primaryButtonText,
-                  isOvershoot: true,
-                },
-              ]}
-            >
-              <ConditionItem
-                condition={condition}
-                index={index}
-                onPress={() => {
-                  handleAddCondition(id, index, condition);
-                }}
-                joiner={joiner}
-              />
-            </SwipableItem>
-            {data.length > 0 ? (
-              index === 0 ? (
-                <JoinSelector onPress={setJoiner} />
-              ) : index !== data.length - 1 ? (
-                <JoinSelector value={joiner} />
-              ) : null
-            ) : null}
-          </>
-        )}
-        keyExtractor={({ id }) => id}
-        ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={ListFooterComponent}
-        contentContainerStyle={{ paddingBottom: 124 }}
-      />
+                ]}
+              >
+                <ConditionItem
+                  condition={condition}
+                  index={index}
+                  onPress={() => {
+                    handleAddCondition(id, index, condition);
+                  }}
+                  joiner={joiner}
+                />
+              </SwipableItem>
+              {data.length > 0 ? (
+                index === 0 ? (
+                  <JoinSelector onPress={setJoiner} />
+                ) : index !== data.length - 1 ? (
+                  <JoinSelector value={joiner} />
+                ) : null
+              ) : null}
+            </>
+          )}
+          keyExtractor={({ id }) => id}
+          ListHeaderComponent={ListHeaderComponent}
+          ListFooterComponent={ListFooterComponent}
+          contentContainerStyle={{ paddingBottom: 124 }}
+        />
 
-      <SelectFromList
-        filtered
-        ref={selectFromListRef}
-        onChange={handleStudyChange}
-        showHeader
-        withSaveButton
-      />
-    </KeyboardAvoidingView>
+        <SelectFromList
+          filtered
+          ref={selectFromListRef}
+          onChange={handleStudyChange}
+          showHeader
+          withSaveButton
+        />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ChartIQ, CrosshairState } from 'react-native-chart-iq-wrapper';
+import { ChartIQ, CrosshairState } from 'react-native-chart-iq';
 import Animated from 'react-native-reanimated';
 
 import { useTranslations } from '~/shared/hooks/use-translations';

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq';
 import Animated, {
   runOnJS,
   useAnimatedStyle,

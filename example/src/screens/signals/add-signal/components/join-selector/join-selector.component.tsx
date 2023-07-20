@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { SignalJoiner } from 'react-native-chart-iq-wrapper';
+import { SignalJoiner } from 'react-native-chart-iq';
 
 import { Theme, useTheme } from '~/theme';
 

@@ -10,7 +10,7 @@ import React, {
   useEffect,
 } from 'react';
 import { View, Image, Text, Pressable, Alert, SectionListData } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq-wrapper';
+import { ChartIQ } from 'react-native-chart-iq';
 import { TextInput } from 'react-native-gesture-handler';
 
 import icons from '~/assets/icons';
