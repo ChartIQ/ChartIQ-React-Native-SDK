@@ -27,22 +27,21 @@ import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selecto
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
-const handleRequest = async (input: Omit<ChartIQDatafeedParams, 'id'>) => {
+const handleRequest = async (input: Omit<ChartIQDatafeedParams, 'id'>, session: string) => {
   const params = {
     identifier: input.symbol,
     enddate: input.end,
     startdate: input.start,
     interval: input.interval,
     period: input.period.toString(),
+    extended: 1,
     session,
   } as ChartQuery;
 
   return await fetchDataFeedAsync(params);
 };
 
-const session = 'test-session-id//aldnsalfkjnsalkdfjnaslkdjfna';
-
-export const useChartIQ = () => {
+export const useChartIQ = (session: string) => {
   const [initialized, setChartInitialized] = React.useState(false);
   const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
@@ -85,7 +84,7 @@ export const useChartIQ = () => {
     },
   }: QuoteFeedEvent) => {
     try {
-      const response = await handleRequest(params);
+      const response = await handleRequest(params, session);
       ChartIQ.setInitialData(response, id);
     } catch (e) {
       handleRetry(() => {
@@ -104,7 +103,7 @@ export const useChartIQ = () => {
     },
   }: QuoteFeedEvent) => {
     try {
-      const response = await handleRequest(params);
+      const response = await handleRequest(params, session);
 
       ChartIQ.setUpdateData(response, id);
     } catch (e) {
@@ -124,7 +123,7 @@ export const useChartIQ = () => {
     },
   }: QuoteFeedEvent) => {
     try {
-      const response = await handleRequest(params);
+      const response = await handleRequest(params, session);
       ChartIQ.setPagingData(response, id);
     } catch (e) {
       handleRetry(() => {

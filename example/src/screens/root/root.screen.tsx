@@ -10,6 +10,7 @@ import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIQWebView, ChartIQ } from 'react-native-chart-iq-wrapper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import uuid from 'react-native-uuid';
 
 import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
@@ -33,10 +34,21 @@ export default function Root() {
   const styles = createStyles(theme);
   const [isFullscreen, setIsFullScreen] = React.useState(false);
   const [isLandscape, setIsLandscape] = React.useState(false);
+  const [session, setSession] = React.useState<string | null>();
 
   const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
   const intervalSelectorRef = React.useRef<BottomSheetMethods>(null);
   const chartStyleSelectorRef = React.useRef<BottomSheetMethods>(null);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem(asyncStorageKeys.session)
+      .then((session) => {
+        setSession(session);
+      })
+      .catch(() => {
+        AsyncStorage.setItem(asyncStorageKeys.session, uuid.v4() as string);
+      });
+  }, []);
 
   const toggleSymbolSelector = () => {
     symbolSelectorRef.current?.present('');
@@ -85,7 +97,7 @@ export default function Root() {
 
     initChart,
     initialized,
-  } = useChartIQ();
+  } = useChartIQ(session ?? '');
 
   React.useEffect(() => {
     const callback = (orientation: Orientation) => {

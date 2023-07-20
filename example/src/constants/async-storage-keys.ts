@@ -4,4 +4,5 @@ export const asyncStorageKeys = {
   drawingToolsFavorite: '@DRAWING_TOOL/favorite',
   languageCode: '@LANGUAGE/code',
   translations: '@TRANSLATIONS',
+  session: '@SESSION',
 };

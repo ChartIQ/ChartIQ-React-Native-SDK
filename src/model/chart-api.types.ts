@@ -4,7 +4,7 @@ export type ChartQuery = {
   enddate?: string;
   interval?: string;
   period?: string;
-  extended?: string;
+  extended?: number;
   session?: string;
 };
 

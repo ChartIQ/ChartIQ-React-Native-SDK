@@ -376,7 +376,10 @@ export async function getActiveSignals() {
   return JSON.parse(response) as Signal[];
 }
 
-/** */
+/**
+ * Add signal study by study shortName
+ * @param name string
+ */
 export async function addSignalStudy(name: string) {
   const response = await ChartIQWrapperModule.addSignalStudy(name);
   if (Platform.OS === 'ios') {
