@@ -57,6 +57,7 @@ const createStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
+      flex: 1,
     },
     filterCard: {
       borderRadius: 4,

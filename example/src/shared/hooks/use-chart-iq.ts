@@ -138,7 +138,6 @@ export const useChartIQ = (session: string) => {
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
     setSymbol(symbol);
-    ChartIQ.setSymbol(symbol);
   };
 
   const handleIntervalChange = (input: IntervalItem) => {

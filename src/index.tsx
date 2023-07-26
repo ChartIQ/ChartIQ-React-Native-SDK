@@ -1,4 +1,4 @@
-import ChartIQWebView, {
+import ChartIQView, {
   ChartIQNativeEvent,
   OnChartTypeChangeEvent,
   OnHudChangeEvent,
@@ -10,7 +10,7 @@ import { ChartIQ } from './chart-iq-wrapper-module';
 
 export {
   ChartIQ,
-  ChartIQWebView,
+  ChartIQView,
   ChartIQNativeEvent,
   OnChartTypeChangeEvent,
   OnHudChangeEvent,

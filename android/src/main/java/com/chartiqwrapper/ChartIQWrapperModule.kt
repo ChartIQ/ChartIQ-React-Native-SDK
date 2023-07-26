@@ -66,14 +66,6 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setSymbol(symbol: String) {
-    handler.post(Runnable {
-      Log.println(Log.INFO, "SET_SYMBOL", "setSymbol: $symbol")
-      chartIQViewModel.getChartIQ().setSymbol(symbol)
-    })
-  }
-
-  @ReactMethod
   fun setPeriodicity(period: Int, interval: String, timeUnit: String) {
 
     handler.post(Runnable {

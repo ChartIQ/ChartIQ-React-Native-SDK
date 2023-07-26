@@ -45,14 +45,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
         }
     }
     
-    @objc func setSymbol(_ symbol: String) {
-        print("log_chart, setSymbol")
-
-        defaultQueue.async {
-            self.chartIQWrapperView.chartIQView.loadChart(symbol)
-        }
-    }
-    
     @objc func setPeriodicity(_ period: Double, interval: String, timeUnit: String) {
         print("log_chart, setPeriodicity")
 

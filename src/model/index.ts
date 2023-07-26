@@ -10,3 +10,5 @@ export * from './chart-api.types';
 export * from './chart-type';
 export * from './signals';
 export * from './study';
+export * from './theme';
+export * from './data-method';

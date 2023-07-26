@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-chart-iq-wrapper": ["./src/index"],
+      "react-native-chart-iq": ["./src/index"],
       "~/*": ["./example/src/*"]
     },
     "allowUnreachableCode": false,

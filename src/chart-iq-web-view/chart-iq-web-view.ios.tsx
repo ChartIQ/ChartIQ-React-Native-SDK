@@ -79,6 +79,7 @@ const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
       pullStartSubscription.remove();
       pullMeasureSubscription.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <ChartIqWrapperViewComponent {...props} />;

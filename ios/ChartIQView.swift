@@ -15,6 +15,19 @@ class ChartIqWrapperView: UIView {
             chartIQView.setChartIQUrl(url)
         }
     }
+    
+    @objc var dataMethod: String = "pull" {
+        didSet {
+            chartIQView.setDataMethod(dataMethod == "push" ? .push : .pull)
+        }
+    }
+    
+    @objc var symbol: String = "" {
+        didSet {
+            print("log_chart, SET SYMBOL BY PROP")
+            chartIQView.loadChart(symbol)
+        }
+    }
  
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -103,7 +116,6 @@ extension ChartIqWrapperView: ChartIQDelegate {
     func chartIQViewDidFinishLoading(_ chartIQView: ChartIQ.ChartIQView) {
         print("log_chart, chartIQViewDidFinishLoading")
 
-        chartIQView.setDataMethod(.pull)
         chartIQView.setVoiceoverFields(default: true)
         RTEEventEmitter.shared?.emitEvent(withName: .dispatchOnChartStart, body: "chartIQViewDidFinishLoading")
     }

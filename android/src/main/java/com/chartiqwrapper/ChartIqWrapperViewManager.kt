@@ -1,5 +1,6 @@
 package com.chartiqwrapper
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -9,7 +10,9 @@ import com.chartiq.sdk.ChartIQ
 import com.chartiq.sdk.DataSource
 import com.chartiq.sdk.DataSourceCallback
 import com.chartiq.sdk.OnStartCallback
+import com.chartiq.sdk.model.ChartTheme
 import com.chartiq.sdk.model.CrosshairHUD
+import com.chartiq.sdk.model.DataMethod
 import com.chartiq.sdk.model.QuoteFeedParams
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactMethod
@@ -28,7 +31,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   private val gson: Gson = Gson()
   private var reactContext: ThemedReactContext? = null
   private lateinit var chartIQ: ChartIQ
-  private val job = Job()
   private lateinit var view: LinearLayout
 
   private var startCallback: OnStartCallback = OnStartCallback {
@@ -42,6 +44,28 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     if(url != null){
       this.url = url
       initChartIQ(view)
+    }
+  }
+
+  @ReactProp(name = "dataMethod")
+  fun setDataMethod(view: ViewGroup, dataMethod: String?){
+    chartIQ.getSymbol{symbol ->
+      if(dataMethod != null){
+        if (dataMethod == "push") {
+          chartIQ.setDataMethod(DataMethod.PUSH, symbol)
+        } else {
+          chartIQ.setDataMethod(DataMethod.PULL, symbol)
+        }
+      }else{
+        chartIQ.setDataMethod(DataMethod.PULL, symbol)
+      }
+    }
+  }
+
+  @ReactProp(name = "symbol")
+  fun setSymbol(view: ViewGroup, symbol: String?){
+    if(symbol != null){
+      chartIQ.setSymbol(symbol)
     }
   }
 
@@ -235,9 +259,5 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     }
 
     chartIQ.start(startCallback)
-  }
-
-  companion object {
-    private const val CROSSHAIRS_UPDATE_PERIOD = 300L
   }
 }

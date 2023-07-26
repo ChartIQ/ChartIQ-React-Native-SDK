@@ -35,7 +35,7 @@ const AnimatedCrosshairValues: React.FC<AnimatedCrosshairValuesProps> = ({
         Object.entries(hud).reduce(
           (acc, [key, value]) => ({
             ...acc,
-            [key]: Number(value).toFixed(3),
+            [key]: isNaN(Number(value)) ? value : Number(value).toFixed(3),
           }),
           {} as CrosshairState,
         ),

@@ -8,7 +8,7 @@ import {
 } from 'expo-screen-orientation';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIQWebView, ChartIQ } from 'react-native-chart-iq';
+import { ChartIQ, ChartIQView } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 
@@ -172,8 +172,10 @@ export default function Root() {
         />
       </View>
       <View style={styles.chartContainer}>
-        <ChartIQWebView
+        <ChartIQView
           url={WEB_VIEW_SOURCE}
+          symbol={symbol}
+          dataMethod="pull"
           onStart={initChart}
           onPullInitialData={onPullInitialData}
           onPullUpdateData={onPullUpdateData}
