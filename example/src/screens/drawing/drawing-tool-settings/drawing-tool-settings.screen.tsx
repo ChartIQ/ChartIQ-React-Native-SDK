@@ -343,8 +343,10 @@ const createStyles = (theme: Theme) =>
       backgroundColor: theme.colors.background,
     },
     colorBox: {
-      padding: 10,
+      padding: 12,
       borderRadius: 4,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
     },
     fontStyle: {
       width: 32,
