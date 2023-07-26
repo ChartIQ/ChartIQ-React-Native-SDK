@@ -42,34 +42,31 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, onPress, index, jo
     condition.markerOption.color !== null ? condition.markerOption.color : fallbackColor;
 
   return (
-    <>
-      <ListItem
-        topBorder={index === 0}
-        onPress={onPress}
-        titleComponent={
-          <View style={styles.row}>
-            {index === 0 || joiner === SignalJoiner.OR ? (
-              <View style={[styles.colorBox, { backgroundColor: color }]}>
-                <Text style={[styles.boxText, { color: textOnColor(color) }]}>
-                  {condition.markerOption.label.length > 1 ? '...' : condition.markerOption.label}
-                </Text>
-              </View>
-            ) : null}
-            <View>
-              <View>
-                <Text style={styles.cardTitle}>{`${index + 1} Condition`}</Text>
-              </View>
-              <Text style={styles.cardDescription}>
-                {`${condition.leftIndicator.split(' (')[0]} Is ${signalOperator} ${rightIndicator}`}
+    <ListItem
+      topBorder={index === 0}
+      onPress={onPress}
+      titleComponent={
+        <View style={styles.row}>
+          {index === 0 || joiner === SignalJoiner.OR ? (
+            <View style={[styles.colorBox, { backgroundColor: color }]}>
+              <Text style={[styles.boxText, { color: textOnColor(color) }]}>
+                {condition.markerOption.label.length > 1 ? '...' : condition.markerOption.label}
               </Text>
             </View>
+          ) : null}
+          <View>
+            <View>
+              <Text style={styles.cardTitle}>{`${index + 1} Condition`}</Text>
+            </View>
+            <Text style={styles.cardDescription}>
+              {`${condition.leftIndicator.split(' (')[0]} Is ${signalOperator} ${rightIndicator}`}
+            </Text>
           </View>
-        }
-      >
-        <Icons.chevronRight fill={theme.colors.cardSubtitle} />
-      </ListItem>
-      <View></View>
-    </>
+        </View>
+      }
+    >
+      <Icons.chevronRight fill={theme.colors.cardSubtitle} />
+    </ListItem>
   );
 };
 

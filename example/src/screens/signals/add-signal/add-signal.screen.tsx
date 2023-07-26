@@ -122,7 +122,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
       data: studies.map(({ display }) => ({ key: display, value: display })),
       selected: selectedStudy?.display ?? '',
       id: SELECT_STUDY,
-      title: 'Select study',
+      title: SELECT_STUDY,
     });
   };
 
@@ -307,7 +307,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     <View style={styles.firstListItem}>
       {selectedStudy === null ? (
         <ListItem
-          title="Select study"
+          title={SELECT_STUDY}
           textStyle={styles.selectStudy}
           onPress={handleSelectStudy}
           topBorder

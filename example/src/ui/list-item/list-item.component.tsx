@@ -36,7 +36,7 @@ const ListItem: React.FC<ListItemProps> = ({
   const styles = createStyles(theme);
 
   return (
-    <View style={containerStyle}>
+    <View style={[styles.containerBackground, containerStyle]}>
       {topBorder ? <View style={[styles.border, topBorderStyles]} /> : null}
       <Pressable onPress={onPress} style={[styles.container, style]}>
         {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
@@ -56,6 +56,9 @@ const ListItem: React.FC<ListItemProps> = ({
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    containerBackground: {
+      backgroundColor: theme.colors.background,
+    },
     border: {
       borderWidth: 1,
       borderColor: theme.colors.border,

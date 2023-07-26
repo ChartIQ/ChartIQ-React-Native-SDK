@@ -99,6 +99,7 @@ extension [String: Any] {
             conditions: (self["conditions"] as! [[String: Any?]]).map { $0.toChartIQCondition() },
             joiner: joiner,
             name: self["name"] as! String,
+            signalDescription: self["description"] as? String,
             isEnabled: !(self["disabled"] as? Bool ?? false)
         )
     }
