@@ -1,3 +1,10 @@
+import {
+  Orientation,
+  OrientationChangeEvent,
+  addOrientationChangeListener,
+  getOrientationAsync,
+  removeOrientationChangeListeners,
+} from 'expo-screen-orientation';
 import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
 import {
@@ -48,6 +55,9 @@ export const useChartIQ = (session: string) => {
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
   const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
   const [isDrawing, setIsDrawing] = React.useState(false);
+  const drawingDisableByTap = React.useRef(false);
+  const [isLandscape, setIsLandscape] = React.useState(false);
+  const [isFullscreen, setIsFullScreen] = React.useState(false);
   const [compareSymbols, setCompareSymbols] = React.useState<Map<string, ColoredChartSymbol>>(
     new Map(),
   );
@@ -310,10 +320,11 @@ export const useChartIQ = (session: string) => {
     }
 
     setIsDrawing(true);
+    setIsFullScreen(false);
   };
 
   const handleRestoreDrawingParams = async (tool: DrawingItem) => {
-    await ChartIQ.restoreDefaultDrawingConfig(tool.name, true);
+    ChartIQ.restoreDefaultDrawingConfig(tool.name, true);
     await onDrawingToolChanged(tool);
   };
 
@@ -321,9 +332,51 @@ export const useChartIQ = (session: string) => {
     if (!isDrawing) {
       return drawingToolSelectorRef.current?.present('');
     }
+    drawingDisableByTap.current = true;
     setIsDrawing(false);
     drawingManagerRef.current?.hide();
     ChartIQ.disableDrawing();
+  };
+
+  const orientationCallback = React.useCallback((orientation: Orientation) => {
+    const landscape =
+      orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT;
+    if (landscape) {
+      setIsLandscape(true);
+    } else {
+      setIsLandscape(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    getOrientationAsync().then(orientationCallback);
+
+    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
+      orientationCallback(orientation);
+    });
+
+    return () => {
+      removeOrientationChangeListeners();
+    };
+  }, [orientationCallback]);
+
+  useEffect(() => {
+    if (isLandscape && !isDrawing && !drawingDisableByTap.current) {
+      drawingDisableByTap.current = false;
+      setIsFullScreen(true);
+    } else {
+      drawingDisableByTap.current = false;
+      setIsFullScreen(false);
+    }
+  }, [isDrawing, isLandscape]);
+
+  const toggleFullScreen = () => {
+    setIsFullScreen((prevState) => {
+      if (!prevState) {
+        toggleDrawingToolSelector();
+      }
+      return !prevState;
+    });
   };
 
   return {
@@ -337,6 +390,7 @@ export const useChartIQ = (session: string) => {
 
     toggleDrawingToolSelector,
     toggleCompareSymbolSelector,
+    toggleFullScreen,
 
     removeSymbol,
     addSymbol,
@@ -352,6 +406,8 @@ export const useChartIQ = (session: string) => {
     compareSymbols,
     isDrawing,
     measureValue,
+    isLandscape,
+    isFullscreen,
 
     drawingToolSelectorRef,
     compareSymbolSelectorRef,

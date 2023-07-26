@@ -1,11 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  Orientation,
-  OrientationChangeEvent,
-  addOrientationChangeListener,
-  getOrientationAsync,
-  removeOrientationChangeListeners,
-} from 'expo-screen-orientation';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIQ, ChartIQView } from 'react-native-chart-iq';
@@ -32,8 +25,6 @@ import SymbolSelector from '~/ui/symbol-selector/symbol-selector.component';
 export default function Root() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const [isFullscreen, setIsFullScreen] = React.useState(false);
-  const [isLandscape, setIsLandscape] = React.useState(false);
   const [session, setSession] = React.useState<string | null>();
 
   const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
@@ -62,12 +53,6 @@ export default function Root() {
     chartStyleSelectorRef.current?.present('');
   };
 
-  const toggleFullScreen = () => {
-    setIsFullScreen((prevState) => {
-      return !prevState;
-    });
-  };
-
   const {
     onMeasureChanged,
     onDrawingToolChanged,
@@ -76,6 +61,7 @@ export default function Root() {
     onPullUpdateData,
     toggleDrawingToolSelector,
     toggleCompareSymbolSelector,
+    toggleFullScreen,
 
     addSymbol,
     removeSymbol,
@@ -90,6 +76,8 @@ export default function Root() {
     isDrawing,
     measureValue,
     symbol,
+    isLandscape,
+    isFullscreen,
 
     drawingToolSelectorRef,
     compareSymbolSelectorRef,
@@ -99,40 +87,9 @@ export default function Root() {
     initialized,
   } = useChartIQ(session ?? '');
 
-  React.useEffect(() => {
-    const callback = (orientation: Orientation) => {
-      const landscape =
-        orientation === Orientation.LANDSCAPE_LEFT || orientation === Orientation.LANDSCAPE_RIGHT;
-      if (landscape) {
-        setIsLandscape(true);
-      } else {
-        setIsLandscape(false);
-      }
-    };
-    getOrientationAsync().then(callback);
-
-    addOrientationChangeListener(({ orientationInfo: { orientation } }: OrientationChangeEvent) => {
-      callback(orientation);
-    });
-
-    return () => {
-      removeOrientationChangeListeners();
-    };
-  }, [setIsLandscape]);
-
-  React.useEffect(() => {
-    if (isLandscape && !isDrawing) {
-      setIsFullScreen(true);
-    } else {
-      setIsFullScreen(false);
-    }
-    // isDrawing is absent in dependency array for skip callback run when drawing tool disables in full screen mode
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLandscape]);
-
-  const showDrawingToolsSelector = () => {
+  function showDrawingToolsSelector() {
     drawingToolSelectorRef.current?.present('');
-  };
+  }
 
   const { getTranslationsFromStorage } = useTranslations();
 
