@@ -24,7 +24,8 @@ import { colorPickerColors } from '~/constants';
 import { useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import {
-  ChartStyleItem,
+  ChartStyleSelectorData,
+  candle,
   chartStyleSelectorData,
 } from '~/ui/chart-style-selector/chart-style-selector.data';
 import { ColoredChartSymbol } from '~/ui/compare-symbol-selector/compare-symbol-selector.component';
@@ -53,7 +54,7 @@ export const useChartIQ = (session: string) => {
   const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
   const [interval, setInterval] = React.useState<IntervalItem | null>(null);
-  const [chartStyle, setChartStyle] = React.useState<ChartStyleItem>(chartStyleSelectorData[0]);
+  const [chartStyle, setChartStyle] = React.useState<ChartStyleSelectorData>(candle);
   const [isDrawing, setIsDrawing] = React.useState(false);
   const drawingDisableByTap = React.useRef(false);
   const [isLandscape, setIsLandscape] = React.useState(false);
@@ -155,7 +156,7 @@ export const useChartIQ = (session: string) => {
     ChartIQ.setPeriodicity(input.period, input.interval, input.timeUnit);
   };
 
-  const handleChartStyleChange = useCallback((input: ChartStyleItem) => {
+  const handleChartStyleChange = useCallback((input: ChartStyleSelectorData) => {
     setChartStyle(input);
     if (input.aggregationType) {
       ChartIQ.setAggregationType(input.aggregationType);

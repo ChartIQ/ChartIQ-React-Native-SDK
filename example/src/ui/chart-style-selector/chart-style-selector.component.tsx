@@ -11,7 +11,7 @@ import { BottomSheet, BottomSheetMethods } from '../bottom-sheet';
 import { SelectorHeader } from '../selector-header';
 
 import {
-  ChartStyleItem,
+  ChartStyleSelectorData,
   chartStyleSelectorData,
   ChartStyleSelectorProps,
 } from './chart-style-selector.data';
@@ -21,9 +21,11 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
     const theme = useTheme();
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
-    const [selectedChartStyle, setSelectedChartStyle] = React.useState<ChartStyleItem | null>(null);
+    const [selectedChartStyle, setSelectedChartStyle] =
+      React.useState<ChartStyleSelectorData | null>(null);
     const { translationMap, translations } = useTranslations();
-    const [data, setData] = React.useState<ChartStyleItem[]>(chartStyleSelectorData);
+    const [data, setData] =
+      React.useState<Readonly<ChartStyleSelectorData[]>>(chartStyleSelectorData);
 
     const handleClose = () => {
       bottomSheetRef.current?.dismiss();
@@ -71,12 +73,15 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
       dismiss: handleClose,
     }));
 
-    const handleChange = (chartStyle: ChartStyleItem) => {
+    const handleChange = (chartStyle: ChartStyleSelectorData) => {
       onChange(chartStyle);
       handleClose();
     };
 
-    const isItemSelected = (item: ChartStyleItem, selectedItem: ChartStyleItem | null) => {
+    const isItemSelected = (
+      item: ChartStyleSelectorData,
+      selectedItem: ChartStyleSelectorData | null,
+    ) => {
       if (!selectedItem) return false;
 
       if (!selectedItem.aggregationType) {

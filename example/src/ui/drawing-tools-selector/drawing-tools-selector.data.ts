@@ -23,8 +23,10 @@ export interface DrawingItem {
   favorite?: boolean;
 }
 
-export const filters = [
-  { name: 'All', value: DrawingToolTags.all },
+export const allDrawingFilter = { name: 'All', value: DrawingToolTags.all };
+
+export const drawingFilters = [
+  allDrawingFilter,
   { name: 'Favorites', value: DrawingToolTags.favorites },
   { name: 'Text', value: DrawingToolTags.text },
   { name: 'Statistics', value: DrawingToolTags.statistics },

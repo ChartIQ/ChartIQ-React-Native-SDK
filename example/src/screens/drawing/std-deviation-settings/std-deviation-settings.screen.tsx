@@ -1,14 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ, DrawingParams } from 'react-native-chart-iq';
+import { ChartIQ, DrawingParams, STDDeviationSettings } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import icons from '~/assets/icons';
-import {
-  LineTypeItem,
-  findLineTypeItemByPatternAndWidth,
-} from '~/assets/icons/line-types/line-types';
+import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 import { defaultHitSlop, edges } from '~/constants';
 import { DrawingContext } from '~/context/drawing-context/drawing.context';
 import { useUpdateDrawingTool } from '~/shared/hooks/use-update-drawing-tool';
@@ -19,53 +15,20 @@ import { ColorSelectorMethods } from '~/ui/color-selector/color-selector.compone
 import { LineTypeSelector } from '~/ui/line-type-selector';
 import { ListItem } from '~/ui/list-item';
 
-type STDDeviations = '1' | '2' | '3';
-
-type STDDeviationItem = {
-  name: STDDeviations;
-  showLine: boolean;
-  lineType: LineTypeItem;
-  lineColor: string;
-};
-
-const defaultLineType = {
-  Icon: icons.lineTypes.solid,
-  lineWidth: 1,
-  name: 'solid',
-  value: 'solid',
-};
+import {
+  STDDeviationItem,
+  createSTDDeviationSettings,
+  defaultLineType,
+} from './std-deviation-settings.data';
 
 const STDDeviationsSettingsScreen: React.FC = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const { updateDrawingSettings } = useUpdateDrawingTool();
   const { drawingSettings } = useContext(DrawingContext);
-  const [stdDeviationSettings, setStdDeviationSettings] = useState<STDDeviationItem[]>([
-    {
-      name: '1' as STDDeviations,
-      showLine: drawingSettings.active1,
-      lineType:
-        findLineTypeItemByPatternAndWidth(drawingSettings.pattern1, drawingSettings.lineWidth1) ??
-        defaultLineType,
-      lineColor: drawingSettings.color1,
-    },
-    {
-      name: '2' as STDDeviations,
-      showLine: drawingSettings.active2,
-      lineType:
-        findLineTypeItemByPatternAndWidth(drawingSettings.pattern2, drawingSettings.lineWidth2) ??
-        defaultLineType,
-      lineColor: drawingSettings.color2,
-    },
-    {
-      name: '3' as STDDeviations,
-      showLine: drawingSettings.active3,
-      lineType:
-        findLineTypeItemByPatternAndWidth(drawingSettings.pattern2, drawingSettings.lineWidth2) ??
-        defaultLineType,
-      lineColor: drawingSettings.color3,
-    },
-  ] satisfies STDDeviationItem[]);
+  const [stdDeviationSettings, setStdDeviationSettings] = useState<STDDeviationItem[]>(() =>
+    createSTDDeviationSettings(drawingSettings),
+  );
 
   const [selectedLineType, setSelectedLineType] = useState<LineTypeItem>(defaultLineType);
 
@@ -75,43 +38,37 @@ const STDDeviationsSettingsScreen: React.FC = () => {
   const navigation = useNavigation();
 
   const handleSave = useCallback(() => {
+    const newSettings = stdDeviationSettings.reduce((acc, item, index) => {
+      const { lineType, lineColor, showLine } = item;
+      const { lineWidth, value } = lineType;
+
+      return {
+        [`active${index + 1}`]: showLine,
+        [`color${index + 1}`]: lineColor,
+        [`pattern${index + 1}`]: value,
+        [`lineWidth${index + 1}`]: lineWidth,
+        ...acc,
+      };
+    }, {} as STDDeviationSettings);
+
     updateDrawingSettings((prevState) => {
       return {
         ...prevState,
-        color1: stdDeviationSettings[0].lineColor,
-        color2: stdDeviationSettings[1].lineColor,
-        color3: stdDeviationSettings[2].lineColor,
-        pattern1: stdDeviationSettings[0].lineType.value,
-        pattern2: stdDeviationSettings[1].lineType.value,
-        pattern3: stdDeviationSettings[2].lineType.value,
-        active1: stdDeviationSettings[0].showLine,
-        active2: stdDeviationSettings[1].showLine,
-        active3: stdDeviationSettings[2].showLine,
-        lineWidth1: stdDeviationSettings[0].lineType.lineWidth,
-        lineWidth2: stdDeviationSettings[1].lineType.lineWidth,
-        lineWidth3: stdDeviationSettings[2].lineType.lineWidth,
+        ...newSettings,
       };
     });
-    ChartIQ.setDrawingParams(
-      DrawingParams.ACTIVE_1,
-      JSON.stringify(stdDeviationSettings[0].showLine),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.ACTIVE_2,
-      JSON.stringify(stdDeviationSettings[1].showLine),
-    );
-    ChartIQ.setDrawingParams(
-      DrawingParams.ACTIVE_3,
-      JSON.stringify(stdDeviationSettings[2].showLine),
-    );
 
-    ChartIQ.setDrawingParams(DrawingParams.COLOR_1, stdDeviationSettings[0].lineColor);
-    ChartIQ.setDrawingParams(DrawingParams.COLOR_2, stdDeviationSettings[1].lineColor);
-    ChartIQ.setDrawingParams(DrawingParams.COLOR_3, stdDeviationSettings[2].lineColor);
+    ChartIQ.setDrawingParams(DrawingParams.ACTIVE_1, JSON.stringify(newSettings.active1));
+    ChartIQ.setDrawingParams(DrawingParams.ACTIVE_2, JSON.stringify(newSettings.active2));
+    ChartIQ.setDrawingParams(DrawingParams.ACTIVE_3, JSON.stringify(newSettings.active3));
 
-    ChartIQ.setDrawingParams(DrawingParams.PATTERN_1, stdDeviationSettings[0].lineType.value);
-    ChartIQ.setDrawingParams(DrawingParams.PATTERN_2, stdDeviationSettings[1].lineType.value);
-    ChartIQ.setDrawingParams(DrawingParams.PATTERN_3, stdDeviationSettings[2].lineType.value);
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_1, newSettings.color1);
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_2, newSettings.color2);
+    ChartIQ.setDrawingParams(DrawingParams.COLOR_3, newSettings.color3);
+
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_1, newSettings.pattern1);
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_2, newSettings.pattern2);
+    ChartIQ.setDrawingParams(DrawingParams.PATTERN_3, newSettings.pattern3);
 
     navigation.goBack();
   }, [navigation, stdDeviationSettings, updateDrawingSettings]);

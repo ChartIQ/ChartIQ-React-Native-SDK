@@ -4,26 +4,25 @@ import { SvgProps } from 'react-native-svg';
 
 import icons from '../../assets/icons';
 
-export type ChartStyleItem = {
+export interface ChartStyleSelectorProps {
+  onChange: (interval: ChartStyleSelectorData) => void;
+}
+
+export interface ChartStyleSelectorData {
   label: string;
   value: ChartType;
   icon: React.FC<SvgProps>;
   aggregationType?: AggregationType;
+}
+
+export const candle: ChartStyleSelectorData = {
+  label: 'Candle',
+  value: ChartType.CANDLE,
+  icon: icons.candles,
 };
 
-export interface ChartStyleSelectorProps {
-  onChange: (interval: ChartStyleItem) => void;
-}
-
-interface ChartStyleSelectorData {
-  label: string;
-  value: ChartType;
-  icon: React.FC<SvgProps>;
-  aggregationType?: AggregationType;
-}
-
-export const chartStyleSelectorData: ChartStyleSelectorData[] = [
-  { label: 'Candle', value: ChartType.CANDLE, icon: icons.candles },
+export const chartStyleSelectorData: Readonly<ChartStyleSelectorData[]> = [
+  candle,
   { label: 'Bar', value: ChartType.BAR, icon: icons.bar },
   { label: 'Colored Bar', value: ChartType.COLORED_BAR, icon: icons.coloredBar },
   { label: 'Line', value: ChartType.LINE, icon: icons.line },
@@ -72,4 +71,4 @@ export const chartStyleSelectorData: ChartStyleSelectorData[] = [
     aggregationType: AggregationType.PANDF,
     icon: icons.pointAndFigure,
   },
-] satisfies ChartStyleSelectorData[];
+] as const;

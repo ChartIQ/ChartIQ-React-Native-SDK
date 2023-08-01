@@ -5,7 +5,7 @@ import IOSChartIQView from './chart-iq-web-view.ios';
 import { ChartIqWrapperProps } from './chart-iq-web-view.types';
 
 const ChartIQView = Platform.select({
-  android: ChartIqWrapperViewComponent,
+  android: ChartIqWrapperViewComponent as React.FC<ChartIqWrapperProps>,
   ios: IOSChartIQView,
 }) as React.FC<ChartIqWrapperProps>;
 

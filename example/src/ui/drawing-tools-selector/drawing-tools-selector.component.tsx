@@ -29,8 +29,9 @@ import {
   DrawingItem,
   drawingTools,
   DrawingToolTags,
-  filters as drawingFilters,
+  drawingFilters,
   specialTools,
+  allDrawingFilter,
 } from './drawing-tools-selector.data';
 import { DrawingToolSelectorProps, RenderSectionHeader } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
@@ -41,7 +42,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     const styles = createStyles(theme);
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const textInputRef = useRef<TextInput>(null);
-    const [selectedFilter, setSelectedFilter] = React.useState<string>(drawingFilters[0].value);
+    const [selectedFilter, setSelectedFilter] = React.useState<string>(allDrawingFilter.value);
     const [tools, setTools] = useState(() =>
       drawingTools.map((item) => ({ ...item, favorite: false })),
     );

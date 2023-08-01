@@ -27,7 +27,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { defaultHitSlop, edges } from '~/constants';
-import { formatStudyName, setFloat } from '~/shared/helpers';
+import { formatNumber, formatStudyName } from '~/shared/helpers';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { SignalsStack, SignalsStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -326,17 +326,6 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const showValueSelector =
     selectedCondition?.signalOperator && selectedCondition.rightIndicator === 'Value';
 
-  const handleSecondIndicatorValue = (text: string) => {
-    const number = Number(text);
-
-    if (Number.isNaN(number)) {
-      setSecondIndicatorValue((0.0).toString());
-      return;
-    }
-
-    setSecondIndicatorValue(text);
-  };
-
   const handleEndEditingSecondIndicatorValue = ({
     nativeEvent: { text },
   }: NativeSyntheticEvent<TextInputChangeEventData | TextInputEndEditingEventData>) => {
@@ -385,7 +374,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
               {showValueSelector ? (
                 <ListItem title="Value">
                   <TextInput
-                    onChangeText={(text) => setFloat(text, handleSecondIndicatorValue)}
+                    onChangeText={(text) => setSecondIndicatorValue(formatNumber(text))}
                     keyboardType="numbers-and-punctuation"
                     defaultValue="0.0"
                     value={secondIndicatorValue ?? undefined}

@@ -1,6 +1,20 @@
 import { Corrective, Decoration, Impulse, Template } from './elliotwave';
 
-export interface DrawingSettings {
+export interface STDDeviationSettings {
+  lineWidth1: number;
+  lineWidth2: number;
+  lineWidth3: number;
+  pattern1: string;
+  pattern2: string;
+  pattern3: string;
+  color1: string;
+  color2: string;
+  color3: string;
+  active1: boolean;
+  active2: boolean;
+  active3: boolean;
+}
+export interface DrawingSettings extends STDDeviationSettings {
   pattern: string;
   lineWidth: number;
   fillColor: string;
@@ -15,15 +29,7 @@ export interface DrawingSettings {
     level: number;
     display: boolean;
   }[];
-  lineWidth1: number;
-  lineWidth2: number;
-  lineWidth3: number;
-  pattern1: string;
-  pattern2: string;
-  pattern3: string;
-  color1: string;
-  color2: string;
-  color3: string;
+
   volumeProfile: {
     priceBuckets: number;
   };
@@ -35,9 +41,5 @@ export interface DrawingSettings {
     template: Template;
     showLines: boolean;
   };
-
-  active1: boolean;
-  active2: boolean;
-  active3: boolean;
   axisLabel: boolean;
 }

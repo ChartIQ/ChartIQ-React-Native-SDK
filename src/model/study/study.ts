@@ -3,27 +3,27 @@ export interface Study {
   fullName: string;
   originalName?: string;
   attributes: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   centerLine: number;
   customRemoval: boolean;
   deferUpdate: boolean;
   display: string;
   inputs: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   outputs: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   overlay: boolean;
   parameters: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   range: string;
   shortName: string;
   type: string;
   yAxis: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
   signalIQExclude: boolean;
   uniqueId?: string;

@@ -24,8 +24,10 @@ interface SymbolSelectorProps {
   onChange?: (symbol: ChartSymbol) => void;
 }
 
+const allFilter = { name: 'All', value: '' };
+
 const filters = [
-  { name: 'All', value: '' },
+  allFilter,
   { name: 'Stocks', value: 'stocks' },
   { name: 'Forex', value: 'forex' },
   { name: 'Indexes', value: 'indexes' },
@@ -39,7 +41,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
   const textInputRef = useRef<InputFieldMethods>(null);
   const [data, setData] = React.useState<ChartSymbol[]>([]);
-  const [selectedFilter, setSelectedFilter] = React.useState<string>(filters[0].value);
+  const [selectedFilter, setSelectedFilter] = React.useState<string>(allFilter.value);
   const [inputValue, setInputValue] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [noDataFound, setNoDataFound] = React.useState<string | null>(null);

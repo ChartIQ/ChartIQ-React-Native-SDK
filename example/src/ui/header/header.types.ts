@@ -3,7 +3,7 @@ import { SvgProps } from 'react-native-svg';
 
 import { ActiveImageType } from '~/assets/images/active-image/active-image.types';
 
-import { ChartStyleItem } from '../chart-style-selector/chart-style-selector.data';
+import { ChartStyleSelectorData } from '../chart-style-selector/chart-style-selector.data';
 
 export interface HeaderItem {
   onPress: () => void;
@@ -19,7 +19,7 @@ export interface HeaderItem {
 
 export interface HeaderProps {
   interval: string | null;
-  chartStyle: ChartStyleItem | null;
+  chartStyle: ChartStyleSelectorData | null;
   symbol: string | null;
   handleSymbolSelector: () => void;
   handleIntervalSelector: () => void;

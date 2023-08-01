@@ -13,6 +13,7 @@ import {
   StudyParameterModel,
 } from 'react-native-chart-iq';
 
+import { formatNumber } from '~/shared/helpers';
 import { Theme, useTheme } from '~/theme';
 
 import { ColorSelector } from '../color-selector';
@@ -30,18 +31,6 @@ export interface ChangeStudyParameterMethods {
   getInputParamsData: () => StudyParameterModel[];
   getOutputParamsData: () => StudyParameterModel[];
 }
-
-const formatNumber = (text: string) => {
-  if (!text) return '0.0';
-
-  const number = Number(text);
-  const fixLength = text.split('.', 2)[1]?.length ?? 1;
-
-  if (isNaN(number) || number === Infinity || number === -Infinity) {
-    return '0.0';
-  }
-  return number.toFixed(fixLength);
-};
 
 const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStudyParametersProps>(
   ({ inputParameters, outputParameters, children }, ref) => {
