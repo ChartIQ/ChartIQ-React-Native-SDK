@@ -45,7 +45,7 @@ const JoinSelector: React.FC<JoinSelectorProps> = ({ onPress, value }) => {
   } else if (value) {
     return (
       <View style={styles.container}>
-        <Text>{value}</Text>
+        <Text style={styles.text}>{value}</Text>
       </View>
     );
   }
@@ -70,9 +70,11 @@ const createStyles = (theme: Theme) =>
     },
     selectedText: {
       borderColor: theme.colors.colorPrimary,
+      color: theme.colors.buttonText,
     },
     text: {
       borderColor: theme.colors.cardSubtitle,
+      color: theme.colors.buttonText,
     },
   });
 

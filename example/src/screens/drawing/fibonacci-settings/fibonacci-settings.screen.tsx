@@ -101,7 +101,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     () => (
       <View style={styles.footerContainer}>
         <TextInput
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           onChangeText={onTextChange}
           style={styles.textInput}
           value={customFib}
@@ -127,6 +127,7 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'height' : undefined}
       keyboardVerticalOffset={height}
+      style={styles.container}
     >
       <FlatList
         data={settings}
@@ -144,6 +145,9 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
 
 const createStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+    },
     text: {
       color: theme.colors.colorPrimary,
       fontWeight: 'bold',
@@ -153,11 +157,13 @@ const createStyles = (theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 40,
+      flex: 1,
     },
     textInput: {
       height: 45,
       flex: 1,
       borderWidth: 1,
+      color: theme.colors.buttonText,
       borderColor: theme.colors.border,
       backgroundColor: theme.colors.backgroundSecondary,
       paddingLeft: 16,

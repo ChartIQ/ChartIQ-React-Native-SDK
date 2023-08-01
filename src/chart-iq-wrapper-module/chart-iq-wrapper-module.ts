@@ -474,15 +474,15 @@ export function removeStudy(study: Study): Promise<void> {
  * Set study parameter
  * @param {Study} study
  * @param {ChartIQStudyParameterModel} parameter
- * @returns {void}
+ * @returns {Promise<Study>}
  * @example
  * ChartIQ.setStudyParameters(study, parameters)
  */
-export function setStudyParameter(
+export async function setStudyParameter(
   study: Study,
   parameter: ChartIQStudyParameterModel
-): void {
-  ChartIQWrapperModule.setStudyParameter(study, parameter);
+): Promise<Study> {
+  return await ChartIQWrapperModule.setStudyParameter(study, parameter);
 }
 
 /**

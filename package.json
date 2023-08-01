@@ -1,5 +1,5 @@
 {
-  "name": "react-native-chart-iq-wrapper",
+  "name": "react-native-chart-iq",
   "version": "0.1.0",
   "description": "test",
   "main": "lib/commonjs/index",
@@ -34,7 +34,8 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install && yarn example pods",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
+    "docs": "jsdoc -c conf.js -d docs"
   },
   "keywords": [
     "react-native",
@@ -42,7 +43,7 @@
     "android"
   ],
   "repository": "https://reactnative.dev/docs/native-modules-setup",
-  "author": "ShinyGuacamole <124245874+ShinyGuacamole@users.noreply.github.com> (https://reactnative.dev/docs/native-modules-setup)",
+  "author": "ShinyGuacamole <124245874+ShinyGuacamole@users.noreply.github.com> ()",
   "license": "MIT",
   "bugs": {
     "url": "https://reactnative.dev/docs/native-modules-setup/issues"
@@ -52,7 +53,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.2.2",
+    "@babel/plugin-transform-export-namespace-from": "^7.22.5",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",

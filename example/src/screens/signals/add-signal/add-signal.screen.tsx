@@ -241,14 +241,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         },
       });
     }
-  }, [
-    isEdit,
-    navigation,
-    selectedStudy,
-    styles.saveButton,
-    styles.saveButtonDisabled,
-    translations.cancel,
-  ]);
+  }, [isEdit, navigation, selectedStudy, styles.saveButton, translations.cancel]);
 
   const ListFooterComponent = (
     <>
@@ -257,12 +250,13 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           onPress={() => handleAddCondition(uuid.v4() as string, data.length)}
           title="Add Condition"
           textStyle={styles.selectStudy}
-          topBorder
+          topBorder={data.length === 0}
         />
       ) : null}
       <View style={styles.firstListItem}>
         <ListItem
           topBorder
+          containerStyle={{ backgroundColor: theme.colors.backgroundSecondary }}
           titleComponent={
             <View>
               <Text style={styles.text}>Description</Text>
@@ -273,8 +267,8 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
                     width: screenWidth - 32,
                   },
                 ]}
-                multiline
-                numberOfLines={2}
+                // multiline
+                // numberOfLines={2}
                 defaultValue={description}
                 placeholder={descriptionPlaceholder}
                 onChangeText={setDescription}
@@ -318,7 +312,8 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
             topBorder
             onPress={handleChangeStudyParams}
             title={formatStudyName(selectedStudy.name)}
-            bottomBorderStyles={styles.bottomBorder}
+            containerStyle={{ backgroundColor: theme.colors.backgroundSecondary }}
+            bottomBorderStyles={!isEdit ? styles.bottomBorder : {}}
           >
             <Icons.chevronRight fill={theme.colors.cardSubtitle} />
           </ListItem>
@@ -358,6 +353,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           data={data}
           renderItem={({ item: { condition, id }, index }) => (
             <>
+              {isEdit && index === 0 ? <View style={styles.space32} /> : null}
               <SwipableItem
                 rightActionButtons={[
                   {
@@ -434,6 +430,7 @@ const createStyles = (theme: Theme) =>
     },
     multilineInput: {
       minHeight: 40,
+      color: theme.colors.buttonText,
     },
     saveButton: {
       color: theme.colors.colorPrimary,

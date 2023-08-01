@@ -42,13 +42,6 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
       },
     }));
 
-    const onDismiss = (index: number) => {
-      if (index === -1) {
-        idRef.current = null;
-        bottomSheetRef.current?.dismiss();
-      }
-    };
-
     return (
       <BottomSheetModal
         ref={bottomSheetRef}
@@ -56,7 +49,6 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         index={0}
         enablePanDownToClose={true}
         enableOverDrag={true}
-        onChange={onDismiss}
         onDismiss={onClose}
         handleComponent={() => null}
         style={styles.bottomSheet}

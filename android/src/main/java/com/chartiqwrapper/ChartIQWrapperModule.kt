@@ -285,6 +285,9 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
     if (drawingParameter != null) {
       handler.post(Runnable {
+        if(value == "true" || value == "false"){
+          chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, (value == "true").toString())
+        }
         chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, value)
       })
     }

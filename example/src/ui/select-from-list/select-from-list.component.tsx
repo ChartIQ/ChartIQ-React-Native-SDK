@@ -119,7 +119,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
           renderItem={({ item }) => (
             <ListItem onPress={() => onPress(item)} title={item.value}>
               {selectedItem?.key === item.key ? (
-                <Icons.check fill={theme.colors.colorPrimary} />
+                <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
               ) : null}
             </ListItem>
           )}

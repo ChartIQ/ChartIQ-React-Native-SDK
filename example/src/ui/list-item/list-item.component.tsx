@@ -37,7 +37,7 @@ const ListItem: React.FC<ListItemProps> = ({
 
   return (
     <View style={[styles.containerBackground, containerStyle]}>
-      {topBorder ? <View style={[styles.border, topBorderStyles]} /> : null}
+      {topBorder ? <View style={[styles.borderTop, topBorderStyles]} /> : null}
       <Pressable onPress={onPress} style={[styles.container, style]}>
         {title ? <Text style={[styles.title, textStyle]}>{title}</Text> : null}
         {value ? (
@@ -49,7 +49,7 @@ const ListItem: React.FC<ListItemProps> = ({
         {titleComponent ? titleComponent : null}
         {children}
       </Pressable>
-      {bottomBorder ? <View style={[styles.border, bottomBorderStyles]} /> : null}
+      {bottomBorder ? <View style={[styles.borderBottom, bottomBorderStyles]} /> : null}
     </View>
   );
 };
@@ -59,8 +59,12 @@ const createStyles = (theme: Theme) =>
     containerBackground: {
       backgroundColor: theme.colors.background,
     },
-    border: {
-      borderWidth: 1,
+    borderTop: {
+      borderTopWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    borderBottom: {
+      borderBottomWidth: 1,
       borderColor: theme.colors.border,
     },
     container: {

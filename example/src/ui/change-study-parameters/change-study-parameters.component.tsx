@@ -253,7 +253,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                       }
                       title={item.name}
                     >
-                      <Text>{item.value}</Text>
+                      <Text style={styles.input}>{item.value}</Text>
                     </ListItem>
                   );
                 }

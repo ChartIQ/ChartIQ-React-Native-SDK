@@ -480,6 +480,10 @@ class ChartIqWrapperViewManager: RCTViewManager {
         print("log_chart, setDrawingParams")
 
         defaultQueue.async {
+            if(value == "true" || value == "false") {
+                self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName, value: value == "true")
+                return
+            }
             self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName, value: value)
         }
     }
