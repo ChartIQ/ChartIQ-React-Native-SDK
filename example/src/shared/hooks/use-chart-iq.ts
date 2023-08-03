@@ -374,7 +374,9 @@ export const useChartIQ = (session: string) => {
   const toggleFullScreen = () => {
     setIsFullScreen((prevState) => {
       if (!prevState) {
-        toggleDrawingToolSelector();
+        setIsDrawing(false);
+        drawingManagerRef.current?.hide();
+        ChartIQ.disableDrawing();
       }
       return !prevState;
     });
