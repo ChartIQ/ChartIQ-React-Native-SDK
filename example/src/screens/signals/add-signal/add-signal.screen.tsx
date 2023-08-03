@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
+  Pressable,
 } from 'react-native';
 import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq';
 import { TextInput } from 'react-native-gesture-handler';
@@ -177,23 +178,16 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const data = Array.from(conditions).map(([id, condition]) => ({ id, condition }));
 
   useEffect(() => {
-    if (selectedStudy && conditions.size > 0 && name.length > 0) {
-      navigation.setOptions({
-        headerRight: () => (
-          <Text disabled={false} style={styles.saveButton} onPress={handleSave}>
+    const enabled = selectedStudy && conditions.size > 0 && name.length > 0;
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable disabled={!enabled} onPress={handleSave}>
+          <Text style={enabled ? styles.saveButton : styles.saveButtonDisabled}>
             {translations.Save}
           </Text>
-        ),
-      });
-    } else {
-      navigation.setOptions({
-        headerRight: () => (
-          <Text disabled={true} style={styles.saveButtonDisabled} onPress={handleSave}>
-            {translations.Save}
-          </Text>
-        ),
-      });
-    }
+        </Pressable>
+      ),
+    });
   }, [
     conditions.size,
     handleSave,
@@ -228,15 +222,14 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
       navigation.setOptions({
         headerLeft: () => {
           return (
-            <Text
-              style={styles.saveButton}
+            <Pressable
               onPress={() => {
                 ChartIQ.removeStudy(selectedStudy);
                 navigation.goBack();
               }}
             >
-              {translations.cancel}
-            </Text>
+              <Text style={styles.saveButton}>{translations.cancel}</Text>
+            </Pressable>
           );
         },
       });
