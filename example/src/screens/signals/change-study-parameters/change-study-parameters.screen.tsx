@@ -65,10 +65,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
         changeStudy: {
           study: {
             ...study,
-            outputs: data.outputs,
-            name: data.studyName,
-            shortName: data.studyName,
-            type: data.type ?? study.type,
+            ...data,
           },
         },
       });

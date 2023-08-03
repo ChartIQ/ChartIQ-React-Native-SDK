@@ -12,6 +12,7 @@ import com.chartiq.sdk.model.signal.*
 import com.chartiq.sdk.model.study.Study
 import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
+import com.chartiq.sdk.model.study.StudySimplified
 import com.facebook.react.bridge.*
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -468,7 +469,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun setStudyParameters(study: ReadableMap, parameters: ReadableArray, promise: Promise) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setStudyParameters(study.toChartIQStudy(), parameters.toStudyParameterModelList()) {
-        promise.resolve(gson.toJson(it))
+        val studySimplified = Arguments.createMap()
+        studySimplified.putString("name", it.studyName)
+        studySimplified.putString("shortName", it.studyName)
+        studySimplified.putString("type", it.type)
+        studySimplified.putMap("outputs", it.outputs?.toReadableMap())
+        promise.resolve(studySimplified)
       }
     })
   }
@@ -750,4 +756,8 @@ private fun ReadableMap.toSignal(): Signal{
   val joiner = this.getString("joiner")!!.toSignalJoiner()
   Log.println(Log.DEBUG, "Signal", "Signal: $uniqueId $name $conditions $description $study $disabled $joiner")
   return Signal(uniqueId, name, conditions, joiner, description, disabled, study)
+}
+
+private fun  Map<String, Any>.toReadableMap(): ReadableMap {
+  return Arguments.makeNativeMap(this)
 }

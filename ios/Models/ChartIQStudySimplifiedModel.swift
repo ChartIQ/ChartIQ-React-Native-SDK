@@ -20,8 +20,10 @@ public class ChartIQStudySimplidiedModel {
     
     public func toDictionary() -> [String: Any] {
         return [
-            "studyName": studyName,
+            "name": studyName,
+            "shortName": studyName,
             "type": type ?? "",
+            "fullName": studyName,
             "outputs": self.outputs as Any,
         ]
     }

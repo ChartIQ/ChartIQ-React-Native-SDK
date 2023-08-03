@@ -1,6 +1,8 @@
 export interface Study {
   name: string;
+  /** IOS specific */
   fullName: string;
+  /** IOS specific */
   originalName?: string;
   attributes: {
     [key: string]: unknown;
@@ -30,9 +32,12 @@ export interface Study {
 }
 
 export type StudySimplified = {
-  studyName: string;
-  type: string | null;
+  name: string;
+  shortName: string;
+  type: string;
   outputs: { [key: string]: string };
+  /** IOS specific */
+  fullName?: string;
 };
 
 export type StudyParameterType = 'Inputs' | 'Outputs' | 'Parameters';

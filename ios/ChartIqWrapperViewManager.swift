@@ -291,7 +291,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
                     outputParams[row]["value"] = outputParams[row]["color"]
                 }
                 resolve(outputParams)
-            } else if studyParameterType == "Outputs" {
+            } else if studyParameterType == "Parameters" {
                 let parameters = self.chartIQWrapperView.chartIQView.getStudyParameters(chartIQStudy, type: .parameters)
                 resolve(parameters)
             } else {
@@ -513,6 +513,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 return
             }
             let response = signalStudy.toDictionary()
+           
             resolve(response)
         }
     }

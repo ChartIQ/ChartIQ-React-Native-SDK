@@ -497,16 +497,10 @@ export async function setStudyParameters(
   study: Study,
   parameter: ChartIQStudyParameterModel[]
 ): Promise<StudySimplified> {
-  const response = await ChartIQWrapperModule.setStudyParameters(
+  return (await ChartIQWrapperModule.setStudyParameters(
     study,
     parameter
-  );
-
-  if (Platform.OS === 'ios') {
-    return response as StudySimplified;
-  }
-
-  return JSON.parse(response) as StudySimplified;
+  )) as StudySimplified;
 }
 
 /**
