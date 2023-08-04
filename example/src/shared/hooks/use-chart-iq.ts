@@ -11,14 +11,12 @@ import {
   ChartIQ,
   OnMeasureChangeEvent,
   QuoteFeedEvent,
-  ChartIQDatafeedParams,
-  ChartQuery,
   ChartSymbol,
   DrawingTool,
 } from 'react-native-chart-iq';
 import { useSharedValue } from 'react-native-reanimated';
 
-import { fetchDataFeedAsync, handleRetry } from '~/api';
+import { RequestHandler } from '~/api';
 import { findLineTypeItemByPatternAndWidth } from '~/assets/icons/line-types/line-types';
 import { colorPickerColors } from '~/constants';
 import { useTheme } from '~/theme';
@@ -35,20 +33,6 @@ import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selecto
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
-const handleRequest = async (input: Omit<ChartIQDatafeedParams, 'id'>, session: string) => {
-  const params = {
-    identifier: input.symbol,
-    enddate: input.end,
-    startdate: input.start,
-    interval: input.interval,
-    period: input.period.toString(),
-    extended: 1,
-    session,
-  } as ChartQuery;
-
-  return await fetchDataFeedAsync(params);
-};
-
 export const useChartIQ = (session: string) => {
   const [initialized, setChartInitialized] = React.useState(false);
   const { isDark } = useTheme();
@@ -62,6 +46,7 @@ export const useChartIQ = (session: string) => {
   const [compareSymbols, setCompareSymbols] = React.useState<Map<string, ColoredChartSymbol>>(
     new Map(),
   );
+  const requestHandler = React.useRef<RequestHandler>(new RequestHandler(session));
   const measureValue = useSharedValue('');
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
@@ -94,18 +79,19 @@ export const useChartIQ = (session: string) => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    try {
-      const response = await handleRequest(params, session);
-      ChartIQ.setInitialData(response, id);
-    } catch (e) {
-      handleRetry(() => {
-        onPullInitialData({
-          nativeEvent: {
-            quoteFeedParam: { id, ...params },
-          },
-        });
-      });
-    }
+    requestHandler.current.add(id, params, 'initial').processRequests();
+    // try {
+    //   const response = await handleRequest(params, session);
+    //   ChartIQ.setInitialData(response, id);
+    // } catch (e) {
+    //   handleRetry(() => {
+    //     onPullInitialData({
+    //       nativeEvent: {
+    //         quoteFeedParam: { id, ...params },
+    //       },
+    //     });
+    //   });
+    // }
   };
 
   const onPullUpdateData = async ({
@@ -113,19 +99,20 @@ export const useChartIQ = (session: string) => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    try {
-      const response = await handleRequest(params, session);
+    requestHandler.current.add(id, params, 'update').processRequests();
+    // try {
+    //   const response = await handleRequest(params, session);
 
-      ChartIQ.setUpdateData(response, id);
-    } catch (e) {
-      handleRetry(() => {
-        onPullUpdateData({
-          nativeEvent: {
-            quoteFeedParam: { id, ...params },
-          },
-        });
-      });
-    }
+    //   ChartIQ.setUpdateData(response, id);
+    // } catch (e) {
+    //   handleRetry(() => {
+    //     onPullUpdateData({
+    //       nativeEvent: {
+    //         quoteFeedParam: { id, ...params },
+    //       },
+    //     });
+    //   });
+    // }
   };
 
   const onPullPagingData = async ({
@@ -133,18 +120,19 @@ export const useChartIQ = (session: string) => {
       quoteFeedParam: { id, ...params },
     },
   }: QuoteFeedEvent) => {
-    try {
-      const response = await handleRequest(params, session);
-      ChartIQ.setPagingData(response, id);
-    } catch (e) {
-      handleRetry(() => {
-        onPullPagingData({
-          nativeEvent: {
-            quoteFeedParam: { id, ...params },
-          },
-        });
-      });
-    }
+    requestHandler.current.add(id, params, 'paging').processRequests();
+    // try {
+    //   const response = await handleRequest(params, session);
+    //   ChartIQ.setPagingData(response, id);
+    // } catch (e) {
+    //   handleRetry(() => {
+    //     onPullPagingData({
+    //       nativeEvent: {
+    //         quoteFeedParam: { id, ...params },
+    //       },
+    //     });
+    //   });
+    // }
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
