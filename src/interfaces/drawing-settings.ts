@@ -1,4 +1,4 @@
-import { Corrective, Decoration, Impulse, Template } from './elliotwave';
+import { Corrective, Decoration, Impulse, Template } from '../enums/elliotwave';
 
 export interface STDDeviationSettings {
   lineWidth1: number;

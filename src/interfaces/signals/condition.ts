@@ -1,5 +1,5 @@
-import { MarkerOption, NullableMarkerOption } from './marker-option';
-import { SignalOperator } from './signal-operator';
+import { SignalOperator } from '../../enums';
+import { MarkerOption, NullableMarkerOption } from '../marker-option';
 
 export interface Condition {
   leftIndicator: string;

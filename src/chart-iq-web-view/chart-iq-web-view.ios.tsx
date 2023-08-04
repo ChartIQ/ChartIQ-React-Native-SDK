@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 
-import { ChartIQDatafeedParams } from '../model';
+import { ChartIQDatafeedParams } from '../interfaces';
 
 import { ChartIqWrapperViewComponent } from './chart-iq-web-view.data';
 import { ChartIqWrapperProps } from './chart-iq-web-view.types';

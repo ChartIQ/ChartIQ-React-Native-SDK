@@ -3,4 +3,6 @@ export {
   StudyParameterModel,
   StudyParameter,
   StudyParameterResponse,
+  ChartIQStudyParameterModel,
+  StudyParameterFieldType,
 } from './study-parameter-model';

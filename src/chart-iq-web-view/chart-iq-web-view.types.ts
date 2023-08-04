@@ -1,6 +1,11 @@
 import { ViewStyle, ViewProps } from 'react-native';
 
-import { ChartIQDatafeedParams, CrosshairState, DataMethod } from '../model';
+import {
+  ChartIQDatafeedParams,
+  CrosshairState,
+  DataMethod,
+} from '../interfaces';
+
 export type ChartIQNativeEvent<T> = { nativeEvent: T };
 export type QuoteFeedEvent = ChartIQNativeEvent<{
   quoteFeedParam: ChartIQDatafeedParams;

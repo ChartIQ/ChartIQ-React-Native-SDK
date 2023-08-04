@@ -1,4 +1,4 @@
-import { DrawingTool } from '../drawingtools';
+import { DrawingTool } from '../../../enums/drawings/drawingtools';
 
 export interface DrawingManager {
   /**

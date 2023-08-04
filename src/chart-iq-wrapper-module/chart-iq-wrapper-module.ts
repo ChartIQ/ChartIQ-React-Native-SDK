@@ -1,21 +1,23 @@
 import { Platform, NativeModules } from 'react-native';
 
 import {
+  ChartType,
   DrawingParams,
   DrawingSettings,
   DrawingTool,
-  OHLCParams,
-  StudyParameter,
-  StudyParameterResponse,
   TimeUnit,
-  ChartType,
+} from '../enums';
+import {
+  ChartIQStudyParameterModel,
+  CrosshairState,
+  OHLCParams,
   Signal,
   Study,
+  StudyParameter,
+  StudyParameterResponse,
   StudyParameterType,
   StudySimplified,
-  CrosshairState,
-  ChartIQStudyParameterModel,
-} from '../model';
+} from '../interfaces';
 
 const {
   ChartIQWrapperModule: AndroidModule,

@@ -1,6 +1,6 @@
 import { lineTypePickerData } from '~/assets/icons/line-types/line-types';
 
-import { DrawingTool } from '../drawingtools';
+import { DrawingTool } from '../../../enums/drawings/drawingtools';
 
 import { DrawingManager } from './drawing-manager';
 

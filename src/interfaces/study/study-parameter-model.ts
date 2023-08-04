@@ -17,10 +17,10 @@ export type StudyParameterFieldType =
   | 'Text'
   | 'Checkbox';
 
-export type StudyParameterResponse = {
+export interface StudyParameterResponse {
   fieldType: StudyParameterFieldType;
   fieldValue: string;
-};
+}
 
 export interface StudyParameter {
   defaultValue: number | string | boolean;
