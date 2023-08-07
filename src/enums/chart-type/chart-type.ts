@@ -1,3 +1,10 @@
+/**
+ * Needs to determine the type of chart to be displayed.
+ * @example
+ * ```typescript
+  ChartIQ.setChartType(ChartType.CANDLE);
+ * ```
+ */
 export enum ChartType {
   CANDLE = 'Candle',
   BAR = 'Bar',
@@ -20,6 +27,13 @@ export enum ChartType {
   None = 'None',
 }
 
+/**
+ * Needs to determine the type of chart aggregation to be displayed.
+ * @example
+ * ```typescript
+ * ChartIQ.setAggregationType(AggregationType.HEIKINASHI);
+ * ```
+ */
 export enum AggregationType {
   HEIKINASHI = 'Heikin Ashi',
   KAGI = 'Kagi',

@@ -1,3 +1,10 @@
+/**
+ * Drawing parameters used for set drawing parameters
+ * @example
+ * ```typescript
+ * ChartIQ.setDrawingParams(DrawingParams.LINE_COLOR, 'red');
+ * ```
+ */
 export enum DrawingParams {
   LINE_COLOR = 'color',
   LINE_TYPE = 'pattern',

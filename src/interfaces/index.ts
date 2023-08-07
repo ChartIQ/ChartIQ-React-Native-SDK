@@ -8,3 +8,4 @@ export * from './theme';
 export * from './data-method';
 export * from './ohlc-param';
 export * from './drawing-settings';
+export * from './supported-drawing-settings';

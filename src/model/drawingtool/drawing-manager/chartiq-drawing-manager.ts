@@ -1,21 +1,9 @@
 import { lineTypePickerData } from '~/assets/icons/line-types/line-types';
 
 import { DrawingTool } from '../../../enums/drawings/drawingtools';
+import { SupportedSettings } from '../../../interfaces';
 
 import { DrawingManager } from './drawing-manager';
-
-export type SupportedSettings = {
-  supportingFillColor: boolean;
-  supportingLineColor: boolean;
-  supportingLineType: boolean;
-  supportingSettings: boolean;
-  supportingFont: boolean;
-  supportingAxisLabel: boolean;
-  supportingDeviations: boolean;
-  supportingFibonacci: boolean;
-  supportingElliottWave: boolean;
-  supportingVolumeProfile: boolean;
-};
 
 export class ChartIQDrawingManager implements DrawingManager {
   isSupportingFillColor(drawingTool: DrawingTool): boolean {
@@ -49,11 +37,7 @@ export class ChartIQDrawingManager implements DrawingManager {
     }
   }
   isSupportingLineColor(drawingTool: DrawingTool): boolean {
-    if (drawingTool === DrawingTool.NO_TOOL) {
-      return false;
-    }
-
-    return true;
+    return drawingTool !== DrawingTool.NO_TOOL;
   }
   isSupportingLineType(drawingTool: DrawingTool): boolean {
     switch (drawingTool) {
@@ -116,43 +100,24 @@ export class ChartIQDrawingManager implements DrawingManager {
     }
   }
   isSupportingElliottWave(drawingTool: DrawingTool): boolean {
-    if (drawingTool === DrawingTool.ELLIOTT_WAVE) {
-      return true;
-    }
-
-    return false;
+    return drawingTool === DrawingTool.ELLIOTT_WAVE;
   }
   isSupportingVolumeProfile(drawingTool: DrawingTool): boolean {
-    if (drawingTool === DrawingTool.VOLUME_PROFILE) {
-      return true;
-    }
-
-    return false;
+    return drawingTool === DrawingTool.VOLUME_PROFILE;
   }
 
   getAvailableDrawingTools(drawingTool: DrawingTool): SupportedSettings {
-    const supportingFillColor = this.isSupportingFillColor(drawingTool);
-    const supportingLineColor = this.isSupportingLineColor(drawingTool);
-    const supportingLineType = this.isSupportingLineType(drawingTool);
-    const supportingSettings = this.isSupportingSettings(drawingTool);
-    const supportingFont = this.isSupportingFont(drawingTool);
-    const supportingAxisLabel = this.isSupportingAxisLabel(drawingTool);
-    const supportingDeviations = this.isSupportingDeviations(drawingTool);
-    const supportingFibonacci = this.isSupportingFibonacci(drawingTool);
-    const supportingElliottWave = this.isSupportingElliottWave(drawingTool);
-    const supportingVolumeProfile = this.isSupportingVolumeProfile(drawingTool);
-
     return {
-      supportingFillColor,
-      supportingLineColor,
-      supportingLineType,
-      supportingSettings,
-      supportingFont,
-      supportingAxisLabel,
-      supportingDeviations,
-      supportingFibonacci,
-      supportingElliottWave,
-      supportingVolumeProfile,
+      supportingFillColor: this.isSupportingFillColor(drawingTool),
+      supportingLineColor: this.isSupportingLineColor(drawingTool),
+      supportingLineType: this.isSupportingLineType(drawingTool),
+      supportingSettings: this.isSupportingSettings(drawingTool),
+      supportingFont: this.isSupportingFont(drawingTool),
+      supportingAxisLabel: this.isSupportingAxisLabel(drawingTool),
+      supportingDeviations: this.isSupportingDeviations(drawingTool),
+      supportingFibonacci: this.isSupportingFibonacci(drawingTool),
+      supportingElliottWave: this.isSupportingElliottWave(drawingTool),
+      supportingVolumeProfile: this.isSupportingVolumeProfile(drawingTool),
     };
   }
 

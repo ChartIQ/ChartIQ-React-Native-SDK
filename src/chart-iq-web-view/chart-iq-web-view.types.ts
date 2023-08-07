@@ -1,10 +1,6 @@
 import { ViewStyle, ViewProps } from 'react-native';
 
-import {
-  ChartIQDatafeedParams,
-  CrosshairState,
-  DataMethod,
-} from '../interfaces';
+import { ChartIQDatafeedParams, DataMethod } from '../interfaces';
 
 export type ChartIQNativeEvent<T> = { nativeEvent: T };
 export type QuoteFeedEvent = ChartIQNativeEvent<{
@@ -12,9 +8,6 @@ export type QuoteFeedEvent = ChartIQNativeEvent<{
 }>;
 export type OnStartEvent = ChartIQNativeEvent<{}>;
 export type OnMeasureChangeEvent = ChartIQNativeEvent<{ measure: string }>;
-export type OnChartTypeChangeEvent = ChartIQNativeEvent<{ chartType: string }>;
-export type On = ChartIQNativeEvent<{ chartType: string }>;
-export type OnHudChangeEvent = ChartIQNativeEvent<{ hud: CrosshairState }>;
 
 export interface ChartIqWrapperProps extends ViewProps {
   url: string;

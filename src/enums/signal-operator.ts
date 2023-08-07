@@ -1,3 +1,7 @@
+/**
+ * An enumeration of available signal operators.
+ * @enum SignalOperator
+ */
 export enum SignalOperator {
   GREATER_THAN = 'GREATER_THAN',
   LESS_THAN = 'LESS_THAN',

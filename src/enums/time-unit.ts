@@ -1,4 +1,5 @@
 /**
+ * An enumeration of available time units.
  * @enum TimeUnit
  */
 export enum TimeUnit {

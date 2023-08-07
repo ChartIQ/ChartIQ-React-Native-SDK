@@ -80,18 +80,6 @@ export const useChartIQ = (session: string) => {
     },
   }: QuoteFeedEvent) => {
     requestHandler.current.add(id, params, 'initial').processRequests();
-    // try {
-    //   const response = await handleRequest(params, session);
-    //   ChartIQ.setInitialData(response, id);
-    // } catch (e) {
-    //   handleRetry(() => {
-    //     onPullInitialData({
-    //       nativeEvent: {
-    //         quoteFeedParam: { id, ...params },
-    //       },
-    //     });
-    //   });
-    // }
   };
 
   const onPullUpdateData = async ({
@@ -100,19 +88,6 @@ export const useChartIQ = (session: string) => {
     },
   }: QuoteFeedEvent) => {
     requestHandler.current.add(id, params, 'update').processRequests();
-    // try {
-    //   const response = await handleRequest(params, session);
-
-    //   ChartIQ.setUpdateData(response, id);
-    // } catch (e) {
-    //   handleRetry(() => {
-    //     onPullUpdateData({
-    //       nativeEvent: {
-    //         quoteFeedParam: { id, ...params },
-    //       },
-    //     });
-    //   });
-    // }
   };
 
   const onPullPagingData = async ({
@@ -121,18 +96,6 @@ export const useChartIQ = (session: string) => {
     },
   }: QuoteFeedEvent) => {
     requestHandler.current.add(id, params, 'paging').processRequests();
-    // try {
-    //   const response = await handleRequest(params, session);
-    //   ChartIQ.setPagingData(response, id);
-    // } catch (e) {
-    //   handleRetry(() => {
-    //     onPullPagingData({
-    //       nativeEvent: {
-    //         quoteFeedParam: { id, ...params },
-    //       },
-    //     });
-    //   });
-    // }
   };
 
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {

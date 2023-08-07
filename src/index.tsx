@@ -1,7 +1,5 @@
 import ChartIQView, {
   ChartIQNativeEvent,
-  OnChartTypeChangeEvent,
-  OnHudChangeEvent,
   OnMeasureChangeEvent,
   OnStartEvent,
   QuoteFeedEvent,
@@ -12,8 +10,6 @@ export {
   ChartIQ,
   ChartIQView,
   ChartIQNativeEvent,
-  OnChartTypeChangeEvent,
-  OnHudChangeEvent,
   OnMeasureChangeEvent,
   OnStartEvent,
   QuoteFeedEvent,

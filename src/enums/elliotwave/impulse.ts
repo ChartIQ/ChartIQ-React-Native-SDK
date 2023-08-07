@@ -1,3 +1,6 @@
+/**
+ * An enumeration of available impulses.
+ */
 export enum Impulse {
   ROMAN_CAPITAL = 'I II III IV V',
   ROMAN_NORMAL = 'i ii iii iv v',

@@ -1,3 +1,6 @@
+/**
+ * An enumeration of available templates.
+ */
 export enum Template {
   GRAND_SUPERCYCLE = 'Grand Supercycle',
   SUPERCYCLE = 'Supercycle',

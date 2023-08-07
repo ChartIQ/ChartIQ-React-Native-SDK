@@ -1,3 +1,6 @@
+/**
+ * An enumeration of available correctives.
+ */
 export enum Corrective {
   ABC_CAPITAL = 'A B C',
   ABC_NORMAL = 'a b c',
