@@ -33,6 +33,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     return "ChartIQWrapperModule"
   }
 
+  @ReactMethod
+  fun setSymbol(symbol: String, promise: Promise) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().setSymbol(symbol)
+    })
+  }
 
   @ReactMethod
   fun setInitialData(data: ReadableArray, id: String) {

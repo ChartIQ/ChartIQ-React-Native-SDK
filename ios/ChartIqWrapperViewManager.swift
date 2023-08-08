@@ -22,6 +22,14 @@ class ChartIqWrapperViewManager: RCTViewManager {
         return true
     }
     
+    @objc func setSymbol(_ symbol: String){
+        defaultQueue.async {
+            if(!symbol.isEmpty){
+                self.chartIQWrapperView.chartIQView.loadChart(symbol)
+            }
+        }
+    }
+    
     @objc func setInitialData(_ data: [[String: Any]], id: String) {
         print("log_chart, setInitialData")
         defaultQueue.async {

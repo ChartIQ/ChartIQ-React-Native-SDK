@@ -4,8 +4,9 @@
 @interface RCT_EXTERN_MODULE(ChartIqWrapperViewManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(url, NSString)
-RCT_EXPORT_VIEW_PROPERTY(symbol, NSString)
 RCT_EXPORT_VIEW_PROPERTY(dataMethod, NSString)
+
+RCT_EXTERN_METHOD(setSymbol: (NSString*)symbol)
 
 RCT_EXTERN_METHOD(setInitialData: (NSArray *)data id:(NSString *)id)
 RCT_EXTERN_METHOD(setUpdateData: (NSArray *)data id:(NSString *)id)

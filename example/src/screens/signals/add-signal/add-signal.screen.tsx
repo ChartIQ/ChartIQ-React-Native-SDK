@@ -66,11 +66,11 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           newConditions.set(key, {
             ...condition,
             leftIndicator: condition.leftIndicator.replace(
-              selectedStudy?.shortName || '',
+              condition.leftIndicator || '',
               changedStudy.name,
             ),
             rightIndicator: condition.rightIndicator
-              ? condition.rightIndicator.replace(selectedStudy?.shortName || '', changedStudy.name)
+              ? condition.rightIndicator.replace(condition.rightIndicator || '', changedStudy.name)
               : '',
           });
         });
@@ -78,7 +78,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         return newConditions;
       });
     }
-  }, [changedStudy, selectedStudy?.shortName]);
+  }, [changedStudy]);
 
   const onConditionChange = useCallback(() => {
     if (addCondition?.condition) {

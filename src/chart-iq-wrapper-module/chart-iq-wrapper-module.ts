@@ -29,6 +29,10 @@ const ChartIQWrapperModule = Platform.select({
   android: AndroidModule,
 });
 
+export async function setSymbol(symbol: string) {
+  await ChartIQWrapperModule.setSymbol(symbol);
+}
+
 /**
  * Set data for the returned onPullInitialData quote feed params by it's id
  * @param {OHLCParams[]} data

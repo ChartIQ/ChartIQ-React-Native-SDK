@@ -21,13 +21,6 @@ class ChartIqWrapperView: UIView {
             chartIQView.setDataMethod(dataMethod == "push" ? .push : .pull)
         }
     }
-    
-    @objc var symbol: String = "" {
-        didSet {
-            print("log_chart, SET SYMBOL BY PROP")
-            chartIQView.loadChart(symbol)
-        }
-    }
  
     override init(frame: CGRect) {
         super.init(frame: frame)

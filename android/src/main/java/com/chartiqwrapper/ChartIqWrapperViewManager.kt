@@ -33,9 +33,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   private lateinit var chartIQ: ChartIQ
   private lateinit var view: LinearLayout
 
-  private var startCallback: OnStartCallback = OnStartCallback {
-    dispatchStart()
-  }
   private var url: String = ""
   override fun getName() = "ChartIqWrapperView"
 
@@ -59,13 +56,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       }else{
         chartIQ.setDataMethod(DataMethod.PULL, symbol)
       }
-    }
-  }
-
-  @ReactProp(name = "symbol")
-  fun setSymbol(view: ViewGroup, symbol: String?){
-    if(symbol != null){
-      chartIQ.setSymbol(symbol)
     }
   }
 
@@ -113,6 +103,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       dispatchOnChartTypeChanged()
       dispatchOnChartAggregationTypeChanged()
       addMeasureListener()
+
     }
   }
 
@@ -256,8 +247,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           dispatchOnPullPagingData(params, params.callbackId!!)
         }
       })
+      Log.println(Log.INFO, "MY_TAG", "BEFORE START")
+      start{
+        Log.println(Log.INFO, "MY_TAG", "STARTED")
+        dispatchStart()
+      }
     }
-
-    chartIQ.start(startCallback)
   }
 }
