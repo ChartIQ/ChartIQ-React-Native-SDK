@@ -7,16 +7,9 @@ import {
 } from 'expo-screen-orientation';
 import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
-import {
-  ChartIQ,
-  OnMeasureChangeEvent,
-  QuoteFeedEvent,
-  ChartSymbol,
-  DrawingTool,
-} from 'react-native-chart-iq';
+import { ChartIQ, OnMeasureChangeEvent, ChartSymbol, DrawingTool } from 'react-native-chart-iq';
 import { useSharedValue } from 'react-native-reanimated';
 
-import { RequestHandler } from '~/api';
 import { findLineTypeItemByPatternAndWidth } from '~/assets/icons/line-types/line-types';
 import { colorPickerColors } from '~/constants';
 import { useTheme } from '~/theme';
@@ -33,7 +26,7 @@ import { IntervalItem, intervals } from '~/ui/interval-selector/interval-selecto
 
 import { useUpdateDrawingTool } from './use-update-drawing-tool';
 
-export const useChartIQ = (session: string) => {
+export const useChartIQ = () => {
   const [initialized, setChartInitialized] = React.useState(false);
   const { isDark } = useTheme();
   const [symbol, setSymbol] = React.useState<null | string>(null);
@@ -46,7 +39,6 @@ export const useChartIQ = (session: string) => {
   const [compareSymbols, setCompareSymbols] = React.useState<Map<string, ColoredChartSymbol>>(
     new Map(),
   );
-  const requestHandler = React.useRef<RequestHandler>(new RequestHandler(session));
   const measureValue = useSharedValue('');
 
   const drawingToolSelectorRef = React.useRef<BottomSheetMethods>(null);
@@ -74,31 +66,8 @@ export const useChartIQ = (session: string) => {
     compareSymbolSelectorRef.current?.present('');
   };
 
-  const onPullInitialData = async ({
-    nativeEvent: {
-      quoteFeedParam: { id, ...params },
-    },
-  }: QuoteFeedEvent) => {
-    requestHandler.current.add(id, params, 'initial').processRequests();
-  };
-
-  const onPullUpdateData = async ({
-    nativeEvent: {
-      quoteFeedParam: { id, ...params },
-    },
-  }: QuoteFeedEvent) => {
-    requestHandler.current.add(id, params, 'update').processRequests();
-  };
-
-  const onPullPagingData = async ({
-    nativeEvent: {
-      quoteFeedParam: { id, ...params },
-    },
-  }: QuoteFeedEvent) => {
-    requestHandler.current.add(id, params, 'paging').processRequests();
-  };
-
   const handleSymbolChange = ({ symbol }: ChartSymbol) => {
+    ChartIQ.setSymbol(symbol);
     setSymbol(symbol);
   };
 
@@ -176,6 +145,7 @@ export const useChartIQ = (session: string) => {
 
     if (!symbol) {
       setSymbol('AAPL');
+      ChartIQ.setSymbol('AAPL');
     } else {
       setSymbol(symbol);
     }
@@ -336,9 +306,6 @@ export const useChartIQ = (session: string) => {
   return {
     onChartTypeChanged,
     onMeasureChanged,
-    onPullInitialData,
-    onPullUpdateData,
-    onPullPagingData,
     onDrawingToolChanged,
     onChartAggregationTypeChanged,
 

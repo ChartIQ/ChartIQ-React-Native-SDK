@@ -3,12 +3,12 @@ import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIQ, ChartIQView } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import uuid from 'react-native-uuid';
 
 import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
+import { usePullData } from '~/shared/hooks/use-pull-data';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
@@ -25,21 +25,10 @@ import SymbolSelector from '~/ui/symbol-selector/symbol-selector.component';
 export default function Root() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const [session, setSession] = React.useState<string | null>();
 
   const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
   const intervalSelectorRef = React.useRef<BottomSheetMethods>(null);
   const chartStyleSelectorRef = React.useRef<BottomSheetMethods>(null);
-
-  React.useEffect(() => {
-    AsyncStorage.getItem(asyncStorageKeys.session)
-      .then((session) => {
-        setSession(session);
-      })
-      .catch(() => {
-        AsyncStorage.setItem(asyncStorageKeys.session, uuid.v4() as string);
-      });
-  }, []);
 
   const toggleSymbolSelector = () => {
     symbolSelectorRef.current?.present('');
@@ -56,9 +45,6 @@ export default function Root() {
   const {
     onMeasureChanged,
     onDrawingToolChanged,
-    onPullInitialData,
-    onPullPagingData,
-    onPullUpdateData,
     toggleDrawingToolSelector,
     toggleCompareSymbolSelector,
     toggleFullScreen,
@@ -85,7 +71,9 @@ export default function Root() {
 
     initChart,
     initialized,
-  } = useChartIQ(session ?? '');
+  } = useChartIQ();
+
+  const { onPullInitialData, onPullPagingData, onPullUpdateData } = usePullData();
 
   function showDrawingToolsSelector() {
     drawingToolSelectorRef.current?.present('');
@@ -131,7 +119,6 @@ export default function Root() {
       <View style={styles.chartContainer}>
         <ChartIQView
           url={WEB_VIEW_SOURCE}
-          symbol={symbol}
           dataMethod="pull"
           onStart={initChart}
           onPullInitialData={onPullInitialData}

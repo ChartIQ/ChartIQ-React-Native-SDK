@@ -53,6 +53,12 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
 
   const handleToggleSignal = (_: boolean, signal: Signal) => {
     ChartIQ.toggleSignal(signal);
+    setActiveSignal((prevState) =>
+      prevState.map((prevSignal) => ({
+        ...prevSignal,
+        disabled: signal.name === prevSignal.name ? !prevSignal.disabled : prevSignal.disabled,
+      })),
+    );
     get();
   };
 
@@ -65,6 +71,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
       <FlatList
         data={activeSignals}
         contentContainerStyle={{ flex: 1 }}
+        keyExtractor={({ name }) => name}
         renderItem={({ item }) => (
           <SwipableItem
             rightActionButtons={[

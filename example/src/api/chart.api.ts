@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { Alert } from 'react-native';
 import {
   ChartQuery,
   ChartSymbol,
@@ -11,7 +10,9 @@ import {
 
 import { HOST_SIMULATOR, HOST_SYMBOLS } from '../constants/network.constants';
 
-const customAxiosApi: AxiosInstance = axios.create({});
+const customAxiosApi: AxiosInstance = axios.create({
+  timeout: 5000,
+});
 
 interface RetryConfig extends AxiosRequestConfig {
   retry: number;
@@ -21,6 +22,7 @@ interface RetryConfig extends AxiosRequestConfig {
 const globalConfig: RetryConfig = {
   retry: 3,
   retryDelay: 1000,
+  timeout: 5000,
 };
 
 customAxiosApi.interceptors.response.use(
@@ -75,18 +77,4 @@ export const fetchSymbolsAsync = async (input: SymbolParams) => {
   }
 
   return [];
-};
-
-export const handleRetry = (onRetry: () => void) => {
-  Alert.alert('Something went wrong', 'The internet connection appears to be offline.', [
-    {
-      text: 'Cancel',
-    },
-    {
-      text: 'Retry',
-      onPress: () => {
-        onRetry();
-      },
-    },
-  ]);
 };

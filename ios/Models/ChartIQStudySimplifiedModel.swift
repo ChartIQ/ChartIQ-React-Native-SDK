@@ -1,10 +1,3 @@
-//
-//  ChartIQStudySimplifiedModel.swift
-//  chartiq_flutter_sdk
-//
-//  Created by user on 20.06.2023.
-//
-
 import Foundation
 
 public class ChartIQStudySimplidiedModel {

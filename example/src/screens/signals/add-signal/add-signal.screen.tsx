@@ -131,7 +131,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
     const item = studies.find((item) => item.display === value) ?? null;
     const study = await ChartIQ.addSignalStudy(item?.shortName ?? '');
 
-    if (selectedStudy && selectedStudy.display !== study?.display) {
+    if (selectedStudy) {
       ChartIQ.removeStudy(selectedStudy);
       setConditions(new Map());
     }
@@ -260,8 +260,9 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
                     width: screenWidth - 32,
                   },
                 ]}
-                // multiline
-                // numberOfLines={2}
+                multiline
+                numberOfLines={2}
+                keyboardType="default"
                 defaultValue={description}
                 placeholder={descriptionPlaceholder}
                 onChangeText={setDescription}

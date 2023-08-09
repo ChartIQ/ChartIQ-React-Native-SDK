@@ -82,6 +82,7 @@ const DrawingToolManager = forwardRef<DrawingToolManagerMethods, DrawingToolMana
       'worklet';
       translate.value = withTiming(100, { duration: 300 });
       height.value = withTiming(0, { duration: 300 });
+      pickerHeight.value = withTiming(0, { duration: 300 });
       runOnJS(setActiveTool)(null);
     };
 

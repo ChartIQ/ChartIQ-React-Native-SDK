@@ -1,6 +1,7 @@
+import { Alert } from 'react-native';
 import { ChartIQ, ChartIQDatafeedParams, ChartQuery } from 'react-native-chart-iq';
 
-import { fetchDataFeedAsync, handleRetry } from '~/api';
+import { fetchDataFeedAsync } from '~/api';
 
 const handleRequest = async (input: Omit<ChartIQDatafeedParams, 'id'>, session: string) => {
   const params = {
@@ -20,31 +21,50 @@ type CallbackType = 'initial' | 'update' | 'paging';
 type RequestConfig = Omit<ChartIQDatafeedParams, 'id'>;
 
 export class RequestHandler {
-  private session: string;
+  private session: string | null = null;
   private requestMap = new Map<string, RequestConfig & { type: CallbackType }>();
-  constructor(session: string) {
-    this.session = session;
-  }
+  private error = false;
+
   private processing = false;
 
-  add(id: string, config: RequestConfig, type: CallbackType) {
+  public initSession: (session: string) => void = (session) => {
+    this.session = session;
+  };
+
+  public add(id: string, config: RequestConfig, type: CallbackType) {
     this.requestMap.set(id, { ...config, type });
     return this;
   }
 
-  remove(id: string) {
+  private remove(id: string) {
     this.requestMap.delete(id);
   }
 
-  async handle(id: string) {
+  private handleRetry(onRetry: () => void) {
+    this.error = true;
+
+    Alert.alert('Something went wrong', 'The internet connection appears to be offline.', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Retry',
+        onPress: () => {
+          onRetry();
+        },
+      },
+    ]);
+  }
+
+  private async handle(id: string) {
     const config = this.requestMap.get(id);
 
-    if (!config) {
+    if (!config || !this.session) {
       return;
     }
 
     try {
-      const response = await handleRequest(config, this.session);
+      const response = await handleRequest(config, this.session || '');
       switch (config.type) {
         case 'initial':
           ChartIQ.setInitialData(response, id);
@@ -58,21 +78,27 @@ export class RequestHandler {
       }
       this.remove(id);
     } catch (e) {
-      handleRetry(() => {
+      if (this.error) {
+        return;
+      }
+
+      this.handleRetry(() => {
+        this.error = false;
         this.handle(id);
-        this.remove(id);
       });
     }
   }
 
   async processRequests() {
-    if (this.processing) return;
+    if (this.processing || this.requestMap.size === 0) return;
 
     const keys = Array.from(this.requestMap.keys());
+
     for (const key of keys) {
       this.processing = true;
       await this.handle(key);
     }
+
     this.processing = false;
   }
 }
