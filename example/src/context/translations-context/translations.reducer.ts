@@ -1,8 +1,6 @@
-import {
-  ChartIQLanguages,
-  defaultENTranslations,
-  defaultENTranslationsMap,
-} from '~/constants/languages';
+import { ChartIQLanguages } from 'react-native-chart-iq';
+
+import { defaultENTranslations, defaultENTranslationsMap } from '~/constants/languages';
 
 import { TranslationsAction } from './translations-actions';
 import { TranslationsState } from './translations-state-types';

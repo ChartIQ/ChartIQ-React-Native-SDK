@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq';
+import { ChartIQ, ChartIQLanguages } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ChartIQLanguages } from '~/constants/languages';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { Theme, useTheme } from '~/theme';
 import { ListItem } from '~/ui/list-item';

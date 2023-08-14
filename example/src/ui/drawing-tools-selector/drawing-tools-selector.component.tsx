@@ -242,30 +242,6 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
             },
           ];
 
-    const SectionFooter: RenderSectionHeader = ({ section: { data } }) => {
-      if (selectedFilter === DrawingToolTags.favorites && data.length === 0) {
-        return (
-          <View style={styles.listEmptyContainer}>
-            <View style={styles.space64} />
-
-            <Image
-              source={theme.isDark ? images.favoritesEmpty.dark : images.favoritesEmpty.light}
-            />
-            <View style={styles.space32} />
-            <>
-              <Text style={styles.emptyListTextTitle}>No Favorite Drawing Tools yet</Text>
-              <View style={styles.space16} />
-              <Text style={styles.emptyListTextDescription}>
-                Swipe left to Add/Remove Drawing Tool to Favorites
-              </Text>
-            </>
-          </View>
-        );
-      }
-
-      return null;
-    };
-
     const cancelButtonIndex = 2;
     const destructiveButtonIndex = 1;
 
@@ -377,7 +353,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
           renderSectionHeader={SectionHeader}
           style={styles.contentContainer}
           contentContainerStyle={styles.contentContainer}
-          renderSectionFooter={SectionFooter}
+          // renderSectionFooter={SectionFooter}
           keyExtractor={(item) => item.name}
           SectionSeparatorComponent={() => <View style={styles.space16} />}
         />

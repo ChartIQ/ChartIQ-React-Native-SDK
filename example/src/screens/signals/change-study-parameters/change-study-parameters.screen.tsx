@@ -57,7 +57,11 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
       })) || [];
 
     if (inputParameters.length === 0 && outputParameters.length === 0) {
-      navigation.goBack();
+      navigation.navigate(SignalsStack.AddSignal, {
+        changeStudy: {
+          study: study,
+        },
+      });
     }
 
     ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]).then((data) => {
@@ -79,8 +83,13 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
           <Text style={styles.buttonText}>{translations.Save}</Text>
         </Pressable>
       ),
+      headerLeft: () => (
+        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
+          <Text style={styles.buttonText}>{translations.cancel}</Text>
+        </Pressable>
+      ),
     });
-  }, [handleSave, navigation, study, styles.buttonText, translations.Save]);
+  }, [handleSave, navigation, study, styles.buttonText, translations.Save, translations.cancel]);
 
   return (
     <SafeAreaView edges={edges} style={styles.container}>

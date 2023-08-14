@@ -16,6 +16,7 @@ interface SwipableSymbolProps extends PropsWithChildren {
     isOvershoot?: boolean;
   }>;
   enabled?: boolean;
+  removable?: boolean;
 }
 
 const buildInterpolationConfig = (
@@ -42,6 +43,7 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
   children,
   rightActionButtons,
   enabled = true,
+  removable = false,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -84,7 +86,7 @@ const SwipableItem: React.FC<SwipableSymbolProps> = ({
   };
 
   return (
-    <Reanimated.View exiting={SlideOutLeft.duration(200)}>
+    <Reanimated.View exiting={removable ? SlideOutLeft.duration(200) : undefined}>
       <Swipeable
         enabled={enabled}
         ref={ref}

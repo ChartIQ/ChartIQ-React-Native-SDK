@@ -89,6 +89,7 @@ const Studies: React.FC = () => {
           const [name, value] = item.display.split(' (', 2);
           return (
             <SwipableItem
+              removable
               rightActionButtons={[
                 {
                   key: 'study-item-remove',

@@ -24,6 +24,7 @@ const SwipableSymbol: React.FC<SwipableSymbolProps> = ({
   return (
     <View style={styles.container}>
       <SwipableItem
+        removable
         rightActionButtons={[
           {
             onPress: () => handleDelete(item),

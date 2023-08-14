@@ -29,6 +29,13 @@ const ChartIQWrapperModule = Platform.select({
   android: AndroidModule,
 });
 
+/**
+ * Set chart symbol
+ * @param {string} symbol
+ * @returns {Promise<void>}
+ * @example
+ * ChartIQ.setSymbol("AAPL")
+ */
 export async function setSymbol(symbol: string) {
   await ChartIQWrapperModule.setSymbol(symbol);
 }
@@ -52,7 +59,7 @@ export function setInitialData(data: OHLCParams[], id: string) {
  * @returns void
  * @example
  * ChartIQ.setUpdateData(data, id)
- *   **/
+ */
 export function setUpdateData(data: OHLCParams[], id: string) {
   ChartIQWrapperModule.setUpdateData(data, id);
 }
@@ -86,12 +93,12 @@ export function setPeriodicity(
 }
 
 /** Set chart style
- * @param obj string
- * @param attr string
- * @param value string
- * @returns void
+ * @param {string} obj
+ * @param {string} attr
+ * @param {string} value
+ * @returns {void}
  */
-export function setChartStyle(obj: string, attr: string, value: string) {
+export function setChartStyle(obj: string, attr: string, value: string): void {
   ChartIQWrapperModule.setChartStyle(obj, attr, value);
 }
 
@@ -147,7 +154,7 @@ export function getChartType(): Promise<string> {
  * @param {boolean} isComparison
  * @returns {void}
  * @example
- * ChartIQ.addSeries("AAPL", "#ff0000", false)
+ * ChartIQ.addSeries("AAPL", "#ff0000", true)
  */
 export function addSeries(
   symbol: string,
@@ -275,16 +282,19 @@ export async function getDrawingParams(
 /**
  * Set drawing parameters
  * @param {DrawingParams | string} parameterName
- * @param {string} value
+ * @param {string | boolean | number} value
  * @returns {void}
  * @example
  * ChartIQ.setDrawingParams(DrawingParams.LINE_COLOR, "#ff0000")
  */
 export function setDrawingParams(
   parameterName: DrawingParams,
-  value: string
+  value: string | boolean
 ): void {
-  ChartIQWrapperModule.setDrawingParams(parameterName, value);
+  const type = typeof value;
+  const input = { parameterName, value, type };
+
+  ChartIQWrapperModule.setDrawingParams(input);
 }
 
 /**
@@ -525,13 +535,13 @@ export async function getActiveSignals(): Promise<Signal[]> {
 
 /**
  * Add signal study by study shortName
- * @param name string
+ * @param {string} shortName
  * @returns {Promise<Study>} study
  * @example
  * ChartIQ.addSignalStudy("ADX")
  */
-export async function addSignalStudy(name: string): Promise<Study> {
-  const response = await ChartIQWrapperModule.addSignalStudy(name);
+export async function addSignalStudy(shortName: string): Promise<Study> {
+  const response = await ChartIQWrapperModule.addSignalStudy(shortName);
   if (Platform.OS === 'ios') {
     return response as Study;
   }
@@ -577,6 +587,9 @@ export function removeSignal(signal: Signal): void {
  * @param {string} languageCode
  * @returns {Promise<Record<string, string>>} translations
  * @example
+ * import {ChartIQ, ChartIQLanguages} from 'react-native-chartiq'
+ * ChartIQ.getTranslations(ChartIQLanguages.EN.code)
+ * @example
  * ChartIQ.getTranslations("en-US")
  */
 export async function getTranslations(
@@ -595,6 +608,10 @@ export async function getTranslations(
  * @param {string} languageCode
  * @returns {void}
  * @example
+ * import {ChartIQ, ChartIQLanguages} from 'react-native-chartiq'
+ * ChartIQ.setLanguage(ChartIQLanguages.EN.code)
+ * @example
+ * import {ChartIQ} from 'react-native-chartiq'
  * ChartIQ.setLanguage("en-US")
  */
 export function setLanguage(languageCode: string): void {

@@ -181,7 +181,7 @@ const DrawingToolSettings: React.FC = () => {
   const toggleShowLines = () => {
     updateDrawingSettings((prevState) => {
       const value = !prevState.waveParameters.showLines;
-      ChartIQ.setDrawingParams(DrawingParams.SHOW_LINES, JSON.stringify(value));
+      ChartIQ.setDrawingParams(DrawingParams.SHOW_LINES, value);
       return {
         ...prevState,
         waveParameters: {

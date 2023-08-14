@@ -28,7 +28,7 @@ RCT_EXTERN_METHOD(removeSeries: (NSString *)symbol)
 RCT_EXTERN_METHOD(enableDrawing: (NSString *)tool)
 RCT_EXTERN_METHOD(disableDrawing)
 RCT_EXTERN_METHOD(getDrawingParams: (NSString *)tool resolver: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(setDrawingParams: (NSString *)parameterName value: (NSString *)value)
+RCT_EXTERN_METHOD(setDrawingParams: (NSDictionary *)drawingParams)
 
 RCT_EXTERN_METHOD(clearDrawing)
 RCT_EXTERN_METHOD(restoreDefaultDrawingConfig: (NSString *)tool all: (BOOL *)all)

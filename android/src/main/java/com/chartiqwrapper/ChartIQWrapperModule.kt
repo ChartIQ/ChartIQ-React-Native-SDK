@@ -285,17 +285,22 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setDrawingParams(parameterName: String, value: String) {
+  fun setDrawingParams(input: ReadableMap) {
+    val parameterName = input.getString("parameterName")
+
+    val value = when (input.getString("type")) {
+      "boolean" -> {
+        input.getBoolean("value")
+      }
+      else -> input.getString("value")
+    }
     val drawingParameter = DrawingParameterType.values().find {
       it.value == parameterName
     }
-
-    if (drawingParameter != null) {
+    if (drawingParameter != null && value != null) {
       handler.post(Runnable {
-        if(value == "true" || value == "false"){
-          chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, (value == "true").toString())
-        }
-        chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter, value)
+        Log.println(Log.INFO, "SET_PARAMS", "class name: ${value.javaClass.name} value:  $value")
+        chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter.value, value)
       })
     }
   }

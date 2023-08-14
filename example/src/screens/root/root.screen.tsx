@@ -1,12 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIQ, ChartIQView } from 'react-native-chart-iq';
+import { ChartIQ, ChartIQLanguages, ChartIQView } from 'react-native-chart-iq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
-import { ChartIQLanguages } from '~/constants/languages';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { usePullData } from '~/shared/hooks/use-pull-data';
 import { useTranslations } from '~/shared/hooks/use-translations';

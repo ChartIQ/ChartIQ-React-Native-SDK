@@ -349,6 +349,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
             <>
               {isEdit && index === 0 ? <View style={styles.space32} /> : null}
               <SwipableItem
+                removable
                 rightActionButtons={[
                   {
                     title: 'Delete',

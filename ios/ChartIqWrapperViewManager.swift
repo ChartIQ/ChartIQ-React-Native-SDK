@@ -22,9 +22,9 @@ class ChartIqWrapperViewManager: RCTViewManager {
         return true
     }
     
-    @objc func setSymbol(_ symbol: String){
+    @objc func setSymbol(_ symbol: String) {
         defaultQueue.async {
-            if(!symbol.isEmpty){
+            if !symbol.isEmpty {
                 self.chartIQWrapperView.chartIQView.loadChart(symbol)
             }
         }
@@ -153,7 +153,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
         defaultQueue.async {
             self.chartIQWrapperView.chartIQView.setAggregationType(aggregationType)
         }
-        
     }
     
     @objc func enableDrawing(_ tool: String) {
@@ -426,13 +425,14 @@ class ChartIqWrapperViewManager: RCTViewManager {
         }
     }
     
-    @objc func setDrawingParams(_ parameterName: String, value: String) {
+    @objc func setDrawingParams(_ drawingParams: NSDictionary) {
+        let parameterName = drawingParams["parameterName"] as? String
+        let value = drawingParams["value"]
+        
         defaultQueue.async {
-            if(value == "true" || value == "false") {
-                self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName, value: value == "true")
-                return
+            if value != nil && parameterName != nil {
+                self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName!, value: value!)
             }
-            self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName, value: value)
         }
     }
     
@@ -446,7 +446,8 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func addSignalStudy(_ studyName: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         defaultQueue.async {
             let studies = self.chartIQWrapperView.chartIQView.getAllStudies().filter {
-                $0.shortName == studyName }
+                $0.shortName == studyName
+            }
             if studies.isEmpty {
                 reject("0", "Error in addSignalStudy, couldn't find study for given studyName \(studyName)", nil)
                 return

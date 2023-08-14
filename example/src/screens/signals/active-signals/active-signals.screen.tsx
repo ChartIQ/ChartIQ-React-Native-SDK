@@ -74,6 +74,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
         keyExtractor={({ name }) => name}
         renderItem={({ item }) => (
           <SwipableItem
+            removable
             rightActionButtons={[
               {
                 key: 'delete-signal-item',
