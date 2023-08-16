@@ -35,7 +35,7 @@ public extension ChartIQCondition {
             "leftIndicator": self.leftIndicator,
             "rightIndicator": self.rightIndicator,
             "signalOperator": self.operator.toString(),
-            "markerOption": self.markerOptions?.toDictionary() as Any
+            "markerOption": self.markerOptions?.toRNDictionary() as Any
         ]
     }
 }
@@ -70,10 +70,10 @@ public extension ChartIQSignalOperator {
 }
 
 public extension ChartIQMarkerOptions {
-    func toDictionary() -> [String: Any] {
+    func toRNDictionary() -> [String: Any] {
         return [
-            "type": self.markerType.stringValue,
-            "color": self.color?.toHexString() as Any,
+            "type": self.markerType.stringValue.uppercased(),
+            "color": self.color?.toHexString() ?? "",
             "signalShape": self.shape.stringValue,
             "label": self.label,
             "signalSize": self.size.stringValue,

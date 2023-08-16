@@ -116,6 +116,7 @@ const createStyles = (theme: Theme) =>
     },
     buttonText: {
       color: theme.colors.colorPrimary,
+      textTransform: 'capitalize',
     },
     input: {
       padding: 0,

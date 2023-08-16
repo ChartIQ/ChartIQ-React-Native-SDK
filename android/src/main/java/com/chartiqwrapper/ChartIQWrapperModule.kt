@@ -299,7 +299,6 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     }
     if (drawingParameter != null && value != null) {
       handler.post(Runnable {
-        Log.println(Log.INFO, "SET_PARAMS", "class name: ${value.javaClass.name} value:  $value")
         chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter.value, value)
       })
     }
