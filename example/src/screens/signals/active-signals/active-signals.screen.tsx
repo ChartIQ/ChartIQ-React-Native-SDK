@@ -40,15 +40,14 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   );
 
   useEffect(() => {
-    if (activeSignals.length !== 0) {
-      navigation.setOptions({
-        headerRight: () => (
+    navigation.setOptions({
+      headerRight: () =>
+        activeSignals.length ? (
           <Pressable hitSlop={defaultHitSlop} onPress={handleAddSignal}>
             <Text style={styles.headerButton}>{translations.Add}</Text>
           </Pressable>
-        ),
-      });
-    }
+        ) : null,
+    });
   }, [activeSignals.length, handleAddSignal, navigation, styles.headerButton, translations.Add]);
 
   const handleToggleSignal = (_: boolean, signal: Signal) => {
