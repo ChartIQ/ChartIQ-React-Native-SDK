@@ -56,6 +56,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const condition = params?.condition;
   const id = params?.id;
   const joiner = params?.joiner;
+  const isEdit = params?.isEdit;
   const selectFromListRef = React.useRef<SelectOptionFromListMethods>(null);
   const colorSelectorRef = React.useRef<ColorSelectorMethods>(null);
   const markerOptionRef = React.useRef<MarkerOptionsFormMethods>(null);
@@ -272,9 +273,13 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       signalOperator,
     };
 
-    navigation.navigate(SignalsStack.AddSignal, { addCondition: { condition: addCondition, id } });
+    navigation.navigate(SignalsStack.AddSignal, {
+      addCondition: { condition: addCondition, id },
+      isEdit,
+    });
   }, [
     id,
+    isEdit,
     navigation,
     outputParams,
     secondIndicatorValue,

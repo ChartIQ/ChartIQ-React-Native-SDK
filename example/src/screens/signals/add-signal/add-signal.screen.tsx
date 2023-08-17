@@ -48,11 +48,11 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const addCondition = params?.addCondition;
   const changedStudy = params?.changeStudy?.study;
   const signalForEdit = params?.signalForEdit?.signal;
+  const isEdit = params.isEdit ?? false;
   const [conditions, setConditions] = useState<Map<string, Condition>>(new Map());
   const [joiner, setJoiner] = useState<SignalJoiner>(SignalJoiner.OR);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [descriptionPlaceholder, setDescriptionPlaceholder] = useState(DESCRIPTION_PLACEHOLDER);
   const height = useHeaderHeight();
 
@@ -142,7 +142,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const handleChangeStudyParams = async () => {
     if (selectedStudy === null) return;
 
-    navigation.navigate(SignalsStack.ChangeStudyParameters, { study: selectedStudy });
+    navigation.navigate(SignalsStack.ChangeStudyParameters, { study: selectedStudy, isEdit });
   };
 
   const handleAddCondition = (id: string, index: number, input?: Condition) => {
@@ -153,6 +153,7 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
         id,
         index,
         joiner,
+        isEdit,
       });
   };
 
@@ -208,12 +209,9 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
       setName(signalForEdit.name);
       setDescription(signalForEdit.description);
       setSelectedStudy(signalForEdit.study);
-      setIsEdit(true);
       navigation.setOptions({
         headerTitle: 'Edit Signal',
       });
-    } else {
-      setIsEdit(false);
     }
   }, [navigation, signalForEdit]);
 
@@ -224,8 +222,11 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
           return (
             <Pressable
               onPress={() => {
-                ChartIQ.removeStudy(selectedStudy);
                 navigation.goBack();
+
+                if (!isEdit) {
+                  ChartIQ.removeStudy(selectedStudy);
+                }
               }}
             >
               <Text style={styles.saveButton}>{translations.cancel}</Text>

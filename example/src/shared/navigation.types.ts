@@ -86,14 +86,19 @@ export type SignalsStackParamList = {
     addCondition?: { condition: Condition; id: string };
     changeStudy?: { study: Study };
     signalForEdit?: { signal: Signal };
+    isEdit?: boolean;
   };
-  [SignalsStack.ChangeStudyParameters]: { study: Study };
+  [SignalsStack.ChangeStudyParameters]: {
+    study: Study;
+    isEdit?: boolean;
+  };
   [SignalsStack.AddCondition]: {
     study: Study;
     condition?: Condition;
     id: string;
     index: number;
     joiner?: SignalJoiner;
+    isEdit?: boolean;
   };
 };
 

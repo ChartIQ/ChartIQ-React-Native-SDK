@@ -17,7 +17,7 @@ export interface SignalParametersProps
 
 const StudyParameters: React.FC<SignalParametersProps> = ({
   route: {
-    params: { study },
+    params: { study, isEdit },
   },
   navigation,
 }) => {
@@ -61,6 +61,7 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
         changeStudy: {
           study: study,
         },
+        isEdit,
       });
     }
 
@@ -72,9 +73,10 @@ const StudyParameters: React.FC<SignalParametersProps> = ({
             ...data,
           },
         },
+        isEdit,
       });
     });
-  }, [navigation, study]);
+  }, [isEdit, navigation, study]);
 
   useEffect(() => {
     navigation.setOptions({

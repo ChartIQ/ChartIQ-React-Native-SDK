@@ -63,7 +63,7 @@ const Signals: React.FC<SignalsProps> = ({ navigation }) => {
   };
 
   const handleEditSignal = (signal: Signal) => {
-    navigation.navigate(SignalsStack.AddSignal, { signalForEdit: { signal } });
+    navigation.navigate(SignalsStack.AddSignal, { signalForEdit: { signal }, isEdit: true });
   };
 
   return (
