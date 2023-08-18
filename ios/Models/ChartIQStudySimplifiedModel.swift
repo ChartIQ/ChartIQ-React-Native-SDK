@@ -4,20 +4,27 @@ public class ChartIQStudySimplidiedModel {
     public let studyName: String
     public let type: String?
     public let outputs: [String: Any]?
+    public let nameParams: String
+    public let originalName: String
     
-    public init(studyName: String, type: String? = "", outputs: [String: Any]?) {
+    public init(studyName: String, type: String? = "", outputs: [String: Any]?, nameParams: String = "", originalName: String = "") {
         self.studyName = studyName
         self.type = type
         self.outputs = outputs
+        self.nameParams = nameParams
+        self.originalName = originalName
     }
     
     public func toDictionary() -> [String: Any] {
         return [
-            "name": studyName,
-            "shortName": studyName,
-            "type": type ?? "",
-            "fullName": studyName,
+            "name": self.studyName,
+            "shortName": self.studyName,
+            "type": self.type ?? "",
+            "fullName": self.studyName,
+            "display": self.studyName,
+            "nameParams": self.nameParams,
             "outputs": self.outputs as Any,
+            "originalName": self.originalName
         ]
     }
 

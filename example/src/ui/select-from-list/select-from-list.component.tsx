@@ -15,6 +15,7 @@ interface SelectOptionFromListProps extends PropsWithChildren {
   filtered?: boolean;
   showHeader?: boolean;
   withSaveButton?: boolean;
+  compare?: (a: string, b: string) => boolean;
 }
 
 type Data = { [key: string]: string } | Array<{ key: string; value: string }>;
@@ -32,7 +33,16 @@ export interface SelectOptionFromListMethods extends BottomSheetMethods {
 type Item = { key: string; value: string };
 
 const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptionFromListProps>(
-  ({ onChange, filtered = false, showHeader = true, withSaveButton = false }, ref) => {
+  (
+    {
+      onChange,
+      filtered = false,
+      showHeader = true,
+      withSaveButton = false,
+      compare = (a, b) => a === b,
+    },
+    ref,
+  ) => {
     const theme = useTheme();
     const bottomSheetRef = useRef<BottomSheetMethods>(null);
     const [flatListData, setFlatListData] = useState<Array<Item>>([]);
@@ -44,10 +54,6 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     const handleSelect = (item: Item) => {
       onChange(item, bottomSheetRef.current?.id ?? '');
       bottomSheetRef.current?.dismiss();
-    };
-
-    const handlePreselect = (item: Item) => {
-      setSelectedItem(item);
     };
 
     const handleSave = () => {
@@ -87,7 +93,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
 
     const onPress = (item: Item) => {
       if (withSaveButton) {
-        handlePreselect(item);
+        setSelectedItem(item);
         return;
       }
 
@@ -118,7 +124,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
           data={filteredData}
           renderItem={({ item }) => (
             <ListItem onPress={() => onPress(item)} title={item.value}>
-              {selectedItem?.key === item.key ? (
+              {compare(selectedItem?.key ?? '', item.key) ? (
                 <Icons.check width={18} height={18} fill={theme.colors.colorPrimary} />
               ) : null}
             </ListItem>

@@ -73,6 +73,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
 
   const get = useCallback(async () => {
     const outputs = await ChartIQ.getStudyParameters(study, 'Outputs');
+
     const aggregation = await ChartIQ.getChartAggregationType();
     setAggregationType(aggregation);
     setOutputParams(outputs);
@@ -213,6 +214,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         { key: 'Close', value: 'Close' },
       ];
     }
+
     selectFromListRef.current?.open({
       data,
       selected: selected ?? '',
@@ -400,7 +402,11 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
               />
             </>
           ) : null}
-          <SelectFromList ref={selectFromListRef} onChange={onChangeFromList} />
+          <SelectFromList
+            compare={(a, b) => a.includes(b)}
+            ref={selectFromListRef}
+            onChange={onChangeFromList}
+          />
           <ColorSelector onChange={handleColorChange} ref={colorSelectorRef} />
         </ScrollView>
       </SafeAreaView>
