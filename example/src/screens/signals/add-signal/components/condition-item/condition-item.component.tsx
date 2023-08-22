@@ -59,7 +59,7 @@ const ConditionItem: React.FC<ConditionProps> = ({ condition, onPress, index, jo
               <Text style={styles.cardTitle}>{`${index + 1} Condition`}</Text>
             </View>
             <Text style={styles.cardDescription}>
-              {`${condition.leftIndicator.split(' (')[0]} Is ${signalOperator} ${rightIndicator}`}
+              {`${condition.leftIndicator.split(' (')[0]} ${signalOperator} ${rightIndicator}`}
             </Text>
           </View>
         </View>

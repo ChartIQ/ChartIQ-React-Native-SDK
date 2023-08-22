@@ -46,6 +46,7 @@ interface AddConditionProps
 const CONDITION = 'CONDITION';
 const FIRST_INDICATOR = 'FIRST_INDICATOR';
 const SECOND_INDICATOR = 'SECOND_INDICATOR';
+const VALUE = 'Value';
 
 const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigation }) => {
   const theme = useTheme();
@@ -64,6 +65,10 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const [secondIndicatorValue, setSecondIndicatorValue] = useState<string | null>('0.0');
   const [outputParams, setOutputParams] = useState<Array<StudyParameter>>([]);
   const [aggregationType, setAggregationType] = useState<string | null>(null);
+  const display = Platform.select({
+    ios: study.display,
+    android: study.shortName,
+  });
 
   useEffect(() => {
     navigation.setOptions({
@@ -78,31 +83,31 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     setAggregationType(aggregation);
     setOutputParams(outputs);
     if (condition) {
-      const isSecondIndicatorValueNumber = !Number.isNaN(Number(condition.rightIndicator));
+      if (condition?.rightIndicator === '') {
+        setSelectedCondition(condition);
+      } else {
+        const isSecondIndicatorValueNumber = !Number.isNaN(Number(condition?.rightIndicator));
 
-      setSelectedCondition({
-        ...condition,
-        rightIndicator: isSecondIndicatorValueNumber ? 'Value' : condition.rightIndicator,
-      });
+        setSelectedCondition({
+          ...condition,
+          rightIndicator: isSecondIndicatorValueNumber ? VALUE : condition?.rightIndicator,
+        });
 
-      if (isSecondIndicatorValueNumber) {
-        setSecondIndicatorValue(condition.rightIndicator);
+        if (isSecondIndicatorValueNumber) {
+          setSecondIndicatorValue(condition.rightIndicator);
+        }
       }
     } else {
-      const display = Platform.select({
-        ios: study.display,
-        android: study.shortName,
-      });
       setSelectedCondition({
         leftIndicator: outputs[0]?.name ? `${outputs[0]?.name} ${display}` : null,
         signalOperator: null,
         markerOption: {
           color: (outputs[0]?.value as string) ?? '#000000',
         },
-        rightIndicator: null,
+        rightIndicator: '',
       });
     }
-  }, [condition, study]);
+  }, [condition, display, study]);
 
   useEffect(() => {
     get();
@@ -124,13 +129,13 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
           key === SignalOperator.DECREASES ||
           key === SignalOperator.DOES_NOT_CHANGE
         ) {
-          rightInd = null;
+          rightInd = '';
         } else {
           const unusedIndicator = outputParams.find((item) => {
             return !leftIndicator.includes(item.name);
           })?.name;
 
-          rightInd = prevState.rightIndicator ?? unusedIndicator ?? 'Value';
+          rightInd = prevState.rightIndicator || `${unusedIndicator} ${display}` || VALUE;
         }
 
         const color =
@@ -161,14 +166,12 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
             prevState.leftIndicator?.includes(name),
           )?.name;
         }
-        if (key === prevState.rightIndicator) {
-          rightIndValue = outputParams.find(({ name }) => !name.includes(key))?.name;
+
+        if (prevState.rightIndicator?.includes(key)) {
+          rightIndValue =
+            outputParams.find(({ name }) => !name.includes(key))?.name + ' ' + display;
         }
 
-        const display = Platform.select({
-          ios: study.display,
-          android: study.shortName,
-        });
         return {
           ...prevState,
           leftIndicator: indicator?.name + ' ' + display,
@@ -186,19 +189,17 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
         if (!prevState) {
           return null;
         }
+
         return {
           ...prevState,
-          rightIndicator: indicator?.name ?? (key as string),
+          rightIndicator:
+            key === VALUE ? VALUE : `${indicator?.name ?? (key as string)} ${display}`,
         };
       });
     }
   };
 
   const handleIndicator = (id: string, selected?: string) => {
-    const display = Platform.select({
-      ios: study.display,
-      android: study.shortName,
-    });
     let data = outputParams.map(({ name }) => ({
       key: name,
       value: `${name} ${display}`,
@@ -207,7 +208,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     if (id === SECOND_INDICATOR) {
       data = [
         ...data.filter(({ key }) => !selectedCondition?.leftIndicator?.includes(key)),
-        { key: 'Value', value: 'Value' },
+        { key: VALUE, value: VALUE },
         { key: 'Open', value: 'Open' },
         { key: 'High', value: 'High' },
         { key: 'Low', value: 'Low' },
@@ -262,15 +263,18 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
     const value = secondIndicatorValue || '0.0';
     const leftIndicator =
       selectedCondition?.leftIndicator || (outputParams[0]?.name ?? '' + ' ' + study.shortName);
-    const rightIndicator =
-      selectedCondition?.rightIndicator === 'Value'
-        ? value
-        : selectedCondition?.rightIndicator + ' ' + study.shortName ?? null;
+
+    let rightIndicator = selectedCondition?.rightIndicator;
+
+    if (rightIndicator === VALUE) {
+      rightIndicator = value;
+    }
+
     const signalOperator = selectedCondition?.signalOperator ?? SignalOperator.DOES_NOT_CHANGE;
 
     const addCondition: Condition = {
       leftIndicator: leftIndicator.trim(),
-      rightIndicator: rightIndicator?.trim(),
+      rightIndicator: rightIndicator?.trim() || '',
       markerOption,
       signalOperator,
     };
@@ -331,7 +335,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
       selectedCondition?.signalOperator === SignalOperator.DOES_NOT_CHANGE);
 
   const showValueSelector =
-    selectedCondition?.signalOperator && selectedCondition.rightIndicator === 'Value';
+    selectedCondition?.signalOperator && selectedCondition.rightIndicator === VALUE;
 
   const handleEndEditingSecondIndicatorValue = ({
     nativeEvent: { text },

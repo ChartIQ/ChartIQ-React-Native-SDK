@@ -505,7 +505,7 @@ export async function setStudyParameter(
  * Set study parameters
  * @param {Study} study
  * @param {ChartIQStudyParameterModel[]} parameter
- * @returns {Promise<StudySimplified>} study
+ * @returns {Promise<StudySimplified | Study>} *study* for ios or simplified study for *android*
  * @example
  * ChartIQ.setStudyParameters(study, parameters)
  */

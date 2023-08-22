@@ -40,7 +40,7 @@ export const chartStyleSelectorData: Readonly<ChartStyleSelectorData[]> = [
   { label: 'Scatterplot', value: ChartType.SCATTERPLOT, icon: icons.scatterplot },
   { label: 'Histogram', value: ChartType.HISTOGRAM, icon: icons.histogram },
   {
-    label: 'Hekin Ashi',
+    label: 'Heikin Ashi',
     value: ChartType.None,
     aggregationType: AggregationType.HEIKINASHI,
     icon: icons.heikinAshi,

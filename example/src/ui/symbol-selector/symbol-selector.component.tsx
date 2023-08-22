@@ -32,7 +32,7 @@ const filters = [
   { name: 'Forex', value: 'forex' },
   { name: 'Indexes', value: 'indexes' },
   { name: 'Funds', value: 'funds' },
-  { name: 'Features', value: 'features' },
+  { name: 'Futures', value: 'Futures' },
 ];
 
 const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ onChange }, ref) => {

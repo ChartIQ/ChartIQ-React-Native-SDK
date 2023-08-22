@@ -12,12 +12,10 @@ import com.chartiq.sdk.model.signal.*
 import com.chartiq.sdk.model.study.Study
 import com.chartiq.sdk.model.study.StudyParameterModel
 import com.chartiq.sdk.model.study.StudyParameterType
-import com.chartiq.sdk.model.study.StudySimplified
 import com.facebook.react.bridge.*
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -484,6 +482,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
         studySimplified.putString("shortName", it.studyName)
         studySimplified.putString("type", it.type)
         studySimplified.putMap("outputs", it.outputs?.toReadableMap())
+
         promise.resolve(studySimplified)
       }
     })

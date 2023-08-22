@@ -3,17 +3,17 @@ import { SignalOperatorListItem } from '../interfaces';
 
 export const SignalOperatorValues: Array<SignalOperatorListItem> = [
   {
-    description: 'Greater Than',
+    description: 'Is Greater Than',
     key: SignalOperator.GREATER_THAN,
     value: '>',
   },
   {
-    description: 'Less Than',
+    description: 'Is Less Than',
     key: SignalOperator.LESS_THAN,
     value: '<',
   },
   {
-    description: 'Equal To',
+    description: 'Is Equal To',
     key: SignalOperator.EQUAL_TO,
     value: '=',
   },

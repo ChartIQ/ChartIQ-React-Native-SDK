@@ -59,19 +59,26 @@ const AddSignal: React.FC<AddSignalProps> = ({ navigation, route: { params } }) 
   const onStudyChange = useCallback(async () => {
     if (changedStudy) {
       setSelectedStudy(changedStudy);
+
       setConditions((prevState) => {
         const newConditions = new Map(prevState);
 
         newConditions.forEach((condition, key) => {
+          let leftInd = condition.leftIndicator;
+          let rightInd = condition.rightIndicator;
+          Object.entries(changedStudy.outputs).forEach(([key, value]: [string, unknown]) => {
+            if (value && condition.leftIndicator.includes(value as string)) {
+              leftInd = key;
+            }
+            if (value && condition?.rightIndicator?.includes(value as string)) {
+              rightInd = key;
+            }
+          });
+
           newConditions.set(key, {
             ...condition,
-            leftIndicator: condition.leftIndicator.replace(
-              condition.leftIndicator || '',
-              changedStudy.name,
-            ),
-            rightIndicator: condition.rightIndicator
-              ? condition.rightIndicator.replace(condition.rightIndicator || '', changedStudy.name)
-              : '',
+            leftIndicator: leftInd,
+            rightIndicator: rightInd,
           });
         });
 

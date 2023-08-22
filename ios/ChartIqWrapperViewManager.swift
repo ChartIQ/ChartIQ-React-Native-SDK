@@ -286,7 +286,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
         
         defaultQueue.async {
             self.chartIQWrapperView.chartIQView.setStudyParameter(chartIQStudy.fullName, key: key, value: value)
-            resolve(chartIQStudy.toStudySimplified().toDictionary())
+            resolve(chartIQStudy.toDictionary())
         }
     }
     
