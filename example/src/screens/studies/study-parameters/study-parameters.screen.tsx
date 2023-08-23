@@ -53,22 +53,7 @@ const StudyParameters: React.FC<StudyParametersProps> = ({
         {
           text: 'Reset',
           onPress: () => {
-            const inputParameters = inputParams.map(({ name, defaultValue }) => ({
-              fieldName: name,
-              fieldSelectedValue: defaultValue.toString(),
-            }));
-            const outputParameters = outputParams.map(({ name, defaultValue }) => ({
-              fieldName: name,
-              fieldSelectedValue: defaultValue.toString(),
-            }));
-
-            ChartIQ.setStudyParameters(study, [...inputParameters, ...outputParameters]);
-            setInputParams((prevState) =>
-              prevState.map((item) => ({ ...item, value: item.defaultValue })),
-            );
-            setOutputParams((prevState) =>
-              prevState.map((item) => ({ ...item, value: item.defaultValue })),
-            );
+            changeStudyParametersRef.current?.resetToDefault();
           },
           style: 'destructive',
         },

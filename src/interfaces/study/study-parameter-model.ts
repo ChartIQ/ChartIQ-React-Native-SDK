@@ -24,6 +24,10 @@ export interface StudyParameterResponse {
 
 export interface StudyParameter {
   defaultValue: number | string | boolean;
+  /**IOS specific */
+  defaultInput?: number | string | boolean;
+  /**IOS specific */
+  defaultOutput?: number | string | boolean;
   heading: string;
   name: string;
   parameterType: StudyParameterType;

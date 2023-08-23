@@ -30,6 +30,7 @@ interface ChangeStudyParametersProps extends PropsWithChildren {
 export interface ChangeStudyParameterMethods {
   getInputParamsData: () => StudyParameterModel[];
   getOutputParamsData: () => StudyParameterModel[];
+  resetToDefault: () => void;
 }
 
 const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStudyParametersProps>(
@@ -203,6 +204,29 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
     useImperativeHandle(ref, () => ({
       getInputParamsData: () => inputParamsData,
       getOutputParamsData: () => outputParamsData,
+      resetToDefault: () => {
+        setInputParamsData(
+          inputParameters.map((item) => {
+            if (item.fieldType === 'Number') {
+              return {
+                fieldName: item.name,
+                fieldSelectedValue: formatNumber(item.defaultValue.toString()),
+              };
+            }
+            return {
+              fieldName: item.name,
+              fieldSelectedValue:
+                item.fieldType === 'Checkbox' ? item.defaultValue : item.defaultValue.toString(),
+            };
+          }),
+        );
+        setOutputParamsData(
+          outputParameters.map((item) => ({
+            fieldName: item.name,
+            fieldSelectedValue: item.defaultValue.toString(),
+          })),
+        );
+      },
     }));
 
     const inputData = inputParams.map((item) => ({

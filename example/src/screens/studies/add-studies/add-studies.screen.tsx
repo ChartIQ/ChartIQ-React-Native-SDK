@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 
 import Icons from '~/assets/icons';
-import { defaultHitSlop } from '~/constants';
+import { defaultHitSlop, edges } from '~/constants';
 import { useTranslations } from '~/shared/hooks/use-translations';
 import { StudiesStackParamList } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
@@ -103,7 +103,7 @@ const AddStudies: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={edges} style={styles.container}>
       <Input
         onChange={(input) => {
           setSearch(input);

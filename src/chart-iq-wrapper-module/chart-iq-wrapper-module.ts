@@ -461,7 +461,19 @@ export async function getStudyParameters(
   const response = await ChartIQWrapperModule.getStudyParameters(study, type);
 
   if (Platform.OS == 'ios') {
-    return response;
+    return response.map(
+      (
+        studyParameter: StudyParameter & {
+          defaultInput: string | boolean | number;
+        }
+      ) => ({
+        ...studyParameter,
+        defaultValue:
+          studyParameter.defaultInput ??
+          studyParameter.defaultOutput ??
+          studyParameter.defaultValue,
+      })
+    );
   }
 
   const data = JSON.parse(response) as StudyParameterResponse[];
