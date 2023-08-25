@@ -42,11 +42,11 @@
     "ios",
     "android"
   ],
-  "repository": "https://reactnative.dev/docs/native-modules-setup",
+  "repository": "https://github.com/ChartIQ/ChartIQ-React-Native-SDK",
   "author": "ShinyGuacamole <124245874+ShinyGuacamole@users.noreply.github.com> ()",
   "license": "MIT",
   "bugs": {
-    "url": "https://reactnative.dev/docs/native-modules-setup/issues"
+    "email": "support@chartiq.com"
   },
   "homepage": "https://www.spglobal.com/marketintelligence/en/solutions/chartiq",
   "publishConfig": {

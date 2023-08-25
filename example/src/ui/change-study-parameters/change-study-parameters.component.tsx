@@ -287,7 +287,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                     <ListItem title={item.name}>
                       <TextInput
                         style={styles.input}
-                        keyboardType="numeric"
+                        keyboardType="numbers-and-punctuation"
                         defaultValue={Number(item.value).toFixed(1)}
                         placeholder="0.0"
                         onChangeText={(text) => onValueChange(item.name, text, 'Number')}

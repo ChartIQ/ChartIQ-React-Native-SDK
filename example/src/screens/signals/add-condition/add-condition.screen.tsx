@@ -340,15 +340,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
   const handleEndEditingSecondIndicatorValue = ({
     nativeEvent: { text },
   }: NativeSyntheticEvent<TextInputChangeEventData | TextInputEndEditingEventData>) => {
-    const number = Number(text);
-    const [_, decimal] = text?.split('.') ?? ['', ''];
-
-    if (number === 0) {
-      setSecondIndicatorValue('0.0');
-    }
-    if (!decimal?.length) {
-      setSecondIndicatorValue(number.toFixed(1));
-    }
+    setSecondIndicatorValue(formatNumber(text));
   };
 
   return (
@@ -385,7 +377,7 @@ const AddCondition: React.FC<AddConditionProps> = ({ route: { params }, navigati
               {showValueSelector ? (
                 <ListItem title="Value">
                   <TextInput
-                    onChangeText={(text) => setSecondIndicatorValue(formatNumber(text))}
+                    onChangeText={(text) => setSecondIndicatorValue(text)}
                     keyboardType="numbers-and-punctuation"
                     defaultValue="0.0"
                     value={secondIndicatorValue ?? undefined}
