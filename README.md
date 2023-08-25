@@ -5,7 +5,7 @@ react-native-chart-iq-wrapper
 ## Installation
 
 ```sh
-npm install react-native-chart-iq-wrapper
+npm install react-native-chart-iq
 ```
 
 or
@@ -28,7 +28,7 @@ pod install
 1. Import the library and provide a remote url to the ChartIQ library and set the dataMethod to either "pull" or "push" depending on how you want to provide data to the chart.
 
 ```js
-import { ChartIqWrapperView } from 'react-native-chart-iq-wrapper';
+import { ChartIqWrapperView } from 'react-native-chart-iq';
 
 // ...
 
