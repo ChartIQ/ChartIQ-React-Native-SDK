@@ -25,6 +25,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "include": ["./example/src/assets/svg.d.ts"],
   "exclude": ["node_modules", "example/node_modules"]
 }
