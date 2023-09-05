@@ -36,7 +36,7 @@ const ChartIQWrapperModule = Platform.select({
  * @example
  * ChartIQ.setSymbol("AAPL")
  */
-export async function setSymbol(symbol: string) {
+export async function setSymbol(symbol: string): Promise<void> {
   await ChartIQWrapperModule.setSymbol(symbol);
 }
 

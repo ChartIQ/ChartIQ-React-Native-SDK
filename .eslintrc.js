@@ -26,7 +26,7 @@ module.exports = {
   rules: {
     'indent': [0, 2, { SwitchCase: 1 }],
     'linebreak-style': 0,
-    'quotes': ['error', 'single'],
+    'quotes': ['error', 'single', { avoidEscape: true }],
     'prettier/prettier': [
       'error',
       {
@@ -93,7 +93,7 @@ module.exports = {
       rules: {
         'indent': [0, 2, { SwitchCase: 1 }],
         'linebreak-style': 0,
-        'quotes': ['error', 'single'],
+        'quotes': ['error', 'single', { avoidEscape: true }],
         'prettier/prettier': [
           'error',
           {

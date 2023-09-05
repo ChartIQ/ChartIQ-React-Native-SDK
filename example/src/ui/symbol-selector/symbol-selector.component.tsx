@@ -10,7 +10,7 @@ import {
 import { ChartSymbol } from 'react-native-chart-iq';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { fetchSymbolsAsync, handleRetry } from '~/api';
+import { RequestHandler, fetchSymbolsAsync } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
 import { useTheme, Theme } from '~/theme';
 
@@ -45,6 +45,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
   const [inputValue, setInputValue] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [noDataFound, setNoDataFound] = React.useState<string | null>(null);
+  const requestHandler = useRef<RequestHandler>(new RequestHandler()).current;
 
   const handleClose = useCallback(() => {
     Keyboard.dismiss();
@@ -61,35 +62,38 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
     setIsLoading(false);
   };
 
-  const fetchSymbols = useCallback((input: string, filter: string) => {
-    if (input.length === 0) {
-      setData([]);
-      setIsLoading(false);
-      return;
-    }
+  const fetchSymbols = useCallback(
+    (input: string, filter: string) => {
+      if (input.length === 0) {
+        setData([]);
+        setIsLoading(false);
+        return;
+      }
 
-    setIsLoading(true);
-    fetchSymbolsAsync({
-      symbol: input,
-      maxResult: DEFAULT_VALUE_MAX_RESULT.toString(),
-      fund: DEFAULT_VALUE_FUNDS,
-      filter: filter.toUpperCase(),
-    })
-      .then((data) => {
-        if (data.length === 0) {
-          setNoDataFound('No data found');
-        } else {
-          setNoDataFound(null);
-        }
-        setData(data);
+      setIsLoading(true);
+      fetchSymbolsAsync({
+        symbol: input,
+        maxResult: DEFAULT_VALUE_MAX_RESULT.toString(),
+        fund: DEFAULT_VALUE_FUNDS,
+        filter: filter.toUpperCase(),
       })
-      .catch(() => {
-        handleRetry(() => {
-          fetchSymbols(input, filter);
-        });
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+        .then((data) => {
+          if (data.length === 0) {
+            setNoDataFound('No data found');
+          } else {
+            setNoDataFound(null);
+          }
+          setData(data);
+        })
+        .catch(() => {
+          requestHandler.handleRetry(() => {
+            fetchSymbols(input, filter);
+          });
+        })
+        .finally(() => setIsLoading(false));
+    },
+    [requestHandler],
+  );
 
   useImperativeHandle(ref, () => bottomSheetRef.current ?? ({} as BottomSheetMethods));
 

@@ -40,7 +40,7 @@ export class RequestHandler {
     this.requestMap.delete(id);
   }
 
-  private handleRetry(onRetry: () => void) {
+  public handleRetry(onRetry: () => void) {
     this.error = true;
 
     Alert.alert('Something went wrong', 'The internet connection appears to be offline.', [
