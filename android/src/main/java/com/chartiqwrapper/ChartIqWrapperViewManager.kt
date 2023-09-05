@@ -1,17 +1,12 @@
 package com.chartiqwrapper
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 
-import androidx.lifecycle.MutableLiveData
 import com.chartiq.sdk.ChartIQ
 import com.chartiq.sdk.DataSource
 import com.chartiq.sdk.DataSourceCallback
-import com.chartiq.sdk.OnStartCallback
-import com.chartiq.sdk.model.ChartTheme
-import com.chartiq.sdk.model.CrosshairHUD
 import com.chartiq.sdk.model.DataMethod
 import com.chartiq.sdk.model.QuoteFeedParams
 import com.facebook.react.bridge.Arguments
@@ -23,7 +18,6 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.google.gson.Gson
-import kotlinx.coroutines.*
 
 
 class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) :
@@ -37,30 +31,30 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   override fun getName() = "ChartIqWrapperView"
 
   @ReactProp(name = "url")
-  fun setUrl(view: ViewGroup, url: String?){
-    if(url != null){
+  fun setUrl(view: ViewGroup, url: String?) {
+    if (url != null) {
       this.url = url
       initChartIQ(view)
     }
   }
 
   @ReactProp(name = "dataMethod")
-  fun setDataMethod(view: ViewGroup, dataMethod: String?){
-    chartIQ.getSymbol{symbol ->
-      if(dataMethod != null){
+  fun setDataMethod(view: ViewGroup, dataMethod: String?) {
+    chartIQ.getSymbol { symbol ->
+      if (dataMethod != null) {
         if (dataMethod == "push") {
           chartIQ.setDataMethod(DataMethod.PUSH, symbol)
         } else {
           chartIQ.setDataMethod(DataMethod.PULL, symbol)
         }
-      }else{
+      } else {
         chartIQ.setDataMethod(DataMethod.PULL, symbol)
       }
     }
   }
 
-  private fun addMeasureListener(){
-    chartIQ.addMeasureListener{measure ->
+  private fun addMeasureListener() {
+    chartIQ.addMeasureListener { measure ->
       dispatchOnMeasureChanged(measure)
     }
   }
@@ -72,7 +66,10 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       "onPullPagingData" to MapBuilder.of("registrationName", "onPullPagingData"),
       "onChartTypeChanged" to MapBuilder.of("registrationName", "onChartTypeChanged"),
       "onMeasureChanged" to MapBuilder.of("registrationName", "onMeasureChanged"),
-      "onChartAggregationTypeChanged" to MapBuilder.of("registrationName", "onChartAggregationTypeChanged"),
+      "onChartAggregationTypeChanged" to MapBuilder.of(
+        "registrationName",
+        "onChartAggregationTypeChanged"
+      ),
       "onStart" to MapBuilder.of("registrationName", "onStart"),
     ).toMutableMap()
   }
@@ -88,8 +85,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     return view
   }
 
-  private fun initChartIQ(view: ViewGroup){
-    if(reactContext != null) {
+  private fun initChartIQ(view: ViewGroup) {
+    if (reactContext != null) {
       chartIQ = ChartIQ.getInstance(url, reactContext!!)
       chartIQViewModel.setChartIQ(chartIQ)
 
@@ -118,8 +115,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
     )
   }
 
-  fun createQuoteFeedMap(params: QuoteFeedParams, id: String):WritableMap {
-    try{
+  fun createQuoteFeedMap(params: QuoteFeedParams, id: String): WritableMap {
+    try {
       var map = Arguments.createMap().apply {
         putString("end", params.end)
         putString("start", params.start)
@@ -136,7 +133,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       return Arguments.createMap().apply {
         putMap("quoteFeedParam", map)
       }
-    }catch (error: Exception){
+    } catch (error: Exception) {
       throw error
     }
   }
@@ -188,25 +185,25 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
   }
 
   @ReactMethod
-  fun dispatchOnChartAggregationTypeChanged(){
+  fun dispatchOnChartAggregationTypeChanged() {
     val event: WritableMap = Arguments.createMap()
-    chartIQ.getChartAggregationType{ aggregationType ->
+    chartIQ.getChartAggregationType { aggregationType ->
 
       val response: String? = aggregationType?.value
       event.putString(
-       "aggregationType", response
+        "aggregationType", response
       )
-     reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-       view.id,
-       "onChartAggregationTypeChanged",
-       event,
-     )
-   }
+      reactContext?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+        view.id,
+        "onChartAggregationTypeChanged",
+        event,
+      )
+    }
 
   }
 
   @ReactMethod
-  fun dispatchOnMeasureChanged(measure: String){
+  fun dispatchOnMeasureChanged(measure: String) {
     val event: WritableMap = Arguments.createMap().apply {
       putString("measure", measure)
     }
@@ -217,7 +214,6 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
       event,
     )
   }
-
 
 
   private fun initDatasource() {
@@ -247,9 +243,8 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           dispatchOnPullPagingData(params, params.callbackId!!)
         }
       })
-      Log.println(Log.INFO, "MY_TAG", "BEFORE START")
-      start{
-        Log.println(Log.INFO, "MY_TAG", "STARTED")
+
+      start {
         dispatchStart()
       }
     }

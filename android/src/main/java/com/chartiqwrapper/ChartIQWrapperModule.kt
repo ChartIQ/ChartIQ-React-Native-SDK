@@ -40,13 +40,14 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
 
   @ReactMethod
   fun setInitialData(data: ReadableArray, id: String) {
-      if (data != null) {
-        val handler = Handler(Looper.getMainLooper())
-        handler.post(Runnable {
-          chartIQViewModel.initialCallbacks.find { it.id == id }?.let {
-            it.callback.execute(data.toOHCLList())
-          }})
-      }
+    if (data != null) {
+      val handler = Handler(Looper.getMainLooper())
+      handler.post(Runnable {
+        chartIQViewModel.initialCallbacks.find { it.id == id }?.let {
+          it.callback.execute(data.toOHCLList())
+        }
+      })
+    }
   }
 
   @ReactMethod
@@ -56,7 +57,8 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       handler.post(Runnable {
         chartIQViewModel.updateCallbacks.find { it.id == id }?.let {
           it.callback.execute(data.toOHCLList())
-        }})
+        }
+      })
     }
   }
 
@@ -66,7 +68,8 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       handler.post(Runnable {
         chartIQViewModel.pagingCallbacks.find { it.id == id }?.let {
           it.callback.execute(data.toOHCLList())
-        }})
+        }
+      })
     }
   }
 
@@ -144,8 +147,8 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     var newType = ChartType.values().find {
       it.value == type
     }
-    if(type == "Vertex Line"){
-        newType = ChartType.VERTEX_LINE
+    if (type == "Vertex Line") {
+      newType = ChartType.VERTEX_LINE
     }
     if (newType != null) {
       handler.post(Runnable {
@@ -201,16 +204,16 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
         it.getPeriodicity { periodicity ->
           it.getInterval { interval ->
             it.getTimeUnit { timeUnit ->
-                val map = Arguments.createMap().apply {
-                  putInt("periodicity", periodicity)
-                  if(interval == "\"day\"" || interval == "\"week\"" || interval == "\"month\""){
-                    putString("interval", "1")
-                    putString("timeUnit", interval.replace("\"", "").uppercase())
-                  } else {
-                    putString("interval", interval)
-                    putString("timeUnit", timeUnit)
-                  }
+              val map = Arguments.createMap().apply {
+                putInt("periodicity", periodicity)
+                if (interval == "\"day\"" || interval == "\"week\"" || interval == "\"month\"") {
+                  putString("interval", "1")
+                  putString("timeUnit", interval.replace("\"", "").uppercase())
+                } else {
+                  putString("interval", interval)
+                  putString("timeUnit", timeUnit)
                 }
+              }
               promise.resolve(map)
             }
           }
@@ -364,7 +367,8 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().getActiveStudies { studies ->
         val formattedStudies = studies.toWritableArray()
-        promise.resolve(formattedStudies)}
+        promise.resolve(formattedStudies)
+      }
     })
   }
 
@@ -453,7 +457,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       handler.post(Runnable {
         chartIQViewModel.getChartIQ().getStudyParameters(study.toChartIQStudy(), parsedType) {
           val jsonArray = JsonArray()
-          for(field in it){
+          for (field in it) {
             val fieldType = field.javaClass.name.split('$')[1]
             val jsonObject = JsonObject()
             jsonObject.addProperty("fieldType", fieldType)
@@ -469,22 +473,24 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   @ReactMethod
   fun setStudyParameter(study: ReadableMap, parameter: ReadableMap, promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().setStudyParameter(study.toChartIQStudy(), parameter.toStudyParameterModel())
+      chartIQViewModel.getChartIQ()
+        .setStudyParameter(study.toChartIQStudy(), parameter.toStudyParameterModel())
     })
   }
 
   @ReactMethod
   fun setStudyParameters(study: ReadableMap, parameters: ReadableArray, promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().setStudyParameters(study.toChartIQStudy(), parameters.toStudyParameterModelList()) {
-        val studySimplified = Arguments.createMap()
-        studySimplified.putString("name", it.studyName)
-        studySimplified.putString("shortName", it.studyName)
-        studySimplified.putString("type", it.type)
-        studySimplified.putMap("outputs", it.outputs?.toReadableMap())
+      chartIQViewModel.getChartIQ()
+        .setStudyParameters(study.toChartIQStudy(), parameters.toStudyParameterModelList()) {
+          val studySimplified = Arguments.createMap()
+          studySimplified.putString("name", it.studyName)
+          studySimplified.putString("shortName", it.studyName)
+          studySimplified.putString("type", it.type)
+          studySimplified.putMap("outputs", it.outputs?.toReadableMap())
 
-        promise.resolve(studySimplified)
-      }
+          promise.resolve(studySimplified)
+        }
     })
   }
 
@@ -514,37 +520,37 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun addSignal(signal: ReadableMap,editMode: Boolean) {
-      handler.post(Runnable {
-        chartIQViewModel.getChartIQ().saveSignal(signal.toSignal(), editMode)
-      })
+  fun addSignal(signal: ReadableMap, editMode: Boolean) {
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().saveSignal(signal.toSignal(), editMode)
+    })
   }
 
   @ReactMethod
   fun toggleSignal(signal: ReadableMap) {
-     handler.post(Runnable {
-        chartIQViewModel.getChartIQ().toggleSignal(signal.toSignal())
-      })
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().toggleSignal(signal.toSignal())
+    })
   }
 
   @ReactMethod
   fun removeSignal(signal: ReadableMap) {
-     handler.post(Runnable {
-        chartIQViewModel.getChartIQ().removeSignal(signal.toSignal())
-      })
+    handler.post(Runnable {
+      chartIQViewModel.getChartIQ().removeSignal(signal.toSignal())
+    })
   }
 
   @ReactMethod
-  fun getTranslations(languageCode: String, promise: Promise){
+  fun getTranslations(languageCode: String, promise: Promise) {
     handler.post(Runnable {
-      chartIQViewModel.getChartIQ().getTranslations(languageCode){
+      chartIQViewModel.getChartIQ().getTranslations(languageCode) {
         promise.resolve(gson.toJson(it))
       }
     })
   }
 
   @ReactMethod
-  fun setLanguage(languageCode: String){
+  fun setLanguage(languageCode: String) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setLanguage(languageCode)
     })
@@ -616,17 +622,17 @@ private fun ReadableMap.toChartIQStudy(): Study {
   )
 }
 
-private fun ReadableMap.toStudyParameterModel(): StudyParameterModel{
-    val name = this.getString("fieldName") as String
-    val value = this.getString("fieldSelectedValue") as String
+private fun ReadableMap.toStudyParameterModel(): StudyParameterModel {
+  val name = this.getString("fieldName") as String
+  val value = this.getString("fieldSelectedValue") as String
 
-    return StudyParameterModel(name, value)
+  return StudyParameterModel(name, value)
 }
 
-private fun ReadableArray.toStudyParameterModelList(): List<StudyParameterModel>{
+private fun ReadableArray.toStudyParameterModelList(): List<StudyParameterModel> {
   var list = mutableListOf<StudyParameterModel>()
-  this.toArrayList().forEach() { item  ->
-    if(item is HashMap<*, *>) {
+  this.toArrayList().forEach() { item ->
+    if (item is HashMap<*, *>) {
       val name = item["fieldName"] as String
       val value = item["fieldSelectedValue"] as String
       StudyParameterModel(name, value).let {
@@ -637,21 +643,25 @@ private fun ReadableArray.toStudyParameterModelList(): List<StudyParameterModel>
 
   return list
 }
+
 private fun ReadableArray.toOHCLList(): List<OHLCParams> {
   var list = mutableListOf<OHLCParams>()
-  this.toArrayList().forEach() { item  ->
-    if(item is HashMap<*, *>) {
+  this.toArrayList().forEach() { item ->
+    if (item is HashMap<*, *>) {
       val dt = item["DT"] as String?
       val open = item["Open"] as Double?
       val high = item["High"] as Double?
-      val low = item["Low"]   as Double?
+      val low = item["Low"] as Double?
       val close = item["Close"] as Double?
       val volume = item["Volume"] as Double?
       val adjClose = item["Adj_Close"] as Double?
-      val localDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(dt)
-      val date = Date(localDate.time)
-      OHLCParams(date, open, high, low, close, volume, adjClose).let {
-        list.add(it)
+      val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+      dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+      val localDate = dt?.let { dateFormat.parse(it) }
+      if (localDate != null) {
+        OHLCParams(localDate, open, high, low, close, volume, adjClose).let {
+          list.add(it)
+        }
       }
     }
   }
@@ -659,7 +669,7 @@ private fun ReadableArray.toOHCLList(): List<OHLCParams> {
   return list
 }
 
-private fun HashMap<*,*>.toMarkerOption(): MarkerOption {
+private fun HashMap<*, *>.toMarkerOption(): MarkerOption {
   val type = (this["type"] as String)!!.toSignalMarkerType()
   val color = this["color"] as String
   val signalShape = (this["signalShape"] as String)!!.toSignalShape()
@@ -671,15 +681,15 @@ private fun HashMap<*,*>.toMarkerOption(): MarkerOption {
 }
 
 private fun String.toSignalMarkerType(): SignalMarkerType {
-  return when(this){
+  return when (this) {
     "MARKER" -> SignalMarkerType.MARKER
     "PAINTBAR" -> SignalMarkerType.PAINTBAR
     else -> SignalMarkerType.MARKER
   }
 }
 
-private  fun String.toSignalShape(): SignalShape {
-  return when(this){
+private fun String.toSignalShape(): SignalShape {
+  return when (this) {
     "CIRCLE" -> SignalShape.CIRCLE
     "SQUARE" -> SignalShape.SQUARE
     "DIAMOND" -> SignalShape.DIAMOND
@@ -688,7 +698,7 @@ private  fun String.toSignalShape(): SignalShape {
 }
 
 private fun String.toSignalMarkerSize(): SignalSize {
-  return when(this){
+  return when (this) {
     "S" -> SignalSize.S
     "M" -> SignalSize.M
     "L" -> SignalSize.L
@@ -697,7 +707,7 @@ private fun String.toSignalMarkerSize(): SignalSize {
 }
 
 private fun String.toSignalPosition(): SignalPosition {
-  return when(this){
+  return when (this) {
     "ABOVE_CANDLE" -> SignalPosition.ABOVE_CANDLE
     "BELOW_CANDLE" -> SignalPosition.BELOW_CANDLE
     "ON_CANDLE" -> SignalPosition.ON_CANDLE
@@ -705,23 +715,20 @@ private fun String.toSignalPosition(): SignalPosition {
   }
 }
 
-private fun HashMap<*,*>.toCondition(): Condition {
-    val leftIndicator = this["leftIndicator"] as String
-    val rightIndicator = this["rightIndicator"] as? String
-    val signalOperator = (this["signalOperator"] as String)!!.toSignalOperator()
-    val markerOption = (this["markerOption"] as HashMap<*,*>)!!.toMarkerOption()
+private fun HashMap<*, *>.toCondition(): Condition {
+  val leftIndicator = this["leftIndicator"] as String
+  val rightIndicator = this["rightIndicator"] as? String
+  val signalOperator = (this["signalOperator"] as String)!!.toSignalOperator()
+  val markerOption = (this["markerOption"] as HashMap<*, *>)!!.toMarkerOption()
 
   return Condition(leftIndicator, rightIndicator, signalOperator, markerOption)
 }
 
 private fun ReadableArray.toConditionList(): List<Condition> {
   var list = mutableListOf<Condition>()
-  Log.println(Log.INFO, "Signal", "Condition List $this")
-  this.toArrayList().forEach() { item  ->
-    Log.println(Log.INFO, "Signal", "Condition Item ${item.javaClass}")
-    if(item is HashMap<*,*>) {
+  this.toArrayList().forEach() { item ->
+    if (item is HashMap<*, *>) {
       item.toCondition().let {
-        Log.println(Log.INFO, "Signal", "Condition $it")
         list.add(it)
       }
     }
@@ -731,7 +738,7 @@ private fun ReadableArray.toConditionList(): List<Condition> {
 }
 
 private fun String.toSignalOperator(): SignalOperator {
-  return when(this) {
+  return when (this) {
     "GREATER_THAN" -> SignalOperator.GREATER_THAN
     "LESS_THAN" -> SignalOperator.LESS_THAN
     "EQUAL_TO" -> SignalOperator.EQUAL_TO
@@ -748,25 +755,27 @@ private fun String.toSignalOperator(): SignalOperator {
 }
 
 private fun String.toSignalJoiner(): SignalJoiner {
-  return when(this) {
+  return when (this) {
     "AND" -> SignalJoiner.AND
     "OR" -> SignalJoiner.OR
     else -> SignalJoiner.AND
   }
 }
 
-private fun ReadableMap.toSignal(): Signal{
-  val uniqueId = this.getString("uniqueId")?.ifBlank { UUID.randomUUID().toString() } ?: UUID.randomUUID().toString()
+private fun ReadableMap.toSignal(): Signal {
+  val uniqueId =
+    this.getString("uniqueId")?.ifBlank { UUID.randomUUID().toString() } ?: UUID.randomUUID()
+      .toString()
   val name = this.getString("name") as String
   val conditions = this.getArray("conditions")!!.toConditionList()
   val description = this.getString("description") as String
   val study = this.getMap("study")!!.toChartIQStudy()
   val disabled = this.getBoolean("disabled")
   val joiner = this.getString("joiner")!!.toSignalJoiner()
-  Log.println(Log.DEBUG, "Signal", "Signal: $uniqueId $name $conditions $description $study $disabled $joiner")
+
   return Signal(uniqueId, name, conditions, joiner, description, disabled, study)
 }
 
-private fun  Map<String, Any>.toReadableMap(): ReadableMap {
+private fun Map<String, Any>.toReadableMap(): ReadableMap {
   return Arguments.makeNativeMap(this)
 }

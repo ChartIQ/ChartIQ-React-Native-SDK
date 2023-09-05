@@ -45,10 +45,7 @@ customAxiosApi.interceptors.response.use(
 
 export const fetchDataFeedAsync = async (input: ChartQuery) => {
   const { data } = await customAxiosApi.get<OHLCParams[]>(`${HOST_SIMULATOR}/datafeed`, {
-    params: {
-      ...input,
-      identifier: input.identifier,
-    },
+    params: input,
     ...globalConfig,
   });
 
