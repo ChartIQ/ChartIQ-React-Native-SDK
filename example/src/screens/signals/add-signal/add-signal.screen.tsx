@@ -12,7 +12,7 @@ import {
   useWindowDimensions,
   Pressable,
 } from 'react-native';
-import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chart-iq';
+import { ChartIQ, Study, Signal, SignalJoiner, Condition } from 'react-native-chartiq';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';

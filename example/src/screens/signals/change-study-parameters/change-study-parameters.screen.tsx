@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { ChartIQ, StudyParameter } from 'react-native-chart-iq';
+import { ChartIQ, StudyParameter } from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { defaultHitSlop, edges } from '~/constants';

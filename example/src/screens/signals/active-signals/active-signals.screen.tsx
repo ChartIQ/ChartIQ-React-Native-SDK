@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ, Signal } from 'react-native-chart-iq';
+import { ChartIQ, Signal } from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import images from '~/assets/images';

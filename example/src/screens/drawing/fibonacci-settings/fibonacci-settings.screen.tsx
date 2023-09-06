@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { ChartIQ, DrawingParams } from 'react-native-chart-iq';
+import { ChartIQ, DrawingParams } from 'react-native-chartiq';
 import { TextInput } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';

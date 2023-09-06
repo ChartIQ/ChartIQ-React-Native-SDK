@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { ChartIQ, DrawingParams, STDDeviationSettings } from 'react-native-chart-iq';
+import { ChartIQ, DrawingParams, STDDeviationSettings } from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';

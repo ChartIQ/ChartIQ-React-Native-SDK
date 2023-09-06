@@ -6,7 +6,7 @@ import {
   Impulse,
   SupportedSettings,
   Template,
-} from 'react-native-chart-iq';
+} from 'react-native-chartiq';
 
 import { LineTypeItem } from '~/assets/icons/line-types/line-types';
 

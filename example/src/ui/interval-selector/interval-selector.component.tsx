@@ -1,7 +1,7 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { StyleSheet, View, SectionListRenderItem } from 'react-native';
-import { TimeUnit } from 'react-native-chart-iq';
+import { TimeUnit } from 'react-native-chartiq';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';

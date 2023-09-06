@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ChartIQ } from 'react-native-chart-iq';
+import { ChartIQ } from 'react-native-chartiq';
 import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';

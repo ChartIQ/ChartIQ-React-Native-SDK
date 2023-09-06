@@ -23,7 +23,7 @@ import {
   Condition,
   NullableCondition,
   StudyParameter,
-} from 'react-native-chart-iq';
+} from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { defaultHitSlop, edges } from '~/constants';

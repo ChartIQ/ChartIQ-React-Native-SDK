@@ -7,11 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { SectionList, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
-import {
-  StudyParameter,
-  StudyParameterFieldType,
-  StudyParameterModel,
-} from 'react-native-chart-iq';
+import { StudyParameter, StudyParameterFieldType, StudyParameterModel } from 'react-native-chartiq';
 
 import { formatNumber } from '~/shared/helpers';
 import { Theme, useTheme } from '~/theme';

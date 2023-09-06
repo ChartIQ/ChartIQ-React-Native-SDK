@@ -1,5 +1,5 @@
 import React from 'react';
-import { DrawingTool } from 'react-native-chart-iq';
+import { DrawingTool } from 'react-native-chartiq';
 import { SvgProps } from 'react-native-svg';
 
 import Icons from '../../assets/icons';

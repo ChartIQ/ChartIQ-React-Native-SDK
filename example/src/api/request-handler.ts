@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { ChartIQ, ChartIQDatafeedParams, ChartQuery } from 'react-native-chart-iq';
+import { ChartIQ, ChartIQDatafeedParams, ChartQuery } from 'react-native-chartiq';
 
 import { fetchDataFeedAsync } from '~/api';
 

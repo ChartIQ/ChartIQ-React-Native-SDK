@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Keyboard,
 } from 'react-native';
-import { ChartSymbol } from 'react-native-chart-iq';
+import { ChartSymbol } from 'react-native-chartiq';
 import { FlatList } from 'react-native-gesture-handler';
 
 import { RequestHandler, fetchSymbolsAsync } from '~/api';

@@ -11,7 +11,7 @@ import {
   TextInputChangeEventData,
   NativeSyntheticEvent,
 } from 'react-native';
-import { ChartIQ, DrawingParams } from 'react-native-chart-iq';
+import { ChartIQ, DrawingParams } from 'react-native-chartiq';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

@@ -124,7 +124,7 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
         putString("symbol", params.symbol)
         putInt("period", params.period!!)
         putString("id", id)
-
+        
         if (params.meta != null && params.meta is String) {
           val meta = gson.fromJson(params.meta as String, Map::class.java)
           putMap("meta", Arguments.makeNativeMap(meta as Map<String, Any>))

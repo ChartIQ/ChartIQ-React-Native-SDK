@@ -1,4 +1,4 @@
-import { ChartIQLanguages } from 'react-native-chart-iq';
+import { ChartIQLanguages } from 'react-native-chartiq';
 
 import { defaultENTranslations, defaultENTranslationsMap } from '~/constants/languages';
 

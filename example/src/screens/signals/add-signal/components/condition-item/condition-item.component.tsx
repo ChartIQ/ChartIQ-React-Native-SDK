@@ -5,7 +5,7 @@ import {
   SignalJoiner,
   SignalOperator,
   SignalOperatorValues,
-} from 'react-native-chart-iq';
+} from 'react-native-chartiq';
 
 import Icons from '~/assets/icons';
 import { textOnColor } from '~/shared/helpers';

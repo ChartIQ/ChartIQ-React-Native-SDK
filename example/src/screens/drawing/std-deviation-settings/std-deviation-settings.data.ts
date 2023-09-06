@@ -1,4 +1,4 @@
-import { DrawingSettings } from 'react-native-chart-iq';
+import { DrawingSettings } from 'react-native-chartiq';
 
 import icons from '~/assets/icons';
 import {

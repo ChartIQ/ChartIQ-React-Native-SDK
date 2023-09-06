@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { ChartIQ, ChartIQLanguages, ChartIQView } from 'react-native-chart-iq';
+import { ChartIQ, ChartIQLanguages, ChartIQView } from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { WEB_VIEW_SOURCE } from '~/constants';

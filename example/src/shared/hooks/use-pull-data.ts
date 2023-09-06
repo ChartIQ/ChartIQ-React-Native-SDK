@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
-import { QuoteFeedEvent } from 'react-native-chart-iq';
+import { QuoteFeedEvent } from 'react-native-chartiq';
 import uuid from 'react-native-uuid';
 
 import { RequestHandler } from '~/api';

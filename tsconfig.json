@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-chart-iq": ["./src/index"],
+      "react-native-chartiq": ["./src/index"],
       "~/*": ["./example/src/*"]
     },
     "allowUnreachableCode": false,

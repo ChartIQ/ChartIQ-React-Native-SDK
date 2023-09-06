@@ -6,7 +6,7 @@ import {
   SymbolLookupResponse,
   SymbolParams,
   SymbolQueryParams,
-} from 'react-native-chart-iq';
+} from 'react-native-chartiq';
 
 import { HOST_SIMULATOR, HOST_SYMBOLS } from '../constants/network.constants';
 

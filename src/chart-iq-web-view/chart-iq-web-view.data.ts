@@ -3,7 +3,7 @@ import { Platform, UIManager, requireNativeComponent } from 'react-native';
 import { ChartIqWrapperProps } from './chart-iq-web-view.types';
 
 export const LINKING_ERROR =
-  "The package 'react-native-chart-iq' doesn't seem to be linked. Make sure: \n\n" +
+  "The package 'react-native-chartiq' doesn't seem to be linked. Make sure: \n\n" +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';

@@ -7,7 +7,7 @@ import {
 } from 'expo-screen-orientation';
 import React, { useCallback, useEffect } from 'react';
 import { NativeSyntheticEvent } from 'react-native';
-import { ChartIQ, OnMeasureChangeEvent, ChartSymbol, DrawingTool } from 'react-native-chart-iq';
+import { ChartIQ, OnMeasureChangeEvent, ChartSymbol, DrawingTool } from 'react-native-chartiq';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { findLineTypeItemByPatternAndWidth } from '~/assets/icons/line-types/line-types';
