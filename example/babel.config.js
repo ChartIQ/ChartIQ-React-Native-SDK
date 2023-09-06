@@ -9,6 +9,7 @@ module.exports = {
         root: ['./src'],
         alias: {
           '~': path.resolve(__dirname, './src'),
+          'react-native-chartiq': path.resolve(__dirname, '../src/index'),
         },
         extensions: [
           '.tsx',
@@ -23,7 +24,6 @@ module.exports = {
         ],
       },
     ],
-    '@babel/plugin-transform-export-namespace-from',
     'react-native-reanimated/plugin',
   ],
 };
