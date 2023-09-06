@@ -1,7 +1,10 @@
 import { useContext, useRef } from 'react';
 import { ChartIQDrawingManager, DrawingSettings, DrawingTool } from 'react-native-chartiq';
 
-import { LineTypeItem } from '~/assets/icons/line-types/line-types';
+import {
+  LineTypeItem,
+  findLineTypeItemByPatternAndWidth,
+} from '~/assets/icons/line-types/line-types';
 import { DrawingItem } from '~/ui/drawing-tools-selector/drawing-tools-selector.data';
 
 import { DrawingActions } from '../../context/drawing-context/drawing-actions';
@@ -34,10 +37,7 @@ export const useUpdateDrawingTool = () => {
   ) => {
     const settings = drawingToolManager.current.getAvailableDrawingTools(drawingTool.name);
     let lineItem =
-      drawingToolManager.current.findLineTypeItemByPatternAndWidth(
-        line?.value ?? '',
-        line?.lineWidth ?? 1,
-      ) ?? currentLineType;
+      findLineTypeItemByPatternAndWidth(line?.value ?? '', line?.lineWidth ?? 1) ?? currentLineType;
 
     dispatch(
       DrawingActions.setDrawingTool({

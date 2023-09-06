@@ -10,9 +10,9 @@ export const LINKING_ERROR =
 
 const ComponentName = 'ChartIqWrapperView';
 
-export const ChartIqWrapperViewComponent =
+export const ChartIqWrapperViewComponent: React.FC<ChartIqWrapperProps> =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<ChartIqWrapperProps>(ComponentName)
-    : () => {
+    : ((() => {
         throw new Error(LINKING_ERROR);
-      };
+      }) as any);
