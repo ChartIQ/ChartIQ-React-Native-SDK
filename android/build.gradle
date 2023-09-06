@@ -37,6 +37,7 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
+  namespace "com.chartiqwrapper"
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
