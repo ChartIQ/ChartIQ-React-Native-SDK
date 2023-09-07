@@ -1,0 +1,10 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "ChartIQ",
+  "entryPoints": ["./src"],
+  "sort": ["source-order"],
+  "media": "./screenshots",
+  "categorizeByGroup": false,
+  "tsconfig": "tsconfig.docs.json",
+  "skipErrorChecking": true
+}
