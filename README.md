@@ -2,7 +2,7 @@
 
 React Native SDK for the [ChartIQ JavaScript library](https://documentation.chartiq.com).
 
-The ChartIQ React Native SDK supports a basic charting application. All the SDK methods in both the existing iOS and Android mobile app SDK are available to use in this project. This SDK can be extended to support more elaborate implementations by adding code to invoke ChartIQ library functions directly or by creating a bridge file similar to *nativeSdkBridge.js* (in the *mobile/js* folder of your ChartIQ library). 
+The ChartIQ React Native SDK supports a basic charting application. This SDK can be extended to support more elaborate implementations by adding code to invoke ChartIQ library functions directly or by creating a bridge file similar to *nativeSdkBridge.js* (in the *mobile/js* folder of your ChartIQ library). 
 
 Contact us at <support@chartiq.com> to request sample code and guidance on how to extend the SDK.
 
