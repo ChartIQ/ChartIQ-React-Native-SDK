@@ -18,7 +18,7 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 ## App
 
-The [example](https://github.com/ChartIQ/ChartIQ-Flutter-SDK/tree/main/example) folder of this repository contains both Android and iOS app that was built using the SDK. Customize the apps to quickly create your own Flutter charting application.
+The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) folder of this repository contains both Android and iOS app that was built using the SDK. Customize the apps to quickly create your own React Native charting application.
 
 **App screen shots**
 
@@ -98,7 +98,6 @@ To run the example app on iOS:
 yarn example ios
 ```
 
-
 ## API documentation
 
 The React Native sdk utilizes the existing mobile sdk that we have to offer.
@@ -109,6 +108,9 @@ The React Native sdk utilizes the existing mobile sdk that we have to offer.
 
 - [ChartIQ JavaScript library](https://documentation.chartiq.com)
 
+## Questions and support
+
+Contact our development support team at <support@chartiq.com>.
 
 ## Contributing
 
