@@ -1,4 +1,4 @@
-# ChartIQ React Native SDK
+# ChartIQ-React-Native-SDK
 
 React Native SDK for the [ChartIQ JavaScript library](https://documentation.chartiq.com).
 
