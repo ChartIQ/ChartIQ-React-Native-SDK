@@ -4,7 +4,7 @@ import ChartIQView, {
   OnStartEvent,
   QuoteFeedEvent,
 } from './chart-iq-web-view';
-import { ChartIQ } from './chart-iq-wrapper-module';
+import * as ChartIQ from './chart-iq-wrapper-module';
 
 export {
   ChartIQ,

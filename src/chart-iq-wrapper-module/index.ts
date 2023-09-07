@@ -48,7 +48,7 @@ import {
   undoDrawing,
 } from './chart-iq-wrapper-module';
 
-export const ChartIQ = {
+export {
   addSeries,
   addSignal,
   addSignalStudy,
