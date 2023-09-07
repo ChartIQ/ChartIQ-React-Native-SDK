@@ -78,6 +78,7 @@ import { ChartIqWrapperView } from 'react-native-chartiq';
   }}
   style={styles.chartIq}
 />;
+```
 
 To start the packager:
 
