@@ -76,7 +76,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.github.AlexStepaniuk:ChartIQ-Android-SDK-fork:v1.0.3'
+  // https://mvnrepository.com/artifact/io.github.chartiq/sdk
+  implementation group: 'io.github.chartiq', name: 'sdk', version: '3.2.0'
   implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.4.1'
   implementation "com.google.code.gson:gson:2.8.6"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
