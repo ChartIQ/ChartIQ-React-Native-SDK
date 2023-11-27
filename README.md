@@ -8,9 +8,8 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 ## Requirements
 
-- Version 9.0.0 or later of the ChartIQ library
-
-  Go to our <a href="https://pages.marketintelligence.spglobal.com/ChartIQ-Follow-up-Request.html" target="_blank">corporate site</a> to obtain a free 30-day trial version of the library, or send us an email at <support@chartiq.com>, and we'll send you an evaluation version.
+- A copy of the ChartIQ JavaScript library (works best with version 9.0.0).
+  - If you do not have a copy of the library or need a different version, please contact your account manager or visit our <a href="https://pages.marketintelligence.spglobal.com/ChartIQ-Follow-up-Request.html" target="_blank">Request Follow-Up Site</a>.
 
 - React Native 0.71.7
 - Android 8.1 Oreo (API level 27) or later
