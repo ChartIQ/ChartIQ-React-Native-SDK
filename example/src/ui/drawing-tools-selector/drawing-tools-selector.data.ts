@@ -185,6 +185,12 @@ export const drawingTools = [
     name: DrawingTool.LINE,
   } as DrawingItem,
   {
+    Icon: Icons.drawingTools.measurementline,
+    tags: [DrawingToolTags.statistics],
+    title: 'Measurement line',
+    name: DrawingTool.MEASUREMENT_LINE,
+  } as DrawingItem,
+  {
     Icon: Icons.drawingTools.pitchfork,
     tags: [DrawingToolTags.technicals],
     title: 'Pitchfork',

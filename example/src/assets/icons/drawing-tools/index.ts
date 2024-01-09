@@ -24,6 +24,7 @@ import Heart from './heart.svg';
 import HorizontalLine from './horizontal-line.svg';
 import Line from './line.svg';
 import Measure from './measure.svg';
+import MeasurementLine from './measurement-line.svg';
 import Pitchfork from './pitchfork.svg';
 import QuadrantLines from './quadrant-lines.svg';
 import Ray from './ray.svg';
@@ -79,6 +80,7 @@ const drawingTools = {
   [DrawingTool.FIB_PROJECTION]: FibonacciProjection,
   [DrawingTool.LINE]: Line,
   [DrawingTool.NO_TOOL]: Measure,
+  [DrawingTool.MEASUREMENT_LINE]: MeasurementLine,
 };
 
 export default drawingTools;

@@ -29,6 +29,7 @@ export class ChartIQDrawingManager implements DrawingManager {
       case DrawingTool.TIME_CYCLE:
       case DrawingTool.TIRONE_LEVELS:
       case DrawingTool.TREND_LINE:
+      case DrawingTool.MEASUREMENT_LINE:
         return true;
       default:
         return false;
@@ -72,6 +73,7 @@ export class ChartIQDrawingManager implements DrawingManager {
       case DrawingTool.CROSSLINE:
       case DrawingTool.HORIZONTAL_LINE:
       case DrawingTool.VERTICAL_LINE:
+      case DrawingTool.MEASUREMENT_LINE:
         return true;
       default:
         return false;
