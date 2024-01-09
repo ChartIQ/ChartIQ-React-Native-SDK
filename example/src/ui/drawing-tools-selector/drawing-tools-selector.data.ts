@@ -221,12 +221,6 @@ export const drawingTools = [
     name: DrawingTool.REGRESSION_LINE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.segment,
-    tags: [DrawingToolTags.lines],
-    title: 'Segment',
-    name: DrawingTool.SEGMENT,
-  } as DrawingItem,
-  {
     Icon: Icons.drawingTools.speedarc,
     tags: [DrawingToolTags.technicals],
     title: 'Speed Resistance Arc',
