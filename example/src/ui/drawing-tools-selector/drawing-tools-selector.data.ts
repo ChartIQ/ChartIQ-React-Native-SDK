@@ -258,7 +258,7 @@ export const drawingTools = [
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.trendline,
-    tags: [DrawingToolTags.text],
+    tags: [DrawingToolTags.lines],
     title: 'Trend Line',
     name: DrawingTool.TREND_LINE,
   } as DrawingItem,
