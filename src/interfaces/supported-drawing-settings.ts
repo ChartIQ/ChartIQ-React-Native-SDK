@@ -9,4 +9,5 @@ export interface SupportedSettings {
   supportingFibonacci: boolean;
   supportingElliottWave: boolean;
   supportingVolumeProfile: boolean;
+  supportCallout: boolean;
 }

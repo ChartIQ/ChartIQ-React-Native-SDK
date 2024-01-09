@@ -34,4 +34,5 @@ export enum DrawingParams {
   PRICE_BUCKETS = 'priceBuckets',
   FILL_COLOR = 'fillColor',
   AXIS_LABEL = 'axisLabel',
+  SHOW_CALLOUT = 'showCallout',
 }

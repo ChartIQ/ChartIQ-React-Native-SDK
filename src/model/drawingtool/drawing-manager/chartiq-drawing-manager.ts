@@ -106,6 +106,10 @@ export class ChartIQDrawingManager implements DrawingManager {
     return drawingTool === DrawingTool.VOLUME_PROFILE;
   }
 
+  isSupportCallout(drawingTool: DrawingTool): boolean {
+    return drawingTool === DrawingTool.TREND_LINE;
+  }
+
   getAvailableDrawingTools(drawingTool: DrawingTool): SupportedSettings {
     return {
       supportingFillColor: this.isSupportingFillColor(drawingTool),
@@ -118,6 +122,7 @@ export class ChartIQDrawingManager implements DrawingManager {
       supportingFibonacci: this.isSupportingFibonacci(drawingTool),
       supportingElliottWave: this.isSupportingElliottWave(drawingTool),
       supportingVolumeProfile: this.isSupportingVolumeProfile(drawingTool),
+      supportCallout: this.isSupportCallout(drawingTool),
     };
   }
 }

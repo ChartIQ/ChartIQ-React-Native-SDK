@@ -47,6 +47,7 @@ const DrawingToolSettings: React.FC = () => {
       supportingVolumeProfile,
       supportingAxisLabel,
       supportingElliottWave,
+      supportCallout,
     },
     currentLineType,
   } = useContext(DrawingContext);
@@ -56,6 +57,7 @@ const DrawingToolSettings: React.FC = () => {
     font,
     volumeProfile,
     waveParameters,
+    showCallout,
   } = drawingSettings;
 
   const [fillColor, setFillColor] = useState(() => colorInitializer(fillColorValue, theme.isDark));
@@ -192,6 +194,17 @@ const DrawingToolSettings: React.FC = () => {
     });
   };
 
+  const toggleShowCallout = () => {
+    updateDrawingSettings((prevState) => {
+      const value = !prevState.showCallout;
+      ChartIQ.setDrawingParams(DrawingParams.SHOW_CALLOUT, value);
+      return {
+        ...prevState,
+        showCallout: value,
+      };
+    });
+  };
+
   return (
     <>
       <SafeAreaView edges={edges} style={styles.container}>
@@ -324,6 +337,11 @@ const DrawingToolSettings: React.FC = () => {
                 <Switch onChange={toggleShowLines} value={waveParameters.showLines} />
               </ListItem>
             </>
+          ) : null}
+          {supportCallout ? (
+            <ListItem title="Show Callout">
+              <Switch onChange={toggleShowCallout} value={showCallout} />
+            </ListItem>
           ) : null}
         </ScrollView>
       </SafeAreaView>
