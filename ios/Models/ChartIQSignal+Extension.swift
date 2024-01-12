@@ -13,8 +13,8 @@ public extension ChartIQSignal {
         return [
             "study": self.study.toDictionary(),
             "joiner": self.joiner.displayName.uppercased(),
-            "name": self.name,
-            "description": self.signalDescription as Any,
+            "name": self.name.removingPercentEncoding,
+            "description": self.signalDescription?.removingPercentEncoding as Any,
             "disabled": !self.isEnabled,
             "conditions": self.conditions.map { $0.toDictionary() }
         ]
@@ -93,13 +93,17 @@ extension [String: Any] {
             joiner = .and
         default: break
         }
-
+        
+        let description = self["description"] as! String
+        let name = self["name"] as! String
+        
+        print("toChartIQSignal \(description) \(name)")
         return ChartIQSignal(
             study: (self["study"] as! [String: Any]).toChartIQStudy()!,
             conditions: (self["conditions"] as! [[String: Any?]]).map { $0.toChartIQCondition() },
             joiner: joiner,
-            name: self["name"] as! String,
-            signalDescription: self["description"] as? String,
+            name: name,
+            signalDescription: description,
             isEnabled: !(self["disabled"] as? Bool ?? false)
         )
     }

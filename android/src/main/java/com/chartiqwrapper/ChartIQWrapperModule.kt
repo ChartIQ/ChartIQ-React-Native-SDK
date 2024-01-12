@@ -295,12 +295,10 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
       }
       else -> input.getString("value")
     }
-    val drawingParameter = DrawingParameterType.values().find {
-      it.value == parameterName
-    }
-    if (drawingParameter != null && value != null) {
+
+    if (parameterName != null && value != null) {
       handler.post(Runnable {
-        chartIQViewModel.getChartIQ().setDrawingParameter(drawingParameter.value, value)
+        chartIQViewModel.getChartIQ().setDrawingParameter(parameterName, value)
       })
     }
   }

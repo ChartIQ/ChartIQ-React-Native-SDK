@@ -46,7 +46,21 @@ const AddStudies: React.FC = () => {
 
       if (study !== undefined) {
         const isClone = activeStudies.some((item) => study.display === item.display);
-        ChartIQ.addStudy({ ...study, uniqueId: uuid.v4() as string }, isClone);
+        const studyParams = {
+          uniqueId: uuid.v4() as string,
+          inputs: {
+            ...study.inputs,
+            'Shift Type': study.inputs?.['Shift Type'] ? 'points' : undefined,
+          },
+        };
+
+        ChartIQ.addStudy(
+          {
+            ...study,
+            ...studyParams,
+          },
+          isClone,
+        );
       }
     });
 

@@ -164,7 +164,7 @@ const DrawingToolSettings: React.FC = () => {
       axisLabel: value,
     }));
 
-    ChartIQ.setDrawingParams(DrawingParams.AXIS_LABEL, JSON.stringify(value));
+    ChartIQ.setDrawingParams(DrawingParams.AXIS_LABEL, value);
   };
 
   const handleVolumeProfileChange = ({
