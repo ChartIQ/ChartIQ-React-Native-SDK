@@ -42,4 +42,5 @@ export interface DrawingSettings extends STDDeviationSettings {
     showLines: boolean;
   };
   axisLabel: boolean;
+  showCallout: boolean;
 }

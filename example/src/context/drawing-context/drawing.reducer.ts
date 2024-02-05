@@ -58,6 +58,7 @@ export const drawingInitialState: DrawingState = {
       template: Template.PRIMARY,
       showLines: true,
     },
+    showCallout: false,
   },
   supportedSettings: {
     supportingAxisLabel: false,
@@ -70,6 +71,7 @@ export const drawingInitialState: DrawingState = {
     supportingLineType: false,
     supportingSettings: false,
     supportingVolumeProfile: false,
+    supportCallout: false,
   },
   currentLineType: {
     name: 'solid',

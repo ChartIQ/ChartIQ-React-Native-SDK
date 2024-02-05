@@ -428,10 +428,18 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func setDrawingParams(_ drawingParams: NSDictionary) {
         let parameterName = drawingParams["parameterName"] as? String
         let value = drawingParams["value"]
+        let type = drawingParams["type"] as? String
+
+        var parameterValue = value
         
+        if(type == "boolean") {
+            parameterValue = value as! Int == 0 ? false : true
+        }
+            
         defaultQueue.async {
             if value != nil && parameterName != nil {
-                self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName!, value: value!)
+                print("setDrawingParams \(parameterName!) \(parameterValue!)")
+                self.chartIQWrapperView.chartIQView.setDrawingParameter(parameterName!, value: parameterValue!)
             }
         }
     }

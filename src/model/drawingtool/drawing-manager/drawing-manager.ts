@@ -70,4 +70,11 @@ export interface DrawingManager {
    * @return true if the drawing tool supports the setting, false if not
    */
   isSupportingVolumeProfile(drawingTool: DrawingTool): boolean;
+
+  /**
+   * Checks if a drawing tool supports `Show Callout` parameters
+   * @param drawingTool A [DrawingTool] to be checked for the support
+   * @return true if the drawing tool supports the setting, false if not
+   */
+  isSupportCallout(drawingTool: DrawingTool): boolean;
 }

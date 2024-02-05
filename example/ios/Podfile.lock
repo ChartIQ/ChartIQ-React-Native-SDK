@@ -1,6 +1,6 @@
 PODS:
   - boost (1.76.0)
-  - ChartIQ (4.0.0)
+  - ChartIQ (4.1.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - EXApplication (5.1.1):
@@ -349,8 +349,8 @@ PODS:
   - React-jsinspector (0.71.7)
   - React-logger (0.71.7):
     - glog
-  - react-native-chartiq (0.0.10):
-    - ChartIQ (= 4.0.0)
+  - react-native-chartiq (0.0.12):
+    - ChartIQ (= 4.1.0)
     - React-Core
   - react-native-safe-area-context (4.5.0):
     - RCT-Folly
@@ -680,9 +680,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  ChartIQ: 97ccc99b03a3d1ddc3bd687c3f777fc55bd6422a
+  ChartIQ: ba63247fbb5d44dc22c9800ab5458718d4f9faa4
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -703,7 +703,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: 4438d2b8bf8bebaba1b1ac0451160bab59e491f8
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -721,7 +721,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: eaa5f71eb8f6861cf0e57f1a0f52aeb020d9e18e
   React-jsinspector: 9885f6f94d231b95a739ef7bb50536fb87ce7539
   React-logger: 3f8ebad1be1bf3299d1ab6d7f971802d7395c7ef
-  react-native-chartiq: 8bc94383494b214b6bcffe0d4d11ea38d7f76689
+  react-native-chartiq: 43547dd0212e3459d05a5966663d20cd8f7f58fc
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   React-perflogger: 2d505bbe298e3b7bacdd9e542b15535be07220f6
   React-RCTActionSheet: 0e96e4560bd733c9b37efbf68f5b1a47615892fb
@@ -747,4 +747,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d2d2f1300303446b4b991c4ef66525eeefd5f998
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.14.3

@@ -1,6 +1,6 @@
 {
   "name": "@chartiq/react-native-chartiq",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "ChartIQ React Native Library",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -82,7 +82,6 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [

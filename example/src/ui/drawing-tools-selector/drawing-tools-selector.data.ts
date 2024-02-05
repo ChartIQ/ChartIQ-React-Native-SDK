@@ -185,6 +185,12 @@ export const drawingTools = [
     name: DrawingTool.LINE,
   } as DrawingItem,
   {
+    Icon: Icons.drawingTools.measurementline,
+    tags: [DrawingToolTags.statistics],
+    title: 'Measurement line',
+    name: DrawingTool.MEASUREMENT_LINE,
+  } as DrawingItem,
+  {
     Icon: Icons.drawingTools.pitchfork,
     tags: [DrawingToolTags.technicals],
     title: 'Pitchfork',
@@ -213,12 +219,6 @@ export const drawingTools = [
     tags: [DrawingToolTags.statistics],
     title: 'Regression Line',
     name: DrawingTool.REGRESSION_LINE,
-  } as DrawingItem,
-  {
-    Icon: Icons.drawingTools.segment,
-    tags: [DrawingToolTags.lines],
-    title: 'Segment',
-    name: DrawingTool.SEGMENT,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.speedarc,
@@ -252,7 +252,7 @@ export const drawingTools = [
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.trendline,
-    tags: [DrawingToolTags.text],
+    tags: [DrawingToolTags.lines],
     title: 'Trend Line',
     name: DrawingTool.TREND_LINE,
   } as DrawingItem,
