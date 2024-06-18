@@ -1,6 +1,6 @@
 PODS:
   - boost (1.76.0)
-  - ChartIQ (4.1.0)
+  - ChartIQ (4.2.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - EXApplication (5.1.1):
@@ -19,7 +19,7 @@ PODS:
     - React-Core
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - EXScreenOrientation (5.1.1):
+  - EXScreenOrientation (5.2.0):
     - ExpoModulesCore
     - React-Core
   - FBLazyVector (0.71.7)
@@ -349,8 +349,8 @@ PODS:
   - React-jsinspector (0.71.7)
   - React-logger (0.71.7):
     - glog
-  - react-native-chartiq (0.0.12):
-    - ChartIQ (= 4.1.0)
+  - react-native-chartiq (0.0.13):
+    - ChartIQ (= 4.2.0)
     - React-Core
   - react-native-safe-area-context (4.5.0):
     - RCT-Folly
@@ -476,7 +476,7 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (13.9.0):
+  - RNSVG (13.12.0):
     - React-Core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
@@ -680,9 +680,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  ChartIQ: ba63247fbb5d44dc22c9800ab5458718d4f9faa4
+  ChartIQ: 6eae4027c72a87319b34adb235a4f04d56dd5d85
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -690,7 +690,7 @@ SPEC CHECKSUMS:
   Expo: 75e4aea2dd87a205b3be49577b1ba6b7afea8019
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 79392ab654019ea3aadeae308919c3d9dd97879c
-  EXScreenOrientation: 52220f8f2477ed25a37e3b2cdbbaa8635d250256
+  EXScreenOrientation: d6f2277d20a76206f1ec5268d6c727e758e10d05
   FBLazyVector: a89a0525bc7ca174675045c2b492b5280d5a2470
   FBReactNativeSpec: 7714e6bc1e9ea23df6c4cb42f0b2fd9c6a3a559c
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -703,7 +703,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 4438d2b8bf8bebaba1b1ac0451160bab59e491f8
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -721,7 +721,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: eaa5f71eb8f6861cf0e57f1a0f52aeb020d9e18e
   React-jsinspector: 9885f6f94d231b95a739ef7bb50536fb87ce7539
   React-logger: 3f8ebad1be1bf3299d1ab6d7f971802d7395c7ef
-  react-native-chartiq: 43547dd0212e3459d05a5966663d20cd8f7f58fc
+  react-native-chartiq: ace9784d47e339cb7f147a93ea5abb1e0178ff4c
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   React-perflogger: 2d505bbe298e3b7bacdd9e542b15535be07220f6
   React-RCTActionSheet: 0e96e4560bd733c9b37efbf68f5b1a47615892fb
@@ -740,11 +740,11 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
+  RNSVG: 6d07f8f8f246c85e3e16e0bcfc0d047db0c48496
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: d2d2f1300303446b4b991c4ef66525eeefd5f998
+PODFILE CHECKSUM: 243c582e87db65090df381d7ea29a92575610085
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

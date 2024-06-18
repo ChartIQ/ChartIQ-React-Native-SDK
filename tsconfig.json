@@ -1,29 +1,3 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "react-native-chartiq": ["./src/index"],
-      "~/*": ["./example/src/*"]
-    },
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext"
-  },
-  "exclude": ["node_modules", "example/node_modules"]
+  "extends": "@react-native/typescript-config/tsconfig.json"
 }

@@ -91,10 +91,10 @@ extension ChartIqWrapperView: ChartIQDataSource {
 
 extension ChartIqWrapperView: RCTInvalidating {
     func invalidate() {
-        chartIQHelper = nil
-        chartIQView = nil
-        chartIQDatasource = nil
-        chartIQDelegate = nil
+        //chartIQHelper = nil
+        //chartIQView = nil
+        //chartIQDatasource = nil
+        //chartIQDelegate = nil
     }
 }
 
