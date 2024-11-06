@@ -9,5 +9,5 @@ export const ChartIQLanguages = {
   HU: { title: 'Hungarian', code: 'hu-HU' },
   ZH: { title: 'Chinese', code: 'zh-CN' },
   JA: { title: 'Japanese', code: 'ja-JP' },
-  AR: { title: 'Arabic', code: 'ar-EG' },
+  AR: { title: 'Arabic', code: 'ar-EG-u-nu-latn' },
 };
