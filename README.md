@@ -8,13 +8,14 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 ## Requirements
 
-- A copy of the ChartIQ JavaScript library (works best with version 9.5.0).
-
+- A copy of the ChartIQ JavaScript library (works best with version 9.6.0).
   - If you do not have a copy of the library or need a different version, please contact your account manager or visit our <a href="https://pages.marketintelligence.spglobal.com/ChartIQ-Follow-up-Request.html" target="_blank">Request Follow-Up Site</a>.
 
 - React Native 0.71.7
 - Android 8.1 Oreo (API level 27) or later
 - iOS 10.3 or later
+
+**Important:** This SDK requires additional configuration to be able to work with the remote npm registry introduced in version 9.5.1.
 
 ## App
 
