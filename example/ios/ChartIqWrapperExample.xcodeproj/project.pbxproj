@@ -14,6 +14,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		22A8B68FDAE7D9BDC24A0C11 /* libPods-ChartIqWrapperExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E661536B366BC4144140E /* libPods-ChartIqWrapperExample.a */; };
 		4098F1BA61A5DB2EE0F2AF7F /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBB1B54E870B1D24C01F3F52 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */; };
+		6DD196F502560A411BEC5EE2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4CF2549B03567F462C05BE5D /* PrivacyInfo.xcprivacy */; };
 		70DF60BE9CA993D53168F277 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7636982212B48851AA878D /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		942FC540B82A684747E1B317 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */; };
@@ -43,6 +44,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ChartIqWrapperExample/main.m; sourceTree = "<group>"; };
 		1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		35DA5A73C7A528112F5109C4 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		4CF2549B03567F462C05BE5D /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ChartIqWrapperExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ChartIqWrapperExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B7636982212B48851AA878D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		C900F50BB1167993EB324879 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				04CC59EA2A4D8439007951E4 /* Images.xcassets */,
+				4CF2549B03567F462C05BE5D /* PrivacyInfo.xcprivacy */,
 			);
 			name = ChartIqWrapperExample;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				04CC59EB2A4D8439007951E4 /* Images.xcassets in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6DD196F502560A411BEC5EE2 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,11 +671,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-					"-Wl -ld_classic ",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -741,11 +741,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-					"-Wl -ld_classic ",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
