@@ -57,15 +57,6 @@ or
 npm i @chartiq/react-native-chartiq
 ```
 
-## IOS installation additional step
-
-Go to the ios folder and run pod install
-
-```sh
-cd ios
-pod install
-```
-
 ## Quick start guide
 
 To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
