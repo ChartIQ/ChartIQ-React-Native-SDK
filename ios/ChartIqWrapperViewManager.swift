@@ -1,4 +1,5 @@
 import ChartIQ
+import React
 
 @objc(ChartIqWrapperViewManager)
 class ChartIqWrapperViewManager: RCTViewManager {
@@ -9,17 +10,61 @@ class ChartIqWrapperViewManager: RCTViewManager {
     private var currentHUD: ChartIQCrosshairHUD?
     
     override init() {
+        super.init()
         self.chartIQHelper = ChartIQHelper()
         self.chartIQWrapperView = ChartIqWrapperView()
         chartIQWrapperView.chartIQHelper = chartIQHelper
     }
     
-    override func view() -> (ChartIqWrapperView) {
+    override static func moduleName() -> String! {
+        return "ChartIqWrapperView"
+    }
+    
+    override class func requiresMainQueueSetup() -> Bool {
+        return true
+    }
+    
+    override func view() -> UIView! {
+        if chartIQWrapperView == nil {
+            chartIQWrapperView = ChartIqWrapperView()
+            chartIQWrapperView.chartIQHelper = chartIQHelper
+        }
         return chartIQWrapperView
     }
     
-    @objc override static func requiresMainQueueSetup() -> Bool {
-        return true
+    @objc class func propConfig() -> [String: Any]! {
+        return [
+            "url": [
+                "type": "String",
+                "required": true
+            ],
+            "symbol": [
+                "type": "String",
+                "required": false
+            ],
+            "dataMethod": [
+                "type": "String",
+                "required": false
+            ]
+        ]
+    }
+    
+    @objc override func constantsToExport() -> [AnyHashable : Any]! {
+        return [:]
+    }
+    
+    @objc func supportedEvents() -> [String]! {
+        return [
+            "DispatchOnPullInitialData",
+            "DispatchOnPullUpdateData",
+            "DispatchOnPullPagingData",
+            "DispatchOnChartStart",
+            "DispatchOnLayoutUpdate",
+            "DispatchOnSymbolUpdate",
+            "DispatchOnDrawingUpdate",
+            "DispatchOnMeasureUpdate",
+            "DispatchOnHUDUpdate"
+        ]
     }
     
     @objc func setSymbol(_ symbol: String) {
@@ -63,9 +108,9 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func setChartType(_ type: String) {
         defaultQueue.async {
-            var stringValue = type.lowercased().replace(" ", with: "_")
+            var stringValue = type.lowercased().replacingOccurrences(of: " ", with: "_")
             if stringValue == "colored_hlc_bar" {
-                stringValue = stringValue.replace("_bar", with: "")
+                stringValue = stringValue.replacingOccurrences(of: "_bar", with: "")
             }
             if stringValue == "baseline" {
                 stringValue.append("_delta")
@@ -86,7 +131,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func getChartType(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         defaultQueue.async {
             let chartType = self.chartIQWrapperView.chartIQView.chartType.displayName.uppercased()
-            
             resolve(chartType)
         }
     }
@@ -97,24 +141,13 @@ class ChartIqWrapperViewManager: RCTViewManager {
             var timeUnitValue = ""
             if timeUnit != nil {
                 timeUnitValue = timeUnit!.stringValue.uppercased()
-            } else {
-                timeUnitValue = ChartIQTimeUnit.day.stringValue.uppercased()
-            }
-            
-            var interval = self.chartIQWrapperView.chartIQView.interval
-            if interval == nil {
-                interval = "1"
-            }
-            if interval == "day" || interval == "week" || interval == "month" {
-                timeUnitValue = ChartIQTimeUnit(stringValue: interval ?? "day")?.stringValue.uppercased() ?? timeUnitValue
-                interval = "1"
             }
             
             resolve([
-                "timeUnit": timeUnitValue,
-                "periodicity": self.chartIQWrapperView.chartIQView.periodicity ?? 1,
-                "interval": interval ?? ""
-            ] as [String: Any])
+                "period": self.chartIQWrapperView.chartIQView.periodicity,
+                "interval": self.chartIQWrapperView.chartIQView.interval ?? "",
+                "timeUnit": timeUnitValue
+            ])
         }
     }
     

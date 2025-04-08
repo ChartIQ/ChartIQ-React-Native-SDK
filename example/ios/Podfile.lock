@@ -20,7 +20,7 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - EXScreenOrientation (5.1.1):
+  - EXScreenOrientation (5.2.0):
     - ExpoModulesCore
     - React-Core
   - FBLazyVector (0.72.17)
@@ -492,7 +492,7 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (13.9.0):
+  - RNSVG (13.14.1):
     - React-Core
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
@@ -683,7 +683,7 @@ SPEC CHECKSUMS:
   Expo: dc993e0d66e657a31dc45574543ca1ed3d68c617
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoModulesCore: cfc52053496bae101b7ce6cd20a0ebaefbf977c0
-  EXScreenOrientation: 52220f8f2477ed25a37e3b2cdbbaa8635d250256
+  EXScreenOrientation: d6f2277d20a76206f1ec5268d6c727e758e10d05
   FBLazyVector: 66398fc2381d8fa1eee4c0f80d931587a7b927e8
   FBReactNativeSpec: 0f8cecf999d709dba7626bbf565b1b5f8f46a5c1
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -728,10 +728,10 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
+  RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: ef534101bb891fb09bae657417f34d399c1efe38
 
-PODFILE CHECKSUM: dbf5839ba0a6cd71f01bdd641160d1b3d02e9211
+PODFILE CHECKSUM: 7d9c0e55b6bb4a5839be562bb83f9487db7c3f8f
 
 COCOAPODS: 1.15.2
