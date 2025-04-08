@@ -63,6 +63,9 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 
+# testing
+/coverage
+
 # Expo
 .expo/
 

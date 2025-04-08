@@ -1,44 +1,27 @@
-const escape = require('escape-string-regexp');
-const { getDefaultConfig } = require('metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
 const path = require('path');
+const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
 
-const pak = require('../package.json');
+const defaultConfig = getDefaultConfig(__dirname);
+const { assetExts, sourceExts } = defaultConfig.resolver;
 
-const root = path.resolve(__dirname, '..');
-
-const modules = Object.keys({
-  ...pak.peerDependencies,
-});
-
-module.exports = async () => {
-  const {
-    resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig();
-  return {
-    projectRoot: __dirname,
-    watchFolders: [root],
-
-    transformer: {
-      getTransformOptions: async () => ({
-        transform: {
-          babelTransformerPath: require.resolve('react-native-svg-transformer'),
-          experimentalImportSupport: false,
-          inlineRequires: true,
-        },
-      }),
-      babelTransformerPath: require.resolve('react-native-svg-transformer'),
-    },
-    resolver: {
-      blacklistRE: exclusionList(
-        modules.map((m) => new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)),
-      ),
-      extraNodeModules: modules.reduce((acc, name) => {
-        acc[name] = path.join(__dirname, 'node_modules', name);
-        return acc;
-      }, {}),
-      assetExts: assetExts.filter((ext) => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg'],
-    },
-  };
+/**
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+const config = {
+  transformer: {
+    babelTransformerPath: require.resolve(
+      "react-native-svg-transformer/react-native"
+    )
+  },
+  resolver: {
+    assetExts: assetExts.filter((ext) => ext !== "svg"),
+    sourceExts: [...sourceExts, "svg"],
+    nodeModulesPaths: [path.resolve(__dirname, '../node_modules')],
+  },
+  watchFolders: [path.resolve(__dirname, '..')],
 };
+
+module.exports = mergeConfig(defaultConfig, config);
