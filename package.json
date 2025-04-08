@@ -22,8 +22,9 @@
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn install && yarn example pods",
+    "bootstrap": "yarn example install && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
+    "cleanmodules": "rm -rf node_modules example/node_modules example/ios/Pods",
     "docs": "typedoc --out docs src/index.ts"
   },
   "keywords": [
