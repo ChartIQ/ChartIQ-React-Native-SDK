@@ -40,6 +40,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
 
   @ReactProp(name = "dataMethod")
   fun setDataMethod(view: ViewGroup, dataMethod: String?) {
+    if (!this::chartIQ.isInitialized) {
+      android.util.Log.w("ChartIQ", "ChartIQ not initialized yet, skipping dataMethod update")
+      return
+    }
+
     chartIQ.getSymbol { symbol ->
       if (dataMethod != null) {
         if (dataMethod == "push") {

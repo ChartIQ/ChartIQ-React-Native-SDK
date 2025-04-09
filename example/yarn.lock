@@ -4007,10 +4007,10 @@ expo-modules-core@1.5.4:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-screen-orientation@^5.1.1:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-5.2.0.tgz#12226d76f76ba0bac3e206f2a6217756b1c301f4"
-  integrity sha512-Qudm37ElZUN8kjbqhrTfzGgGh8+zbEk8k8GGKJ8VbqaLq+uO+bR3vmc1yMDDbSKBZTDXybEXTHlilMawL8fscA==
+expo-screen-orientation@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-6.2.0.tgz#13f9a94e64a58b229d88285dc342c4aed8b19cc5"
+  integrity sha512-1uIIe5ACKlRu/vUccBOSXj1ZxQ38pn5MDsxdTqhlQDC637kfX5CTvaM2uYxRGV4S1PXdRrC+d/dvtE2xLQNAFQ==
 
 expo@49.0.0:
   version "49.0.0"
