@@ -27,6 +27,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+**/.xcode.env.local
 project.xcworkspace
 
 # Android/IJ
@@ -47,8 +48,9 @@ output-metadata.json
 #
 example/ios/Pods
 
-# Ruby
+# Ruby / CocoaPods
 example/vendor/
+**/Pods/
 
 # node.js
 #
@@ -65,6 +67,14 @@ android/keystores/debug.keystore
 
 # testing
 /coverage
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # Expo
 .expo/
