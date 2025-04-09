@@ -62,4 +62,3 @@ RCT_EXTERN_METHOD(removeSignal: (NSDictionary *)signal)
 RCT_EXTERN_METHOD(getHudDetails: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 @end
-

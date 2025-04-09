@@ -16,7 +16,10 @@ import { ChartIqWrapperProps } from './chart-iq-web-view.types';
  * url={url}
  * />
  */
-const ChartIQView = Platform.OS === 'ios' ? IOSChartIQView : ChartIqWrapperViewComponent;
+const ChartIQView = Platform.select({
+  android: ChartIqWrapperViewComponent as React.FC<ChartIqWrapperProps>,
+  ios: IOSChartIQView,
+}) as React.FC<ChartIqWrapperProps>;
 
 export default ChartIQView;
 export * from './chart-iq-web-view.types';

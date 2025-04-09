@@ -1,15 +1,13 @@
-import React from 'react';
-import {
-  NativeModules,
-  NativeEventEmitter,
-  requireNativeComponent,
-  ViewProps,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 
 import { ChartIQDatafeedParams } from '../interfaces';
+
+import { ChartIqWrapperViewComponent } from './chart-iq-web-view.data';
 import { ChartIqWrapperProps } from './chart-iq-web-view.types';
 
 const { RTEEventEmitter } = NativeModules;
+
 const RTVEventEmitter = new NativeEventEmitter(RTEEventEmitter);
 
 enum IOSEventEmitterKeys {
@@ -24,9 +22,67 @@ enum IOSEventEmitterKeys {
   DispatchOnHUDUpdate = 'DispatchOnHUDUpdate',
 }
 
-const ComponentName = 'ChartIqWrapperView';
+const ChartIQWrapperView: React.FC<ChartIqWrapperProps> = ({
+  onPullInitialData,
+  onPullUpdateData,
+  onPullPagingData,
+  onStart,
+  onMeasureChanged,
+  ...props
+}) => {
+  useEffect(() => {
+    const pullInitialSubscription = RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnPullInitialData,
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
+        onPullInitialData &&
+          onPullInitialData({
+            nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
+          });
+      }
+    );
+    const pullUpdateSubscription = RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnPullUpdateData,
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
+        onPullUpdateData &&
+          onPullUpdateData({
+            nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
+          });
+      }
+    );
+    const pullPagingSubscription = RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnPullPagingData,
+      (quote: { quoteFeedParam: ChartIQDatafeedParams }) => {
+        onPullPagingData &&
+          onPullPagingData({
+            nativeEvent: { quoteFeedParam: quote.quoteFeedParam },
+          });
+      }
+    );
+    const pullStartSubscription = RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnChartStart,
+      () => {
+        onStart && onStart({ nativeEvent: {} });
+      }
+    );
+    const pullMeasureSubscription = RTVEventEmitter.addListener(
+      IOSEventEmitterKeys.DispatchOnMeasureUpdate,
+      (payload: string) => {
+        onMeasureChanged &&
+          onMeasureChanged({ nativeEvent: { measure: payload } });
+      }
+    );
 
-// @ts-ignore
-const ChartIQWrapperView = requireNativeComponent(ComponentName);
+    return () => {
+      pullInitialSubscription.remove();
+      pullUpdateSubscription.remove();
+      pullPagingSubscription.remove();
+      pullStartSubscription.remove();
+      pullMeasureSubscription.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return <ChartIqWrapperViewComponent {...props} />;
+};
 
 export default ChartIQWrapperView;
