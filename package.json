@@ -49,7 +49,7 @@
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
     "@types/react": "~18.2.0",
-    "@types/react-native": "0.72.17",
+    "@types/react-native": "^0.72.8",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "commitlint": "^17.0.2",

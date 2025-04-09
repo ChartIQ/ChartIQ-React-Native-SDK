@@ -1,7 +1,9 @@
 import React, { createContext } from 'react';
 
 import { DrawingState } from './drawing-state.types';
-import { Action, drawingInitialState } from './drawing.reducer';
+import { Action } from './drawing.reducer';
 
-export const DrawingContext = createContext<DrawingState>(drawingInitialState);
-export const DrawingDispatchContext = createContext<React.Dispatch<Action>>(() => {});
+// @ts-ignore
+export const DrawingContext = createContext<DrawingState>(null);
+// @ts-ignore
+export const DrawingDispatchContext = createContext<React.Dispatch<Action>>(null);
