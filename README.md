@@ -21,9 +21,9 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) folder of this repository contains both Android and iOS app that was built using the SDK. Customize the apps to quickly create your own React Native charting application.
 
-### Knwon issues
+### Known issues
 
-- Macs with M1 chip have issues building the example app with flipper enabled.
+- Macs with Apple silicon processors have issues building the example app with flipper enabled.
   In order to fix this, you need ether to update FlipperTransportTypes.h including the following line:
   ```
   #include <functional>
@@ -55,6 +55,16 @@ or
 
 ```sh
 npm i @chartiq/react-native-chartiq
+```
+
+## iOS installation additional steps
+
+This project has been tested using Cocoapods 1.16.2.
+
+If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
+ 
+```sh
+npm install -g ios-deploy
 ```
 
 ## Quick start guide
