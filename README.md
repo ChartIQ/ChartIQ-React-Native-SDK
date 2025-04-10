@@ -24,7 +24,7 @@ The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/exam
 ### Known issues
 
 - Macs with Apple silicon processors have issues building the example app with flipper enabled.
-  In order to fix this, you need ether to update FlipperTransportTypes.h including the following line:
+  In order to fix this, you need either to update FlipperTransportTypes.h including the following line:
   ```
   #include <functional>
   ```
