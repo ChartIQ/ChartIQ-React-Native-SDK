@@ -9,15 +9,15 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ChartIqWrapperExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ChartIqWrapperExampleTests.m */; };
 		04CC59EB2A4D8439007951E4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04CC59EA2A4D8439007951E4 /* Images.xcassets */; };
-		1161784039C97E2BA4132931 /* libPods-ChartIqWrapperExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10A935FF8F8D61C25A17FAC3 /* libPods-ChartIqWrapperExample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		4C038813EE201A0ACB04096C /* libPods-ChartIqWrapperExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF24CAA0DBE9DDA8786BC66 /* libPods-ChartIqWrapperExample.a */; };
 		70DF60BE9CA993D53168F277 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7636982212B48851AA878D /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		930608392DA5194E00CD2C27 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 930608382DA5194E00CD2C27 /* PrivacyInfo.xcprivacy */; };
 		942FC540B82A684747E1B317 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */; };
-		B03765626709CE319BED5D0C /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F48ABD27FD476513F1768798 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */; };
+		DE7E0648EE04D96867528721 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB56E9D798440F1AAD0D7B9B /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,23 +36,23 @@
 		00E356F21AD99517003FC87E /* ChartIqWrapperExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChartIqWrapperExampleTests.m; sourceTree = "<group>"; };
 		043C1FBD2A7A7C6300115048 /* ChartIqWrapperExampleRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ChartIqWrapperExampleRelease.entitlements; path = ChartIqWrapperExample/ChartIqWrapperExampleRelease.entitlements; sourceTree = "<group>"; };
 		04CC59EA2A4D8439007951E4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		10A935FF8F8D61C25A17FAC3 /* libPods-ChartIqWrapperExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FF24CAA0DBE9DDA8786BC66 /* libPods-ChartIqWrapperExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* ChartIqWrapperExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChartIqWrapperExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ChartIqWrapperExample/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ChartIqWrapperExample/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ChartIqWrapperExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ChartIqWrapperExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ChartIqWrapperExample/main.m; sourceTree = "<group>"; };
-		1C2B63C533A5AA70CC0C0FA8 /* Pods-ChartIqWrapperExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.release.xcconfig"; sourceTree = "<group>"; };
 		1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		7F8DAD6E0AF5D09D6972F4DD /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		356DE4D38C928EDD7FE3D38B /* Pods-ChartIqWrapperExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.debug.xcconfig"; sourceTree = "<group>"; };
+		60CE6FC0AD4ECCD885FED753 /* Pods-ChartIqWrapperExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ChartIqWrapperExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B7636982212B48851AA878D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		930608382DA5194E00CD2C27 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		AC686663ECD6DF7DFBCC1401 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; sourceTree = "<group>"; };
-		ACE845BC4C6992A53DF2BC63 /* Pods-ChartIqWrapperExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.debug.xcconfig"; sourceTree = "<group>"; };
+		9E092F74B7DAC460BA38D380 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B53562B0052DB2CBC5456ADE /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		EB56E9D798440F1AAD0D7B9B /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F48ABD27FD476513F1768798 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B03765626709CE319BED5D0C /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */,
+				DE7E0648EE04D96867528721 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1161784039C97E2BA4132931 /* libPods-ChartIqWrapperExample.a in Frameworks */,
+				4C038813EE201A0ACB04096C /* libPods-ChartIqWrapperExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,8 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				10A935FF8F8D61C25A17FAC3 /* libPods-ChartIqWrapperExample.a */,
-				F48ABD27FD476513F1768798 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */,
+				0FF24CAA0DBE9DDA8786BC66 /* libPods-ChartIqWrapperExample.a */,
+				EB56E9D798440F1AAD0D7B9B /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -170,10 +170,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				ACE845BC4C6992A53DF2BC63 /* Pods-ChartIqWrapperExample.debug.xcconfig */,
-				1C2B63C533A5AA70CC0C0FA8 /* Pods-ChartIqWrapperExample.release.xcconfig */,
-				7F8DAD6E0AF5D09D6972F4DD /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */,
-				AC686663ECD6DF7DFBCC1401 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */,
+				356DE4D38C928EDD7FE3D38B /* Pods-ChartIqWrapperExample.debug.xcconfig */,
+				60CE6FC0AD4ECCD885FED753 /* Pods-ChartIqWrapperExample.release.xcconfig */,
+				9E092F74B7DAC460BA38D380 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */,
+				B53562B0052DB2CBC5456ADE /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -193,13 +193,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ChartIqWrapperExampleTests" */;
 			buildPhases = (
-				3ABEDB8D5F5858836EA4401F /* [CP] Check Pods Manifest.lock */,
+				C18B4AE2C6F4B19226EA9EB6 /* [CP] Check Pods Manifest.lock */,
 				B7406DDF9FB6968A06F035A8 /* [Expo] Configure project */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				9076F8DE5DE7A3DB9F0B6590 /* [CP] Embed Pods Frameworks */,
-				45FF1B80758FDFFA9D5B59CD /* [CP] Copy Pods Resources */,
+				4AA40BF2B0C720F4F5A88A11 /* [CP] Embed Pods Frameworks */,
+				4961F06453861785BE00B2DD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -215,15 +215,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ChartIqWrapperExample" */;
 			buildPhases = (
-				7692D3BFECC9418E06DA2F03 /* [CP] Check Pods Manifest.lock */,
+				9229B853891148C77527A186 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				C9D5E419699EEC0CDC04FA40 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				327CF48C87E4A2DADAA3A408 /* [CP] Embed Pods Frameworks */,
-				729D315C16AA65B006A3AF70 /* [CP] Copy Pods Resources */,
+				0A2640DA6AB6DFA8450411FF /* [CP] Embed Pods Frameworks */,
+				D59C0389E5E5FF35AAADEA02 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -308,7 +308,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		327CF48C87E4A2DADAA3A408 /* [CP] Embed Pods Frameworks */ = {
+		0A2640DA6AB6DFA8450411FF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -325,29 +325,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3ABEDB8D5F5858836EA4401F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		45FF1B80758FDFFA9D5B59CD /* [CP] Copy Pods Resources */ = {
+		4961F06453861785BE00B2DD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -364,24 +342,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		729D315C16AA65B006A3AF70 /* [CP] Copy Pods Resources */ = {
+		4AA40BF2B0C720F4F5A88A11 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7692D3BFECC9418E06DA2F03 /* [CP] Check Pods Manifest.lock */ = {
+		9229B853891148C77527A186 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -403,23 +381,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9076F8DE5DE7A3DB9F0B6590 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B7406DDF9FB6968A06F035A8 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -439,6 +400,28 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/expo-configure-project.sh\"\n";
 		};
+		C18B4AE2C6F4B19226EA9EB6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C9D5E419699EEC0CDC04FA40 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -457,6 +440,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-ChartIqWrapperExample/expo-configure-project.sh\"\n";
+		};
+		D59C0389E5E5FF35AAADEA02 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -512,7 +512,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7F8DAD6E0AF5D09D6972F4DD /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 9E092F74B7DAC460BA38D380 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = LKPKK2C2WB;
@@ -542,7 +542,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC686663ECD6DF7DFBCC1401 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */;
+			baseConfigurationReference = B53562B0052DB2CBC5456ADE /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -569,7 +569,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ACE845BC4C6992A53DF2BC63 /* Pods-ChartIqWrapperExample.debug.xcconfig */;
+			baseConfigurationReference = 356DE4D38C928EDD7FE3D38B /* Pods-ChartIqWrapperExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -609,7 +609,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C2B63C533A5AA70CC0C0FA8 /* Pods-ChartIqWrapperExample.release.xcconfig */;
+			baseConfigurationReference = 60CE6FC0AD4ECCD885FED753 /* Pods-ChartIqWrapperExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
