@@ -1,4 +1,4 @@
-export const HOST_SIMULATOR = 'https://mobile-simulator.chartiq.com';
+export const HOST_SIMULATOR = 'https://simulator.chartiq.com';
 export const HOST_SYMBOLS = 'https://symbols.chartiq.com';
 
 export const DEFAULT_VALUE_EXTENDED = '1';

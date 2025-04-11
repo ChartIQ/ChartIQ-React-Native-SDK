@@ -2,7 +2,7 @@
 
 React Native SDK for the [ChartIQ JavaScript library](https://documentation.chartiq.com).
 
-The ChartIQ React Native SDK supports a basic charting application. This SDK can be extended to support more elaborate implementations by adding code to invoke ChartIQ library functions directly or by creating a bridge file similar to *nativeSdkBridge.js* (in the *mobile/js* folder of your ChartIQ library). 
+The ChartIQ React Native SDK supports a basic charting application. This SDK can be extended to support more elaborate implementations by adding code to invoke ChartIQ library functions directly or by creating a bridge file similar to _nativeSdkBridge.js_ (in the _mobile/js_ folder of your ChartIQ library).
 
 Contact us at <support@chartiq.com> to request sample code and guidance on how to extend the SDK.
 
@@ -20,6 +20,18 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 ## App
 
 The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) folder of this repository contains both Android and iOS app that was built using the SDK. Customize the apps to quickly create your own React Native charting application.
+
+### Known issues
+
+- Macs with Apple silicon processors have issues building the example app with flipper enabled.
+  In order to fix this, you need either to update FlipperTransportTypes.h including the following line:
+  ```
+  #include <functional>
+  ```
+  or to disable Flipper in the example app installing pods with the following command:
+  ```
+  NO_FLIPPER=1 pod install
+  ```
 
 **App screen shots**
 
@@ -45,13 +57,14 @@ or
 npm i @chartiq/react-native-chartiq
 ```
 
-## IOS installation additional step
+## iOS installation additional steps
 
-Go to the ios folder and run pod install
+This project has been tested using Cocoapods 1.16.2.
 
+If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
+ 
 ```sh
-cd ios
-pod install
+npm install -g ios-deploy
 ```
 
 ## Quick start guide

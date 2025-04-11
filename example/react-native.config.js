@@ -7,5 +7,6 @@ module.exports = {
     [pak.name]: {
       root: path.join(__dirname, '..'),
     },
+    ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
   },
 };
