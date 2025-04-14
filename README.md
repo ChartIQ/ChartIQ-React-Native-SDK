@@ -23,8 +23,8 @@ The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/exam
 
 ### Known issues
 
-- Macs with M1 chip have issues building the example app with flipper enabled.
-  In order to fix this, you need ether to update FlipperTransportTypes.h including the following line:
+- Macs with Apple silicon processors have issues building the example app with flipper enabled.
+  In order to fix this, you need either to update FlipperTransportTypes.h including the following line:
   ```
   #include <functional>
   ```
@@ -55,6 +55,16 @@ or
 
 ```sh
 npm i @chartiq/react-native-chartiq
+```
+
+## iOS installation additional steps
+
+This project has been tested using Cocoapods 1.16.2.
+
+If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
+ 
+```sh
+npm install -g ios-deploy
 ```
 
 ## Quick start guide
