@@ -13,11 +13,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		61AEB8C6A356CF5E221546D0 /* libPods-ChartIqWrapperExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E412ADE6A64D665A237DA77D /* libPods-ChartIqWrapperExample.a */; };
+		61AEB8C6A356CF5E221546D0 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		70DF60BE9CA993D53168F277 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7636982212B48851AA878D /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		930608392DA5194E00CD2C27 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 930608382DA5194E00CD2C27 /* PrivacyInfo.xcprivacy */; };
 		942FC540B82A684747E1B317 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD1271F43FA546FCBA5136 /* ExpoModulesProvider.swift */; };
+		E8053D7A7DFA073D07269E4D /* libPods-ChartIqWrapperExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D54A5DDA2CBE6CF49DE02C8A /* libPods-ChartIqWrapperExample.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +52,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ChartIqWrapperExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B7636982212B48851AA878D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		930608382DA5194E00CD2C27 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		C900F50BB1167993EB324879 /* Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests/Pods-ChartIqWrapperExample-ChartIqWrapperExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		EBAF8E8E04281255F8F9BE38 /* Pods-ChartIqWrapperExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChartIqWrapperExample.debug.xcconfig"; path = "Target Support Files/Pods-ChartIqWrapperExample/Pods-ChartIqWrapperExample.debug.xcconfig"; sourceTree = "<group>"; };
+		D54A5DDA2CBE6CF49DE02C8A /* libPods-ChartIqWrapperExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChartIqWrapperExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -69,7 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61AEB8C6A356CF5E221546D0 /* libPods-ChartIqWrapperExample.a in Frameworks */,
+				61AEB8C6A356CF5E221546D0 /* BuildFile in Frameworks */,
+				E8053D7A7DFA073D07269E4D /* libPods-ChartIqWrapperExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,8 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				E412ADE6A64D665A237DA77D /* libPods-ChartIqWrapperExample.a */,
 				1DCB01262BCBA5D9C2849A09 /* libPods-ChartIqWrapperExample-ChartIqWrapperExampleTests.a */,
+				D54A5DDA2CBE6CF49DE02C8A /* libPods-ChartIqWrapperExample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -671,11 +672,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -744,11 +741,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
