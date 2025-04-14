@@ -20,8 +20,9 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - EXScreenOrientation (5.2.0):
+  - ExpoScreenOrientation (6.2.0):
     - ExpoModulesCore
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - FBLazyVector (0.72.17)
   - FBReactNativeSpec (0.72.17):
@@ -507,7 +508,7 @@ DEPENDENCIES:
   - Expo (from `../node_modules/expo`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
-  - EXScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
+  - ExpoScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -581,7 +582,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
-  EXScreenOrientation:
+  ExpoScreenOrientation:
     :path: "../node_modules/expo-screen-orientation/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
@@ -683,7 +684,7 @@ SPEC CHECKSUMS:
   Expo: dc993e0d66e657a31dc45574543ca1ed3d68c617
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoModulesCore: cfc52053496bae101b7ce6cd20a0ebaefbf977c0
-  EXScreenOrientation: d6f2277d20a76206f1ec5268d6c727e758e10d05
+  ExpoScreenOrientation: 7f5b116850b3ce0bf1a3bf3f9be62e8f36c33e3b
   FBLazyVector: 66398fc2381d8fa1eee4c0f80d931587a7b927e8
   FBReactNativeSpec: 0f8cecf999d709dba7626bbf565b1b5f8f46a5c1
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
