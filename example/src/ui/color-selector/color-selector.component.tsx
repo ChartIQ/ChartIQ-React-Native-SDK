@@ -4,8 +4,9 @@ import {
   addOrientationChangeListener,
   getOrientationAsync,
 } from 'expo-screen-orientation';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Icons from '~/assets/icons';
 import { colorPickerColors } from '~/constants';
@@ -98,7 +99,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
           leftActionTitle="Cancel"
           handleLeftAction={handleDismiss}
         />
-        <FlatList
+        <BottomSheetFlatList
           data={colorPickerColors}
           numColumns={numberOfColumns}
           key={numberOfColumns === HORIZONTAL_LIST_NUM_COLUMNS ? 'horizontal' : 'vertical'}
