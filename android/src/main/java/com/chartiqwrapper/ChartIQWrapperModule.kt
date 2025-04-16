@@ -569,11 +569,11 @@ private fun List<Study>.toWritableArray(): WritableArray {
       putBoolean("overlay", it.overlay)
       putBoolean("signalIQExclude", it.signalIQExclude)
       putBoolean("customRemoval", it.customRemoval)
-      putMap("inputs", Arguments.makeNativeMap(it.inputs))
-      putMap("outputs", Arguments.makeNativeMap(it.outputs))
-      putMap("parameters", Arguments.makeNativeMap(it.parameters))
-      putMap("attributes", Arguments.makeNativeMap(it.attributes))
-      putMap("yAxis", Arguments.makeNativeMap(it.yAxis))
+      putMap("inputs", Arguments.makeNativeMap(it.inputs?.let { map -> map.mapValues { it.value ?: "" } } ?: emptyMap()))
+      putMap("outputs", Arguments.makeNativeMap(it.outputs?.let { map -> map.mapValues { it.value ?: "" } } ?: emptyMap()))
+      putMap("parameters", Arguments.makeNativeMap(it.parameters?.let { map -> map.mapValues { it.value ?: "" } } ?: emptyMap()))
+      putMap("attributes", Arguments.makeNativeMap(it.attributes?.let { map -> map.mapValues { it.value ?: "" } } ?: emptyMap()))
+      putMap("yAxis", Arguments.makeNativeMap(it.yAxis?.let { map -> map.mapValues { it.value ?: "" } } ?: emptyMap()))
       putBoolean("deferUpdate", it.deferUpdate)
       putBoolean("underlay", it.underlay)
     }
@@ -592,30 +592,30 @@ private fun ReadableMap.toChartIQStudy(): Study {
   val overlay = this.getBoolean("overlay")
   val signalIQExclude = this.getBoolean("signalIQExclude")
   val customRemoval = this.getBoolean("customRemoval")
-  val inputs = this.getMap("inputs")?.toHashMap()
-  val outputs = this.getMap("outputs")?.toHashMap()
-  val parameters = this.getMap("parameters")?.toHashMap() as Map<String, String>
-  val attributes = this.getMap("attributes")?.toHashMap()
-  val yAxis = this.getMap("yAxis")?.toHashMap()
+  val inputs = this.getMap("inputs")?.toHashMap()?.mapValues { it.value as Any } ?: emptyMap()
+  val outputs = this.getMap("outputs")?.toHashMap()?.mapValues { it.value as Any } ?: emptyMap()
+  val parameters = this.getMap("parameters")?.toHashMap()?.mapValues { it.value as Any } ?: emptyMap()
+  val attributes = this.getMap("attributes")?.toHashMap()?.mapValues { it.value as Any } ?: emptyMap()
+  val yAxis = this.getMap("yAxis")?.toHashMap()?.mapValues { it.value as Any } ?: emptyMap()
   val deferUpdate = this.getBoolean("deferUpdate")
   val underlay = this.getBoolean("underlay")
 
   return Study(
     name,
-    attributes,
+    attributes as Map<String, Any>,
     centerLine,
     customRemoval,
     deferUpdate,
     display,
-    inputs,
-    outputs,
+    inputs as Map<String, Any>,
+    outputs as Map<String, Any>,
     overlay,
-    parameters,
+    parameters as Map<String, Any>,
     range,
     shortName,
     type,
     underlay,
-    yAxis,
+    yAxis as Map<String, Any>,
     signalIQExclude,
   )
 }
@@ -776,4 +776,10 @@ private fun ReadableMap.toSignal(): Signal {
 
 private fun Map<String, Any>.toReadableMap(): ReadableMap {
   return Arguments.makeNativeMap(this)
+}
+
+private fun HashMap<*, *>.toMap(): Map<String, Any> {
+  return this.map { (key, value) ->
+    key.toString() to (value ?: "")
+  }.toMap()
 }

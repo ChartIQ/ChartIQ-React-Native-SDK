@@ -1,6 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer, Theme } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -28,6 +28,7 @@ export default function App() {
 
   const { colors, isDark } = useTheme();
   const navigationTheme: Theme = {
+    ...DefaultTheme,
     colors: {
       background: colors.background,
       border: colors.border,

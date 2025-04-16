@@ -98,6 +98,15 @@ extension ChartIqWrapperView: ChartIQDataSource {
     }
 }
 
+extension ChartIqWrapperView: RCTInvalidating {
+    func invalidate() {
+        chartIQHelper = nil
+        chartIQView = nil
+        chartIQDatasource = nil
+        chartIQDelegate = nil
+    }
+}
+
 extension ChartIqWrapperView: ChartIQDelegate {
     func chartIQViewDidFinishLoading(_ chartIQView: ChartIQ.ChartIQView) {
         chartIQView.setVoiceoverFields(default: true)

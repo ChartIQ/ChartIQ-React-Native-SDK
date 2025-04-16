@@ -1,8 +1,7 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, { PropsWithChildren, useRef, forwardRef, useImperativeHandle } from 'react';
 import { View, LayoutChangeEvent, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Theme, useTheme } from '~/theme';
 
@@ -54,11 +53,11 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         style={styles.bottomSheet}
         animateOnMount
       >
-        <SafeAreaView style={styles.container}>
+        <BottomSheetView style={styles.container}>
           <View onLayout={onLayout} style={styles.container}>
             {children}
           </View>
-        </SafeAreaView>
+        </BottomSheetView>
       </BottomSheetModal>
     );
   },
