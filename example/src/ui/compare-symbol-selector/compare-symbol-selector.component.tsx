@@ -79,7 +79,7 @@ const CompareSymbolSelector = forwardRef<BottomSheetMethods, CompareSymbolSelect
 
     return (
       <>
-        <BottomSheet ref={bottomSheetRef}>
+        <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
           <SelectorHeader
             title="Compare Symbols"
             leftActionTitle={translations.cancel}
