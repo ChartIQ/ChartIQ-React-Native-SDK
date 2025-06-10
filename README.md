@@ -79,14 +79,14 @@ This project has been tested using Cocoapods 1.16.2.
 If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
  
 ```sh
-npm install -g ios-deploy
+yarn global add ios-deploy
 ```
 
 While developing you can run the [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
 
 ## Using ChartIQ React Native module
 
-We provide a [npm module](https://www.npmjs.com/package/@chartiq/react-native-chartiq) that contains the project source sdk along with the necessary mobile bridge code for Android and iOS. 
+We offer a [npm module](https://www.npmjs.com/package/@chartiq/react-native-chartiq) that contains the project source SDK along with the necessary mobile bridge code for Android and iOS. 
 
 ```sh
 yarn add @chartiq/react-native-chartiq
@@ -98,7 +98,7 @@ or
 npm i @chartiq/react-native-chartiq
 ```
 
-Import the library into your project and provide a [remote url](https://documentation.chartiq.com/tutorial-Getting%20the%20SDK.html#installing) to the ChartIQView component and set the dataMethod to either "pull" or "push", depending on how you want to provide data to the chart.
+Import the library into your project, provide a url to your deployed [ChartIQ app](https://documentation.chartiq.com/tutorial-Quick%20Start.html) in the ChartIQView component, and set the dataMethod to either "pull" or "push", depending on how you want to provide data to the chart.
 
 ```js
 import {ChartIQView} from '@chartiq/react-native-chartiq';
