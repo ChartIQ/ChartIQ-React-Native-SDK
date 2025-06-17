@@ -135,7 +135,15 @@ const stylesTest = createStyles();
  </View>
 ```
 
-Now this will get you a blank chart when you launch your app as there is no data being passed in yet. As you see the data methods and onStart methods are commented out in the example above. Those will be further explored in our upcoming user guide, but in the meantime you can follow what we are doing in our own [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/blob/main/example/src/screens/root/root.screen.tsx#L119). 
+Now this will get you a blank chart when you launch your app as there is no data being passed in yet. As you see the data methods and onStart methods are commented out in the example above. Those will be further explored in our upcoming user guide, but in the meantime you can follow what we are doing in our own [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/blob/main/example/src/screens/root/root.screen.tsx#L119).
+
+### Android Note
+When you install the ChartIQ sdk module you might have to set `allowBackup` in the AndroidManifest.xml file for your project, if it's not already set.
+
+```js
+tools:replace="android:allowBackup"
+android:allowBackup="false"
+```
 
 
 ## API documentation
