@@ -1,6 +1,6 @@
 {
   "name": "@chartiq/react-native-chartiq",
-  "version": "0.0.14",
+  "version": "1.0.0",
   "description": "ChartIQ React Native Library",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
