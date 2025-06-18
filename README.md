@@ -8,10 +8,10 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 ## Requirements
 
-- A copy of the ChartIQ JavaScript library (works best with version 9.6.0).
+- A copy of the ChartIQ JavaScript library (works best with version 9.8.0).
   - If you do not have a copy of the library or need a different version, please contact your account manager or visit our <a href="https://pages.marketintelligence.spglobal.com/ChartIQ-Follow-up-Request.html" target="_blank">Request Follow-Up Site</a>.
 
-- React Native 0.71.7
+- React Native 0.77.2
 - Android 8.1 Oreo (API level 27) or later
 - iOS 10.3 or later
 
@@ -43,55 +43,15 @@ The [example](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/exam
   </tr>
 </table>
 
-## Getting started
 
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
+## Run example app
 
-```sh
-yarn add @chartiq/react-native-chartiq
-```
+While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
 
-or
-
-```sh
-npm i @chartiq/react-native-chartiq
-```
-
-## iOS installation additional steps
-
-This project has been tested using Cocoapods 1.16.2.
-
-If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
- 
-```sh
-npm install -g ios-deploy
-```
-
-## Quick start guide
-
-To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
+To get started with the provided example project, run `yarn` in the root directory to install the required dependencies for each package:
 
 ```sh
 yarn
-```
-
-While developing you can run the [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
-
-Import the library and provide a remote url to the ChartIQ library and set the dataMethod to either "pull" or "push" depending on how you want to provide data to the chart.
-
-```js
-import { ChartIqWrapperView } from 'react-native-chartiq';
-
-// ...
-
-<ChartIQView
-  url={WEB_VIEW_SOURCE} // url to ChartIQ JS library
-  dataMethod="pull"
-  onStart={() => {
-    // do something when chart is ready e.g. set symbol, theme etc.
-  }}
-  style={styles.chartIq}
-/>;
 ```
 
 To start the packager:
@@ -111,6 +71,80 @@ To run the example app on iOS:
 ```sh
 yarn example ios
 ```
+
+### iOS installation additional steps
+
+This project has been tested using Cocoapods 1.16.2.
+
+If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
+ 
+```sh
+yarn global add ios-deploy
+```
+
+While developing you can run the [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/tree/main/example) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
+
+## Using ChartIQ React Native module
+
+We offer a [npm module](https://www.npmjs.com/package/@chartiq/react-native-chartiq) that contains the project source SDK along with the necessary mobile bridge code for Android and iOS. 
+
+```sh
+yarn add @chartiq/react-native-chartiq
+```
+
+or
+
+```sh
+npm i @chartiq/react-native-chartiq
+```
+
+Import the library into your project, provide a url to your deployed [ChartIQ app](https://documentation.chartiq.com/tutorial-Quick%20Start.html) in the ChartIQView component, and set the dataMethod to either "pull" or "push", depending on how you want to provide data to the chart.
+
+```js
+import {ChartIQView} from '@chartiq/react-native-chartiq';
+
+// ...
+
+// sample styles for webview
+const createStyles = () =>
+  StyleSheet.create({
+    box: {
+      flex: 1,
+    },
+    chartIQ: {
+      flex: 1,
+    }
+  });
+
+const stylesTest = createStyles();
+
+// ...
+
+// Create the webview component
+<View style={stylesTest.box}>
+	<ChartIQView
+        url="WEB_VIEW_SOURCE" // url to ChartIQ JS library
+        dataMethod="pull"
+        //onStart={initChart}
+        //onPullInitialData={onPullInitialData}
+        //onPullUpdateData={onPullUpdateData}
+        //onPullPagingData={onPullPagingData}
+        //onMeasureChanged={onMeasureChanged}
+        style={stylesTest.chartIQ}
+	/>
+ </View>
+```
+
+Now this will get you a blank chart when you launch your app as there is no data being passed in yet. As you see the data methods and onStart methods are commented out in the example above. Those will be further explored in our upcoming user guide, but in the meantime you can follow what we are doing in our own [example app](https://github.com/ChartIQ/ChartIQ-React-Native-SDK/blob/main/example/src/screens/root/root.screen.tsx#L119).
+
+### Android Note
+When you install the ChartIQ sdk module you might have to set `allowBackup` in the AndroidManifest.xml file for your project, if it's not already set.
+
+```js
+tools:replace="android:allowBackup"
+android:allowBackup="false"
+```
+
 
 ## API documentation
 

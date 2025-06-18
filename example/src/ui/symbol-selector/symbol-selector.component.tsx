@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { ChartSymbol } from 'react-native-chartiq';
-import { FlatList } from 'react-native-gesture-handler';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 import { RequestHandler, fetchSymbolsAsync } from '~/api';
 import { DEFAULT_VALUE_FUNDS, DEFAULT_VALUE_MAX_RESULT } from '~/constants';
@@ -118,7 +118,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
   );
 
   return (
-    <BottomSheet ref={bottomSheetRef} onClose={handleClose}>
+    <BottomSheet snapPoints={['90%']} ref={bottomSheetRef} onClose={handleClose}>
       <View>
         <Input
           bottomSheet
@@ -135,7 +135,7 @@ const SymbolSelector = forwardRef<BottomSheetMethods, SymbolSelectorProps>(({ on
       </View>
       <View style={styles.container}>
         {!isLoading ? (
-          <FlatList
+          <BottomSheetFlatList
             data={data}
             style={styles.contentContainer}
             contentContainerStyle={styles.contentContainer}

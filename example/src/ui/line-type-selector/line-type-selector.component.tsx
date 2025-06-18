@@ -4,8 +4,9 @@ import {
   addOrientationChangeListener,
   getOrientationAsync,
 } from 'expo-screen-orientation';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { LineTypeItem, lineTypePickerData } from '~/assets/icons/line-types/line-types';
 import { Theme, useTheme } from '~/theme';
@@ -87,7 +88,7 @@ const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
           handleLeftAction={handleClose}
           title="Select line type"
         />
-        <FlatList
+        <BottomSheetFlatList
           data={lineTypePickerData}
           numColumns={numberOfColumns}
           key={numberOfColumns === HORIZONTAL_LIST_NUM_COLUMNS ? 'horizontal' : 'vertical'}

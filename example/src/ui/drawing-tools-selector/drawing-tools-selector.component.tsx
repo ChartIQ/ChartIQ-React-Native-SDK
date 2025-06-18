@@ -329,7 +329,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     };
 
     return (
-      <BottomSheet ref={bottomSheetRef}>
+      <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
         <View>
           <SelectorHeader
             title="Drawing Tools"

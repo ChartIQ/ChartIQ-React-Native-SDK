@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { Keyboard, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ChartIQ } from 'react-native-chartiq';
-import { FlatList } from 'react-native-gesture-handler';
 
 import Icons from '~/assets/icons';
 import { useTranslations } from '~/shared/hooks/use-translations';
@@ -15,6 +14,7 @@ import {
   chartStyleSelectorData,
   ChartStyleSelectorProps,
 } from './chart-style-selector.data';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProps>(
   ({ onChange }, ref) => {
@@ -92,13 +92,13 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
     };
 
     return (
-      <BottomSheet ref={bottomSheetRef}>
+      <BottomSheet snapPoints={['90%']} ref={bottomSheetRef}>
         <SelectorHeader
           leftActionTitle={translations.cancel}
           handleLeftAction={handleClose}
           title={translations['Chart Style']}
         />
-        <FlatList
+        <BottomSheetFlatList
           data={data}
           contentContainerStyle={styles.contentContainer}
           style={styles.contentContainer}
