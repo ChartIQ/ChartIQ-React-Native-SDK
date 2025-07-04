@@ -46,6 +46,7 @@ const ImpulseScreen: React.FC = () => {
           <ListItem onPress={() => handlePress(value)} title={name}>
             <Icons.check
               fill={theme.colors.colorPrimary}
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{ display: value === impulse ? 'flex' : 'none' }}
             />
           </ListItem>
