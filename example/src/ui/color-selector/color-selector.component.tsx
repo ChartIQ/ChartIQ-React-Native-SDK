@@ -93,6 +93,7 @@ const ColorSelector = forwardRef<ColorSelectorMethods, ColorSelectorProps>(({ on
           setWidth(containerWidth);
         }}
         ref={bottomSheetRef}
+        snapPoints={['90%']}
       >
         <SelectorHeader
           title="Select color"

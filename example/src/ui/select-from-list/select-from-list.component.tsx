@@ -101,7 +101,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     };
 
     return (
-      <BottomSheet ref={bottomSheetRef} onClose={onDismiss}>
+      <BottomSheet ref={bottomSheetRef} onClose={onDismiss} snapPoints={['90%']}>
         {title && showHeader ? (
           <SelectorHeader
             title={translationMap[title] || title}

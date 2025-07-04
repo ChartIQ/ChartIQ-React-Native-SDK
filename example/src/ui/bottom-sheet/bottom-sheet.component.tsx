@@ -47,7 +47,8 @@ const BottomSheetSelector = forwardRef<BottomSheetMethods, BottomSheetSelectorPr
         snapPoints={snapPoints}
         index={0}
         enablePanDownToClose={true}
-        enableOverDrag={true}
+        enableOverDrag={false}
+        enableContentPanningGesture={true}
         onDismiss={onClose}
         handleComponent={() => null}
         style={styles.bottomSheet}

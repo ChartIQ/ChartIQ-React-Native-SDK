@@ -7,6 +7,7 @@ export const createStyles = (theme: Theme) =>
     contentContainer: {
       backgroundColor: theme.colors.background,
       paddingBottom: 16,
+      flex: 1,
     },
     spaceBetween: {
       justifyContent: 'space-between',

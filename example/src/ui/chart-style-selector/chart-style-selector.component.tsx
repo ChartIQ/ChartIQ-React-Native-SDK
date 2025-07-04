@@ -96,7 +96,7 @@ const ChartStyleSelector = forwardRef<BottomSheetMethods, ChartStyleSelectorProp
         <SelectorHeader
           leftActionTitle={translations.cancel}
           handleLeftAction={handleClose}
-          title={translations['Chart Style']}
+          title={translations['Chart Types']}
         />
         <BottomSheetFlatList
           data={data}

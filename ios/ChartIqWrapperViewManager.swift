@@ -256,7 +256,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
                 }
                 resolve(inputParams)
             } else if studyParameterType == "Outputs" {
-                guard var outputParams = self.chartIQWrapperView.chartIQView.getStudyParameters(chartIQStudy, type: .outputs) as? [[String: String]] else {
+                guard var outputParams = self.chartIQWrapperView.chartIQView.getStudyParameters(chartIQStudy, type: .outputs) as? [[String: Any]] else {
                     reject("0", "getStudyParameters error, chartIQ Study parameter in sot a String", nil)
                     return
                 }

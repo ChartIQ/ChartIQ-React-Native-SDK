@@ -92,6 +92,8 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     }));
 
     const handleSymbolChange = (drawingItem: DrawingItem) => {
+      console.log('handleSymbolChange', drawingItem);
+
       setTool(drawingItem);
       onChange(drawingItem);
       handleClose();
@@ -330,33 +332,41 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
 
     return (
       <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
-        <View>
-          <SelectorHeader
-            title="Drawing Tools"
-            leftActionTitle="Cancel"
-            handleLeftAction={handleClose}
-            RightActionIcon={
-              <Pressable hitSlop={defaultHitSlop} onPress={onMore} style={styles.moreContainer}>
-                <icons.moreVertical fill={theme.colors.colorPrimary} style={styles.more} />
-              </Pressable>
-            }
-          />
-          <FilterSelector
-            handleFilterChange={handleFilterChange}
-            selectedFilter={selectedFilter}
-            filters={drawingFilters}
-          />
+        <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+          <View style={{ backgroundColor: theme.colors.background }}>
+            <SelectorHeader
+              title="Drawing Tools"
+              leftActionTitle="Cancel"
+              handleLeftAction={handleClose}
+              RightActionIcon={
+                <Pressable hitSlop={defaultHitSlop} onPress={onMore} style={styles.moreContainer}>
+                  <icons.moreVertical fill={theme.colors.colorPrimary} style={styles.more} />
+                </Pressable>
+              }
+            />
+            <FilterSelector
+              handleFilterChange={handleFilterChange}
+              selectedFilter={selectedFilter}
+              filters={drawingFilters}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <BottomSheetSectionList
+              stickyHeaderHiddenOnScroll
+              sections={filteredSection}
+              renderSectionHeader={SectionHeader}
+              keyExtractor={(item) => item.name}
+              SectionSeparatorComponent={() => <View style={styles.space16} />}
+              showsVerticalScrollIndicator={true}
+              bounces={true}
+              keyboardShouldPersistTaps="handled"
+              removeClippedSubviews={false}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={10}
+            />
+          </View>
         </View>
-        <BottomSheetSectionList
-          stickyHeaderHiddenOnScroll
-          sections={filteredSection}
-          renderSectionHeader={SectionHeader}
-          style={styles.contentContainer}
-          contentContainerStyle={styles.contentContainer}
-          // renderSectionFooter={SectionFooter}
-          keyExtractor={(item) => item.name}
-          SectionSeparatorComponent={() => <View style={styles.space16} />}
-        />
       </BottomSheet>
     );
   },

@@ -120,7 +120,7 @@ const IntervalSelector = forwardRef<BottomSheetMethods, IntervalSelectorProps>(
     ];
 
     return (
-      <BottomSheet ref={bottomSheetRef}>
+      <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
         <SelectorHeader
           title="Intervals"
           leftActionTitle={translations.cancel}

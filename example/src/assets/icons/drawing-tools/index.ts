@@ -42,7 +42,7 @@ import VolumeProfile from './volume-profile.svg';
 
 const drawingTools = {
   [DrawingTool.ANNOTATION]: Annotation,
-  [DrawingTool.ARROW]: Arrow,
+  [DrawingTool.ARROWLINE]: Arrow,
   [DrawingTool.AVERAGE_LINE]: AverageLine,
   [DrawingTool.CALLOUT]: Callout,
   [DrawingTool.CHANNEL]: Channel,
