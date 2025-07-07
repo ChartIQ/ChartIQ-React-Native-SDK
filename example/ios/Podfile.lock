@@ -1270,7 +1270,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
   - react-native-chartiq (1.0.0):
-    - ChartIQ (= 4.3.0)
+    - ChartIQ
     - React-Core
   - react-native-safe-area-context (5.1.0):
     - React-Core
@@ -2001,7 +2001,7 @@ SPEC CHECKSUMS:
   React-logger: 592d84bed2e04db64c0b3725f9970b437473f3d3
   React-Mapbuffer: 595c88852c1dcb1c4faafad88148de8690a70aae
   React-microtasksnativemodule: b56986b155ae82e9bcb1d1c0ca8726bac52dbb6e
-  react-native-chartiq: 8b306cf689fa9a29386f9c5d79e8f5acdc9dae0f
+  react-native-chartiq: 7c0a09f1498db23693d2cd7862f49b1937090d41
   react-native-safe-area-context: e134b241010ebe2aacdcea013565963d13826faa
   React-nativeconfig: ecf4dc92c40b97e2b3f0c619938f78bfd6507b08
   React-NativeModulesApple: f457bbfb30fb3bc41979b1a87b99d292d7340d39
