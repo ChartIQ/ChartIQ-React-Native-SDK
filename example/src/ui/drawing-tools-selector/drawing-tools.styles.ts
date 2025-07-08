@@ -127,4 +127,8 @@ export const createStyles = (theme: Theme) =>
     flexOne: {
       flex: 1,
     },
+    filterView: {
+      paddingHorizontal: 16,
+      paddingTop: 5,
+    },
   });

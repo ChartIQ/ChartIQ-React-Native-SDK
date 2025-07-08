@@ -295,16 +295,9 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     );
 
     return (
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={['90%']}
-        keyboardBehavior="interactive"
-        keyboardBlurBehavior="restore"
-        android_keyboardInputMode="adjustResize"
-        enableOverDrag={false}
-      >
+      <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
         <SafeAreaView style={styles.flexOne}>
-          <View style={{ paddingHorizontal: 16, paddingTop: 5 }}>
+          <View style={styles.filterView}>
             <SelectorHeader
               title="Drawing Tools"
               leftActionTitle="Cancel"
