@@ -49,6 +49,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     const { showActionSheetWithOptions } = useActionSheet();
     const [tool, setTool] = useState<DrawingItem | null>(null);
     const { translationMap } = useTranslations();
+    const [canDismiss, setCanDismiss] = useState(true);
 
     useEffect(() => {
       const getFavoriteItems = async () => {
@@ -77,8 +78,6 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
 
       getFavoriteItems();
     }, [translationMap]);
-
-    const [canDismiss, setCanDismiss] = useState(true);
 
     const handleClose = () => {
       if (canDismiss) {
