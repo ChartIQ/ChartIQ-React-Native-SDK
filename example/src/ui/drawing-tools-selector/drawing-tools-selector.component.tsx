@@ -87,6 +87,7 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     };
 
     useImperativeHandle(ref, () => ({
+      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       present: (id) => {
         setCanDismiss(false);
         bottomSheetRef.current?.present(id);
