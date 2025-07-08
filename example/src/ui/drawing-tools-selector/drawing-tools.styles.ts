@@ -31,6 +31,7 @@ export const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
     },
     filterContainer: {
+      flex: 1,
       backgroundColor: theme.colors.background,
     },
     filterContentContainer: {
@@ -115,5 +116,12 @@ export const createStyles = (theme: Theme) =>
     },
     bottomBorderStyle: {
       marginLeft: 16,
+    },
+    flatListContainer: {
+      flex: 1,
+      minHeight: 0,
+    },
+    flatListBottomPadding: {
+      paddingBottom: 120,
     },
   });
