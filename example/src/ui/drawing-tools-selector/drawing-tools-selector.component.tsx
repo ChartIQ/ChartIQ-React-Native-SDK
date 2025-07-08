@@ -1,4 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BottomSheetFlatList, BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useRef,
@@ -8,7 +9,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { View, Image, Text, Pressable, Alert, FlatList } from 'react-native';
+import { View, Image, Text, Pressable, Alert } from 'react-native';
 import { ChartIQ } from 'react-native-chartiq';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -30,6 +31,7 @@ import {
   DrawingToolTags,
   drawingFilters,
   allDrawingFilter,
+  specialTools,
 } from './drawing-tools-selector.data';
 import { DrawingToolSelectorProps } from './drawing-tools-selector.types';
 import { createStyles } from './drawing-tools.styles';
@@ -243,7 +245,34 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       </View>
     );
 
-    const renderItem = ({ item, index }: { item: DrawingItem; index: number }) => (
+    const renderSectionHeader = ({ section: { title } }: { section: { title: string } }) => (
+      <Text style={styles.sectionHeaderText}>{title}</Text>
+    );
+
+    const renderSectionItem = ({
+      item,
+      index,
+      section,
+    }: {
+      item: DrawingItem;
+      index: number;
+      section: { title: string; data: DrawingItem[] };
+    }) => (
+      <SwipableToolItem
+        addToFavorites={handleAddToFavorites}
+        item={item}
+        onPress={handleSymbolChange}
+        removeFromFavorites={handleRemoveFromFavorites}
+        active={item.name === tool?.name}
+        enabled={section.title !== 'Other tools'}
+        listItemProps={{
+          topBorder: index === 0,
+          containerStyle: { backgroundColor: theme.colors.backgroundSecondary },
+        }}
+      />
+    );
+
+    const renderFlatListItem = ({ item, index }: { item: DrawingItem; index: number }) => (
       <SwipableToolItem
         addToFavorites={handleAddToFavorites}
         item={item}
@@ -252,7 +281,6 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
         active={item.name === tool?.name}
         listItemProps={{
           topBorder: index === 0,
-          bottomBorderStyles: index === filteredData.length - 1 ? {} : styles.bottomBorderStyle,
           containerStyle: { backgroundColor: theme.colors.backgroundSecondary },
         }}
       />
@@ -279,17 +307,38 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
             />
           </View>
           <View style={styles.flatListContainer}>
-            <FlatList
-              data={filteredData}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.name}
-              ListEmptyComponent={renderEmptyComponent}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag"
-              showsVerticalScrollIndicator={true}
-              bounces={false}
-              contentContainerStyle={styles.flatListBottomPadding}
-            />
+            {selectedFilter === DrawingToolTags.all ? (
+              <BottomSheetSectionList
+                sections={[
+                  { title: 'Other tools', data: specialTools },
+                  { title: 'Main Tools', data: filteredData },
+                ]}
+                renderItem={renderSectionItem}
+                keyExtractor={(item) => item.name}
+                renderSectionHeader={renderSectionHeader}
+                ListEmptyComponent={renderEmptyComponent}
+                stickySectionHeadersEnabled={false}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                showsVerticalScrollIndicator={true}
+                // bounces={false}
+                contentContainerStyle={styles.flatListBottomPadding}
+                nestedScrollEnabled={true}
+              />
+            ) : (
+              <BottomSheetFlatList
+                data={filteredData}
+                renderItem={renderFlatListItem}
+                keyExtractor={(item) => item.name}
+                ListEmptyComponent={renderEmptyComponent}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                showsVerticalScrollIndicator={true}
+                // bounces={false}
+                contentContainerStyle={styles.flatListBottomPadding}
+                nestedScrollEnabled={true}
+              />
+            )}
           </View>
         </View>
       </BottomSheet>

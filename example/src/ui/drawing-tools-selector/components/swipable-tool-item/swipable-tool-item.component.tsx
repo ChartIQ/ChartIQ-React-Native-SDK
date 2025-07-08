@@ -58,6 +58,7 @@ const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
         onPress={() => {
           onPress(item);
         }}
+        containerStyle={{ paddingLeft: 0 }}
         {...listItemProps}
       >
         <View style={[styles.row]}>
@@ -67,13 +68,19 @@ const SwipableToolItem: React.FC<SwipableToolItemProps> = ({
             fill={theme.colors.buttonText}
             stroke={theme.colors.buttonText}
           />
-          <Text style={styles.cardTitle}>
-            {item.title}
-            {item.favorite ? ' ★' : ''}
-          </Text>
-          {active ? (
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          {item.favorite || active ? (
             <View style={styles.iconContainer}>
-              <Icons.check style={{}} width={24} height={24} fill={theme.colors.colorPrimary} />
+              {item.favorite && (
+                <Text
+                  style={{ color: theme.colors.favoriteBackground, fontSize: 18, marginLeft: 8 }}
+                >
+                  ★
+                </Text>
+              )}
+              {active ? (
+                <Icons.check style={{}} width={24} height={24} fill={theme.colors.colorPrimary} />
+              ) : null}
             </View>
           ) : null}
         </View>
@@ -96,7 +103,7 @@ const createStyles = (theme: Theme) =>
     row: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 14,
+      paddingLeft: 16,
     },
     iconContainer: {
       flex: 1,

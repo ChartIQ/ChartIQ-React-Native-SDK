@@ -102,8 +102,11 @@ export const createStyles = (theme: Theme) =>
       paddingTop: 16,
     },
     sectionHeaderText: {
+      backgroundColor: theme.colors.backgroundSecondary,
       color: theme.colors.cardSubtitle,
       fontSize: 13,
+      fontWeight: 'normal',
+      paddingVertical: 14,
       textTransform: 'uppercase',
     },
 
@@ -114,14 +117,11 @@ export const createStyles = (theme: Theme) =>
     more: {
       transform: [{ rotateZ: '90deg' }],
     },
-    bottomBorderStyle: {
-      marginLeft: 16,
-    },
     flatListContainer: {
       flex: 1,
       minHeight: 0,
     },
     flatListBottomPadding: {
-      paddingBottom: 120,
+      paddingBottom: 20,
     },
   });
