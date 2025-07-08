@@ -124,4 +124,7 @@ export const createStyles = (theme: Theme) =>
     flatListBottomPadding: {
       paddingBottom: 20,
     },
+    flexOne: {
+      flex: 1,
+    },
   });

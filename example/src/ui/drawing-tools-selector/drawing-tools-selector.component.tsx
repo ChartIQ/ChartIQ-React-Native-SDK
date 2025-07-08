@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import { View, Image, Text, Pressable, Alert } from 'react-native';
+import { View, Image, Text, Pressable, Alert, SafeAreaView } from 'react-native';
 import { ChartIQ } from 'react-native-chartiq';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -78,15 +78,23 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
       getFavoriteItems();
     }, [translationMap]);
 
+    const [canDismiss, setCanDismiss] = useState(true);
+
     const handleClose = () => {
-      bottomSheetRef.current?.dismiss();
+      if (canDismiss) {
+        bottomSheetRef.current?.dismiss();
+      }
     };
 
     useImperativeHandle(ref, () => ({
-      ...(bottomSheetRef.current ?? ({} as BottomSheetMethods)),
       present: (id) => {
+        setCanDismiss(false);
         bottomSheetRef.current?.present(id);
-        textInputRef.current?.focus();
+
+        setTimeout(() => {
+          setCanDismiss(true);
+          textInputRef.current?.focus();
+        }, 100);
       },
       close: handleClose,
     }));
@@ -287,9 +295,16 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
     );
 
     return (
-      <BottomSheet ref={bottomSheetRef} snapPoints={['90%']}>
-        <View style={styles.filterContainer}>
-          <View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={['90%']}
+        keyboardBehavior="interactive"
+        keyboardBlurBehavior="restore"
+        android_keyboardInputMode="adjustResize"
+        enableOverDrag={false}
+      >
+        <SafeAreaView style={styles.flexOne}>
+          <View style={{ paddingHorizontal: 16, paddingTop: 5 }}>
             <SelectorHeader
               title="Drawing Tools"
               leftActionTitle="Cancel"
@@ -306,41 +321,40 @@ const DrawingToolSelector = forwardRef<BottomSheetMethods, DrawingToolSelectorPr
               filters={drawingFilters}
             />
           </View>
-          <View style={styles.flatListContainer}>
-            {selectedFilter === DrawingToolTags.all ? (
-              <BottomSheetSectionList
-                sections={[
-                  { title: 'Other tools', data: specialTools },
-                  { title: 'Main Tools', data: filteredData },
-                ]}
-                renderItem={renderSectionItem}
-                keyExtractor={(item) => item.name}
-                renderSectionHeader={renderSectionHeader}
-                ListEmptyComponent={renderEmptyComponent}
-                stickySectionHeadersEnabled={false}
-                keyboardShouldPersistTaps="handled"
-                keyboardDismissMode="on-drag"
-                showsVerticalScrollIndicator={true}
-                // bounces={false}
-                contentContainerStyle={styles.flatListBottomPadding}
-                nestedScrollEnabled={true}
-              />
-            ) : (
-              <BottomSheetFlatList
-                data={filteredData}
-                renderItem={renderFlatListItem}
-                keyExtractor={(item) => item.name}
-                ListEmptyComponent={renderEmptyComponent}
-                keyboardShouldPersistTaps="handled"
-                keyboardDismissMode="on-drag"
-                showsVerticalScrollIndicator={true}
-                // bounces={false}
-                contentContainerStyle={styles.flatListBottomPadding}
-                nestedScrollEnabled={true}
-              />
-            )}
-          </View>
-        </View>
+
+          {selectedFilter === DrawingToolTags.all ? (
+            <BottomSheetSectionList
+              style={styles.flexOne}
+              sections={[
+                { title: 'Other tools', data: specialTools },
+                { title: 'Main Tools', data: filteredData },
+              ]}
+              renderItem={renderSectionItem}
+              keyExtractor={(item) => item.name}
+              renderSectionHeader={renderSectionHeader}
+              ListEmptyComponent={renderEmptyComponent}
+              stickySectionHeadersEnabled={false}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
+              showsVerticalScrollIndicator={true}
+              contentContainerStyle={styles.flatListBottomPadding}
+              nestedScrollEnabled
+            />
+          ) : (
+            <BottomSheetFlatList
+              style={styles.flexOne}
+              data={filteredData}
+              renderItem={renderFlatListItem}
+              keyExtractor={(item) => item.name}
+              ListEmptyComponent={renderEmptyComponent}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
+              showsVerticalScrollIndicator={true}
+              contentContainerStyle={styles.flatListBottomPadding}
+              nestedScrollEnabled
+            />
+          )}
+        </SafeAreaView>
       </BottomSheet>
     );
   },
