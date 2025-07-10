@@ -53,10 +53,10 @@ export const drawingTools = [
     name: DrawingTool.ANNOTATION,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.arrow,
+    Icon: Icons.drawingTools.arrowline,
     tags: [DrawingToolTags.markings],
     title: 'Arrow',
-    name: DrawingTool.ARROW,
+    name: DrawingTool.ARROWLINE,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.average,
@@ -85,7 +85,7 @@ export const drawingTools = [
   {
     Icon: Icons.drawingTools.continuous,
     tags: [DrawingToolTags.lines],
-    title: 'Continuos',
+    title: 'Continuous',
     name: DrawingTool.CONTINUOUS_LINE,
   } as DrawingItem,
   {

@@ -1,6 +1,6 @@
 export enum DrawingTool {
   ANNOTATION = 'annotation',
-  ARROW = 'arrow',
+  ARROWLINE = 'arrowline',
   AVERAGE_LINE = 'average',
   CALLOUT = 'callout',
   CHANNEL = 'channel',

@@ -72,22 +72,31 @@ const FibonacciSettings: React.FC<FibonacciSettingsProps> = ({ route }) => {
     navigation.goBack();
   }, [navigation, settings, updateDrawingSettings]);
 
+  const HeaderRight = useCallback(
+    () => (
+      <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
+        <Text style={styles.text}>Save</Text>
+      </Pressable>
+    ),
+    [handleSave, styles.text],
+  );
+
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Pressable hitSlop={defaultHitSlop} onPress={handleSave}>
-          <Text style={styles.text}>Save</Text>
-        </Pressable>
-      ),
+      headerRight: HeaderRight,
     });
-  }, [handleSave, navigation, styles.text, theme.colors.colorPrimary]);
+  }, [HeaderRight, navigation]);
 
   const handleAdd = useCallback(() => {
     const value = Number(Number(customFib).toFixed(2));
     setCustomFib('');
     setSettings((prevState) => {
-      if (isNaN(value)) return prevState;
-      if (prevState.find((item) => item.level === value)) return prevState;
+      if (isNaN(value)) {
+        return prevState;
+      }
+      if (prevState.find((item) => item.level === value)) {
+        return prevState;
+      }
 
       return prevState.concat({ level: Number(Number(customFib).toFixed(2)), display: true });
     });

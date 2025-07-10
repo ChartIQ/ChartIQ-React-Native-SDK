@@ -90,7 +90,9 @@ export class RequestHandler {
   }
 
   async processRequests() {
-    if (this.processing || this.requestMap.size === 0) return;
+    if (this.processing || this.requestMap.size === 0) {
+      return;
+    }
 
     const keys = Array.from(this.requestMap.keys());
 

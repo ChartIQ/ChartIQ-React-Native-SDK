@@ -93,7 +93,9 @@ const DrawingToolSettings: React.FC = () => {
   };
 
   const onColorChange = (color: string, id?: string | undefined) => {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
 
     if (id === DrawingParams.FILL_COLOR) {
       updateFillColor(color);

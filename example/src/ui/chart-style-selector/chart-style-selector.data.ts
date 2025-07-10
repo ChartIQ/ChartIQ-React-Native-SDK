@@ -37,7 +37,7 @@ export const chartStyleSelectorData: Readonly<ChartStyleSelectorData[]> = [
     value: ChartType.COLORED_HLC,
     icon: icons.coloredHlcBar,
   },
-  { label: 'Scatterplot', value: ChartType.SCATTERPLOT, icon: icons.scatterplot },
+  { label: 'Data Points', value: ChartType.SCATTERPLOT, icon: icons.scatterplot },
   { label: 'Histogram', value: ChartType.HISTOGRAM, icon: icons.histogram },
   {
     label: 'Heikin Ashi',

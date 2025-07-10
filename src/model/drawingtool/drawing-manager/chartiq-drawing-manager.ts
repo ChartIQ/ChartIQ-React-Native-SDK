@@ -6,7 +6,7 @@ import { DrawingManager } from './drawing-manager';
 export class ChartIQDrawingManager implements DrawingManager {
   isSupportingFillColor(drawingTool: DrawingTool): boolean {
     switch (drawingTool) {
-      case DrawingTool.ARROW:
+      case DrawingTool.ARROWLINE:
       case DrawingTool.CHANNEL:
       case DrawingTool.CALLOUT:
       case DrawingTool.CHECK:

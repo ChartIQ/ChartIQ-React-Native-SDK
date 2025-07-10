@@ -82,6 +82,7 @@ const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
           setWidth(containerWidth);
         }}
         ref={bottomSheetRef}
+        snapPoints={['90%']}
       >
         <SelectorHeader
           leftActionTitle="Cancel"
@@ -92,7 +93,7 @@ const LineTypeSelector = forwardRef<BottomSheetMethods, LineTypeSelectorProps>(
           data={lineTypePickerData}
           numColumns={numberOfColumns}
           key={numberOfColumns === HORIZONTAL_LIST_NUM_COLUMNS ? 'horizontal' : 'vertical'}
-          scrollEnabled={false}
+          scrollEnabled={true}
           contentContainerStyle={[styles.contentContainer]}
           style={styles.container}
           renderItem={({ item }) => (

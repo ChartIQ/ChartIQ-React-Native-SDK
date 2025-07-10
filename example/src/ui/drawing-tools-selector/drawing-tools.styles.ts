@@ -7,6 +7,7 @@ export const createStyles = (theme: Theme) =>
     contentContainer: {
       backgroundColor: theme.colors.background,
       paddingBottom: 16,
+      flex: 1,
     },
     spaceBetween: {
       justifyContent: 'space-between',
@@ -30,6 +31,7 @@ export const createStyles = (theme: Theme) =>
       color: theme.colors.buttonText,
     },
     filterContainer: {
+      flex: 1,
       backgroundColor: theme.colors.background,
     },
     filterContentContainer: {
@@ -100,8 +102,11 @@ export const createStyles = (theme: Theme) =>
       paddingTop: 16,
     },
     sectionHeaderText: {
+      backgroundColor: theme.colors.backgroundSecondary,
       color: theme.colors.cardSubtitle,
       fontSize: 13,
+      fontWeight: 'normal',
+      paddingVertical: 14,
       textTransform: 'uppercase',
     },
 
@@ -112,7 +117,18 @@ export const createStyles = (theme: Theme) =>
     more: {
       transform: [{ rotateZ: '90deg' }],
     },
-    bottomBorderStyle: {
-      marginLeft: 16,
+    flatListContainer: {
+      flex: 1,
+      minHeight: 0,
+    },
+    flatListBottomPadding: {
+      paddingBottom: 20,
+    },
+    flexOne: {
+      flex: 1,
+    },
+    filterView: {
+      paddingHorizontal: 16,
+      paddingTop: 5,
     },
   });
