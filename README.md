@@ -8,7 +8,7 @@ Contact us at <support@chartiq.com> to request sample code and guidance on how t
 
 ## Requirements
 
-- A copy of the ChartIQ JavaScript library (works best with version 9.8.0).
+- A copy of the ChartIQ JavaScript library (works best with version 9.9.0).
   - If you do not have a copy of the library or need a different version, please contact your account manager or visit our <a href="https://pages.marketintelligence.spglobal.com/ChartIQ-Follow-up-Request.html" target="_blank">Request Follow-Up Site</a>.
 
 - React Native 0.77.2
@@ -77,7 +77,7 @@ yarn example ios
 This project has been tested using Cocoapods 1.16.2.
 
 If you are testing the iOS example app on a physical device you might have to install the `ios-deploy` package.
- 
+
 ```sh
 yarn global add ios-deploy
 ```
@@ -86,7 +86,7 @@ While developing you can run the [example app](https://github.com/ChartIQ/ChartI
 
 ## Using ChartIQ React Native module
 
-We offer a [npm module](https://www.npmjs.com/package/@chartiq/react-native-chartiq) that contains the project source SDK along with the necessary mobile bridge code for Android and iOS. 
+We offer a [npm module](https://www.npmjs.com/package/@chartiq/react-native-chartiq) that contains the project source SDK along with the necessary mobile bridge code for Android and iOS.
 
 ```sh
 yarn add @chartiq/react-native-chartiq
