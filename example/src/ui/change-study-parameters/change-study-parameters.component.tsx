@@ -126,37 +126,36 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       });
     };
 
-    const onOptionChange = ({ value: input }: { value: string }, id: string) => {
+    const onOptionChange = ({ key }: { key: string }, id: string) => {
       const itemToChange = inputParamsData.find((item) => item.fieldName === id);
       if (itemToChange) {
-        setInputParamsData((prevState) => {
-          return prevState.map((item) => {
-            if (item.fieldName === id) {
-              return {
-                ...item,
-                fieldSelectedValue: input,
-              };
-            }
-            return item;
-          });
-        });
+        setInputParamsData((prevState) =>
+          prevState.map((item) =>
+            item.fieldName === id
+              ? {
+                  ...item,
+                  fieldSelectedValue: key,
+                }
+              : item,
+          ),
+        );
       } else {
-        setInputParamsData((prevState) => {
-          return [...prevState, { fieldName: id, fieldSelectedValue: input }];
-        });
+        setInputParamsData((prevState) => [
+          ...prevState,
+          { fieldName: id, fieldSelectedValue: key },
+        ]);
       }
 
-      setInputParams((prevState) => {
-        return prevState.map((item) => {
-          if (item.name === id) {
-            return {
-              ...item,
-              value: input,
-            };
-          }
-          return item;
-        });
-      });
+      setInputParams((prevState) =>
+        prevState.map((item) =>
+          item.name === id
+            ? {
+                ...item,
+                value: key,
+              }
+            : item,
+        ),
+      );
     };
 
     const onValueChange = (
@@ -242,6 +241,10 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
       onValueChange(name, formatNumber(text));
     };
 
+    const getStudyLabel = (item: StudyParameter) => {
+      return item.options?.[item.value as string] || item.value;
+    };
+
     return (
       <>
         <SectionList
@@ -262,7 +265,7 @@ const ChangeStudyParameters = forwardRef<ChangeStudyParameterMethods, ChangeStud
                       }
                       title={item.name}
                     >
-                      <Text style={styles.input}>{item.value}</Text>
+                      <Text style={styles.input}>{getStudyLabel(item)}</Text>
                     </ListItem>
                   );
                 }
