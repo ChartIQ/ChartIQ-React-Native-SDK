@@ -5,9 +5,7 @@ import Arrow from './arrow.svg';
 import AverageLine from './average-line.svg';
 import Callout from './callout.svg';
 import Channel from './channel.svg';
-import Check from './check.svg';
 import ContinuosLine from './continuous-line.svg';
-import Cross from './cross.svg';
 import CrossLine from './crossline.svg';
 import Doodle from './doodle.svg';
 import ElliotWave from './elliott-wave.svg';
@@ -17,10 +15,8 @@ import FibonacciFan from './fib-fan.svg';
 import FibonacciProjection from './fib-projection.svg';
 import FibonacciRetracement from './fib-retracement.svg';
 import FibonacciTimezone from './fib-time_zone.svg';
-import Focus from './focus.svg';
 import GannFan from './gann-fan.svg';
 import Gartley from './gartley.svg';
-import Heart from './heart.svg';
 import HorizontalLine from './horizontal-line.svg';
 import Line from './line.svg';
 import Measure from './measure.svg';
@@ -33,7 +29,6 @@ import RegressionLine from './regression-line.svg';
 import Segment from './segment.svg';
 import SpeedResistanceArc from './speed-resistance_arc.svg';
 import SpeedResistanceLine from './speed-resistance_line.svg';
-import Star from './star.svg';
 import TimeCycle from './time-cycle.svg';
 import TrioneLevel from './tirone-levels.svg';
 import TrendLine from './trend-line.svg';
@@ -46,9 +41,7 @@ const drawingTools = {
   [DrawingTool.AVERAGE_LINE]: AverageLine,
   [DrawingTool.CALLOUT]: Callout,
   [DrawingTool.CHANNEL]: Channel,
-  [DrawingTool.CHECK]: Check,
   [DrawingTool.CONTINUOUS_LINE]: ContinuosLine,
-  [DrawingTool.CROSS]: Cross,
   [DrawingTool.CROSSLINE]: CrossLine,
   [DrawingTool.DOODLE]: Doodle,
   [DrawingTool.ELLIOTT_WAVE]: ElliotWave,
@@ -57,10 +50,8 @@ const drawingTools = {
   [DrawingTool.FIB_FAN]: FibonacciFan,
   [DrawingTool.FIB_RETRACEMENT]: FibonacciRetracement,
   [DrawingTool.FIB_TIME_ZONE]: FibonacciTimezone,
-  [DrawingTool.FOCUS]: Focus,
   [DrawingTool.GANN_FAN]: GannFan,
   [DrawingTool.GARTLEY]: Gartley,
-  [DrawingTool.HEART]: Heart,
   [DrawingTool.HORIZONTAL_LINE]: HorizontalLine,
   [DrawingTool.MEASURE]: Measure,
   [DrawingTool.PITCHFORK]: Pitchfork,
@@ -71,7 +62,6 @@ const drawingTools = {
   [DrawingTool.SEGMENT]: Segment,
   [DrawingTool.SPEED_RESISTANCE_ARC]: SpeedResistanceArc,
   [DrawingTool.SPEED_RESISTANCE_LINE]: SpeedResistanceLine,
-  [DrawingTool.STAR]: Star,
   [DrawingTool.TIME_CYCLE]: TimeCycle,
   [DrawingTool.TIRONE_LEVELS]: TrioneLevel,
   [DrawingTool.TREND_LINE]: TrendLine,

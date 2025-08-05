@@ -9,23 +9,18 @@ export class ChartIQDrawingManager implements DrawingManager {
       case DrawingTool.ARROWLINE:
       case DrawingTool.CHANNEL:
       case DrawingTool.CALLOUT:
-      case DrawingTool.CHECK:
-      case DrawingTool.CROSS:
       case DrawingTool.ELLIPSE:
       case DrawingTool.FIB_ARC:
       case DrawingTool.FIB_FAN:
       case DrawingTool.FIB_PROJECTION:
       case DrawingTool.FIB_RETRACEMENT:
       case DrawingTool.FIB_TIME_ZONE:
-      case DrawingTool.FOCUS:
       case DrawingTool.GANN_FAN:
       case DrawingTool.GARTLEY:
-      case DrawingTool.HEART:
       case DrawingTool.QUADRANT_LINES:
       case DrawingTool.RECTANGLE:
       case DrawingTool.SPEED_RESISTANCE_ARC:
       case DrawingTool.SPEED_RESISTANCE_LINE:
-      case DrawingTool.STAR:
       case DrawingTool.TIME_CYCLE:
       case DrawingTool.TIRONE_LEVELS:
       case DrawingTool.TREND_LINE:
