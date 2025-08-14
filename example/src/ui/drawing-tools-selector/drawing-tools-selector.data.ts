@@ -77,22 +77,10 @@ export const drawingTools = [
     name: DrawingTool.CHANNEL,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.check,
-    tags: [DrawingToolTags.markings],
-    title: 'Check',
-    name: DrawingTool.CHECK,
-  } as DrawingItem,
-  {
     Icon: Icons.drawingTools.continuous,
     tags: [DrawingToolTags.lines],
     title: 'Continuous',
     name: DrawingTool.CONTINUOUS_LINE,
-  } as DrawingItem,
-  {
-    Icon: Icons.drawingTools.xcross,
-    tags: [DrawingToolTags.markings],
-    title: 'Cross',
-    name: DrawingTool.CROSS,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.crossline,
@@ -149,12 +137,6 @@ export const drawingTools = [
     name: DrawingTool.FIB_TIME_ZONE,
   } as DrawingItem,
   {
-    Icon: Icons.drawingTools.focusarrow,
-    tags: [DrawingToolTags.markings],
-    title: 'Focus',
-    name: DrawingTool.FOCUS,
-  } as DrawingItem,
-  {
     Icon: Icons.drawingTools.gannfan,
     tags: [DrawingToolTags.technicals],
     title: 'Gann Fan',
@@ -165,12 +147,6 @@ export const drawingTools = [
     tags: [DrawingToolTags.technicals],
     title: 'Gartley',
     name: DrawingTool.GARTLEY,
-  } as DrawingItem,
-  {
-    Icon: Icons.drawingTools.heart,
-    tags: [DrawingToolTags.markings],
-    title: 'Heart',
-    name: DrawingTool.HEART,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.horizontal,
@@ -231,12 +207,6 @@ export const drawingTools = [
     tags: [DrawingToolTags.technicals],
     title: 'Speed Resistance Line',
     name: DrawingTool.SPEED_RESISTANCE_LINE,
-  } as DrawingItem,
-  {
-    Icon: Icons.drawingTools.star,
-    tags: [DrawingToolTags.markings],
-    title: 'Star',
-    name: DrawingTool.STAR,
   } as DrawingItem,
   {
     Icon: Icons.drawingTools.timecycle,
