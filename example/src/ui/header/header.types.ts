@@ -30,4 +30,5 @@ export interface HeaderProps {
   isDrawing: boolean;
   isLandscape: boolean;
   loading: boolean;
+  showBackButton?: boolean;
 }

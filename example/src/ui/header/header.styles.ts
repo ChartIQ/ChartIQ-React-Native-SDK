@@ -24,6 +24,23 @@ export const createStyles = (theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    backButton: {
+      backgroundColor: theme.colors.buttonBackground,
+      height: 32,
+      width: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 16,
+      marginRight: 8,
+    },
+    backButtonText: {
+      color: theme.colors.buttonText,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    backIcon: {
+      transform: [{ scaleX: -1 }], // Flip horizontally to point left
+    },
     button: {
       backgroundColor: theme.colors.buttonBackground,
       height: 32,

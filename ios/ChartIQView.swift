@@ -12,12 +12,14 @@ class ChartIqWrapperView: UIView {
 
     @objc var url: String = "" {
         didSet {
+            guard let chartIQView = chartIQView else { return }
             chartIQView.setChartIQUrl(url)
         }
     }
     
     @objc var dataMethod: String = "pull" {
         didSet {
+            guard let chartIQView = chartIQView else { return }
             chartIQView.setDataMethod(dataMethod == "push" ? .push : .pull)
         }
     }
@@ -55,7 +57,8 @@ class ChartIqWrapperView: UIView {
 extension ChartIqWrapperView: ChartIQDataSource {
     func pullInitialData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            if(self.chartIQHelper == nil){
+            if self.chartIQHelper == nil || self.chartIQView == nil || self.superview == nil {
+                completionHandler([])
                 return
             }
             let id = UUID().uuidString
@@ -66,7 +69,8 @@ extension ChartIqWrapperView: ChartIQDataSource {
     
     func pullUpdateData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            if(self.chartIQHelper == nil){
+            if self.chartIQHelper == nil || self.chartIQView == nil || self.superview == nil {
+                completionHandler([])
                 return
             }
             let id = UUID().uuidString
@@ -77,7 +81,8 @@ extension ChartIqWrapperView: ChartIQDataSource {
     
     func pullPaginationData(by params: ChartIQ.ChartIQQuoteFeedParams, completionHandler: @escaping ([ChartIQ.ChartIQData]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
-            if(self.chartIQHelper == nil){
+            if self.chartIQHelper == nil || self.chartIQView == nil || self.superview == nil {
+                completionHandler([])
                 return
             }
             let id = UUID().uuidString
@@ -100,6 +105,7 @@ extension ChartIqWrapperView: ChartIQDataSource {
 
 extension ChartIqWrapperView: RCTInvalidating {
     func invalidate() {
+        chartIQHelper?.completeAndClearAllCallbacks()
         chartIQHelper = nil
         chartIQView = nil
         chartIQDatasource = nil

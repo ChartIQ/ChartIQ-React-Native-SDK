@@ -15,6 +15,7 @@ export enum RootStack {
   Settings = '[Root stack] Settings',
   Drawings = '[Root stack] Drawings',
   Signals = '[Root stack] Signals',
+  TestRig = '[Root stack] TestRig',
 }
 
 export type RootStackParamList = {
@@ -23,6 +24,7 @@ export type RootStackParamList = {
   [RootStack.Settings]: undefined;
   [RootStack.Studies]: undefined;
   [RootStack.Signals]: undefined;
+  [RootStack.TestRig]: undefined;
 };
 
 export enum DrawingsStack {
