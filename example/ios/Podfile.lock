@@ -1,6 +1,6 @@
 PODS:
   - boost (1.84.0)
-  - ChartIQ (4.3.0)
+  - ChartIQ (4.4.0)
   - DoubleConversion (1.1.6)
   - EXConstants (17.0.8):
     - ExpoModulesCore
@@ -1269,7 +1269,7 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-chartiq (1.0.0):
+  - react-native-chartiq (1.1.0):
     - ChartIQ
     - React-Core
   - react-native-safe-area-context (5.1.0):
@@ -1957,7 +1957,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
-  ChartIQ: 4a12adb06d79aa50f63b312bd077dc45ddb3f8e6
+  ChartIQ: 2f4b3a18b3272dd7b570ddaee35f9f7ab68079e1
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   EXConstants: fcfc75800824ac2d5c592b5bc74130bad17b146b
   Expo: fa1475866d71a99d36fccaf9983a76b681e7da8d
@@ -2001,7 +2001,7 @@ SPEC CHECKSUMS:
   React-logger: 592d84bed2e04db64c0b3725f9970b437473f3d3
   React-Mapbuffer: 595c88852c1dcb1c4faafad88148de8690a70aae
   React-microtasksnativemodule: b56986b155ae82e9bcb1d1c0ca8726bac52dbb6e
-  react-native-chartiq: 7c0a09f1498db23693d2cd7862f49b1937090d41
+  react-native-chartiq: 530b7f7b4a7c1ca089c06bbed1d39681f96bf044
   react-native-safe-area-context: e134b241010ebe2aacdcea013565963d13826faa
   React-nativeconfig: ecf4dc92c40b97e2b3f0c619938f78bfd6507b08
   React-NativeModulesApple: f457bbfb30fb3bc41979b1a87b99d292d7340d39
