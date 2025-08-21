@@ -14,7 +14,7 @@ const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   // Flag to start app in Test Rig screen
-  const shouldStartInTestRig = true;
+  const shouldStartInTestRig = false;
 
   return (
     <Navigator initialRouteName={shouldStartInTestRig ? RootStack.TestRig : RootStack.Main}>

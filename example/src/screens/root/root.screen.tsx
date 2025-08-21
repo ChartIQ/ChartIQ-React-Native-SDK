@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIQ, ChartIQLanguages, ChartIQView } from 'react-native-chartiq';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { WEB_VIEW_SOURCE } from '~/constants';
 import { asyncStorageKeys } from '~/constants/async-storage-keys';
-import { RootStack } from '~/shared/navigation.types';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { usePullData } from '~/shared/hooks/use-pull-data';
 import { useTranslations } from '~/shared/hooks/use-translations';
+import { RootStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ChartStyleSelector } from '~/ui/chart-style-selector';
