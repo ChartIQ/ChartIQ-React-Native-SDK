@@ -43,8 +43,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     if (data != null) {
       val handler = Handler(Looper.getMainLooper())
       handler.post(Runnable {
+        if (!chartIQViewModel.isChartInitialized()) {
+          return@Runnable
+        }
         chartIQViewModel.initialCallbacks.find { it.id == id }?.let {
           it.callback.execute(data.toOHCLList())
+          chartIQViewModel.initialCallbacks.removeAll { callback -> callback.id == id }
         }
       })
     }
@@ -55,8 +59,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
     if (data != null) {
       val handler = Handler(Looper.getMainLooper())
       handler.post(Runnable {
+        if (!chartIQViewModel.isChartInitialized()) {
+          return@Runnable
+        }
         chartIQViewModel.updateCallbacks.find { it.id == id }?.let {
           it.callback.execute(data.toOHCLList())
+          chartIQViewModel.updateCallbacks.removeAll { callback -> callback.id == id }
         }
       })
     }
@@ -66,8 +74,12 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun setPagingData(data: ReadableArray, id: String) {
     if (data != null) {
       handler.post(Runnable {
+        if (!chartIQViewModel.isChartInitialized()) {
+          return@Runnable
+        }
         chartIQViewModel.pagingCallbacks.find { it.id == id }?.let {
           it.callback.execute(data.toOHCLList())
+          chartIQViewModel.pagingCallbacks.removeAll { callback -> callback.id == id }
         }
       })
     }

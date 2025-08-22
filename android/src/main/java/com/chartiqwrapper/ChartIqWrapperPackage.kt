@@ -20,14 +20,41 @@ class ChartIQViewModel {
   var initialCallbacks: MutableList<RNDataSourceCallback> = mutableListOf()
   var updateCallbacks: MutableList<RNDataSourceCallback>  = mutableListOf()
   var pagingCallbacks: MutableList<RNDataSourceCallback>  = mutableListOf()
+  
+  private var isActive: Boolean = true
 
   fun setChartIQ(input: ChartIQ): ChartIQ {
     chartIQ = input
+    isActive = true
     return chartIQ
   }
 
   fun getChartIQ(): ChartIQ {
     return chartIQ
+  }
+  
+  fun isViewActive(): Boolean {
+    return isActive && this::chartIQ.isInitialized
+  }
+  
+  fun isChartInitialized(): Boolean {
+    return this::chartIQ.isInitialized
+  }
+  
+  fun completeAndClearAllCallbacks() {
+    synchronized(this) {
+      val emptyList = emptyList<com.chartiq.sdk.model.OHLCParams>()
+      
+      initialCallbacks.forEach { it.callback.execute(emptyList) }
+      updateCallbacks.forEach { it.callback.execute(emptyList) }
+      pagingCallbacks.forEach { it.callback.execute(emptyList) }
+      
+      initialCallbacks.clear()
+      updateCallbacks.clear()
+      pagingCallbacks.clear()
+      
+      isActive = false
+    }
   }
 
 }

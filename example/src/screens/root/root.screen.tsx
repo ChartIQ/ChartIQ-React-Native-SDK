@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ChartIQ, ChartIQLanguages, ChartIQView } from 'react-native-chartiq';
@@ -9,6 +10,7 @@ import { asyncStorageKeys } from '~/constants/async-storage-keys';
 import { useChartIQ } from '~/shared/hooks/use-chart-iq';
 import { usePullData } from '~/shared/hooks/use-pull-data';
 import { useTranslations } from '~/shared/hooks/use-translations';
+import { RootStack } from '~/shared/navigation.types';
 import { Theme, useTheme } from '~/theme';
 import { BottomSheetMethods } from '~/ui/bottom-sheet';
 import { ChartStyleSelector } from '~/ui/chart-style-selector';
@@ -24,6 +26,8 @@ import SymbolSelector from '~/ui/symbol-selector/symbol-selector.component';
 export default function Root() {
   const theme = useTheme();
   const styles = createStyles(theme);
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const symbolSelectorRef = React.useRef<BottomSheetMethods>(null);
   const intervalSelectorRef = React.useRef<BottomSheetMethods>(null);
@@ -82,6 +86,9 @@ export default function Root() {
 
   const displayStyle: ViewStyle = { display: isFullscreen ? 'none' : 'flex' };
 
+  // coming from Test Rig Screen ?
+  const showBackButton = route.name === RootStack.Main && navigation.canGoBack();
+
   const get = React.useCallback(async () => {
     let userLanguage =
       (await AsyncStorage.getItem(asyncStorageKeys.languageCode)) ?? ChartIQLanguages.EN.code;
@@ -113,6 +120,7 @@ export default function Root() {
           isDrawing={isDrawing}
           isLandscape={isLandscape}
           loading={!initialized}
+          showBackButton={showBackButton}
         />
       </View>
       <View style={styles.chartContainer}>

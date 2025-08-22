@@ -228,6 +228,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
+          // Only block if chart is not initialized, not during normal operation
+          if (!chartIQViewModel.isChartInitialized()) {
+            callback.execute(emptyList())
+            return
+          }
           chartIQViewModel.initialCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
           dispatchOnPullInitialData(params, params.callbackId!!)
         }
@@ -236,6 +241,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
+          // Only block if chart is not initialized, not during normal operation
+          if (!chartIQViewModel.isChartInitialized()) {
+            callback.execute(emptyList())
+            return
+          }
           chartIQViewModel.updateCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
           dispatchOnPullUpdateData(params, params.callbackId!!)
         }
@@ -244,6 +254,11 @@ class ChartIqWrapperViewManager(private val chartIQViewModel: ChartIQViewModel) 
           params: QuoteFeedParams,
           callback: DataSourceCallback,
         ) {
+          // Only block if chart is not initialized, not during normal operation
+          if (!chartIQViewModel.isChartInitialized()) {
+            callback.execute(emptyList())
+            return
+          }
           chartIQViewModel.pagingCallbacks.add(RNDataSourceCallback(callback, params.callbackId!!))
           dispatchOnPullPagingData(params, params.callbackId!!)
         }

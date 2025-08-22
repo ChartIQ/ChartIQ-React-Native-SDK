@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
   isDrawing,
   isLandscape,
   loading,
+  showBackButton = false,
 }) => {
   const theme = useTheme();
   const styles = createStyles(theme);
@@ -75,6 +76,10 @@ const Header: React.FC<HeaderProps> = ({
 
     runOnJS(setOpen)((prevState) => !prevState);
   }, [open, otherToolsHeight]);
+
+  const handleBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   useEffect(() => {
     if (open && isLandscape) {
@@ -278,6 +283,16 @@ const Header: React.FC<HeaderProps> = ({
     <>
       <Animated.View style={[styles.container]}>
         <View style={styles.row}>
+          {showBackButton && (
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+              <Icons.chevronRight
+                style={styles.backIcon}
+                fill={theme.colors.buttonText}
+                width={20}
+                height={20}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={handleSymbolSelector} style={styles.button}>
             {symbol && !loading ? (
               <Text numberOfLines={1} ellipsizeMode="middle" style={styles.buttonText}>

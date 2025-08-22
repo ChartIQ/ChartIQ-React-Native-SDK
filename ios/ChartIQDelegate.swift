@@ -68,4 +68,25 @@ class ChartIQHelper: NSObject {
         }
         return array
     }
+    
+    func completeAndClearAllCallbacks() {
+        defaultQueue.async {
+            let emptyData: [ChartIQData] = []
+            
+            self.onPullInitialCompleationHandlers.forEach { callback in
+                callback.callback(emptyData)
+            }
+            self.onPullInitialCompleationHandlers.removeAll()
+            
+            self.onPullUpdateCompleationHandlers.forEach { callback in
+                callback.callback(emptyData)
+            }
+            self.onPullUpdateCompleationHandlers.removeAll()
+            
+            self.onPullPagingCompleationHandlers.forEach { callback in
+                callback.callback(emptyData)
+            }
+            self.onPullPagingCompleationHandlers.removeAll()
+        }
+    }
 }

@@ -15,6 +15,11 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     override func view() -> (ChartIqWrapperView) {
+        if chartIQWrapperView == nil || chartIQWrapperView.chartIQView == nil {
+            chartIQHelper = ChartIQHelper()
+            chartIQWrapperView = ChartIqWrapperView()
+            chartIQWrapperView.chartIQHelper = chartIQHelper
+        }
         return chartIQWrapperView
     }
     
@@ -25,7 +30,8 @@ class ChartIqWrapperViewManager: RCTViewManager {
     @objc func setSymbol(_ symbol: String) {
         defaultQueue.async {
             if !symbol.isEmpty {
-                self.chartIQWrapperView.chartIQView.loadChart(symbol)
+                guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+                chartIQView.loadChart(symbol)
             }
         }
     }
@@ -50,14 +56,16 @@ class ChartIqWrapperViewManager: RCTViewManager {
     
     @objc func setPeriodicity(_ period: Double, interval: String, timeUnit: String) {
         defaultQueue.async {
+            guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
             let newTimeUnit = ChartIQTimeUnit(stringValue: timeUnit.lowercased())
-            self.chartIQWrapperView.chartIQView.setPeriodicity(Int(period), interval: interval, timeUnit: newTimeUnit ?? .day)
+            chartIQView.setPeriodicity(Int(period), interval: interval, timeUnit: newTimeUnit ?? .day)
         }
     }
     
     @objc func setChartStyle(_ obj: String, attr: String, value: String) {
         defaultQueue.async {
-            self.chartIQWrapperView.chartIQView.setChartStyle(obj, attribute: attr, value: value)
+            guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+            chartIQView.setChartStyle(obj, attribute: attr, value: value)
         }
     }
     
@@ -496,18 +504,21 @@ class ChartIqWrapperViewManager: RCTViewManager {
             guard let chartIQSignal = signal.toChartIQSignal() else {
                 return
             }
-            self.chartIQWrapperView.chartIQView.removeSignal(chartIQSignal)
+            guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+            chartIQView.removeSignal(chartIQSignal)
         }
     }
 }
 
 extension ChartIqWrapperViewManager: RCTInvalidating {
     func invalidate() {
-        if chartIQWrapperView.chartIQView != nil {
-            chartIQWrapperView.chartIQView.clearChart()
-            chartIQWrapperView.chartIQView.cleanup()
+        chartIQHelper?.completeAndClearAllCallbacks()
+        
+        if let chartIQView = chartIQWrapperView?.chartIQView {
+            chartIQView.clearChart()
+            chartIQView.cleanup()
         }
-    
+        
         timer?.invalidate()
         chartIQHelper = nil
         chartIQWrapperView = nil
