@@ -88,7 +88,7 @@ const SelectOptionFromList = forwardRef<SelectOptionFromListMethods, SelectOptio
     }));
 
     const filteredData = flatListData.filter(({ value }) =>
-      value.toLowerCase().includes(filter.toLowerCase()),
+      String(value).toLowerCase().includes(filter.toLowerCase()),
     );
 
     const onPress = (item: Item) => {
