@@ -53,6 +53,44 @@ class ChartIqWrapperViewManager: RCTViewManager {
             self.chartIQHelper.updatePagingData(data: data, id: id)
         }
     }
+  
+    @objc func push(_ symbol: String, data: [[String: Any]]) {
+        defaultQueue.async {
+          var array: [ChartIQData] = []
+                  data.forEach { item in
+                      let quote = ChartIQData.init(dictionary: item)
+                      array.append(quote)
+                  }
+          guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+          chartIQView.push(symbol, data: array)
+        }
+    }
+  
+    @objc func pushJson(_ symbol: String, jsonData: String) {
+        defaultQueue.async {
+        guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+          chartIQView.push(symbol, jsonString: jsonData)
+      }
+    }
+  
+    @objc func pushUpdate(_ data: [[String: Any]], useAsLastSale: Bool) {
+        defaultQueue.async {
+          var array: [ChartIQData] = []
+                  data.forEach { item in
+                      let quote = ChartIQData.init(dictionary: item)
+                      array.append(quote)
+                  }
+          guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+          chartIQView.pushUpdate(array, useAsLastSale: useAsLastSale)
+        }
+    }
+  
+    @objc func pushJsonUpdate(_ jsonData: String, useAsLastSale: Bool) {
+        defaultQueue.async {
+          guard let chartIQView = self.chartIQWrapperView?.chartIQView else { return }
+          chartIQView.pushUpdate(jsonData, useAsLastSale: useAsLastSale)
+        }
+    }
     
     @objc func setPeriodicity(_ period: Double, interval: String, timeUnit: String) {
         defaultQueue.async {
@@ -383,6 +421,7 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     @objc func enableCrosshairs() {
+        print("Hello, world!")
         defaultQueue.async {
             self.chartIQWrapperView.chartIQView.enableCrosshairs(true)
         }

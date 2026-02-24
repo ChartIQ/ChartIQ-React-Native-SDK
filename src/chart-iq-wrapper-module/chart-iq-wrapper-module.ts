@@ -76,6 +76,22 @@ export function setPagingData(data: OHLCParams[], id: string) {
   ChartIQWrapperModule.setPagingData(data, id);
 }
 
+export function push(symbol: string, data: OHLCParams[]) {
+  ChartIQWrapperModule.push(symbol, data);
+}
+
+export function pushJson(symbol: string, jsonData: string) {
+  ChartIQWrapperModule.push(symbol, jsonData);
+}
+
+export function pushUpdate(data: OHLCParams[], useAsLastSale: Boolean) {
+  ChartIQWrapperModule.pushUpdate(data, useAsLastSale);
+}
+
+export function pushJsonUpdate(jsonData: string, useAsLastSale: Boolean) {
+  ChartIQWrapperModule.pushUpdate(jsonData, useAsLastSale);
+}
+
 /** Set periodicity
  * @param {number} period
  * @param {string} interval

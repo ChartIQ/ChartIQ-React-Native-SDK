@@ -86,8 +86,25 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   }
 
   @ReactMethod
-  fun setPeriodicity(period: Int, interval: String, timeUnit: String) {
+  fun push(symbol: String, data: ReadableArray) {
+  	if (data != null) {
+ 		handler.post(Runnable {
+      		chartIQViewModel.getChartIQ().push(symbol, data.toOHCLList())
+    	})
+  	}
+  }
 
+  @ReactMethod
+  fun pushUpdate(data: ReadableArray, useAsLastSale: Boolean) {
+  	if (data != null) {
+ 		handler.post(Runnable {
+      		chartIQViewModel.getChartIQ().pushUpdate(data.toOHCLList(), useAsLastSale)
+    	})
+  	}
+  }
+
+  @ReactMethod
+  fun setPeriodicity(period: Int, interval: String, timeUnit: String) {
     handler.post(Runnable {
       chartIQViewModel.getChartIQ().setPeriodicity(period, interval, TimeUnit.valueOf(timeUnit))
     })
