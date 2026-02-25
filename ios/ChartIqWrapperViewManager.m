@@ -14,9 +14,9 @@ RCT_EXTERN_METHOD(setUpdateData:(NSArray *)data id:(NSString *)id)
 RCT_EXTERN_METHOD(setPagingData:(NSArray *)data id:(NSString *)id)
 
 RCT_EXTERN_METHOD(push:(NSString *)symbol data:(NSArray *)data)
-RCT_EXTERN_METHOD(pushJson:(NSString *)symbol data:(NSString *)data)
+RCT_EXTERN_METHOD(pushJson:(NSString *)symbol jsonData:(NSString *)jsonData)
 RCT_EXTERN_METHOD(pushUpdate:(NSArray *)data useAsLastSale:(BOOL)useAsLastSale)
-RCT_EXTERN_METHOD(pushJsonUpdate:(NSString *)data useAsLastSale:(BOOL)useAsLastSale)
+RCT_EXTERN_METHOD(pushJsonUpdate:(NSString *)jsonData useAsLastSale:(BOOL)useAsLastSale)
 
 RCT_EXTERN_METHOD(setPeriodicity:(double)period interval:(NSString *)interval timeUnit:(NSString *)timeUnit)
 RCT_EXTERN_METHOD(setChartStyle:(NSString *)obj attr:(NSString *)attr value:(NSString *)value)
