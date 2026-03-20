@@ -421,7 +421,6 @@ class ChartIqWrapperViewManager: RCTViewManager {
     }
     
     @objc func enableCrosshairs() {
-        print("Hello, world!")
         defaultQueue.async {
             self.chartIQWrapperView.chartIQView.enableCrosshairs(true)
         }
