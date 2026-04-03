@@ -97,31 +97,31 @@ export function push(symbol: string, data: OHLCParams[]) {
  * ChartIQ.push(symbol, data)
  */
 export function pushJson(symbol: string, jsonData: string) {
-  ChartIQWrapperModule.push(symbol, jsonData);
+  ChartIQWrapperModule.pushJson(symbol, jsonData);
 }
 
 /**
  * Stream OHLC data into a chart.
  * @param {OHLCParams} data
- * @param {Boolean} useAsLastSale
+ * @param {boolean} useAsLastSale
  * @returns void
  * @example
  * ChartIQ.pushUpdate(data, useAsLastSale)
  */
-export function pushUpdate(data: OHLCParams[], useAsLastSale: Boolean) {
+export function pushUpdate(data: OHLCParams[], useAsLastSale: boolean) {
   ChartIQWrapperModule.pushUpdate(data, useAsLastSale);
 }
 
 /**
  * Stream OHLC data into a chart via a JSON object.
  * @param {string} jsonData
- * @param {Boolean} useAsLastSale
+ * @param {boolean} useAsLastSale
  * @returns void
  * @example
  * ChartIQ.pushUpdate(data, useAsLastSale)
  */
-export function pushJsonUpdate(jsonData: string, useAsLastSale: Boolean) {
-  ChartIQWrapperModule.pushUpdate(jsonData, useAsLastSale);
+export function pushJsonUpdate(jsonData: string, useAsLastSale: boolean) {
+  ChartIQWrapperModule.pushJsonUpdate(jsonData, useAsLastSale);
 }
 
 /** Set periodicity
