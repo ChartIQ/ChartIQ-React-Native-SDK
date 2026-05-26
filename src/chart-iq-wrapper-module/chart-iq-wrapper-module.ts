@@ -71,9 +71,57 @@ export function setUpdateData(data: OHLCParams[], id: string) {
  * @returns void
  * @example
  * ChartIQ.setPagingData(data, id)
- *   **/
+ */
 export function setPagingData(data: OHLCParams[], id: string) {
   ChartIQWrapperModule.setPagingData(data, id);
+}
+
+/**
+ * Sets the chart data with OHLC array by push.
+ * @param {string} symbol
+ * @param {OHLCParams[]} data
+ * @returns void
+ * @example
+ * ChartIQ.push(symbol, data)
+ */
+export function push(symbol: string, data: OHLCParams[]) {
+  ChartIQWrapperModule.push(symbol, data);
+}
+
+/**
+ * Sets the chart data with JSON by push.
+ * @param {string} symbol
+ * @param {string} jsonData
+ * @returns void
+ * @example
+ * ChartIQ.push(symbol, data)
+ */
+export function pushJson(symbol: string, jsonData: string) {
+  ChartIQWrapperModule.pushJson(symbol, jsonData);
+}
+
+/**
+ * Stream OHLC data into a chart.
+ * @param {OHLCParams} data
+ * @param {boolean} useAsLastSale
+ * @returns void
+ * @example
+ * ChartIQ.pushUpdate(data, useAsLastSale)
+ */
+export function pushUpdate(data: OHLCParams[], useAsLastSale: boolean) {
+  ChartIQWrapperModule.pushUpdate(data, useAsLastSale);
+}
+
+/**
+ * Stream OHLC data into a chart via a JSON object.
+ * @param {string} jsonData
+ * @param {boolean} useAsLastSale
+ * @returns void
+ * @example
+ * ChartIQ.pushUpdate(data, useAsLastSale)
+ */
+export function pushJsonUpdate(jsonData: string, useAsLastSale: boolean) {
+  ChartIQWrapperModule.pushJsonUpdate(jsonData, useAsLastSale);
 }
 
 /** Set periodicity
