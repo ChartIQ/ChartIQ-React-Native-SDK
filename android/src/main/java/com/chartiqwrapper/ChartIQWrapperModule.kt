@@ -98,7 +98,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun pushJson(symbol: String, data: String) {
     if (data != null) {
       handler.post(Runnable {
-        chartIQViewModel.getChartIQ().push(symbol, data)
+      		chartIQViewModel.getChartIQ().push(symbol, data)
       })
     }
   }
@@ -116,7 +116,7 @@ class ChartIQWrapperModule(private val chartIQViewModel: ChartIQViewModel) :
   fun pushJsonUpdate(data: String, useAsLastSale: Boolean) {
     if (data != null) {
       handler.post(Runnable {
-        chartIQViewModel.getChartIQ().pushUpdate(data, useAsLastSale)
+      		chartIQViewModel.getChartIQ().pushUpdate(data, useAsLastSale)
       })
     }
   }
